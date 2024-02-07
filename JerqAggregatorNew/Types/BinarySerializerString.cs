@@ -1,21 +1,15 @@
-﻿using System.Drawing;
+﻿using System;
 using System.Text;
 
 namespace JerqAggregatorNew.Types
 {
     public class BinarySerializerString : IBinaryTypeSerializer<string>
     {
-        public void Encode(List<byte> buffer, string value, ref int offset, ref int offsetInLastByte)
+        public void Encode(byte[] buffer, string value, ref int offset, ref int offsetInLastByte)
         {
-
             Header header = new Header();
             header.IsMissing = false;
             header.IsNull = value == null;
-
-            if (buffer.Count == 0)
-            {
-                buffer.Add(0);
-            }
 
             // if byte has space for both flags
             if (offsetInLastByte < 7)
@@ -37,17 +31,14 @@ namespace JerqAggregatorNew.Types
                 buffer[offset] |= (byte)((header.IsMissing ? 1 : 0) << (7 - offsetInLastByte));
                 offsetInLastByte = 0;
                 offset++;
-                buffer.Add(0);
                 buffer[offset] |= (byte)((header.IsNull ? 1 : 0) << (7 - offsetInLastByte));
                 offsetInLastByte++;
             }
-
             // if byte hasn't space for any flag move to the next byte and start writing header
             else
             {
                 offsetInLastByte = 0;
                 offset++;
-                buffer.Add(0);
                 buffer[offset] |= (byte)((header.IsMissing ? 1 : 0) << (7 - offsetInLastByte));
                 offsetInLastByte++;
                 buffer[offset] |= (byte)((header.IsNull ? 1 : 0) << (7 - offsetInLastByte));
@@ -60,7 +51,7 @@ namespace JerqAggregatorNew.Types
                 byte valueLength = (byte)Encoding.UTF8.GetByteCount(value);
                 header.StringLength = valueLength;
 
-                for(int i = 5; i >= 0; i--)
+                for (int i = 5; i >= 0; i--)
                 {
                     byte bit = (byte)((valueLength >> i) & 1);
 
@@ -69,7 +60,6 @@ namespace JerqAggregatorNew.Types
                     if (offsetInLastByte % 8 == 0)
                     {
                         offset++;
-                        buffer.Add(0);
                         offsetInLastByte = 0;
                     }
                     else
@@ -77,7 +67,7 @@ namespace JerqAggregatorNew.Types
                         offsetInLastByte++;
                     }
                 }
-            
+
                 byte[] valueBytes = Encoding.UTF8.GetBytes(value);
 
                 for (int i = valueBytes.Length - 1; i >= 0; i--)
@@ -86,7 +76,6 @@ namespace JerqAggregatorNew.Types
                     {
                         if (offsetInLastByte % 8 == 0)
                         {
-                            buffer.Add(0);
                             offset++;
                             offsetInLastByte = 0;
                         }
@@ -97,7 +86,8 @@ namespace JerqAggregatorNew.Types
                 }
             }
         }
-        public HeaderWithValue Decode(List<byte> buffer, ref int offset, ref int offsetInLastByte)
+
+        public HeaderWithValue Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
             byte[] valueBytes = null;
             int size = 0;
@@ -162,6 +152,7 @@ namespace JerqAggregatorNew.Types
                     int bit = (buffer[offset] >> (7 - offsetInLastByte)) & 1;
                     byteToAdd |= (byte)(bit << j);
                     offsetInLastByte++;
+                    
                 }
                 valueBytes[i] = byteToAdd;
             }
@@ -172,20 +163,26 @@ namespace JerqAggregatorNew.Types
 
         public int GetLengthInBytes(string value)
         {
+            if (value == null)
+            {
+                return sizeof(byte);
+            }
+
             int valueLength = Encoding.UTF8.GetByteCount(value);
             return valueLength + sizeof(byte);
         }
 
         #region ISerializer implementation
-        void ISerializer.Encode(List<byte> buffer, object value, ref int offset, ref int offsetInLastByte)
+        void ISerializer.Encode(byte[] buffer, object value, ref int offset, ref int offsetInLastByte)
         {
-            Encode(buffer, (string)value, ref offset, ref offsetInLastByte); 
+            Encode(buffer, (string)value, ref offset, ref offsetInLastByte);
         }
 
-        HeaderWithValue ISerializer.Decode(List<byte> buffer, ref int offset, ref int offsetInLastByte)
+        HeaderWithValue ISerializer.Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
-            return (HeaderWithValue)((IBinaryTypeSerializer<string?>)this).Decode(buffer, ref offset, ref offsetInLastByte);
+            return (HeaderWithValue)((IBinaryTypeSerializer<string>)this).Decode(buffer, ref offset, ref offsetInLastByte);
         }
+
         int ISerializer.GetLengthInBytes(object value)
         {
             return GetLengthInBytes((string)value);

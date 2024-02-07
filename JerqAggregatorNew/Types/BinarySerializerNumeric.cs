@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace JerqAggregatorNew.Types
@@ -12,13 +13,11 @@ namespace JerqAggregatorNew.Types
             switch (typeCode)
             {
                 case TypeCode.Boolean:
-                    byte[] byteArray = new byte[1];
-                    byteArray[0] = (byte)((bool)(object)value ? 1 : 0);
-                    return byteArray;
+                    return new byte[] { (byte)((bool)(object)value ? 1 : 0) };
                 case TypeCode.Byte:
-                    return BitConverter.GetBytes((byte)(object)value);
+                    return new byte[] { (byte)(object)value };
                 case TypeCode.SByte:
-                    return BitConverter.GetBytes((sbyte)(object)value);
+                    return new byte[] { (byte)(sbyte)(object)value };
                 case TypeCode.Int16:
                     return BitConverter.GetBytes((short)(object)value);
                 case TypeCode.Char:
@@ -51,16 +50,11 @@ namespace JerqAggregatorNew.Types
             }
         }
 
-        public void Encode(List<byte> buffer, T? value, ref int offset, ref int offsetInLastByte) 
+        public void Encode(byte[] buffer, T? value, ref int offset, ref int offsetInLastByte)
         {
             Header header = new Header();
             header.IsMissing = false;
             header.IsNull = value == null;
-
-            if (buffer.Count == 0)
-            {
-                buffer.Add(0);
-            }
 
             // if byte has space for both flags
             if (offsetInLastByte < 7)
@@ -82,17 +76,14 @@ namespace JerqAggregatorNew.Types
                 buffer[offset] |= (byte)((header.IsMissing ? 1 : 0) << (7 - offsetInLastByte));
                 offsetInLastByte = 0;
                 offset++;
-                buffer.Add(0);
                 buffer[offset] |= (byte)((header.IsNull ? 1 : 0) << (7 - offsetInLastByte));
                 offsetInLastByte++;
             }
-
             // if byte hasn't space for any flag move to the next byte and start writing header
             else
             {
                 offsetInLastByte = 0;
                 offset++;
-                buffer.Add(0);
                 buffer[offset] |= (byte)((header.IsMissing ? 1 : 0) << (7 - offsetInLastByte));
                 offsetInLastByte++;
                 buffer[offset] |= (byte)((header.IsNull ? 1 : 0) << (7 - offsetInLastByte));
@@ -102,14 +93,13 @@ namespace JerqAggregatorNew.Types
             if (value.HasValue)
             {
                 byte[] valueBytes = ConvertToByteArray(value.Value);
-                
+
                 for (int i = valueBytes.Length - 1; i >= 0; i--)
                 {
                     for (int j = 7; j >= 0; j--)
                     {
                         if (offsetInLastByte % 8 == 0)
                         {
-                            buffer.Add(0);
                             offset++;
                             offsetInLastByte = 0;
                         }
@@ -119,9 +109,9 @@ namespace JerqAggregatorNew.Types
                     }
                 }
             }
-            
         }
-        public HeaderWithValue Decode(List<byte> buffer, ref int offset, ref int offsetInLastByte)
+
+        public HeaderWithValue Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
             byte[] valueBytes = new byte[Unsafe.SizeOf<T>()];
             int size = Unsafe.SizeOf<T>();
@@ -172,6 +162,7 @@ namespace JerqAggregatorNew.Types
                     int bit = (buffer[offset] >> (7 - offsetInLastByte)) & 1;
                     byteToAdd |= (byte)(bit << j);
                     offsetInLastByte++;
+                    
                 }
                 valueBytes[i] = byteToAdd;
             }
@@ -208,7 +199,7 @@ namespace JerqAggregatorNew.Types
         public int GetLengthInBytes(T? value)
         {
             // for datetime return size of long
-            if(typeof(T) == typeof(DateTime))
+            if (typeof(T) == typeof(DateTime))
             {
                 if (value == null)
                 {
@@ -222,12 +213,12 @@ namespace JerqAggregatorNew.Types
         }
 
         #region ISerializer implementation
-        void ISerializer.Encode(List<byte> buffer, object? value, ref int offset, ref int offsetInLastByte)
+        void ISerializer.Encode(byte[] buffer, object? value, ref int offset, ref int offsetInLastByte)
         {
             Encode(buffer, (T?)value, ref offset, ref offsetInLastByte);
         }
 
-        HeaderWithValue ISerializer.Decode(List<byte> buffer, ref int offset, ref int offsetInLastByte)
+        HeaderWithValue ISerializer.Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
             return (HeaderWithValue)((IBinaryTypeSerializer<T?>)this).Decode(buffer, ref offset, ref offsetInLastByte);
         }

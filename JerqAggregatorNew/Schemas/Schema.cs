@@ -5,6 +5,11 @@ namespace JerqAggregatorNew.Schemas
 {
     public class Schema<T> where T : new()
     {
+        static int BUFFER_SIZE = 256000000;
+
+        [ThreadStatic]
+        static byte[] _buffer = new byte[BUFFER_SIZE];
+
         private List<MemberData> _memberData;
        
         public Schema()
@@ -27,8 +32,6 @@ namespace JerqAggregatorNew.Schemas
             int offset = 0;
             int offsetInLastByte = 0;
 
-            List<byte> buffer = new List<byte>();
-
             foreach (MemberData memberData in _memberData)
             {
                 if (!memberData.IsIncluded)
@@ -49,10 +52,10 @@ namespace JerqAggregatorNew.Schemas
                     value = propertyInfo.GetValue(schemaObject);             
                 }
 
-                memberData.BinarySerializer.Encode(buffer, value, ref offset, ref offsetInLastByte);
+                memberData.BinarySerializer.Encode(_buffer, value, ref offset, ref offsetInLastByte);
             }
 
-            return buffer.ToArray();
+            return _buffer.Take(offset + 1).ToArray();
         }
 
         /// <summary>
@@ -86,7 +89,6 @@ namespace JerqAggregatorNew.Schemas
        
             int offset = 0;
             int offsetInLastByte = 0;
-            List<byte> bytes = buffer.ToList();
 
             foreach (MemberData memberData in _memberData)
             {
@@ -95,7 +97,7 @@ namespace JerqAggregatorNew.Schemas
                     continue;
                 }
 
-                HeaderWithValue value = memberData.BinarySerializer.Decode(bytes, ref offset, ref offsetInLastByte);
+                HeaderWithValue value = memberData.BinarySerializer.Decode(buffer, ref offset, ref offsetInLastByte);
 
                 if (memberData.MemberInfo is FieldInfo)
                 {
