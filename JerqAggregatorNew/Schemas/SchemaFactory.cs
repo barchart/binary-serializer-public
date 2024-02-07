@@ -11,7 +11,7 @@ namespace JerqAggregatorNew.Schemas
         private static readonly Dictionary<Type, ISerializer> allSerializers = new Dictionary<Type, ISerializer>();
         static SchemaFactory()
         {
-            allSerializers.Add(typeof(String), new BinaryTypeSerializerString());
+            allSerializers.Add(typeof(String), new BinarySerializerString());
 
             allSerializers.Add(typeof(DateTime?), new BinarySerializerNumeric<DateTime>());
             allSerializers.Add(typeof(DateTime), allSerializers[typeof(DateTime?)]);

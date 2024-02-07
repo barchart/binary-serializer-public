@@ -3,7 +3,7 @@ using System.Text;
 
 namespace JerqAggregatorNew.Types
 {
-    public class BinaryTypeSerializerString : IBinaryTypeSerializer<string>
+    public class BinarySerializerString : IBinaryTypeSerializer<string>
     {
         public void Encode(List<byte> buffer, string value, ref int offset, ref int offsetInLastByte)
         {
