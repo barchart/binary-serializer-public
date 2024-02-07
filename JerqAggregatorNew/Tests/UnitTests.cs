@@ -9,7 +9,7 @@ namespace JerqAggregatorNew.Tests
     class Person
     {
          [BinarySerialize(include: true, key: false)]
-          public int? IntNumber { get; set; }
+         public int? IntNumber { get; set; }
 
          [BinarySerialize(include: true, key: true)]
          public bool? BoolNumber { get; set; }
