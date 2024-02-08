@@ -7,7 +7,6 @@ namespace JerqAggregatorNew.Types
     {
         public void Encode(List<byte> buffer, string value, ref int offset, ref int offsetInLastByte)
         {
-
             Header header = new Header();
             header.IsMissing = false;
             header.IsNull = value == null;
@@ -31,6 +30,7 @@ namespace JerqAggregatorNew.Types
                     offset++;
                 }
             }
+
             // if byte has space only for one flag
             else if (offsetInLastByte == 7)
             {
@@ -62,22 +62,19 @@ namespace JerqAggregatorNew.Types
 
                 for(int i = 5; i >= 0; i--)
                 {
-                    byte bit = (byte)((valueLength >> i) & 1);
-
-                    buffer[offset] |= (byte)(bit << (7 - offsetInLastByte));
-
                     if (offsetInLastByte % 8 == 0)
                     {
                         offset++;
                         buffer.Add(0);
                         offsetInLastByte = 0;
                     }
-                    else
-                    {
-                        offsetInLastByte++;
-                    }
+
+                    byte bit = (byte)((valueLength >> i) & 1);
+                    buffer[offset] |= (byte)(bit << (7 - offsetInLastByte));
+                    offsetInLastByte++;
+
                 }
-            
+
                 byte[] valueBytes = Encoding.UTF8.GetBytes(value);
 
                 for (int i = valueBytes.Length - 1; i >= 0; i--)

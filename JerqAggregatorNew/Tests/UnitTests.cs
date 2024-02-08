@@ -239,7 +239,7 @@ namespace JerqAggregatorNew.Tests
                 long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
                 DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
 
-                Car car1= new Car()
+                Car carOld = new Car()
                 {
                     DecimalNumber = (decimal)1.5,
                     doubleNumber = (double)2.5,
@@ -247,29 +247,36 @@ namespace JerqAggregatorNew.Tests
                     StringName = "Luka",
                 };
 
-                Car car2= new Car()
+                Car carNew = new Car()
                 {
                     DecimalNumber = (decimal)1.5,
                     doubleNumber = (double)2.5,
                     DateTimeDate = roundedDateTime,
-                    StringName = "Luka",
+                    StringName = "Luka2",
                 };
 
                 Schema<Car> carSchema = SchemaFactory.GetSchema<Car>();
 
                 stopwatch.Start();
 
-                byte[] serializedData = carSchema.Serialize(car1, car2);
-
+                byte[] serializedData = carSchema.Serialize(carNew);
                 Car deserializedCar = carSchema.Deserialize(serializedData);
+
+                byte[] serializedDataDifference = carSchema.Serialize(carOld, carNew);
+                Car deserializedCarDifference = carSchema.Deserialize(serializedDataDifference, carNew);
 
                 stopwatch.Stop();
                 output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
-                Assert.Equal(car1.DecimalNumber, car2.DecimalNumber);
-                Assert.Equal(car1.doubleNumber, car2.doubleNumber);
-                Assert.Equal(car1.StringName, car2.StringName);
-                Assert.Equal(car1.DateTimeDate, car2.DateTimeDate);
+                Assert.Equal(carNew.DecimalNumber, deserializedCar.DecimalNumber);
+                Assert.Equal(carNew.doubleNumber, deserializedCar.doubleNumber);
+                Assert.Equal(carNew.StringName, deserializedCar.StringName);
+                Assert.Equal(carNew.DateTimeDate, deserializedCar.DateTimeDate);
+
+                Assert.Equal(carNew.DecimalNumber, deserializedCarDifference.DecimalNumber);
+                Assert.Equal(carNew.doubleNumber, deserializedCarDifference.doubleNumber);
+                Assert.Equal(carNew.StringName, deserializedCarDifference.StringName);
+                Assert.Equal(carNew.DateTimeDate, deserializedCarDifference.DateTimeDate);
             }
             catch (Exception ex)
             {

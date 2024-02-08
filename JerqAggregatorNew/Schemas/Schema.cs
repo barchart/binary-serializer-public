@@ -130,7 +130,6 @@ namespace JerqAggregatorNew.Schemas
         /// <returns> Deserialized object written into existing object of generic type </returns>
         public T Deserialize(byte[] buffer, T existing) 
         {
-            // todo - check flag ismissing is set - then take value from existing object
             int offset = 0;
             int offsetInLastByte = 0;
             List<byte> bytes = buffer.ToList();
