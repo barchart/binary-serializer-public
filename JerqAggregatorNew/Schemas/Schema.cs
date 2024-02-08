@@ -6,7 +6,6 @@ namespace JerqAggregatorNew.Schemas
     public class Schema<T> where T : new()
     {
         private List<MemberData> _memberData;
-        private readonly object _lock = new object();
         public Schema()
         {
             _memberData = new List<MemberData>();
@@ -14,10 +13,8 @@ namespace JerqAggregatorNew.Schemas
 
         public void AddMemberData(MemberData memberData)
         {
-            lock (_lock)
-            {
-                _memberData.Add(memberData);
-            }
+            _memberData.Add(memberData);
+            
         }
 
         /// <summary>
@@ -31,32 +28,30 @@ namespace JerqAggregatorNew.Schemas
             int offsetInLastByte = 0;
 
             List<byte> buffer = new List<byte>();
-
-            lock (_lock)
+      
+            foreach (MemberData memberData in _memberData)
             {
-                foreach (MemberData memberData in _memberData)
+                if (!memberData.IsIncluded)
                 {
-                    if (!memberData.IsIncluded)
-                    {
-                        continue;
-                    }
-
-                    object? value;
-
-                    if (memberData.MemberInfo is FieldInfo)
-                    {
-                        FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                        value = fieldInfo.GetValue(schemaObject);
-                    }
-                    else
-                    {
-                        PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                        value = propertyInfo.GetValue(schemaObject);
-                    }
-
-                    memberData.BinarySerializer.Encode(buffer, value, ref offset, ref offsetInLastByte);
+                    continue;
                 }
+
+                object? value;
+
+                if (memberData.MemberInfo is FieldInfo)
+                {
+                    FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
+                    value = fieldInfo.GetValue(schemaObject);
+                }
+                else
+                {
+                    PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
+                    value = propertyInfo.GetValue(schemaObject);
+                }
+
+                memberData.BinarySerializer.Encode(buffer, value, ref offset, ref offsetInLastByte);
             }
+            
             return buffer.ToArray();
         }
 
@@ -73,42 +68,40 @@ namespace JerqAggregatorNew.Schemas
 
             List<byte> buffer = new List<byte>();
 
-            lock (_lock)
+            foreach (MemberData memberData in _memberData)
             {
-                foreach (MemberData memberData in _memberData)
+                if (!memberData.IsIncluded)
                 {
-                    if (!memberData.IsIncluded)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    object? firstValue, secondValue;
+                object? firstValue, secondValue;
 
-                    if (memberData.MemberInfo is FieldInfo)
-                    {
-                        FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
-                        firstValue = fieldInfo.GetValue(firstObject);
-                        secondValue = fieldInfo.GetValue(secondObject);
-                    }
-                    else
-                    {
-                        PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
-                        firstValue = propertyInfo.GetValue(firstObject);
-                        secondValue = propertyInfo.GetValue(secondObject);
-                    }
+                if (memberData.MemberInfo is FieldInfo)
+                {
+                    FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
+                    firstValue = fieldInfo.GetValue(firstObject);
+                    secondValue = fieldInfo.GetValue(secondObject);
+                }
+                else
+                {
+                    PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
+                    firstValue = propertyInfo.GetValue(firstObject);
+                    secondValue = propertyInfo.GetValue(secondObject);
+                }
 
-                    bool valuesEqual = object.Equals(firstValue, secondValue);
+                bool valuesEqual = object.Equals(firstValue, secondValue);
 
-                    if (valuesEqual)
-                    {
-                        memberData.BinarySerializer.EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
-                    }
-                    else
-                    {
-                        memberData.BinarySerializer.Encode(buffer, secondValue, ref offset, ref offsetInLastByte);
-                    }
+                if (valuesEqual)
+                {
+                    memberData.BinarySerializer.EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
+                }
+                else
+                {
+                    memberData.BinarySerializer.Encode(buffer, secondValue, ref offset, ref offsetInLastByte);
                 }
             }
+            
 
             return buffer.ToArray();
         }
@@ -134,34 +127,32 @@ namespace JerqAggregatorNew.Schemas
             int offsetInLastByte = 0;
             List<byte> bytes = buffer.ToList();
 
-            lock (_lock)
+            foreach (MemberData memberData in _memberData)
             {
-                foreach (MemberData memberData in _memberData)
+                if (!memberData.IsIncluded)
                 {
-                    if (!memberData.IsIncluded)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    HeaderWithValue value = memberData.BinarySerializer.Decode(bytes, ref offset, ref offsetInLastByte);
+                HeaderWithValue value = memberData.BinarySerializer.Decode(bytes, ref offset, ref offsetInLastByte);
 
-                    if (value.Header.IsMissing)
-                    {
-                        continue;
-                    }
+                if (value.Header.IsMissing)
+                {
+                    continue;
+                }
 
-                    if (memberData.MemberInfo is FieldInfo)
-                    {
-                        FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                        fieldInfo.SetValue(existing, value.Value);
-                    }
-                    else
-                    {
-                        PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                        propertyInfo.SetValue(existing, value.Value);
-                    }
+                if (memberData.MemberInfo is FieldInfo)
+                {
+                    FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
+                    fieldInfo.SetValue(existing, value.Value);
+                }
+                else
+                {
+                    PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
+                    propertyInfo.SetValue(existing, value.Value);
                 }
             }
+            
             return existing;
         }
     }
