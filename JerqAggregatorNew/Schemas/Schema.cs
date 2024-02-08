@@ -61,14 +61,56 @@ namespace JerqAggregatorNew.Schemas
         }
 
         /// <summary>
-        ///      Serialize only a difference between objects of generic type
+        ///      Serialize only a difference between the new and the old object
         /// </summary>
-        /// <param name="firstObject">First object of generic to be serialized</param>
-        /// <param name="secondObject">Second object of generic type to be serialized</param>
+        /// <param name="firstObject">Old object of generic type</param>
+        /// <param name="secondObject">New object of generic type</param>
         /// <returns>Array of bytes that represents a result of binary serialization</returns>
         public byte[] Serialize(T firstObject, T secondObject)
         {
-           return new byte[1];
+            int offset = 0;
+            int offsetInLastByte = 0;
+
+            List<byte> buffer = new List<byte>();
+
+            lock (_lock)
+            {
+                foreach (MemberData memberData in _memberData)
+                {
+                    if (!memberData.IsIncluded)
+                    {
+                        continue;
+                    }
+
+                    object? firstValue, secondValue;
+
+                    if (memberData.MemberInfo is FieldInfo)
+                    {
+                        FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
+                        firstValue = fieldInfo.GetValue(firstObject);
+                        secondValue = fieldInfo.GetValue(secondObject);
+                    }
+                    else
+                    {
+                        PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
+                        firstValue = propertyInfo.GetValue(firstObject);
+                        secondValue = propertyInfo.GetValue(secondObject);
+                    }
+
+                    bool valuesEqual = object.Equals(firstValue, secondValue);
+
+                    if (valuesEqual)
+                    {
+                        memberData.BinarySerializer.EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
+                    }
+                    else
+                    {
+                        memberData.BinarySerializer.Encode(buffer, secondValue, ref offset, ref offsetInLastByte);
+                    }
+                }
+            }
+
+            return buffer.ToArray();
         }
 
         /// <summary>
@@ -103,6 +145,11 @@ namespace JerqAggregatorNew.Schemas
                     }
 
                     HeaderWithValue value = memberData.BinarySerializer.Decode(bytes, ref offset, ref offsetInLastByte);
+
+                    if (value.Header.IsMissing)
+                    {
+                        continue;
+                    }
 
                     if (memberData.MemberInfo is FieldInfo)
                     {

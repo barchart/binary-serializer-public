@@ -1,4 +1,5 @@
 ﻿
+using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 
 namespace JerqAggregatorNew.Types
@@ -121,6 +122,32 @@ namespace JerqAggregatorNew.Types
             }
             
         }
+        public void EncodeMissingFlag(List<byte> buffer, ref int offset, ref int offsetInLastByte)
+        {
+            if (buffer.Count == 0)
+            {
+                buffer.Add(0);
+            }
+
+            if (offsetInLastByte < 7)
+            {
+                buffer[offset] |= (byte)((1) << (7 - offsetInLastByte));
+                offsetInLastByte++;            
+            }
+            else if (offsetInLastByte == 7)
+            {
+                buffer[offset] |= (byte)((1) << (7 - offsetInLastByte));
+                offsetInLastByte ++;
+            }
+            else
+            {
+                offsetInLastByte = 0;
+                offset++;
+                buffer.Add(0);
+                buffer[offset] |= (byte)((1) << (7 - offsetInLastByte));
+                offsetInLastByte++;
+            }
+        }
         public HeaderWithValue Decode(List<byte> buffer, ref int offset, ref int offsetInLastByte)
         {
             byte[] valueBytes = new byte[Unsafe.SizeOf<T>()];
@@ -146,6 +173,11 @@ namespace JerqAggregatorNew.Types
             {
                 offsetInLastByte = 0;
                 offset++;
+            }
+
+            if (header.IsMissing)
+            {
+                return new HeaderWithValue(header, null);
             }
 
             isNull = ((buffer[offset] >> (7 - offsetInLastByte)) & 1) == 1;
@@ -226,7 +258,10 @@ namespace JerqAggregatorNew.Types
         {
             Encode(buffer, (T?)value, ref offset, ref offsetInLastByte);
         }
-
+        void ISerializer.EncodeMissingFlag(List<byte> buffer, ref int offset, ref int offsetInLastByte)
+        {
+            ((IBinaryTypeSerializer<T?>)this).EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
+        }
         HeaderWithValue ISerializer.Decode(List<byte> buffer, ref int offset, ref int offsetInLastByte)
         {
             return (HeaderWithValue)((IBinaryTypeSerializer<T?>)this).Decode(buffer, ref offset, ref offsetInLastByte);
