@@ -6,7 +6,7 @@ namespace JerqAggregatorNew.Schemas
     public class Schema<T> where T : new()
     {
         private List<MemberData> _memberData;
-       
+        private readonly object _lock = new object();
         public Schema()
         {
             _memberData = new List<MemberData>();
@@ -14,7 +14,10 @@ namespace JerqAggregatorNew.Schemas
 
         public void AddMemberData(MemberData memberData)
         {
-            _memberData.Add(memberData);
+            lock (_lock)
+            {
+                _memberData.Add(memberData);
+            }
         }
 
         /// <summary>
@@ -29,29 +32,31 @@ namespace JerqAggregatorNew.Schemas
 
             List<byte> buffer = new List<byte>();
 
-            foreach (MemberData memberData in _memberData)
+            lock (_lock)
             {
-                if (!memberData.IsIncluded)
+                foreach (MemberData memberData in _memberData)
                 {
-                    continue;
-                }
+                    if (!memberData.IsIncluded)
+                    {
+                        continue;
+                    }
 
-                object? value;
+                    object? value;
 
-                if (memberData.MemberInfo is FieldInfo)
-                {
-                    FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                    value = fieldInfo.GetValue(schemaObject);
-                }
-                else
-                {
-                    PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                    value = propertyInfo.GetValue(schemaObject);             
-                }
+                    if (memberData.MemberInfo is FieldInfo)
+                    {
+                        FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
+                        value = fieldInfo.GetValue(schemaObject);
+                    }
+                    else
+                    {
+                        PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
+                        value = propertyInfo.GetValue(schemaObject);
+                    }
 
-                memberData.BinarySerializer.Encode(buffer, value, ref offset, ref offsetInLastByte);
+                    memberData.BinarySerializer.Encode(buffer, value, ref offset, ref offsetInLastByte);
+                }
             }
-
             return buffer.ToArray();
         }
 
@@ -88,27 +93,29 @@ namespace JerqAggregatorNew.Schemas
             int offsetInLastByte = 0;
             List<byte> bytes = buffer.ToList();
 
-            foreach (MemberData memberData in _memberData)
+            lock (_lock)
             {
-                if (!memberData.IsIncluded)
+                foreach (MemberData memberData in _memberData)
                 {
-                    continue;
-                }
+                    if (!memberData.IsIncluded)
+                    {
+                        continue;
+                    }
 
-                HeaderWithValue value = memberData.BinarySerializer.Decode(bytes, ref offset, ref offsetInLastByte);
+                    HeaderWithValue value = memberData.BinarySerializer.Decode(bytes, ref offset, ref offsetInLastByte);
 
-                if (memberData.MemberInfo is FieldInfo)
-                {
-                    FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                    fieldInfo.SetValue(existing, value.Value);
-                }
-                else
-                {
-                    PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                    propertyInfo.SetValue(existing, value.Value);
+                    if (memberData.MemberInfo is FieldInfo)
+                    {
+                        FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
+                        fieldInfo.SetValue(existing, value.Value);
+                    }
+                    else
+                    {
+                        PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
+                        propertyInfo.SetValue(existing, value.Value);
+                    }
                 }
             }
-
             return existing;
         }
     }
