@@ -7,6 +7,10 @@
     <Nullable>enable</Nullable>
 	<GenerateProgramFile>false</GenerateProgramFile>
 
+	<PackageId>binary-serialization-net</PackageId>
+	<Version>1.0.0</Version>
+	<Authors>Luka Sotra</Authors>
+	<Company>BarChart</Company>
   </PropertyGroup>
 
   <ItemGroup>
