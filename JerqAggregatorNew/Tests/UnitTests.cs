@@ -3,6 +3,7 @@ using JerqAggregatorNew.Schemas;
 using System.Xml.Linq;
 using System.Diagnostics;
 using Xunit.Abstractions;
+using System;
 
 namespace JerqAggregatorNew.Tests
 {
@@ -98,6 +99,22 @@ namespace JerqAggregatorNew.Tests
         [BinarySerialize(include: true, key: false)]
         public DateTime? DateTimeDate5 { get; set; }
     }
+
+    class Car
+    {
+        [BinarySerialize(include: true, key: false)]
+        public double doubleNumber;
+
+        [BinarySerialize(include: true, key: false)]
+        public decimal DecimalNumber { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public string? StringName { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public DateTime? DateTimeDate { get; set; }
+    }
+
     public class UnitTests
     {
         private readonly ITestOutputHelper output;
@@ -195,6 +212,7 @@ namespace JerqAggregatorNew.Tests
                 Assert.Equal(person.DecimalNumber4, deserializedPerson.DecimalNumber4);
                 Assert.Equal(person.doubleNumber4, deserializedPerson.doubleNumber4);
                 Assert.Equal(person.StringName4, deserializedPerson.StringName4);
+                Assert.Equal(person.DateTimeDate4, deserializedPerson.DateTimeDate4);
 
                 Assert.Equal(person.IntNumber5, deserializedPerson.IntNumber5);
                 Assert.Equal(person.BoolNumber5, deserializedPerson.BoolNumber5);
@@ -202,7 +220,56 @@ namespace JerqAggregatorNew.Tests
                 Assert.Equal(person.doubleNumber5, deserializedPerson.doubleNumber5);
                 Assert.Equal(person.StringName5, deserializedPerson.StringName5);
                 Assert.Equal(person.DateTimeDate5, deserializedPerson.DateTimeDate5);
-                Assert.Equal(person.DateTimeDate5, deserializedPerson.DateTimeDate5);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        [Fact]
+        public void DifferenceSerializationTest()
+        {
+            try
+            {
+                Stopwatch stopwatch = new Stopwatch();
+                DateTime now = DateTime.UtcNow;
+                long ticks = now.Ticks;
+                long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+                DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+
+                Car car1= new Car()
+                {
+                    DecimalNumber = (decimal)1.5,
+                    doubleNumber = (double)2.5,
+                    DateTimeDate = roundedDateTime,
+                    StringName = "Luka",
+                };
+
+                Car car2= new Car()
+                {
+                    DecimalNumber = (decimal)1.5,
+                    doubleNumber = (double)2.5,
+                    DateTimeDate = roundedDateTime,
+                    StringName = "Luka",
+                };
+
+                Schema<Car> carSchema = SchemaFactory.GetSchema<Car>();
+
+                stopwatch.Start();
+
+                byte[] serializedData = carSchema.Serialize(car1, car2);
+
+                Car deserializedCar = carSchema.Deserialize(serializedData);
+
+                stopwatch.Stop();
+                output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+                Assert.Equal(car1.DecimalNumber, car2.DecimalNumber);
+                Assert.Equal(car1.doubleNumber, car2.doubleNumber);
+                Assert.Equal(car1.StringName, car2.StringName);
+                Assert.Equal(car1.DateTimeDate, car2.DateTimeDate);
             }
             catch (Exception ex)
             {
