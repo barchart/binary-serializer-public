@@ -21,10 +21,10 @@ namespace JerqAggregatorNew.Schemas
         }
 
         /// <summary>
-        ///     serialize an object or structure of generic type
+        ///     Serialize an object of generic type
         /// </summary>
-        /// <param name="schemaObject">object that needs to be serialized</param>
-        /// <returns>array of bytes that represents a result of binary serializatiom</returns>
+        /// <param name="schemaObject">Object or structure to be serialized</param>
+        /// <returns>Array of bytes that represents a result of binary serialization</returns>
         public byte[] Serialize(T schemaObject)
         {
             int offset = 0;
@@ -61,34 +61,34 @@ namespace JerqAggregatorNew.Schemas
         }
 
         /// <summary>
-        ///     deserialize an object or structure of generic type
+        ///      Serialize only a difference between objects of generic type
         /// </summary>
-        /// <param name="firstObject"></param>
-        /// <param name="secondObject"></param>
-        /// <returns></returns>
+        /// <param name="firstObject">First object of generic to be serialized</param>
+        /// <param name="secondObject">Second object of generic type to be serialized</param>
+        /// <returns>Array of bytes that represents a result of binary serialization</returns>
         public byte[] Serialize(T firstObject, T secondObject)
         {
-            return new byte[1];
+           return new byte[1];
         }
 
         /// <summary>
-        ///     deserialize array of bytes into object or structure
+        ///     Deserialize array of bytes into object
         /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns> deserialized object written into newly createdS object of generic type </returns>
+        /// <param name="buffer">Array oy bytes which will be deserialized</param>
+        /// <returns> Deserialized object written into newly created object of generic type </returns>
         public T Deserialize(byte[] buffer) {
             return Deserialize(buffer, new T());
         }
 
         /// <summary>
-        ///     deserialize array of bytes into object or structure
+        ///     Deserialize array of bytes into object
         /// </summary>
-        /// <param name="buffer"></param>
-        /// <param name="existing"></param>
-        /// <returns> deserialized object written into existing object of generic type </returns>
+        /// <param name="buffer">Array oy bytes which will be deserialized</param>
+        /// <param name="existing">Existing generic object</param>
+        /// <returns> Deserialized object written into existing object of generic type </returns>
         public T Deserialize(byte[] buffer, T existing) 
         {
-       
+            // todo - check flag ismissing is set - then take value from existing object
             int offset = 0;
             int offsetInLastByte = 0;
             List<byte> bytes = buffer.ToList();
