@@ -185,7 +185,7 @@ namespace JerqAggregatorNew.Types
 
             offsetInLastByte++;
 
-            if (header.IsMissing || header.IsNull)
+            if (header.IsNull)
             {
                 return new HeaderWithValue(header, null);
             }
