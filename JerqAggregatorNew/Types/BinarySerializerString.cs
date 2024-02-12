@@ -99,14 +99,14 @@ namespace JerqAggregatorNew.Types
             else if (offsetInLastByte == 7)
             {
                 buffer[offset] |= (byte)(1 << (7 - offsetInLastByte));
-                offsetInLastByte = 0;
                 offset++;
             }
             else
             {
+                offsetInLastByte = 0;
                 offset++;
-                buffer = buffer.Append((byte)(1 << (7 - offsetInLastByte))).ToArray();
-                offsetInLastByte = 1;
+                buffer[offset] |= (byte)(1 << (7 - offsetInLastByte));
+                offsetInLastByte++;
             }
         }
 
@@ -135,12 +135,17 @@ namespace JerqAggregatorNew.Types
                 offset++;
             }
 
+            if (header.IsMissing)
+            {
+                return new HeaderWithValue(header, null);
+            }
+
             isNull = ((buffer[offset] >> (7 - offsetInLastByte)) & 1) == 1;
             header.IsNull = isNull;
 
             offsetInLastByte++;
 
-            if (header.IsMissing || header.IsNull)
+            if (header.IsNull)
             {
                 return new HeaderWithValue(header, null);
             }
