@@ -259,8 +259,8 @@ namespace JerqAggregatorNew.Tests
 
                 stopwatch.Start();
 
-                //byte[] serializedData = carSchema.Serialize(carNew);
-                //Car deserializedCar = carSchema.Deserialize(serializedData);
+                byte[] serializedData = carSchema.Serialize(carNew);
+                Car deserializedCar = carSchema.Deserialize(serializedData);
 
                 byte[] serializedDataDifference = carSchema.Serialize(carOld, carNew);
                 Car deserializedCarDifference = carSchema.Deserialize(serializedDataDifference, carNew);
@@ -268,10 +268,10 @@ namespace JerqAggregatorNew.Tests
                 stopwatch.Stop();
                 output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
-                //Assert.Equal(carNew.DecimalNumber, deserializedCar.DecimalNumber);
-                //Assert.Equal(carNew.doubleNumber, deserializedCar.doubleNumber);
-                //Assert.Equal(carNew.StringName, deserializedCar.StringName);
-                //Assert.Equal(carNew.DateTimeDate, deserializedCar.DateTimeDate);
+                Assert.Equal(carNew.DecimalNumber, deserializedCar.DecimalNumber);
+                Assert.Equal(carNew.doubleNumber, deserializedCar.doubleNumber);
+                Assert.Equal(carNew.StringName, deserializedCar.StringName);
+                Assert.Equal(carNew.DateTimeDate, deserializedCar.DateTimeDate);
 
                 Assert.Equal(carNew.DecimalNumber, deserializedCarDifference.DecimalNumber);
                 Assert.Equal(carNew.doubleNumber, deserializedCarDifference.doubleNumber);
