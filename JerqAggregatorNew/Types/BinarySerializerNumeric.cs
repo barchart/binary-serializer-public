@@ -1,12 +1,14 @@
-﻿using System;
-using System.Linq;
+﻿using JerqAggregatorNew.Schemas;
 using System.Runtime.CompilerServices;
 
 namespace JerqAggregatorNew.Types
 {
-    public class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T?> where T : struct, IConvertible
+    public abstract class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T?> where T : struct, IConvertible
     {
-        private byte[] ConvertToByteArray(T value)
+        public abstract int Size { get; }
+
+        // make absract instead of virtual
+        protected virtual byte[] ConvertToByteArray(T value)
         {
             TypeCode typeCode = Type.GetTypeCode(typeof(T));
 
@@ -24,8 +26,7 @@ namespace JerqAggregatorNew.Types
                     return BitConverter.GetBytes((char)(object)value);
                 case TypeCode.UInt16:
                     return BitConverter.GetBytes((ushort)(object)value);
-                case TypeCode.Int32:
-                    return BitConverter.GetBytes((int)(object)value);
+              
                 case TypeCode.UInt32:
                     return BitConverter.GetBytes((uint)(object)value);
                 case TypeCode.Int64:
@@ -56,42 +57,8 @@ namespace JerqAggregatorNew.Types
             header.IsMissing = false;
             header.IsNull = value == null;
 
-            // if byte has space for both flags
-            if (offsetInLastByte < 7)
-            {
-                buffer[offset] |= (byte)((header.IsMissing ? 1 : 0) << (7 - offsetInLastByte));
-                offsetInLastByte++;
-                buffer[offset] |= (byte)((header.IsNull ? 1 : 0) << (7 - offsetInLastByte));
-                offsetInLastByte++;
-
-                if (offsetInLastByte == 7)
-                {
-                    offsetInLastByte = 0;
-                    offset++;
-                    buffer[offset] = 0;
-                }
-            }
-            // if byte has space only for one flag
-            else if (offsetInLastByte == 7)
-            {
-                buffer[offset] |= (byte)((header.IsMissing ? 1 : 0) << (7 - offsetInLastByte));
-                offsetInLastByte = 0;
-                offset++;
-                buffer[offset] = 0;
-                buffer[offset] |= (byte)((header.IsNull ? 1 : 0) << (7 - offsetInLastByte));
-                offsetInLastByte++;
-            }
-            // if byte hasn't space for any flag move to the next byte and start writing header
-            else
-            {
-                offsetInLastByte = 0;
-                offset++;
-                buffer[offset] = 0;
-                buffer[offset] |= (byte)((header.IsMissing ? 1 : 0) << (7 - offsetInLastByte));
-                offsetInLastByte++;
-                buffer[offset] |= (byte)((header.IsNull ? 1 : 0) << (7 - offsetInLastByte));
-                offsetInLastByte++;
-            }
+            buffer.WriteBit(0, ref offset, ref offsetInLastByte);
+            buffer.WriteBit((byte)(header.IsNull ? 1 : 0), ref offset, ref offsetInLastByte);
 
             if (value.HasValue)
             {
@@ -114,45 +81,13 @@ namespace JerqAggregatorNew.Types
                 }
             }
         }
-        public void EncodeMissingFlag(byte[] buffer, ref int offset, ref int offsetInLastByte)
-        {
-            if (buffer.Length == 0)
-            {
-                buffer = new byte[1];
-            }
-
-            if (offsetInLastByte < 7)
-            {
-                buffer[offset] |= (byte)(1 << (7 - offsetInLastByte));
-                offsetInLastByte++;
-            }
-            else if (offsetInLastByte == 7)
-            {
-                buffer[offset] |= (byte)(1 << (7 - offsetInLastByte));
-                offset++;
-                buffer[offset] = 0;
-                offsetInLastByte = 0;
-            }
-            else
-            {
-                offsetInLastByte = 0;
-                offset++;
-                buffer[offset] = 0;
-                buffer[offset] |= (byte)(1 << (7 - offsetInLastByte));
-                offsetInLastByte++;
-            }
-        }
 
         public HeaderWithValue Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
-            byte[] valueBytes = new byte[Unsafe.SizeOf<T>()];
-            int size = Unsafe.SizeOf<T>();
-
-            T value = default;
+            int size = Size;
+            byte[] valueBytes = new byte[size];
 
             Header header = new Header();
-            bool isMissing = false;
-            bool isNull = false;
 
             if (offsetInLastByte == 8)
             {
@@ -160,8 +95,7 @@ namespace JerqAggregatorNew.Types
                 offset++;
             }
 
-            isMissing = ((buffer[offset] >> (7 - offsetInLastByte)) & 1) == 1;
-            header.IsMissing = isMissing;
+            header.IsMissing = ((buffer[offset] >> (7 - offsetInLastByte)) & 1) == 1;
             offsetInLastByte++;
 
             if (offsetInLastByte == 8)
@@ -175,8 +109,7 @@ namespace JerqAggregatorNew.Types
                 return new HeaderWithValue(header, null);
             }
 
-            isNull = ((buffer[offset] >> (7 - offsetInLastByte)) & 1) == 1;
-            header.IsNull = isNull;
+            header.IsNull = ((buffer[offset] >> (7 - offsetInLastByte)) & 1) == 1;
 
             offsetInLastByte++;
 
@@ -196,11 +129,6 @@ namespace JerqAggregatorNew.Types
                         offsetInLastByte = 0;
                     }
 
-                    if (offset >= buffer.Length)
-                    {
-                        var x = 20;
-                    }
-
                     int bit = (buffer[offset] >> (7 - offsetInLastByte)) & 1;
                     byteToAdd |= (byte)(bit << j);
                     offsetInLastByte++;
@@ -209,59 +137,45 @@ namespace JerqAggregatorNew.Types
                 valueBytes[i] = byteToAdd;
             }
 
-            // datetime and decimal are non primitive types
-            if (!typeof(T).IsPrimitive)
-            {
-                // decimal is only non primitive numerical type in C# and needs to be converted manually
-                if (typeof(T) == typeof(decimal))
-                {
-                    int[] bits = new int[4];
-                    Buffer.BlockCopy(valueBytes, 0, bits, 0, Unsafe.SizeOf<decimal>());
-                    decimal decodedValue = new Decimal(bits);
-                    value = (T)(object)decodedValue;
-                }
-                else if (typeof(T) == typeof(DateTime))
-                {
-                    long ticksPerMillisecond = TimeSpan.TicksPerMillisecond;
-                    long milliSeconds = BitConverter.ToInt64(valueBytes, 0);
-                    DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                    DateTime decodedDateTime = epoch.AddTicks(milliSeconds * ticksPerMillisecond);
-                    value = (T)(object)decodedDateTime;
-                }
-            }
-            // every other numerical type is primitive
-            else
-            {
-                value = Unsafe.As<byte, T>(ref valueBytes[0]);
-            }
+            return new HeaderWithValue(header, DecodeBytes(valueBytes));
+ 
+            //// datetime and decimal are non primitive types
+            //if (!typeof(T).IsPrimitive)
+            //{
+            //    // decimal is only non primitive numerical type in C# and needs to be converted manually
+            //    if (typeof(T) == typeof(decimal))
+            //    {
+            //        int[] bits = new int[4];
+            //        Buffer.BlockCopy(valueBytes, 0, bits, 0, Unsafe.SizeOf<decimal>());
+            //        decimal decodedValue = new Decimal(bits);
+            //        value = (T)(object)decodedValue;
+            //    }
+            //    else if (typeof(T) == typeof(DateTime))
+            //    {
+            //        long ticksPerMillisecond = TimeSpan.TicksPerMillisecond;
+            //        long milliSeconds = BitConverter.ToInt64(valueBytes, 0);
+            //        DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            //        DateTime decodedDateTime = epoch.AddTicks(milliSeconds * ticksPerMillisecond);
+            //        value = (T)(object)decodedDateTime;
+            //    }
+            //}
+            //// every other numerical type is primitive
+            //else
+            //{
+            //    value = Unsafe.As<byte, T>(ref valueBytes[0]);
+            //}
 
-            return new HeaderWithValue(header, value);
+           
         }
 
-        public int GetLengthInBytes(T? value)
-        {
-            // for datetime return size of long
-            if (typeof(T) == typeof(DateTime))
-            {
-                if (value == null)
-                {
-                    return sizeof(byte);
-                }
+        protected abstract T DecodeBytes(byte[] bytes);
 
-                return sizeof(long) + sizeof(byte);
-            }
-
-            return Unsafe.SizeOf<T>() + sizeof(byte);
-        }
+        public abstract int GetLengthInBytes(T? value);
 
         #region ISerializer implementation
         void ISerializer.Encode(byte[] buffer, object? value, ref int offset, ref int offsetInLastByte)
         {
             Encode(buffer, (T?)value, ref offset, ref offsetInLastByte);
-        }
-        void ISerializer.EncodeMissingFlag(byte[] buffer, ref int offset, ref int offsetInLastByte)
-        {
-            ((IBinaryTypeSerializer<T?>)this).EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
         }
         HeaderWithValue ISerializer.Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {

@@ -29,9 +29,14 @@ namespace JerqAggregatorNew.Schemas
         /// <returns>Array of bytes that represents a result of binary serialization</returns>
         public byte[] Serialize(T schemaObject)
         {
+            return Serialize(schemaObject, _buffer);
+        }
+
+        public byte[] Serialize(T schemaObject, byte[] buffer)
+        {
             int offset = 0;
-            _buffer[offset] = 0;
             int offsetInLastByte = 0;
+            buffer[offset] = 0;
 
             foreach (MemberData memberData in _memberData)
             {
@@ -50,13 +55,13 @@ namespace JerqAggregatorNew.Schemas
                 else
                 {
                     PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                    value = propertyInfo.GetValue(schemaObject);             
+                    value = propertyInfo.GetValue(schemaObject);
                 }
 
-                memberData.BinarySerializer.Encode(_buffer, value, ref offset, ref offsetInLastByte);
+                memberData.BinarySerializer.Encode(buffer, value, ref offset, ref offsetInLastByte);
             }
 
-            return _buffer.Take(offset + 1).ToArray();
+            return buffer.Take(offset + 1).ToArray();
         }
 
         /// <summary>
@@ -67,9 +72,14 @@ namespace JerqAggregatorNew.Schemas
         /// <returns>Array of bytes that represents a result of binary serialization</returns>
         public byte[] Serialize(T oldObject, T newObject)
         {
+            return Serialize(oldObject, newObject, _buffer);
+        }
+
+        public byte[] Serialize(T oldObject, T newObject, byte[] buffer)
+        {
             int offset = 0;
-            _buffer[offset] = 0;
             int offsetInLastByte = 0;
+            buffer[offset] = 0;
 
             foreach (MemberData memberData in _memberData)
             {
@@ -97,15 +107,19 @@ namespace JerqAggregatorNew.Schemas
 
                 if (valuesEqual)
                 {
-                    memberData.BinarySerializer.EncodeMissingFlag(_buffer, ref offset, ref offsetInLastByte);
+                    EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
                 }
                 else
                 {
-                    memberData.BinarySerializer.Encode(_buffer, newValue, ref offset, ref offsetInLastByte);
+                    memberData.BinarySerializer.Encode(buffer, newValue, ref offset, ref offsetInLastByte);
                 }
             }
 
-            return _buffer.Take(offset + 1).ToArray();
+            return buffer.Take(offset + 1).ToArray();
+        }
+        private void EncodeMissingFlag(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            buffer.WriteBit(1, ref offset, ref offsetInLastByte);
         }
 
         /// <summary>
@@ -156,6 +170,39 @@ namespace JerqAggregatorNew.Schemas
             }
 
             return existing;
+        }
+    }
+    public static class BufferHelper
+    {
+        public static void WriteBit(this byte[] buffer, byte bit, ref int offset, ref int offsetInLastByte)
+        {
+            buffer[offset] |= (byte)(bit << (7 - offsetInLastByte));
+            offsetInLastByte = (offsetInLastByte + 1) % 8;
+
+            if (offsetInLastByte == 0)
+            {
+                offset++;
+             
+                if (offset >= buffer.Length)
+                {
+                    throw new Exception($"Object is larger then {buffer.Length} bytes.");
+                }
+
+                buffer[offset] = 0;
+            }
+        }
+
+        public static byte ReadBit(this byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            byte bit = (byte)((buffer[offset] >> (7 - offsetInLastByte)) & 1);
+            offsetInLastByte = (offsetInLastByte + 1) % 8;
+
+            if (offsetInLastByte == 0)
+            {
+                offset++;
+            }
+
+            return bit;
         }
     }
 }
