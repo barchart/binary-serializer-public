@@ -30,6 +30,7 @@ namespace JerqAggregatorNew.Schemas
         public byte[] Serialize(T schemaObject)
         {
             int offset = 0;
+            _buffer[offset] = 0;
             int offsetInLastByte = 0;
 
             foreach (MemberData memberData in _memberData)
@@ -61,12 +62,13 @@ namespace JerqAggregatorNew.Schemas
         /// <summary>
         ///      Serialize only a difference between the new and the old object
         /// </summary>
-        /// <param name="firstObject">Old object of generic type</param>
-        /// <param name="secondObject">New object of generic type</param>
+        /// <param name="oldObject">Old object of generic type</param>
+        /// <param name="newObject">New object of generic type</param>
         /// <returns>Array of bytes that represents a result of binary serialization</returns>
-        public byte[] Serialize(T firstObject, T secondObject)
+        public byte[] Serialize(T oldObject, T newObject)
         {
             int offset = 0;
+            _buffer[offset] = 0;
             int offsetInLastByte = 0;
 
             foreach (MemberData memberData in _memberData)
@@ -76,22 +78,22 @@ namespace JerqAggregatorNew.Schemas
                     continue;
                 }
 
-                object? firstValue, secondValue;
+                object? oldValue, newValue;
 
                 if (memberData.MemberInfo is FieldInfo)
                 {
                     FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
-                    firstValue = fieldInfo.GetValue(firstObject);
-                    secondValue = fieldInfo.GetValue(secondObject);
+                    oldValue = fieldInfo.GetValue(oldObject);
+                    newValue = fieldInfo.GetValue(newObject);
                 }
                 else
                 {
                     PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
-                    firstValue = propertyInfo.GetValue(firstObject);
-                    secondValue = propertyInfo.GetValue(secondObject);
+                    oldValue = propertyInfo.GetValue(oldObject);
+                    newValue = propertyInfo.GetValue(newObject);
                 }
 
-                bool valuesEqual = object.Equals(firstValue, secondValue);
+                bool valuesEqual = object.Equals(oldValue, newValue);
 
                 if (valuesEqual)
                 {
@@ -99,10 +101,9 @@ namespace JerqAggregatorNew.Schemas
                 }
                 else
                 {
-                    memberData.BinarySerializer.Encode(_buffer, secondValue, ref offset, ref offsetInLastByte);
+                    memberData.BinarySerializer.Encode(_buffer, newValue, ref offset, ref offsetInLastByte);
                 }
             }
-
 
             return _buffer.Take(offset + 1).ToArray();
         }
@@ -136,6 +137,11 @@ namespace JerqAggregatorNew.Schemas
                 }
 
                 HeaderWithValue value = memberData.BinarySerializer.Decode(buffer, ref offset, ref offsetInLastByte);
+
+                if (value.Header.IsMissing)
+                {
+                    continue;
+                }
 
                 if (memberData.MemberInfo is FieldInfo)
                 {

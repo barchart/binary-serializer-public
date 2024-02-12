@@ -23,6 +23,7 @@ namespace JerqAggregatorNew.Types
                 {
                     offsetInLastByte = 0;
                     offset++;
+                    buffer[offset] = 0;
                 }
             }
             // if byte has space only for one flag
@@ -31,6 +32,7 @@ namespace JerqAggregatorNew.Types
                 buffer[offset] |= (byte)((header.IsMissing ? 1 : 0) << (7 - offsetInLastByte));
                 offsetInLastByte = 0;
                 offset++;
+                buffer[offset] = 0;
                 buffer[offset] |= (byte)((header.IsNull ? 1 : 0) << (7 - offsetInLastByte));
                 offsetInLastByte++;
             }
@@ -39,6 +41,7 @@ namespace JerqAggregatorNew.Types
             {
                 offsetInLastByte = 0;
                 offset++;
+                buffer[offset] = 0;
                 buffer[offset] |= (byte)((header.IsMissing ? 1 : 0) << (7 - offsetInLastByte));
                 offsetInLastByte++;
                 buffer[offset] |= (byte)((header.IsNull ? 1 : 0) << (7 - offsetInLastByte));
@@ -56,6 +59,7 @@ namespace JerqAggregatorNew.Types
                     if (offsetInLastByte % 8 == 0)
                     {
                         offset++;
+                        buffer[offset] = 0;
                         offsetInLastByte = 0;
                     }
 
@@ -74,6 +78,7 @@ namespace JerqAggregatorNew.Types
                         if (offsetInLastByte % 8 == 0)
                         {
                             offset++;
+                            buffer[offset] = 0;
                             offsetInLastByte = 0;
                         }
 
@@ -100,11 +105,14 @@ namespace JerqAggregatorNew.Types
             {
                 buffer[offset] |= (byte)(1 << (7 - offsetInLastByte));
                 offset++;
+                buffer[offset] = 0;
+                offsetInLastByte = 0;
             }
             else
             {
                 offsetInLastByte = 0;
                 offset++;
+                buffer[offset] = 0;
                 buffer[offset] |= (byte)(1 << (7 - offsetInLastByte));
                 offsetInLastByte++;
             }
