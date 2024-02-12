@@ -66,7 +66,45 @@ namespace JerqAggregatorNew.Schemas
         /// <returns>Array of bytes that represents a result of binary serialization</returns>
         public byte[] Serialize(T firstObject, T secondObject)
         {
-            return new byte[1];
+            int offset = 0;
+            int offsetInLastByte = 0;
+
+            foreach (MemberData memberData in _memberData)
+            {
+                if (!memberData.IsIncluded)
+                {
+                    continue;
+                }
+
+                object? firstValue, secondValue;
+
+                if (memberData.MemberInfo is FieldInfo)
+                {
+                    FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
+                    firstValue = fieldInfo.GetValue(firstObject);
+                    secondValue = fieldInfo.GetValue(secondObject);
+                }
+                else
+                {
+                    PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
+                    firstValue = propertyInfo.GetValue(firstObject);
+                    secondValue = propertyInfo.GetValue(secondObject);
+                }
+
+                bool valuesEqual = object.Equals(firstValue, secondValue);
+
+                if (valuesEqual)
+                {
+                    memberData.BinarySerializer.EncodeMissingFlag(_buffer, ref offset, ref offsetInLastByte);
+                }
+                else
+                {
+                    memberData.BinarySerializer.Encode(_buffer, secondValue, ref offset, ref offsetInLastByte);
+                }
+            }
+
+
+            return _buffer.Take(offset + 1).ToArray();
         }
 
         /// <summary>

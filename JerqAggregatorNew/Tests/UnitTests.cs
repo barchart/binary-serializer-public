@@ -1,48 +1,49 @@
-﻿using Xunit;
+﻿﻿using Xunit;
 using JerqAggregatorNew.Schemas;
 using System.Xml.Linq;
 using System.Diagnostics;
 using Xunit.Abstractions;
+using System;
 
 namespace JerqAggregatorNew.Tests
 {
     class Person
     {
-         [BinarySerialize(include: true, key: false)]
-         public int? IntNumber { get; set; }
+        [BinarySerialize(include: true, key: false)]
+        public int? IntNumber { get; set; }
 
-         [BinarySerialize(include: true, key: true)]
-         public bool? BoolNumber { get; set; }
-        
-         [BinarySerialize(include: true, key: false)]
-         public double doubleNumber;
+        [BinarySerialize(include: true, key: true)]
+        public bool? BoolNumber { get; set; }
 
-         [BinarySerialize(include: true, key: false)]
-         public decimal DecimalNumber { get; set; }
+        [BinarySerialize(include: true, key: false)]
+        public double doubleNumber;
 
-         [BinarySerialize(include: true, key: false)]
-         public string? StringName { get; set; }
- 
-         [BinarySerialize(include: true, key: false)]
-         public DateTime? DateTimeDate { get; set; }
+        [BinarySerialize(include: true, key: false)]
+        public decimal DecimalNumber { get; set; }
 
-         [BinarySerialize(include: true, key: false)]
-         public int? IntNumber2 { get; set; }
+        [BinarySerialize(include: true, key: false)]
+        public string? StringName { get; set; }
 
-         [BinarySerialize(include: true, key: true)]
-         public bool? BoolNumber2 { get; set; }
+        [BinarySerialize(include: true, key: false)]
+        public DateTime? DateTimeDate { get; set; }
 
-         [BinarySerialize(include: true, key: false)]
-         public double doubleNumber2;
+        [BinarySerialize(include: true, key: false)]
+        public int? IntNumber2 { get; set; }
 
-         [BinarySerialize(include: true, key: false)]
-         public decimal DecimalNumber2 { get; set; }
+        [BinarySerialize(include: true, key: true)]
+        public bool? BoolNumber2 { get; set; }
 
-         [BinarySerialize(include: true, key: false)]
-         public string? StringName2 { get; set; }
+        [BinarySerialize(include: true, key: false)]
+        public double doubleNumber2;
 
-         [BinarySerialize(include: true, key: false)]
-         public DateTime? DateTimeDate2 { get; set; }
+        [BinarySerialize(include: true, key: false)]
+        public decimal DecimalNumber2 { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public string? StringName2 { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public DateTime? DateTimeDate2 { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public int? IntNumber3 { get; set; }
@@ -98,6 +99,22 @@ namespace JerqAggregatorNew.Tests
         [BinarySerialize(include: true, key: false)]
         public DateTime? DateTimeDate5 { get; set; }
     }
+
+    class Car
+    {
+        [BinarySerialize(include: true, key: false)]
+        public double doubleNumber;
+
+        [BinarySerialize(include: true, key: false)]
+        public decimal DecimalNumber { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public string? StringName { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public DateTime? DateTimeDate { get; set; }
+    }
+
     public class UnitTests
     {
         private readonly ITestOutputHelper output;
@@ -159,7 +176,7 @@ namespace JerqAggregatorNew.Tests
                 };
 
                 Schema<Person> personSchema = SchemaFactory.GetSchema<Person>();
-                
+
                 stopwatch.Start();
 
                 byte[] serializedData = personSchema.Serialize(person);
@@ -195,6 +212,7 @@ namespace JerqAggregatorNew.Tests
                 Assert.Equal(person.DecimalNumber4, deserializedPerson.DecimalNumber4);
                 Assert.Equal(person.doubleNumber4, deserializedPerson.doubleNumber4);
                 Assert.Equal(person.StringName4, deserializedPerson.StringName4);
+                Assert.Equal(person.DateTimeDate4, deserializedPerson.DateTimeDate4);
 
                 Assert.Equal(person.IntNumber5, deserializedPerson.IntNumber5);
                 Assert.Equal(person.BoolNumber5, deserializedPerson.BoolNumber5);
@@ -202,12 +220,69 @@ namespace JerqAggregatorNew.Tests
                 Assert.Equal(person.doubleNumber5, deserializedPerson.doubleNumber5);
                 Assert.Equal(person.StringName5, deserializedPerson.StringName5);
                 Assert.Equal(person.DateTimeDate5, deserializedPerson.DateTimeDate5);
-                Assert.Equal(person.DateTimeDate5, deserializedPerson.DateTimeDate5);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
                 throw;
-            } 
+            }
+        }
+
+        [Fact]
+        public void DifferenceSerializationTest()
+        {
+            try
+            {
+                Stopwatch stopwatch = new Stopwatch();
+                DateTime now = DateTime.UtcNow;
+                long ticks = now.Ticks;
+                long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+                DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+
+                Car carOld = new Car()
+                {
+                    DecimalNumber = (decimal)1.5,
+                    doubleNumber = (double)2.5,
+                    DateTimeDate = roundedDateTime,
+                    StringName = "Luka",
+                };
+
+                Car carNew = new Car()
+                {
+                    DecimalNumber = (decimal)1.5,
+                    doubleNumber = (double)2.5,
+                    DateTimeDate = roundedDateTime,
+                    StringName = "Luka2",
+                };
+
+                Schema<Car> carSchema = SchemaFactory.GetSchema<Car>();
+
+                stopwatch.Start();
+
+                //byte[] serializedData = carSchema.Serialize(carNew);
+                //Car deserializedCar = carSchema.Deserialize(serializedData);
+
+                byte[] serializedDataDifference = carSchema.Serialize(carOld, carNew);
+                Car deserializedCarDifference = carSchema.Deserialize(serializedDataDifference, carNew);
+
+                stopwatch.Stop();
+                output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+                //Assert.Equal(carNew.DecimalNumber, deserializedCar.DecimalNumber);
+                //Assert.Equal(carNew.doubleNumber, deserializedCar.doubleNumber);
+                //Assert.Equal(carNew.StringName, deserializedCar.StringName);
+                //Assert.Equal(carNew.DateTimeDate, deserializedCar.DateTimeDate);
+
+                Assert.Equal(carNew.DecimalNumber, deserializedCarDifference.DecimalNumber);
+                Assert.Equal(carNew.doubleNumber, deserializedCarDifference.doubleNumber);
+                Assert.Equal(carNew.StringName, deserializedCarDifference.StringName);
+                Assert.Equal(carNew.DateTimeDate, deserializedCarDifference.DateTimeDate);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
     }
 }

@@ -49,7 +49,7 @@ namespace JerqAggregatorNew.Types
                     throw new NotSupportedException($"Type {typeof(T)} is not supported.");
             }
         }
-
+     
         public void Encode(byte[] buffer, T? value, ref int offset, ref int offsetInLastByte)
         {
             Header header = new Header();
@@ -108,6 +108,31 @@ namespace JerqAggregatorNew.Types
                         offsetInLastByte++;
                     }
                 }
+            }
+        }
+        public void EncodeMissingFlag(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            if (buffer.Length == 0)
+            {
+                buffer = new byte[1];
+            }
+
+            if (offsetInLastByte < 7)
+            {
+                buffer[offset] |= (byte)(1 << (7 - offsetInLastByte));
+                offsetInLastByte++;
+            }
+            else if (offsetInLastByte == 7)
+            {
+                buffer[offset] |= (byte)(1 << (7 - offsetInLastByte));
+                offsetInLastByte = 0;
+                offset++;
+            }
+            else
+            {
+                offset++;
+                buffer = buffer.Append((byte)(1 << (7 - offsetInLastByte))).ToArray();
+                offsetInLastByte = 1;
             }
         }
 
@@ -217,7 +242,10 @@ namespace JerqAggregatorNew.Types
         {
             Encode(buffer, (T?)value, ref offset, ref offsetInLastByte);
         }
-
+        void ISerializer.EncodeMissingFlag(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            ((IBinaryTypeSerializer<T?>)this).EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
+        }
         HeaderWithValue ISerializer.Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
             return (HeaderWithValue)((IBinaryTypeSerializer<T?>)this).Decode(buffer, ref offset, ref offsetInLastByte);
