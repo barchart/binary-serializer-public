@@ -20,10 +20,7 @@ namespace JerqAggregatorNew.Types
 
                 for (int i = valueBytes.Length - 1; i >= 0; i--)
                 {
-                    for (int j = 7; j >= 0; j--)
-                    {
-                        buffer.WriteBit((byte)((valueBytes[i] >> j) & 1), ref offset, ref offsetInLastByte);
-                    }
+                    buffer.WriteByte(valueBytes[i], ref offset, ref offsetInLastByte);
                 }
             }
         }
@@ -50,13 +47,7 @@ namespace JerqAggregatorNew.Types
 
             for (int i = size - 1; i >= 0; i--)
             {
-                byte byteToAdd = 0;
-                for (int j = 7; j >= 0; j--)
-                {
-                    byte bit = buffer.ReadBit(ref offset, ref offsetInLastByte);
-                    byteToAdd |= (byte)(bit << j);
-                }
-                valueBytes[i] = byteToAdd;
+                valueBytes[i] = buffer.ReadByte(ref offset, ref offsetInLastByte);
             }
 
             return new HeaderWithValue(header, DecodeBytes(valueBytes, offset));         

@@ -103,7 +103,7 @@ namespace JerqAggregatorNew.Schemas
                     newValue = propertyInfo.GetValue(newObject);
                 }
 
-                bool valuesEqual = object.Equals(oldValue, newValue);
+                bool valuesEqual = Equals(oldValue, newValue);
 
                 if (valuesEqual)
                 {
@@ -203,6 +203,26 @@ namespace JerqAggregatorNew.Schemas
             }
 
             return bit;
+        }
+
+        public static void WriteByte(this byte[] buffer, byte valueByte, ref int offset, ref int offsetInLastByte)
+        {
+            for (int j = 7; j >= 0; j--)
+            {
+                buffer.WriteBit((byte)((valueByte >> j) & 1), ref offset, ref offsetInLastByte);
+            }
+        }
+        public static byte ReadByte(this byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            byte byteToAdd = 0;
+            
+            for (int j = 7; j >= 0; j--)
+            {
+                byte bit = buffer.ReadBit(ref offset, ref offsetInLastByte);
+                byteToAdd |= (byte)(bit << j);
+            }
+
+            return byteToAdd;
         }
     }
 }
