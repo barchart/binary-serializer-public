@@ -32,6 +32,12 @@ namespace JerqAggregatorNew.Schemas
             return Serialize(schemaObject, _buffer);
         }
 
+        /// <summary>
+        ///     Serialize an object of generic type
+        /// </summary>
+        /// <param name="schemaObject">Object or structure to be serialized</param>
+        /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization</param>
+        /// <returns>Array of bytes that represents a result of binary serialization</returns>
         public byte[] Serialize(T schemaObject, byte[] buffer)
         {
             int offset = 0;
@@ -75,6 +81,13 @@ namespace JerqAggregatorNew.Schemas
             return Serialize(oldObject, newObject, _buffer);
         }
 
+        /// <summary>
+        ///     Serialize only a difference between the new and the old object
+        /// </summary>
+        /// <param name="oldObject">Old object of generic type</param>
+        /// <param name="newObject">New object of generic type</param>
+        /// <param name="buffer"></param>
+        /// <returns>Array of bytes that represents a result of binary serialization</returns>
         public byte[] Serialize(T oldObject, T newObject, byte[] buffer)
         {
             int offset = 0;
