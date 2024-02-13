@@ -1,5 +1,4 @@
 ﻿using JerqAggregatorNew.Schemas;
-using System.Runtime.CompilerServices;
 
 namespace JerqAggregatorNew.Types
 {
