@@ -261,7 +261,7 @@ namespace JerqAggregatorNew.Tests
 
                 for (int i = 0; i < 1000000; i++)
                 {
-                    byte[] serializedData = carSchema.Serialize(carNew);
+                    byte[] serializedData = carSchema.Serialize(carOld);
                     Car deserializedCar = carSchema.Deserialize(serializedData);
 
                     byte[] serializedDataDifference = carSchema.Serialize(carOld, carNew);

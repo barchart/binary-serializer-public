@@ -5,9 +5,14 @@
         public override int Size => sizeof(decimal);
         protected override byte[] ConvertToByteArray(decimal value)
         {
-            return Decimal.GetBits(value)
-                        .SelectMany(BitConverter.GetBytes)
-                        .ToArray();
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(value);
+                    return(stream.ToArray());
+                }
+            }
         }
 
         public override int GetLengthInBytes(decimal? value)
@@ -17,9 +22,13 @@
 
         protected override decimal DecodeBytes(byte[] bytes, int offset)
         {
-            int[] bits = new int[4];
-            Buffer.BlockCopy(bytes, 0, bits, 0, sizeof(decimal));
-            return new Decimal(bits);
+            using (MemoryStream stream = new MemoryStream(bytes))
+            {
+                using (BinaryReader reader = new BinaryReader(stream))
+                {
+                    return(reader.ReadDecimal());
+                }
+            }
         }
     }
 }

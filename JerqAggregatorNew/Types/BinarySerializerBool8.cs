@@ -15,7 +15,7 @@
 
         protected override bool DecodeBytes(byte[] bytes, int offset)
         {
-            return (bytes[offset] & 0x01) != 0;
+            return (bytes[0] & 0x01) != 0;
         }
     }
 }
