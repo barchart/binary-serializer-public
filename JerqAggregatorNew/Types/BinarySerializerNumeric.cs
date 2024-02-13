@@ -22,15 +22,7 @@ namespace JerqAggregatorNew.Types
                 {
                     for (int j = 7; j >= 0; j--)
                     {
-                        if (offsetInLastByte % 8 == 0)
-                        {
-                            offset++;
-                            buffer[offset] = 0;
-                            offsetInLastByte = 0;
-                        }
-
-                        buffer[offset] |= (byte)(((valueBytes[i] >> j) & 1) << ((7 - offsetInLastByte) % 8));
-                        offsetInLastByte++;
+                        buffer.WriteBit((byte)((valueBytes[i] >> j) & 1), ref offset, ref offsetInLastByte);
                     }
                 }
             }
@@ -42,30 +34,14 @@ namespace JerqAggregatorNew.Types
             byte[] valueBytes = new byte[size];
 
             Header header = new Header();
-
-            if (offsetInLastByte == 8)
-            {
-                offsetInLastByte = 0;
-                offset++;
-            }
-
-            header.IsMissing = ((buffer[offset] >> (7 - offsetInLastByte)) & 1) == 1;
-            offsetInLastByte++;
-
-            if (offsetInLastByte == 8)
-            {
-                offsetInLastByte = 0;
-                offset++;
-            }
+            header.IsMissing = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
 
             if (header.IsMissing)
             {
                 return new HeaderWithValue(header, null);
             }
 
-            header.IsNull = ((buffer[offset] >> (7 - offsetInLastByte)) & 1) == 1;
-
-            offsetInLastByte++;
+            header.IsNull = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
 
             if (header.IsNull)
             {
@@ -77,16 +53,8 @@ namespace JerqAggregatorNew.Types
                 byte byteToAdd = 0;
                 for (int j = 7; j >= 0; j--)
                 {
-                    if (offsetInLastByte % 8 == 0)
-                    {
-                        offset++;
-                        offsetInLastByte = 0;
-                    }
-
-                    int bit = (buffer[offset] >> (7 - offsetInLastByte)) & 1;
+                    byte bit = buffer.ReadBit(ref offset, ref offsetInLastByte);
                     byteToAdd |= (byte)(bit << j);
-                    offsetInLastByte++;
-                    
                 }
                 valueBytes[i] = byteToAdd;
             }
