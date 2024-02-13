@@ -2,7 +2,7 @@
 {
     public class BinarySerializerDecimal : BinarySerializerNumeric<decimal>
     {
-        public override int Size => sizeof(decimal);
+        protected override int Size => sizeof(decimal);
         protected override byte[] ConvertToByteArray(decimal value)
         {
             return Decimal.GetBits(value)
@@ -10,7 +10,7 @@
                         .ToArray();
         }
 
-        public override int GetLengthInBytes(decimal? value)
+        protected override int GetLengthInBytes(decimal? value)
         {
             return Size;
         }

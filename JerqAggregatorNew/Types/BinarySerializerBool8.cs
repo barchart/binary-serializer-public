@@ -2,13 +2,13 @@
 {
     public class BinarySerializerBool8 : BinarySerializerNumeric<bool>
     {
-        public override int Size => sizeof(bool);
+        protected override int Size => sizeof(bool);
         protected override byte[] ConvertToByteArray(bool value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public override int GetLengthInBytes(bool? value)
+        protected override int GetLengthInBytes(bool? value)
         {
             return Size;
         }

@@ -2,7 +2,7 @@
 {
     public class BinarySerializerDateTime : BinarySerializerNumeric<DateTime>
     {
-        public override int Size => sizeof(long);
+        protected override int Size => sizeof(long);
         protected override byte[] ConvertToByteArray(DateTime value)
         {
             DateTime dateTimeValue = (DateTime)(object)value;
@@ -11,7 +11,7 @@
             return BitConverter.GetBytes(unixTime);
         }
 
-        public override int GetLengthInBytes(DateTime? value)
+        protected override int GetLengthInBytes(DateTime? value)
         {
             return Size;
         }

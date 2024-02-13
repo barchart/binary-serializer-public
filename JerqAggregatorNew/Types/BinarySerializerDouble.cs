@@ -2,13 +2,13 @@
 {
     public class BinarySerializerDouble : BinarySerializerNumeric<double>
     {
-        public override int Size => sizeof(double);
+        protected override int Size => sizeof(double);
         protected override byte[] ConvertToByteArray(double value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public override int GetLengthInBytes(double? value)
+        protected override int GetLengthInBytes(double? value)
         {
             return Size;
         }

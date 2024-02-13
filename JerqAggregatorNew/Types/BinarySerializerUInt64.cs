@@ -2,13 +2,13 @@
 {
     public class BinarySerializerUInt64 : BinarySerializerNumeric<ulong>
     {
-        public override int Size => sizeof(ulong);
+        protected override int Size => sizeof(ulong);
         protected override byte[] ConvertToByteArray(ulong value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public override int GetLengthInBytes(ulong? value)
+        protected override int GetLengthInBytes(ulong? value)
         {
             return Size;
         }

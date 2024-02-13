@@ -2,13 +2,13 @@
 {
     public class BinarySerializerChar16 : BinarySerializerNumeric<char>
     {
-        public override int Size => sizeof(char);
+        protected override int Size => sizeof(char);
         protected override byte[] ConvertToByteArray(char value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public override int GetLengthInBytes(char? value)
+        protected override int GetLengthInBytes(char? value)
         {
             return Size;
         }
