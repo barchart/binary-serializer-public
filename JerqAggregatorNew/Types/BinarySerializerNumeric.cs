@@ -5,7 +5,7 @@ namespace JerqAggregatorNew.Types
 {
     public abstract class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T?> where T : struct, IConvertible
     {
-        protected abstract int Size { get; }
+        public abstract int Size { get; }
         public void Encode(byte[] buffer, T? value, ref int offset, ref int offsetInLastByte)
         {
             Header header = new Header();
@@ -96,7 +96,7 @@ namespace JerqAggregatorNew.Types
         }
         protected abstract byte[] ConvertToByteArray(T value);
         protected abstract T DecodeBytes(byte[] bytes, int offset);
-        protected abstract int GetLengthInBytes(T? value);
+        public abstract int GetLengthInBytes(T? value);
 
         #region ISerializer implementation
         void ISerializer.Encode(byte[] buffer, object? value, ref int offset, ref int offsetInLastByte)
