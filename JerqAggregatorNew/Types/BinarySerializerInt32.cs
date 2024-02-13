@@ -2,7 +2,7 @@
 {
     public class BinarySerializerInt32 : BinarySerializerNumeric<int>
     {
-        public override int Size => sizeof(int); 
+        public override int Size => sizeof(int);
         protected override byte[] ConvertToByteArray(int value)
         {
             return BitConverter.GetBytes(value);

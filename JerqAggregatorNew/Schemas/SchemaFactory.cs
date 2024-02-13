@@ -7,7 +7,7 @@ namespace JerqAggregatorNew.Schemas
 {
     public static class SchemaFactory
     {
-     
+
         private static readonly Dictionary<Type, ISerializer> allSerializers = new Dictionary<Type, ISerializer>();
         static SchemaFactory()
         {
@@ -60,9 +60,9 @@ namespace JerqAggregatorNew.Schemas
             {
                 Type memberType;
 
-                if(memberInfo is FieldInfo)
+                if (memberInfo is FieldInfo)
                 {
-                    memberType = ((FieldInfo) memberInfo).FieldType;
+                    memberType = ((FieldInfo)memberInfo).FieldType;
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace JerqAggregatorNew.Schemas
                 }
 
                 BinarySerializeAttribute? attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
-                if(attribute == null) { continue; }
+                if (attribute == null) { continue; }
 
                 bool include = attribute.Include;
                 bool key = attribute.Key;
@@ -78,8 +78,8 @@ namespace JerqAggregatorNew.Schemas
                 ISerializer? serializer;
                 allSerializers.TryGetValue(memberType, out serializer);
 
-                if (serializer == null) { continue; }    
-    
+                if (serializer == null) { continue; }
+
                 MemberData newMemberData = new MemberData()
                 {
                     Type = memberType,
@@ -91,7 +91,7 @@ namespace JerqAggregatorNew.Schemas
                 };
                 schema.AddMemberData(newMemberData);
             }
-         
+
             return schema;
         }
     }

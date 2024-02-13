@@ -60,7 +60,7 @@ namespace JerqAggregatorNew.Types
 
             for (int i = size - 1; i >= 0; i--)
             {
-                valueBytes[i] = buffer.ReadByte(ref offset, ref offsetInLastByte);            
+                valueBytes[i] = buffer.ReadByte(ref offset, ref offsetInLastByte);
             }
 
             string decodedString = Encoding.UTF8.GetString(valueBytes);

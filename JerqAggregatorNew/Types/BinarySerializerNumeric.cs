@@ -50,7 +50,7 @@ namespace JerqAggregatorNew.Types
                 valueBytes[i] = buffer.ReadByte(ref offset, ref offsetInLastByte);
             }
 
-            return new HeaderWithValue(header, DecodeBytes(valueBytes, offset));         
+            return new HeaderWithValue(header, DecodeBytes(valueBytes, offset));
         }
         protected abstract byte[] ConvertToByteArray(T value);
         protected abstract T DecodeBytes(byte[] bytes, int offset);

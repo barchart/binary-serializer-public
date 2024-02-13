@@ -10,7 +10,7 @@
                 using (BinaryWriter writer = new BinaryWriter(stream))
                 {
                     writer.Write(value);
-                    return(stream.ToArray());
+                    return (stream.ToArray());
                 }
             }
         }
@@ -26,7 +26,7 @@
             {
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    return(reader.ReadDecimal());
+                    return (reader.ReadDecimal());
                 }
             }
         }

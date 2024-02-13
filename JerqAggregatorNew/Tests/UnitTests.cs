@@ -1,4 +1,4 @@
-﻿﻿using Xunit;
+﻿using Xunit;
 using JerqAggregatorNew.Schemas;
 using System.Xml.Linq;
 using System.Diagnostics;

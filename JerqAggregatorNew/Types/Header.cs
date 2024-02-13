@@ -14,9 +14,11 @@
 
         private byte? _stringLength;
 
-        public byte? StringLength { 
+        public byte? StringLength
+        {
 
-            get {
+            get
+            {
                 return _stringLength;
             }
 
@@ -33,15 +35,16 @@
         /// <summary>
         ///     returns header byte in specified format based on missing/null bits and string length bits
         /// </summary>
-        public byte HeaderInformation {
+        public byte HeaderInformation
+        {
             get
             {
-                return (byte)((IsMissing? 0x80: 0x00) | (IsNull? 0x40: 0x00) | ((StringLength?? 0) & 0x3F));
+                return (byte)((IsMissing ? 0x80 : 0x00) | (IsNull ? 0x40 : 0x00) | ((StringLength ?? 0) & 0x3F));
             }
 
             set
             {
-                IsMissing = (value & 0x80 ) != 0;
+                IsMissing = (value & 0x80) != 0;
                 IsNull = (value & 0x40) != 0;
                 StringLength = (byte)(value & 0x3F);
             }
