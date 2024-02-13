@@ -5,8 +5,7 @@
         public override int Size => sizeof(long);
         protected override byte[] ConvertToByteArray(DateTime value)
         {
-            DateTime dateTimeValue = value;
-            TimeSpan unixTimeSpan = dateTimeValue - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            TimeSpan unixTimeSpan = value - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             long unixTime = (long)unixTimeSpan.TotalMilliseconds;
             return BitConverter.GetBytes(unixTime);
         }
