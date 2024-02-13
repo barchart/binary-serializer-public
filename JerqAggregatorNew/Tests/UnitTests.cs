@@ -4,6 +4,9 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using Xunit.Abstractions;
 using System;
+using System.Reflection;
+using System.Linq.Expressions;
+using System.Net.WebSockets;
 
 namespace JerqAggregatorNew.Tests
 {
@@ -288,5 +291,127 @@ namespace JerqAggregatorNew.Tests
                 throw;
             }
         }
+
+        [Fact]
+        public void TestDirect()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            DateTime now = DateTime.UtcNow;
+            long ticks = now.Ticks;
+            long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            stopwatch.Start();
+
+            Car carOld = new Car()
+            {
+                DecimalNumber = (decimal)1.5,
+                doubleNumber = (double)2.5,
+                DateTimeDate = roundedDateTime,
+                StringName = "Luka",
+            };
+
+            for (long i = 0; i < int.MaxValue / 2; i++)
+            {
+                carOld.DecimalNumber = (decimal)22.5;
+                var x = carOld.DecimalNumber;
+                //double a = carOld.doubleNumber;
+            }
+            stopwatch.Stop();
+            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+        }
+
+        [Fact]
+        public void TestReflection()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            DateTime now = DateTime.UtcNow;
+            long ticks = now.Ticks;
+            long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            stopwatch.Start();
+
+            Car carOld = new Car()
+            {
+                DecimalNumber = (decimal)1.5,
+                doubleNumber = (double)2.5,
+                DateTimeDate = roundedDateTime,
+                StringName = "Luka",
+            };
+
+            Type carType = typeof(Car);
+            PropertyInfo decimalNumberProperty = carType.GetProperty("DecimalNumber");
+            FieldInfo doubleNumberProperty = carType.GetField("doubleNumber");
+
+            for (long i = 0; i < int.MaxValue / 2; i++)
+            {
+                decimalNumberProperty.SetValue(carOld, (decimal)22.5);
+                double a = (double)doubleNumberProperty.GetValue(carOld);
+            }
+            stopwatch.Stop();
+            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+        }
+
+        [Fact]
+        public void TestLambda()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            DateTime now = DateTime.UtcNow;
+            long ticks = now.Ticks;
+            long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            stopwatch.Start();
+
+            Car carOld = new Car()
+            {
+                DecimalNumber = (decimal)1.5,
+                doubleNumber = (double)2.5,
+                DateTimeDate = roundedDateTime,
+                StringName = "Luka",
+            };
+
+            var getter = (Car carold) => carold.DecimalNumber;
+            var setter = (Car carold, decimal value) => carold.DecimalNumber = value;
+
+            for (long i = 0; i < int.MaxValue / 2; i++)
+            {
+                getter(carOld);
+                setter(carOld, (decimal)22.5);
+            }
+            stopwatch.Stop();
+            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+        }
+
+        [Fact]
+        public void TestDelegate()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            DateTime now = DateTime.UtcNow;
+            long ticks = now.Ticks;
+            long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            stopwatch.Start();
+
+            Car carOld = new Car()
+            {
+                DecimalNumber = (decimal)1.5,
+                doubleNumber = (double)2.5,
+                DateTimeDate = roundedDateTime,
+                StringName = "Luka",
+            };
+
+            var carType = carOld.GetType();
+            var getMethod = carType.GetProperty("DecimalNumber")!.GetGetMethod()!.CreateDelegate<Func<Car, decimal>>()!;
+            var setMethod = carType.GetProperty("DecimalNumber")!.GetSetMethod()!.CreateDelegate<Action<Car, decimal>>()!;
+
+            for (long i = 0; i < int.MaxValue / 2; i++)
+            {
+                setMethod(carOld, (decimal)22.5);
+                var x = getMethod(carOld);
+            }
+
+            stopwatch.Stop();
+            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+        }
+
     }
 }
