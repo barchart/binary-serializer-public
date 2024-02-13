@@ -205,4 +205,43 @@ namespace JerqAggregatorNew.Schemas
             return bit;
         }
     }
+
+    public static  class CompareHelper
+    {
+        public static bool DeepCompare(this object obj, object another)
+        {
+            if (ReferenceEquals(obj, another)) return true;
+            if ((obj == null) || (another == null)) return false;
+            if (obj.GetType() != another.GetType()) return false;
+
+            var result = true;
+
+            foreach (var property in obj.GetType().GetProperties())
+            {
+                var objValue = property.GetValue(obj);
+                var anotherValue = property.GetValue(another);
+                if (!objValue.Equals(anotherValue)) result = false;
+            }
+
+            return result;
+        }
+
+        public static bool IsEqualToObject(this object obj, object another)
+        {
+            if (ReferenceEquals(obj, another)) return true;
+            if ((obj == null) || (another == null)) return false;
+            if (obj.GetType() != another.GetType()) return false;
+
+            if (!obj.GetType().IsClass) return obj.Equals(another);
+
+            var result = true;
+            foreach (var property in obj.GetType().GetProperties())
+            {
+                var objValue = property.GetValue(obj);
+                var anotherValue = property.GetValue(another);
+                if (!objValue.DeepCompare(anotherValue)) result = false;
+            }
+            return result;
+        }
+    }
 }
