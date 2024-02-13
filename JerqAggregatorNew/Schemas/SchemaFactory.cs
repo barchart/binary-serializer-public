@@ -12,35 +12,34 @@ namespace JerqAggregatorNew.Schemas
         static SchemaFactory()
         {
             allSerializers.Add(typeof(String), new BinarySerializerString());
-
-            allSerializers.Add(typeof(DateTime?), new BinarySerializerNumeric<DateTime>());
-            allSerializers.Add(typeof(DateTime), allSerializers[typeof(DateTime?)]);
-            allSerializers.Add(typeof(Decimal?), new BinarySerializerNumeric<decimal>());
-            allSerializers.Add(typeof(Decimal), allSerializers[typeof(Decimal?)]);
-            allSerializers.Add(typeof(Boolean?), new BinarySerializerNumeric<bool>());
-            allSerializers.Add(typeof(Boolean), allSerializers[typeof(Boolean?)]);
-            allSerializers.Add(typeof(Int32?), new BinarySerializerNumeric<int>());
-            allSerializers.Add(typeof(Int32), allSerializers[typeof(Int32?)]);
-            allSerializers.Add(typeof(Int16?), new BinarySerializerNumeric<short>());
-            allSerializers.Add(typeof(Int16), allSerializers[typeof(Int16?)]);
-            allSerializers.Add(typeof(SByte?), new BinarySerializerNumeric<sbyte>());
-            allSerializers.Add(typeof(SByte), allSerializers[typeof(SByte?)]);
-            allSerializers.Add(typeof(Byte?), new BinarySerializerNumeric<byte>());
-            allSerializers.Add(typeof(Byte), allSerializers[typeof(Byte?)]);
-            allSerializers.Add(typeof(Int64?), new BinarySerializerNumeric<long>());
-            allSerializers.Add(typeof(Int64), allSerializers[typeof(Int64?)]);
-            allSerializers.Add(typeof(UInt16?), new BinarySerializerNumeric<ushort>());
-            allSerializers.Add(typeof(UInt16), allSerializers[typeof(UInt16?)]);
-            allSerializers.Add(typeof(UInt32?), new BinarySerializerNumeric<uint>());
-            allSerializers.Add(typeof(UInt32), allSerializers[typeof(UInt32?)]);
-            allSerializers.Add(typeof(UInt64?), new BinarySerializerNumeric<ulong>());
-            allSerializers.Add(typeof(UInt64), allSerializers[typeof(UInt64?)]);
-            allSerializers.Add(typeof(Single?), new BinarySerializerNumeric<float>());
-            allSerializers.Add(typeof(Single), allSerializers[typeof(Single?)]);
-            allSerializers.Add(typeof(Double?), new BinarySerializerNumeric<double>());
-            allSerializers.Add(typeof(Double), allSerializers[typeof(Double?)]);
-            allSerializers.Add(typeof(Char?), new BinarySerializerNumeric<char>());
-            allSerializers.Add(typeof(Char), allSerializers[typeof(Char?)]);
+            allSerializers.Add(typeof(Int32), new BinarySerializerInt32());
+            allSerializers.Add(typeof(Int32?), new BinarySerializerInt32());
+            allSerializers.Add(typeof(Int16), new BinarySerializerInt16());
+            allSerializers.Add(typeof(Int16?), new BinarySerializerInt16());
+            allSerializers.Add(typeof(Char), new BinarySerializerChar16());
+            allSerializers.Add(typeof(Char?), new BinarySerializerChar16());
+            allSerializers.Add(typeof(SByte), new BinarySerializerSInt8());
+            allSerializers.Add(typeof(SByte?), new BinarySerializerSInt8());
+            allSerializers.Add(typeof(Byte), new BinarySerializerInt8());
+            allSerializers.Add(typeof(Byte?), new BinarySerializerInt8());
+            allSerializers.Add(typeof(Boolean), new BinarySerializerBool8());
+            allSerializers.Add(typeof(Boolean?), new BinarySerializerBool8());
+            allSerializers.Add(typeof(Int64), new BinarySerializerInt64());
+            allSerializers.Add(typeof(Int64?), new BinarySerializerInt64());
+            allSerializers.Add(typeof(UInt16), new BinarySerializerUInt16());
+            allSerializers.Add(typeof(UInt16?), new BinarySerializerUInt16());
+            allSerializers.Add(typeof(UInt32), new BinarySerializerUInt32());
+            allSerializers.Add(typeof(UInt32?), new BinarySerializerUInt32());
+            allSerializers.Add(typeof(UInt64), new BinarySerializerUInt64());
+            allSerializers.Add(typeof(UInt64?), new BinarySerializerUInt64());
+            allSerializers.Add(typeof(Single), new BinarySerializerFloat());
+            allSerializers.Add(typeof(Single?), new BinarySerializerFloat());
+            allSerializers.Add(typeof(Double), new BinarySerializerDouble());
+            allSerializers.Add(typeof(Double?), new BinarySerializerDouble());
+            allSerializers.Add(typeof(Decimal), new BinarySerializerDecimal());
+            allSerializers.Add(typeof(Decimal?), new BinarySerializerDecimal());
+            allSerializers.Add(typeof(DateTime), new BinarySerializerDateTime());
+            allSerializers.Add(typeof(DateTime?), new BinarySerializerDateTime());
         }
 
         /// <summary>
