@@ -143,36 +143,36 @@ namespace JerqAggregatorNew.Tests
                 Person person = new Person()
                 {
                     IntNumber = 1,
-                    DecimalNumber = (decimal)1.5,
-                    doubleNumber = (double)2.5,
+                    DecimalNumber = 1.5m,
+                    doubleNumber = 2.5,
                     BoolNumber = true,
                     DateTimeDate = roundedDateTime,
                     StringName = "Luka",
 
                     IntNumber2 = 1,
-                    DecimalNumber2 = (decimal)1.5,
-                    doubleNumber2 = (double)2.5,
+                    DecimalNumber2 = 1.5m,
+                    doubleNumber2 = 2.5,
                     BoolNumber2 = true,
                     DateTimeDate2 = roundedDateTime,
                     StringName2 = "Luka",
 
                     IntNumber3 = 1,
-                    DecimalNumber3 = (decimal)1.5,
-                    doubleNumber3 = (double)2.5,
+                    DecimalNumber3 = 1.5m,
+                    doubleNumber3 = 2.5,
                     BoolNumber3 = true,
                     DateTimeDate3 = roundedDateTime,
                     StringName3 = "Luka",
 
                     IntNumber4 = 1,
-                    DecimalNumber4 = (decimal)1.5,
-                    doubleNumber4 = (double)2.5,
+                    DecimalNumber4 = 1.5m,
+                    doubleNumber4 = 2.5,
                     BoolNumber4 = true,
                     DateTimeDate4 = roundedDateTime,
                     StringName4 = "Luka",
 
                     IntNumber5 = 1,
-                    DecimalNumber5 = (decimal)1.5,
-                    doubleNumber5 = (double)2.5,
+                    DecimalNumber5 = 1.5m,
+                    doubleNumber5 = 2.5,
                     BoolNumber5 = true,
                     DateTimeDate5 = roundedDateTime,
                     StringName5 = "Luka"
@@ -244,16 +244,16 @@ namespace JerqAggregatorNew.Tests
 
                 Car carOld = new Car()
                 {
-                    DecimalNumber = (decimal)1.5,
-                    doubleNumber = (double)2.5,
+                    DecimalNumber = 1.5m,
+                    doubleNumber = 2.5,
                     DateTimeDate = roundedDateTime,
                     StringName = "Luka",
                 };
 
                 Car carNew = new Car()
                 {
-                    DecimalNumber = (decimal)1.5,
-                    doubleNumber = (double)2.5,
+                    DecimalNumber = 1.5m,
+                    doubleNumber = 2.5,
                     DateTimeDate = roundedDateTime,
                     StringName = "Luka2",
                 };
@@ -262,7 +262,7 @@ namespace JerqAggregatorNew.Tests
 
                 stopwatch.Start();
 
-                for (int i = 0; i < 1000000; i++)
+                for (int i = 0; i < 10000000; i++)
                 {
                     byte[] serializedData = carSchema.Serialize(carOld);
                     Car deserializedCar = carSchema.Deserialize(serializedData);
@@ -304,17 +304,16 @@ namespace JerqAggregatorNew.Tests
 
             Car carOld = new Car()
             {
-                DecimalNumber = (decimal)1.5,
-                doubleNumber = (double)2.5,
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
                 DateTimeDate = roundedDateTime,
                 StringName = "Luka",
             };
 
             for (long i = 0; i < int.MaxValue / 2; i++)
             {
-                carOld.DecimalNumber = (decimal)22.5;
+                carOld.DecimalNumber = 22.5m;
                 var x = carOld.DecimalNumber;
-                //double a = carOld.doubleNumber;
             }
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
@@ -332,8 +331,8 @@ namespace JerqAggregatorNew.Tests
 
             Car carOld = new Car()
             {
-                DecimalNumber = (decimal)1.5,
-                doubleNumber = (double)2.5,
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
                 DateTimeDate = roundedDateTime,
                 StringName = "Luka",
             };
@@ -344,8 +343,8 @@ namespace JerqAggregatorNew.Tests
 
             for (long i = 0; i < int.MaxValue / 2; i++)
             {
-                decimalNumberProperty.SetValue(carOld, (decimal)22.5);
-                double a = (double)doubleNumberProperty.GetValue(carOld);
+                decimalNumberProperty.SetValue(carOld, 22.5m);
+                double a = (double) doubleNumberProperty.GetValue(carOld);
             }
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
@@ -363,8 +362,8 @@ namespace JerqAggregatorNew.Tests
 
             Car carOld = new Car()
             {
-                DecimalNumber = (decimal)1.5,
-                doubleNumber = (double)2.5,
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
                 DateTimeDate = roundedDateTime,
                 StringName = "Luka",
             };
@@ -375,7 +374,7 @@ namespace JerqAggregatorNew.Tests
             for (long i = 0; i < int.MaxValue / 2; i++)
             {
                 getter(carOld);
-                setter(carOld, (decimal)22.5);
+                setter(carOld, 22.5m);
             }
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
@@ -393,8 +392,8 @@ namespace JerqAggregatorNew.Tests
 
             Car carOld = new Car()
             {
-                DecimalNumber = (decimal)1.5,
-                doubleNumber = (double)2.5,
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5d,
                 DateTimeDate = roundedDateTime,
                 StringName = "Luka",
             };
@@ -405,13 +404,12 @@ namespace JerqAggregatorNew.Tests
 
             for (long i = 0; i < int.MaxValue / 2; i++)
             {
-                setMethod(carOld, (decimal)22.5);
+                setMethod(carOld, 22.5m);
                 var x = getMethod(carOld);
             }
 
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
-
     }
 }

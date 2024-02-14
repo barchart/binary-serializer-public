@@ -1,7 +1,9 @@
-﻿
-
-using JerqAggregatorNew.Types;
+﻿using JerqAggregatorNew.Types;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics.Metrics;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace JerqAggregatorNew.Schemas
 {
@@ -64,6 +66,7 @@ namespace JerqAggregatorNew.Schemas
                 {
                     memberType = ((FieldInfo)memberInfo).FieldType;
                 }
+
                 else
                 {
                     memberType = ((PropertyInfo)memberInfo).PropertyType;
@@ -80,7 +83,7 @@ namespace JerqAggregatorNew.Schemas
 
                 if (serializer == null) { continue; }
 
-                MemberData newMemberData = new MemberData()
+                MemberData<T> newMemberData = new MemberData<T>()
                 {
                     Type = memberType,
                     Name = memberInfo.Name,
@@ -89,10 +92,50 @@ namespace JerqAggregatorNew.Schemas
                     BinarySerializer = serializer,
                     MemberInfo = memberInfo
                 };
+
+                if (memberInfo is FieldInfo)
+                {
+                    var getter = GenerateGetter<T>(memberInfo);
+                    var setter = GenerateSetter<T>(memberInfo);
+                    newMemberData.GetDelegate = getter;
+                    newMemberData.SetDelegate = setter;
+                }
+                else
+                {
+                    var getter = GenerateGetter<T>(memberInfo);
+                    var setter = GenerateSetter<T>(memberInfo);
+                    newMemberData.GetDelegate = getter;
+                    newMemberData.SetDelegate = setter;
+                }
+
                 schema.AddMemberData(newMemberData);
             }
 
             return schema;
+        }
+        public static Action<T, object> GenerateSetter<T>(MemberInfo memberInfo)
+        {
+            var instance = Expression.Parameter(typeof(T), "instance");
+            var value = Expression.Parameter(typeof(object), "value");
+            var member = Expression.MakeMemberAccess(instance, memberInfo);
+            var memberType = memberInfo switch
+            {
+                PropertyInfo propertyInfo => propertyInfo.PropertyType,
+                FieldInfo fieldInfo => fieldInfo.FieldType,
+            };
+            var convert = Expression.Convert(value, memberType);
+            var assign = Expression.Assign(member, convert);
+
+            return Expression.Lambda<Action<T, object>>(assign, instance, value).Compile();
+        }
+
+        public static Func<T, object> GenerateGetter<T>(MemberInfo memberInfo)
+        {
+            var instance = Expression.Parameter(typeof(T), "instance");
+            var member = Expression.MakeMemberAccess(instance, memberInfo);
+            var convert = Expression.Convert(member, typeof(object));
+
+            return Expression.Lambda<Func<T, object>>(convert, instance).Compile();
         }
     }
 }

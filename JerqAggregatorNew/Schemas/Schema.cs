@@ -1,4 +1,5 @@
 ﻿using JerqAggregatorNew.Types;
+using Newtonsoft.Json.Linq;
 using System.Reflection;
 
 namespace JerqAggregatorNew.Schemas
@@ -10,14 +11,13 @@ namespace JerqAggregatorNew.Schemas
         [ThreadStatic]
         static byte[] _buffer = new byte[BUFFER_SIZE];
 
-        private List<MemberData> _memberData;
-
+        private List<MemberData<T>> _memberData;
         public Schema()
         {
-            _memberData = new List<MemberData>();
+            _memberData = new List<MemberData<T>>();
         }
 
-        public void AddMemberData(MemberData memberData)
+        public void AddMemberData(MemberData<T> memberData)
         {
             _memberData.Add(memberData);
         }
@@ -44,7 +44,7 @@ namespace JerqAggregatorNew.Schemas
             int offsetInLastByte = 0;
             buffer[offset] = 0;
 
-            foreach (MemberData memberData in _memberData)
+            foreach (MemberData<T> memberData in _memberData)
             {
                 if (!memberData.IsIncluded)
                 {
@@ -56,12 +56,14 @@ namespace JerqAggregatorNew.Schemas
                 if (memberData.MemberInfo is FieldInfo)
                 {
                     FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                    value = fieldInfo.GetValue(schemaObject);
+                    value = memberData.GetDelegate(schemaObject);
+                    //value = fieldInfo.GetValue(schemaObject);
                 }
                 else
                 {
                     PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                    value = propertyInfo.GetValue(schemaObject);
+                    value = memberData.GetDelegate(schemaObject);
+                    //value = propertyInfo.GetValue(schemaObject);
                 }
 
                 memberData.BinarySerializer.Encode(buffer, value, ref offset, ref offsetInLastByte);
@@ -94,7 +96,7 @@ namespace JerqAggregatorNew.Schemas
             int offsetInLastByte = 0;
             buffer[offset] = 0;
 
-            foreach (MemberData memberData in _memberData)
+            foreach (MemberData<T> memberData in _memberData)
             {
                 if (!memberData.IsIncluded)
                 {
@@ -106,14 +108,18 @@ namespace JerqAggregatorNew.Schemas
                 if (memberData.MemberInfo is FieldInfo)
                 {
                     FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
-                    oldValue = fieldInfo.GetValue(oldObject);
-                    newValue = fieldInfo.GetValue(newObject);
+                    oldValue = memberData.GetDelegate(oldObject);
+                    newValue = memberData.GetDelegate(newObject);
+                    //oldValue = fieldInfo.GetValue(oldObject);
+                    //newValue = fieldInfo.GetValue(newObject);
                 }
                 else
                 {
                     PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
-                    oldValue = propertyInfo.GetValue(oldObject);
-                    newValue = propertyInfo.GetValue(newObject);
+                    oldValue = memberData.GetDelegate(oldObject);
+                    newValue = memberData.GetDelegate(newObject);
+                    //oldValue = propertyInfo.GetValue(oldObject);
+                    //newValue = propertyInfo.GetValue(newObject);
                 }
 
                 bool valuesEqual = Equals(oldValue, newValue);
@@ -157,7 +163,7 @@ namespace JerqAggregatorNew.Schemas
             int offset = 0;
             int offsetInLastByte = 0;
 
-            foreach (MemberData memberData in _memberData)
+            foreach (MemberData<T> memberData in _memberData)
             {
                 if (!memberData.IsIncluded)
                 {
@@ -174,12 +180,14 @@ namespace JerqAggregatorNew.Schemas
                 if (memberData.MemberInfo is FieldInfo)
                 {
                     FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                    fieldInfo.SetValue(existing, value.Value);
+                    //fieldInfo.SetValue(existing, value.Value);
+                    memberData.SetDelegate(existing, value.Value);
                 }
                 else
                 {
                     PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                    propertyInfo.SetValue(existing, value.Value);
+                    // propertyInfo.SetValue(existing, value.Value);
+                    memberData.SetDelegate(existing, value.Value);
                 }
             }
 
