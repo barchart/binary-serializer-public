@@ -411,5 +411,39 @@ namespace JerqAggregatorNew.Tests
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
+
+        [Fact]
+        public void TestDelegateGetterSetter()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            DateTime now = DateTime.UtcNow;
+            long ticks = now.Ticks;
+            long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            stopwatch.Start();
+
+            Car carOld = new Car()
+            {
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5d,
+                DateTimeDate = roundedDateTime,
+                StringName = "Luka",
+            };
+
+
+            var carType = carOld.GetType();
+            var getMethod = SchemaFactory.GenerateGetter<Car>(carType.GetField("doubleNumber"));
+            var setMethod = SchemaFactory.GenerateSetter<Car>(carType.GetProperty("DecimalNumber"));
+
+
+            for (long i = 0; i < int.MaxValue / 2; i++)
+            {
+                setMethod(carOld, 22.5m);
+                var x = getMethod(carOld);
+            }
+
+            stopwatch.Stop();
+            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using JerqAggregatorNew.Types;
-using Newtonsoft.Json.Linq;
 using System.Reflection;
 
 namespace JerqAggregatorNew.Schemas
