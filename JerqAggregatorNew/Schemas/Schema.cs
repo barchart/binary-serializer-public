@@ -56,13 +56,11 @@ namespace JerqAggregatorNew.Schemas
                 {
                     FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
                     value = memberData.GetDelegate(schemaObject);
-                    //value = fieldInfo.GetValue(schemaObject);
                 }
                 else
                 {
                     PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
                     value = memberData.GetDelegate(schemaObject);
-                    //value = propertyInfo.GetValue(schemaObject);
                 }
 
                 memberData.BinarySerializer.Encode(buffer, value, ref offset, ref offsetInLastByte);
@@ -109,16 +107,12 @@ namespace JerqAggregatorNew.Schemas
                     FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
                     oldValue = memberData.GetDelegate(oldObject);
                     newValue = memberData.GetDelegate(newObject);
-                    //oldValue = fieldInfo.GetValue(oldObject);
-                    //newValue = fieldInfo.GetValue(newObject);
                 }
                 else
                 {
                     PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
                     oldValue = memberData.GetDelegate(oldObject);
                     newValue = memberData.GetDelegate(newObject);
-                    //oldValue = propertyInfo.GetValue(oldObject);
-                    //newValue = propertyInfo.GetValue(newObject);
                 }
 
                 bool valuesEqual = Equals(oldValue, newValue);
@@ -179,13 +173,11 @@ namespace JerqAggregatorNew.Schemas
                 if (memberData.MemberInfo is FieldInfo)
                 {
                     FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                    //fieldInfo.SetValue(existing, value.Value);
                     memberData.SetDelegate(existing, value.Value);
                 }
                 else
                 {
                     PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                    // propertyInfo.SetValue(existing, value.Value);
                     memberData.SetDelegate(existing, value.Value);
                 }
             }
