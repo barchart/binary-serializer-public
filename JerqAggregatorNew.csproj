@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<GenerateProgramFile>false</GenerateProgramFile>
-
+	<IsPackable>true</IsPackable>
 	<PackageId>binary-serialization-net</PackageId>
 	<Version>1.0.0</Version>
 	<Authors>Luka Sotra</Authors>
