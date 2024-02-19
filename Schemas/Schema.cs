@@ -117,13 +117,13 @@ namespace JerqAggregatorNew.Schemas
 
                 bool valuesEqual = Equals(oldValue, newValue);
 
-                if (valuesEqual)
+                if(!valuesEqual || memberData.IsKeyAttribute)
                 {
-                    EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
+                    memberData.BinarySerializer.Encode(buffer, newValue, ref offset, ref offsetInLastByte);
                 }
                 else
                 {
-                    memberData.BinarySerializer.Encode(buffer, newValue, ref offset, ref offsetInLastByte);
+                    EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte); 
                 }
             }
 
