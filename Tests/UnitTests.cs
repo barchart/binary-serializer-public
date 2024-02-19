@@ -232,7 +232,7 @@ namespace JerqAggregatorNew.Tests
         }
 
         [Fact]
-        public void DifferenceSerializationTest()
+        public void SingleAndDifferenceSerializationTest()
         {
             try
             {
@@ -269,17 +269,6 @@ namespace JerqAggregatorNew.Tests
 
                     byte[] serializedDataDifference = carSchema.Serialize(carOld, carNew);
                     Car deserializedCarDifference = carSchema.Deserialize(serializedDataDifference, carOld);
-
-
-                    //Assert.Equal(carNew.DecimalNumber, deserializedCar.DecimalNumber);
-                    //Assert.Equal(carNew.doubleNumber, deserializedCar.doubleNumber);
-                    //Assert.Equal(carNew.StringName, deserializedCar.StringName);
-                    //Assert.Equal(carNew.DateTimeDate, deserializedCar.DateTimeDate);
-
-                    //Assert.Equal(carNew.DecimalNumber, deserializedCarDifference.DecimalNumber);
-                    //Assert.Equal(carNew.doubleNumber, deserializedCarDifference.doubleNumber);
-                    //Assert.Equal(carNew.StringName, deserializedCarDifference.StringName);
-                    //Assert.Equal(carNew.DateTimeDate, deserializedCarDifference.DateTimeDate);
                 }
                 stopwatch.Stop();
                 output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
