@@ -1,12 +1,8 @@
 ﻿using Xunit;
 using JerqAggregatorNew.Schemas;
-using System.Xml.Linq;
 using System.Diagnostics;
 using Xunit.Abstractions;
-using System;
 using System.Reflection;
-using System.Linq.Expressions;
-using System.Net.WebSockets;
 
 namespace JerqAggregatorNew.Tests
 {
