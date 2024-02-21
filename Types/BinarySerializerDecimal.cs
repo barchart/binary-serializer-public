@@ -3,6 +3,7 @@
     public class BinarySerializerDecimal : BinarySerializerNumeric<decimal>
     {
         public override int Size => sizeof(decimal);
+
         protected override byte[] ConvertToByteArray(decimal value)
         {
             using (MemoryStream stream = new MemoryStream())

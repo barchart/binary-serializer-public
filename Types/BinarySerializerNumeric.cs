@@ -5,6 +5,7 @@ namespace JerqAggregatorNew.Types
     public abstract class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T?> where T : struct, IConvertible
     {
         public abstract int Size { get; }
+
         public void Encode(byte[] buffer, T? value, ref int offset, ref int offsetInLastByte)
         {
             Header header = new Header();
