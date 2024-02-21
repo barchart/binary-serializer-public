@@ -50,6 +50,8 @@ namespace JerqAggregatorNew.Schemas
             allSerializers.Add(typeof(Decimal?), new BinarySerializerDecimal());
             allSerializers.Add(typeof(DateTime), new BinarySerializerDateTime());
             allSerializers.Add(typeof(DateTime?), new BinarySerializerDateTime());
+            allSerializers.Add(typeof(DateOnly), new BinarySerializerDateOnly());
+            allSerializers.Add(typeof(DateOnly?), new BinarySerializerDateOnly());
         }
 
         /// <summary>

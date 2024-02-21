@@ -2,7 +2,7 @@
 
 namespace JerqAggregatorNew.Types
 {
-    public abstract class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T?> where T : struct, IConvertible
+    public abstract class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T?> where T : struct
     {
         public abstract int Size { get; }
 

@@ -97,6 +97,9 @@ namespace JerqAggregatorNew.Tests
 
         [BinarySerialize(include: true, key: false)]
         public DateTime? DateTimeDate5 { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public DateOnly? DateOnly { get; set; }
     }
 
     class Car
@@ -171,7 +174,9 @@ namespace JerqAggregatorNew.Tests
                     doubleNumber5 = 2.5,
                     BoolNumber5 = true,
                     DateTimeDate5 = roundedDateTime,
-                    StringName5 = "Luka"
+                    StringName5 = "Luka",
+
+                    DateOnly = new DateOnly(2022, 2, 14)
                 };
 
                 Schema<Person> personSchema = SchemaFactory.GetSchema<Person>();
@@ -219,6 +224,8 @@ namespace JerqAggregatorNew.Tests
                 Assert.Equal(person.doubleNumber5, deserializedPerson.doubleNumber5);
                 Assert.Equal(person.StringName5, deserializedPerson.StringName5);
                 Assert.Equal(person.DateTimeDate5, deserializedPerson.DateTimeDate5);
+
+                Assert.Equal(person.DateOnly, deserializedPerson.DateOnly);
             }
             catch (Exception ex)
             {
