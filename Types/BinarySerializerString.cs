@@ -14,7 +14,17 @@ namespace JerqAggregatorNew.Types
             buffer.WriteBit(0, ref offset, ref offsetInLastByte);
             buffer.WriteBit((byte)(header.IsNull ? 1 : 0), ref offset, ref offsetInLastByte);
 
-            if (value != null)
+            if (value == null)
+            {
+                byte valueZeroLength = (byte)0;
+                header.StringLength = valueZeroLength;
+
+                for (int i = 5; i >= 0; i--)
+                {
+                    buffer.WriteBit((byte)((valueZeroLength >> i) & 1), ref offset, ref offsetInLastByte);
+                }
+            }
+            else
             {
                 // writing size of string in the buffer
                 byte valueLength = (byte)Encoding.UTF8.GetByteCount(value);
@@ -54,6 +64,12 @@ namespace JerqAggregatorNew.Types
             {
                 byte bit = buffer.ReadBit(ref offset, ref offsetInLastByte);
                 size |= (bit << i);
+            }
+
+            // if string is null return null value
+            if (header.IsNull)
+            {
+                return new HeaderWithValue(header, null);
             }
 
             valueBytes = new byte[size];

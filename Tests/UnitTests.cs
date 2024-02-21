@@ -143,7 +143,7 @@ namespace JerqAggregatorNew.Tests
                     doubleNumber = 2.5,
                     BoolNumber = true,
                     DateTimeDate = roundedDateTime,
-                    StringName = "Luka",
+                    StringName = null,
 
                     IntNumber2 = 1,
                     DecimalNumber2 = 1.5m,
