@@ -117,6 +117,27 @@ namespace JerqAggregatorNew.Tests
         public DateTime? DateTimeDate { get; set; }
     }
 
+    class Garage
+    {
+        [BinarySerialize(include: true, key: false)]
+        public Car? CarObject { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public Person? PersonObject { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public double doubleNumber;
+
+        [BinarySerialize(include: true, key: false)]
+        public decimal DecimalNumber { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public string? StringName { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public DateTime? DateTimeDate { get; set; }
+    }
+
     public class UnitTests
     {
         private readonly ITestOutputHelper output;
@@ -419,7 +440,7 @@ namespace JerqAggregatorNew.Tests
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5d,
                 DateTimeDate = roundedDateTime,
-                StringName = "Luka",
+                StringName = "Luka"
             };
 
 
@@ -436,6 +457,133 @@ namespace JerqAggregatorNew.Tests
 
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+        }
+
+        [Fact]
+        public void TestClassProperties()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            DateTime now = DateTime.UtcNow;
+            long ticks = now.Ticks;
+            long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            stopwatch.Start();
+
+            Person person = new Person()
+            {
+                IntNumber = 1,
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
+                BoolNumber = true,
+                DateTimeDate = roundedDateTime,
+                StringName = null,
+
+                IntNumber2 = 1,
+                DecimalNumber2 = 1.5m,
+                doubleNumber2 = 2.5,
+                BoolNumber2 = true,
+                DateTimeDate2 = roundedDateTime,
+                StringName2 = "Luka",
+
+                IntNumber3 = 1,
+                DecimalNumber3 = 1.5m,
+                doubleNumber3 = 2.5,
+                BoolNumber3 = true,
+                DateTimeDate3 = roundedDateTime,
+                StringName3 = "Luka",
+
+                IntNumber4 = 1,
+                DecimalNumber4 = 1.5m,
+                doubleNumber4 = 2.5,
+                BoolNumber4 = true,
+                DateTimeDate4 = roundedDateTime,
+                StringName4 = "Luka",
+
+                IntNumber5 = 1,
+                DecimalNumber5 = 1.5m,
+                doubleNumber5 = 2.5,
+                BoolNumber5 = true,
+                DateTimeDate5 = roundedDateTime,
+                StringName5 = "Luka",
+
+                DateOnly = new DateOnly(2022, 2, 14)
+            };
+
+            Car car = new Car()
+            {
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5d,
+                DateTimeDate = roundedDateTime,
+                StringName = "Car"
+            };
+
+            Garage garage = new Garage()
+            {
+                CarObject = car,
+                PersonObject = person,
+                StringName = "Garage",
+                DecimalNumber = 12.5m,
+                DateTimeDate = roundedDateTime,
+                doubleNumber = 10.5d
+            };
+
+            Schema<Garage> garageSchema = SchemaFactory.GetSchema<Garage>();
+
+            stopwatch.Start();
+
+            byte[] serializedData = garageSchema.Serialize(garage);
+
+            Garage deserializedGarage = garageSchema.Deserialize(serializedData);
+
+            stopwatch.Stop();
+            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+            Assert.Equal(garage.PersonObject.IntNumber, deserializedGarage.PersonObject.IntNumber);
+            Assert.Equal(garage.PersonObject.BoolNumber, deserializedGarage.PersonObject.BoolNumber);
+            Assert.Equal(garage.PersonObject.DecimalNumber, deserializedGarage.PersonObject.DecimalNumber);
+            Assert.Equal(garage.PersonObject.doubleNumber, deserializedGarage.PersonObject.doubleNumber);
+            Assert.Equal(garage.PersonObject.StringName, deserializedGarage.PersonObject.StringName);
+            Assert.Equal(garage.PersonObject.DateTimeDate, deserializedGarage.PersonObject.DateTimeDate);
+
+            Assert.Equal(garage.PersonObject.IntNumber2, deserializedGarage.PersonObject.IntNumber2);
+            Assert.Equal(garage.PersonObject.BoolNumber2, deserializedGarage.PersonObject.BoolNumber2);
+            Assert.Equal(garage.PersonObject.DecimalNumber2, deserializedGarage.PersonObject.DecimalNumber2);
+            Assert.Equal(garage.PersonObject.doubleNumber2, deserializedGarage.PersonObject.doubleNumber2);
+            Assert.Equal(garage.PersonObject.StringName2, deserializedGarage.PersonObject.StringName2);
+            Assert.Equal(garage.PersonObject.DateTimeDate2, deserializedGarage.PersonObject.DateTimeDate2);
+
+            Assert.Equal(garage.PersonObject.IntNumber3, deserializedGarage.PersonObject.IntNumber3);
+            Assert.Equal(garage.PersonObject.BoolNumber3, deserializedGarage.PersonObject.BoolNumber3);
+            Assert.Equal(garage.PersonObject.DecimalNumber3, deserializedGarage.PersonObject.DecimalNumber3);
+            Assert.Equal(garage.PersonObject.doubleNumber3, deserializedGarage.PersonObject.doubleNumber3);
+            Assert.Equal(garage.PersonObject.StringName3, deserializedGarage.PersonObject.StringName3);
+            Assert.Equal(garage.PersonObject.DateTimeDate3, deserializedGarage.PersonObject.DateTimeDate3);
+
+            Assert.Equal(person.IntNumber4, deserializedGarage.PersonObject.IntNumber4);
+            Assert.Equal(person.BoolNumber4, deserializedGarage.PersonObject.BoolNumber4);
+            Assert.Equal(person.DecimalNumber4, deserializedGarage.PersonObject.DecimalNumber4);
+            Assert.Equal(person.doubleNumber4, deserializedGarage.PersonObject.doubleNumber4);
+            Assert.Equal(person.StringName4, deserializedGarage.PersonObject.StringName4);
+            Assert.Equal(person.DateTimeDate4, deserializedGarage.PersonObject.DateTimeDate4);
+
+            Assert.Equal(garage.PersonObject.IntNumber5, deserializedGarage.PersonObject.IntNumber5);
+            Assert.Equal(garage.PersonObject.BoolNumber5, deserializedGarage.PersonObject.BoolNumber5);
+            Assert.Equal(garage.PersonObject.DecimalNumber5, deserializedGarage.PersonObject.DecimalNumber5);
+            Assert.Equal(garage.PersonObject.doubleNumber5, deserializedGarage.PersonObject.doubleNumber5);
+            Assert.Equal(garage.PersonObject.StringName5, deserializedGarage.PersonObject.StringName5);
+            Assert.Equal(garage.PersonObject.DateTimeDate5, deserializedGarage.PersonObject.DateTimeDate5);
+
+            Assert.Equal(garage.PersonObject.DateOnly, deserializedGarage.PersonObject.DateOnly);
+
+            Assert.Equal(garage.CarObject.DateTimeDate, deserializedGarage.CarObject.DateTimeDate);
+            Assert.Equal(garage.CarObject.DecimalNumber, deserializedGarage.CarObject.DecimalNumber);
+            Assert.Equal(garage.CarObject.doubleNumber, deserializedGarage.CarObject.doubleNumber);
+            Assert.Equal(garage.CarObject.StringName, deserializedGarage.CarObject.StringName);
+
+            Assert.Equal(garage.DateTimeDate, deserializedGarage.DateTimeDate);
+            Assert.Equal(garage.DecimalNumber, deserializedGarage.DecimalNumber);
+            Assert.Equal(garage.doubleNumber, deserializedGarage.doubleNumber);
+            Assert.Equal(garage.StringName, deserializedGarage.StringName);
         }
     }
 }
