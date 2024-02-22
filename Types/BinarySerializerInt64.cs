@@ -3,6 +3,7 @@
     public class BinarySerializerInt64 : BinarySerializerNumeric<long>
     {
         public override int Size => sizeof(long);
+
         protected override byte[] ConvertToByteArray(long value)
         {
             return BitConverter.GetBytes(value);

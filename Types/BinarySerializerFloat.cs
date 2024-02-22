@@ -3,6 +3,7 @@
     public class BinarySerializerFloat : BinarySerializerNumeric<float>
     {
         public override int Size => sizeof(float);
+
         protected override byte[] ConvertToByteArray(float value)
         {
             return BitConverter.GetBytes(value);

@@ -3,6 +3,7 @@
     public class BinarySerializerUInt64 : BinarySerializerNumeric<ulong>
     {
         public override int Size => sizeof(ulong);
+
         protected override byte[] ConvertToByteArray(ulong value)
         {
             return BitConverter.GetBytes(value);

@@ -3,6 +3,7 @@
     public class BinarySerializerUInt16 : BinarySerializerNumeric<ushort>
     {
         public override int Size => sizeof(ushort);
+
         protected override byte[] ConvertToByteArray(ushort value)
         {
             return BitConverter.GetBytes(value);

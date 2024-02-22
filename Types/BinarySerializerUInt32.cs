@@ -3,6 +3,7 @@
     public class BinarySerializerUInt32 : BinarySerializerNumeric<uint>
     {
         public override int Size => sizeof(int);
+
         protected override byte[] ConvertToByteArray(uint value)
         {
             return BitConverter.GetBytes(value);

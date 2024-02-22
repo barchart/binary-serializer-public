@@ -3,6 +3,7 @@
     public class BinarySerializerDouble : BinarySerializerNumeric<double>
     {
         public override int Size => sizeof(double);
+
         protected override byte[] ConvertToByteArray(double value)
         {
             return BitConverter.GetBytes(value);

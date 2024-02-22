@@ -3,6 +3,7 @@
     public class BinarySerializerBool8 : BinarySerializerNumeric<bool>
     {
         public override int Size => sizeof(bool);
+
         protected override byte[] ConvertToByteArray(bool value)
         {
             return BitConverter.GetBytes(value);

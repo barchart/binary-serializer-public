@@ -3,6 +3,7 @@
     public class BinarySerializerDateTime : BinarySerializerNumeric<DateTime>
     {
         public override int Size => sizeof(long);
+
         protected override byte[] ConvertToByteArray(DateTime value)
         {
             TimeSpan unixTimeSpan = value - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

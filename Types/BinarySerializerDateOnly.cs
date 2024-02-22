@@ -1,15 +1,8 @@
-﻿using System;
-
-namespace JerqAggregatorNew.Types
+﻿namespace JerqAggregatorNew.Types
 {
     public class BinarySerializerDateOnly : BinarySerializerNumeric<DateOnly>
     {
         public override int Size => sizeof(int);
-
-        public override int GetLengthInBytes(DateOnly? value)
-        {
-            return Size;
-        }
 
         protected override byte[] ConvertToByteArray(DateOnly value)
         {
@@ -17,6 +10,11 @@ namespace JerqAggregatorNew.Types
             return BitConverter.GetBytes(daysSinceEpoch);
         }
 
+        public override int GetLengthInBytes(DateOnly? value)
+        {
+            return Size;
+        }
+  
         protected override DateOnly DecodeBytes(byte[] bytes, int offset)
         {
             int daysSinceEpoch = BitConverter.ToInt32(bytes);
