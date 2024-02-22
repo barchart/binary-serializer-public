@@ -64,65 +64,84 @@ namespace JerqAggregatorNew.Schemas
             Schema<T> schema = new Schema<T>();
             Type type = typeof(T);
 
-            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
-
-            MemberInfo[] members = type.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, null, null);
+            MemberInfo[] members = GetAllMembersForType(type);
 
             foreach (MemberInfo memberInfo in members)
             {
-                Type memberType;
-
-                if (memberInfo is FieldInfo)
-                {
-                    memberType = ((FieldInfo)memberInfo).FieldType;
-                }
-
-                else
-                {
-                    memberType = ((PropertyInfo)memberInfo).PropertyType;
-                }
-
-                BinarySerializeAttribute? attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
-                if (attribute == null) { continue; }
-
-                bool include = attribute.Include;
-                bool key = attribute.Key;
-
-                ISerializer? serializer;
-                allSerializers.TryGetValue(memberType, out serializer);
-
-                if (serializer == null) { continue; }
-
-                MemberData<T> newMemberData = new MemberData<T>()
-                {
-                    Type = memberType,
-                    Name = memberInfo.Name,
-                    IsIncluded = include,
-                    IsKeyAttribute = key,
-                    BinarySerializer = serializer,
-                    MemberInfo = memberInfo
-                };
-
-                if (memberInfo is FieldInfo)
-                {
-                    var getter = GenerateGetter<T>(memberInfo);
-                    var setter = GenerateSetter<T>(memberInfo);
-                    newMemberData.GetDelegate = getter;
-                    newMemberData.SetDelegate = setter;
-                }
-                else
-                {
-                    var getter = GenerateGetter<T>(memberInfo);
-                    var setter = GenerateSetter<T>(memberInfo);
-                    newMemberData.GetDelegate = getter;
-                    newMemberData.SetDelegate = setter;
-                }
-
-                schema.AddMemberData(newMemberData);
+                ProcessMemberInfo(memberInfo, schema);
             }
 
             return schema;
         }
+
+        private static void ProcessMemberInfo<T>(MemberInfo memberInfo, Schema<T> schema) where T : new()
+        {
+            Type memberType;
+
+            if (memberInfo is FieldInfo)
+            {
+                memberType = ((FieldInfo)memberInfo).FieldType;
+            }
+            else
+            {
+                memberType = ((PropertyInfo)memberInfo).PropertyType;
+            }
+
+            BinarySerializeAttribute? attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
+
+            if (attribute == null) { return; }
+
+            bool include = attribute.Include;
+            bool key = attribute.Key;
+
+            ISerializer? serializer;
+            allSerializers.TryGetValue(memberType, out serializer);
+
+            if (serializer == null)
+            {
+                MemberInfo[] nestedMembers = GetAllMembersForType(memberType);
+
+                foreach (MemberInfo nestedMember in nestedMembers)
+                {
+                    ProcessMemberInfo(nestedMember, schema);
+                }
+
+                return;
+            }
+
+            MemberData<T> newMemberData = new MemberData<T>()
+            {
+                Type = memberType,
+                Name = memberInfo.Name,
+                IsIncluded = include,
+                IsKeyAttribute = key,
+                BinarySerializer = serializer,
+                MemberInfo = memberInfo
+            };
+
+            if (memberInfo is FieldInfo)
+            {
+                var getter = GenerateGetter<T>(memberInfo);
+                var setter = GenerateSetter<T>(memberInfo);
+                newMemberData.GetDelegate = getter;
+                newMemberData.SetDelegate = setter;
+            }
+            else
+            {
+                var getter = GenerateGetter<T>(memberInfo);
+                var setter = GenerateSetter<T>(memberInfo);
+                newMemberData.GetDelegate = getter;
+                newMemberData.SetDelegate = setter;
+            }
+
+            schema.AddMemberData(newMemberData);
+        }
+
+        private static MemberInfo[] GetAllMembersForType(Type type) {
+            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+            return type.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, null, null);
+        }
+
         public static Action<T, object?> GenerateSetter<T>(MemberInfo memberInfo)
         {
             var instance = Expression.Parameter(typeof(T), "instance");
@@ -146,7 +165,7 @@ namespace JerqAggregatorNew.Schemas
             var member = Expression.MakeMemberAccess(instance, memberInfo);
             var convert = Expression.Convert(member, typeof(object));
 
-            return Expression.Lambda<Func<T, object>>(convert, instance).Compile();
+            return Expression.Lambda<Func<T, object?>>(convert, instance).Compile();
         }
     }
 }

@@ -126,16 +126,16 @@ namespace JerqAggregatorNew.Tests
         public Person? PersonObject { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public double doubleNumber;
+        public double doubleNumberGarage;
 
         [BinarySerialize(include: true, key: false)]
-        public decimal DecimalNumber { get; set; }
+        public decimal DecimalNumberGarage { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public string? StringName { get; set; }
+        public string? StringNameGarage { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public DateTime? DateTimeDate { get; set; }
+        public DateTime? DateTimeDateGarage { get; set; }
     }
 
     public class UnitTests
@@ -521,10 +521,10 @@ namespace JerqAggregatorNew.Tests
             {
                 CarObject = car,
                 PersonObject = person,
-                StringName = "Garage",
-                DecimalNumber = 12.5m,
-                DateTimeDate = roundedDateTime,
-                doubleNumber = 10.5d
+                StringNameGarage = "Garage",
+                DecimalNumberGarage = 12.5m,
+                DateTimeDateGarage = roundedDateTime,
+                doubleNumberGarage = 10.5d
             };
 
             Schema<Garage> garageSchema = SchemaFactory.GetSchema<Garage>();
@@ -580,10 +580,10 @@ namespace JerqAggregatorNew.Tests
             Assert.Equal(garage.CarObject.doubleNumber, deserializedGarage.CarObject.doubleNumber);
             Assert.Equal(garage.CarObject.StringName, deserializedGarage.CarObject.StringName);
 
-            Assert.Equal(garage.DateTimeDate, deserializedGarage.DateTimeDate);
-            Assert.Equal(garage.DecimalNumber, deserializedGarage.DecimalNumber);
-            Assert.Equal(garage.doubleNumber, deserializedGarage.doubleNumber);
-            Assert.Equal(garage.StringName, deserializedGarage.StringName);
+            Assert.Equal(garage.DateTimeDateGarage, deserializedGarage.DateTimeDateGarage);
+            Assert.Equal(garage.DecimalNumberGarage, deserializedGarage.DecimalNumberGarage);
+            Assert.Equal(garage.doubleNumberGarage, deserializedGarage.doubleNumberGarage);
+            Assert.Equal(garage.StringNameGarage, deserializedGarage.StringNameGarage);
         }
     }
 }
