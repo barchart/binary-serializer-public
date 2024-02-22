@@ -123,7 +123,7 @@ namespace JerqAggregatorNew.Schemas
 
             return schema;
         }
-        public static Action<T, object> GenerateSetter<T>(MemberInfo memberInfo)
+        public static Action<T, object?> GenerateSetter<T>(MemberInfo memberInfo)
         {
             var instance = Expression.Parameter(typeof(T), "instance");
             var value = Expression.Parameter(typeof(object), "value");
@@ -132,14 +132,15 @@ namespace JerqAggregatorNew.Schemas
             {
                 PropertyInfo propertyInfo => propertyInfo.PropertyType,
                 FieldInfo fieldInfo => fieldInfo.FieldType,
+                _ => throw new NotImplementedException(),
             };
             var convert = Expression.Convert(value, memberType);
             var assign = Expression.Assign(member, convert);
 
-            return Expression.Lambda<Action<T, object>>(assign, instance, value).Compile();
+            return Expression.Lambda<Action<T, object?>>(assign, instance, value).Compile();
         }
 
-        public static Func<T, object> GenerateGetter<T>(MemberInfo memberInfo)
+        public static Func<T, object?> GenerateGetter<T>(MemberInfo memberInfo)
         {
             var instance = Expression.Parameter(typeof(T), "instance");
             var member = Expression.MakeMemberAccess(instance, memberInfo);

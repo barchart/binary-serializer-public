@@ -14,7 +14,7 @@ namespace JerqAggregatorNew.Schemas
         public bool IsIncluded { get; set; }
         public bool IsKeyAttribute { get; set; }
         public ISerializer BinarySerializer { get; set; }
-        public Func<T, object> GetDelegate { get; set; }
-        public Action<T, object> SetDelegate { get; set; }
+        public Func<T, object?> GetDelegate { get; set; }
+        public Action<T, object?> SetDelegate { get; set; }
     }
 }

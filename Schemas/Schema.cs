@@ -185,6 +185,7 @@ namespace JerqAggregatorNew.Schemas
             return existing;
         }
     }
+
     public static class BufferHelper
     {
         public static void WriteBit(this byte[] buffer, byte bit, ref int offset, ref int offsetInLastByte)
