@@ -68,13 +68,14 @@ namespace JerqAggregatorNew.Schemas
 
             foreach (MemberInfo memberInfo in members)
             {
-                ProcessMemberInfo(memberInfo, schema);
+                MemberData<T>? member = ProcessMemberInfo(memberInfo, schema);
+                if(member != null) schema.AddMemberData((MemberData<T>)member);
             }
 
             return schema;
         }
 
-        private static void ProcessMemberInfo<T>(MemberInfo memberInfo, Schema<T> schema) where T : new()
+        private static MemberData<T>? ProcessMemberInfo<T>(MemberInfo memberInfo, Schema<T> schema) where T : new()
         {
             Type memberType;
 
@@ -89,7 +90,7 @@ namespace JerqAggregatorNew.Schemas
 
             BinarySerializeAttribute? attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
 
-            if (attribute == null) { return; }
+            if (attribute == null) { return null; }
 
             bool include = attribute.Include;
             bool key = attribute.Key;
@@ -106,7 +107,7 @@ namespace JerqAggregatorNew.Schemas
                     ProcessMemberInfo(nestedMember, schema);
                 }
 
-                return;
+                return null;
             }
 
             MemberData<T> newMemberData = new MemberData<T>()
@@ -124,7 +125,7 @@ namespace JerqAggregatorNew.Schemas
             newMemberData.GetDelegate = getter;
             newMemberData.SetDelegate = setter;
            
-            schema.AddMemberData(newMemberData);
+            return newMemberData;
         }
 
         private static MemberInfo[] GetAllMembersForType(Type type) {

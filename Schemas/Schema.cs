@@ -11,6 +11,7 @@ namespace JerqAggregatorNew.Schemas
         static byte[] _buffer = new byte[BUFFER_SIZE];
 
         private List<MemberData<T>> _memberData;
+
         public Schema()
         {
             _memberData = new List<MemberData<T>>();
