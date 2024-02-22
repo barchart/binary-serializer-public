@@ -119,21 +119,11 @@ namespace JerqAggregatorNew.Schemas
                 MemberInfo = memberInfo
             };
 
-            if (memberInfo is FieldInfo)
-            {
-                var getter = GenerateGetter<T>(memberInfo);
-                var setter = GenerateSetter<T>(memberInfo);
-                newMemberData.GetDelegate = getter;
-                newMemberData.SetDelegate = setter;
-            }
-            else
-            {
-                var getter = GenerateGetter<T>(memberInfo);
-                var setter = GenerateSetter<T>(memberInfo);
-                newMemberData.GetDelegate = getter;
-                newMemberData.SetDelegate = setter;
-            }
-
+            var getter = GenerateGetter<T>(memberInfo);
+            var setter = GenerateSetter<T>(memberInfo);
+            newMemberData.GetDelegate = getter;
+            newMemberData.SetDelegate = setter;
+           
             schema.AddMemberData(newMemberData);
         }
 
