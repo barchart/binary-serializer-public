@@ -1,5 +1,4 @@
-﻿using JerqAggregatorNew.Tests;
-using JerqAggregatorNew.Types;
+﻿using JerqAggregatorNew.Types;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -100,20 +99,21 @@ namespace JerqAggregatorNew.Schemas
             ISerializer? serializer;
             allSerializers.TryGetValue(memberType, out serializer);
 
-            if (serializer == null && memberType.IsClass)
+            if (IsClassMember(serializer, memberType))
             {
                 ISchema nestedSchema = GenerateSchemaInterface(memberType);
                 var getterNestedClass = GenerateGetter<T>(memberInfo);
                 var setterNestedClass = GenerateSetter<T>(memberInfo);
-                MemberDataNestedClass<T> newMemberDataNestedClass = new MemberDataNestedClass<T>()
+                var objectbinarySerializer = new ObjectBinarySerializer(nestedSchema);
+
+                MemberData<T> newMemberDataNestedClass = new MemberData<T>()
                 {
                     Type = memberType,
                     Name = memberInfo.Name,
                     IsIncluded = include,
                     IsKeyAttribute = key,
-                    BinarySerializer = serializer,
+                    BinarySerializer = objectbinarySerializer,
                     MemberInfo = memberInfo,
-                    Schema = nestedSchema
                 };
 
                 newMemberDataNestedClass.GetDelegate = getterNestedClass;
@@ -137,6 +137,11 @@ namespace JerqAggregatorNew.Schemas
             newMemberData.SetDelegate = setter;
            
             return newMemberData;
+        }
+
+        private static bool IsClassMember(ISerializer? serializer, Type memberType)
+        {
+            return (serializer == null && memberType.IsClass);
         }
 
         private static MemberInfo[] GetAllMembersForType(Type type) {

@@ -42,6 +42,11 @@ namespace JerqAggregatorNew.Schemas
         {
             int offset = 0;
             int offsetInLastByte = 0;
+            return Serialize(schemaObject, buffer, ref offset, ref offsetInLastByte);
+        }
+
+        byte[] Serialize(T schemaObject, byte[] buffer, ref int offset, ref int offsetInLastByte) {
+
             buffer[offset] = 0;
 
             foreach (MemberData<T> memberData in _memberData)
@@ -69,7 +74,6 @@ namespace JerqAggregatorNew.Schemas
 
             return buffer.Take(offset + 1).ToArray();
         }
-
         /// <summary>
         ///      Serialize only a difference between the new and the old object
         /// </summary>
@@ -118,13 +122,13 @@ namespace JerqAggregatorNew.Schemas
 
                 bool valuesEqual = Equals(oldValue, newValue);
 
-                if(!valuesEqual || memberData.IsKeyAttribute)
+                if (!valuesEqual || memberData.IsKeyAttribute)
                 {
                     memberData.BinarySerializer.Encode(buffer, newValue, ref offset, ref offsetInLastByte);
                 }
                 else
                 {
-                    EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte); 
+                    EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
                 }
             }
 
@@ -146,18 +150,12 @@ namespace JerqAggregatorNew.Schemas
             return Deserialize(buffer, new T());
         }
 
-        /// <summary>
-        ///     Deserialize array of bytes into object
-        /// </summary>
-        /// <param name="buffer">Array oy bytes which will be deserialized</param>
-        /// <param name="existing">Existing generic object</param>
-        /// <returns> Deserialized object written into existing object of generic type </returns>
-        public T Deserialize(byte[] buffer, T existing)
+        public T Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte) {
+            return Deserialize(buffer, new T(), ref offset, ref offsetInLastByte);
+        }
+
+        public T Deserialize(byte[] buffer, T existing, ref int offset, ref int offsetInLastByte)
         {
-
-            int offset = 0;
-            int offsetInLastByte = 0;
-
             foreach (MemberData<T> memberData in _memberData)
             {
                 if (!memberData.IsIncluded)
@@ -187,6 +185,22 @@ namespace JerqAggregatorNew.Schemas
             return existing;
         }
 
+        /// <summary>
+        ///     Deserialize array of bytes into object
+        /// </summary>
+        /// <param name="buffer">Array oy bytes which will be deserialized</param>
+        /// <param name="existing">Existing generic object</param>
+        /// <returns> Deserialized object written into existing object of generic type </returns>
+        public T Deserialize(byte[] buffer, T existing)
+        {
+
+            int offset = 0;
+            int offsetInLastByte = 0;
+
+            return Deserialize(buffer, existing, ref offset, ref offsetInLastByte);
+        }
+
+
         #region ISchema
         public byte[] Serialize(object schemaObject)
         {
@@ -207,7 +221,10 @@ namespace JerqAggregatorNew.Schemas
         {
             return Serialize((T)oldObject, (T)newObject, buffer);
         }
-
+        byte[] ISchema.Serialize(object schemaObject, byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            return Serialize((T)schemaObject, buffer, ref offset, ref offsetInLastByte);
+        }
         object ISchema.Deserialize(byte[] buffer)
         {
             return Deserialize(buffer);
@@ -217,6 +234,12 @@ namespace JerqAggregatorNew.Schemas
         {
             return Deserialize(buffer, (T)existing);
         }
+
+        object ISchema.Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            return Deserialize(buffer, ref offset, ref offsetInLastByte);
+        }
+
         #endregion
     }
 
