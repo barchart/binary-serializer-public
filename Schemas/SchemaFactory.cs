@@ -1,4 +1,5 @@
-﻿using JerqAggregatorNew.Types;
+﻿using JerqAggregatorNew.Tests;
+using JerqAggregatorNew.Types;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -19,6 +20,7 @@ namespace JerqAggregatorNew.Schemas
     {
 
         private static readonly Dictionary<Type, ISerializer> allSerializers = new Dictionary<Type, ISerializer>();
+
         static SchemaFactory()
         {
             allSerializers.Add(typeof(String), new BinarySerializerString());
@@ -98,16 +100,25 @@ namespace JerqAggregatorNew.Schemas
             ISerializer? serializer;
             allSerializers.TryGetValue(memberType, out serializer);
 
-            if (serializer == null)
+            if (serializer == null && memberType.IsClass)
             {
-                MemberInfo[] nestedMembers = GetAllMembersForType(memberType);
-
-                foreach (MemberInfo nestedMember in nestedMembers)
+                ISchema nestedSchema = GenerateSchemaInterface(memberType);
+                var getterNestedClass = GenerateGetter<T>(memberInfo);
+                var setterNestedClass = GenerateSetter<T>(memberInfo);
+                MemberDataNestedClass<T> newMemberDataNestedClass = new MemberDataNestedClass<T>()
                 {
-                    ProcessMemberInfo(nestedMember, schema);
-                }
+                    Type = memberType,
+                    Name = memberInfo.Name,
+                    IsIncluded = include,
+                    IsKeyAttribute = key,
+                    BinarySerializer = serializer,
+                    MemberInfo = memberInfo,
+                    Schema = nestedSchema
+                };
 
-                return null;
+                newMemberDataNestedClass.GetDelegate = getterNestedClass;
+                newMemberDataNestedClass.SetDelegate = setterNestedClass;
+                return newMemberDataNestedClass;
             }
 
             MemberData<T> newMemberData = new MemberData<T>()
@@ -135,7 +146,12 @@ namespace JerqAggregatorNew.Schemas
 
         public static ISchema GenerateSchemaInterface(Type type)
         {
-            
+            Type[] types = { type };
+            MethodCallExpression methodCallExpression = Expression.Call(typeof(SchemaFactory), nameof(GetSchema), types, null);
+            Expression<Func<ISchema>> lambdaExpression = Expression.Lambda<Func<ISchema>>(methodCallExpression);
+            Func<ISchema> function = lambdaExpression.Compile();
+            ISchema schemaInterface = function();
+            return schemaInterface;
         }
 
         public static Action<T, object?> GenerateSetter<T>(MemberInfo memberInfo)
