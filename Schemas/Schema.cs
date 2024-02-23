@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace JerqAggregatorNew.Schemas
 {
-    public class Schema<T> where T : new()
+    public class Schema<T> : ISchema where T : new()
     {
         static int BUFFER_SIZE = 256000000;
 
@@ -130,6 +130,7 @@ namespace JerqAggregatorNew.Schemas
 
             return buffer.Take(offset + 1).ToArray();
         }
+
         private void EncodeMissingFlag(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
             buffer.WriteBit(1, ref offset, ref offsetInLastByte);
@@ -185,6 +186,38 @@ namespace JerqAggregatorNew.Schemas
 
             return existing;
         }
+
+        #region ISchema
+        public byte[] Serialize(object schemaObject)
+        {
+            return Serialize((T)schemaObject);
+        }
+
+        byte[] ISchema.Serialize(object schemaObject, byte[] buffer)
+        {
+            return Serialize((T)schemaObject, buffer);
+        }
+
+        byte[] ISchema.Serialize(object oldObject, object newObject)
+        {
+            return Serialize((T)oldObject, (T)newObject);
+        }
+
+        byte[] ISchema.Serialize(object oldObject, object newObject, byte[] buffer)
+        {
+            return Serialize((T)oldObject, (T)newObject, buffer);
+        }
+
+        object ISchema.Deserialize(byte[] buffer)
+        {
+            return Deserialize(buffer);
+        }
+
+        object ISchema.Deserialize(byte[] buffer, object existing)
+        {
+            return Deserialize(buffer, (T)existing);
+        }
+        #endregion
     }
 
     public static class BufferHelper

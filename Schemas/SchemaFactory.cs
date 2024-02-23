@@ -133,6 +133,11 @@ namespace JerqAggregatorNew.Schemas
             return type.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, null, null);
         }
 
+        public static ISchema GenerateSchemaInterface(Type type)
+        {
+            
+        }
+
         public static Action<T, object?> GenerateSetter<T>(MemberInfo memberInfo)
         {
             var instance = Expression.Parameter(typeof(T), "instance");
