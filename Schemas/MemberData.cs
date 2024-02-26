@@ -6,7 +6,7 @@ namespace JerqAggregatorNew.Schemas
     /// <summary>
     ///     Structure that represents information about a field/property fetched from reflection
     /// </summary>
-    public class MemberData<T>
+    public struct MemberData<T>
     {
         public Type Type { get; set; }
         public MemberInfo MemberInfo { get; set; }
