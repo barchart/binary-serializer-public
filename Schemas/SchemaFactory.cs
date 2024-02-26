@@ -127,7 +127,7 @@ namespace JerqAggregatorNew.Schemas
                 Name = memberInfo.Name,
                 IsIncluded = include,
                 IsKeyAttribute = key,
-                BinarySerializer = serializer,
+                BinarySerializer = serializer!,
                 MemberInfo = memberInfo
             };
 
