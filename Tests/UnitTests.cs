@@ -121,6 +121,9 @@ namespace JerqAggregatorNew.Tests
 
         [BinarySerialize(include: true, key: false)]
         public byte? Byte { get; set; }
+
+        [BinarySerialize(include: true, key: false)]
+        public Person? PersonObjectInCar { get; set; }
     }
 
     class Garage
@@ -289,14 +292,14 @@ namespace JerqAggregatorNew.Tests
                     DateTimeDate = roundedDateTime,
                     StringName = "Luka2",
                     Byte = (byte)1,
-                    sByte = (sbyte)2
+                    sByte = (sbyte)-2
                 };
 
                 Schema<Car> carSchema = SchemaFactory.GetSchema<Car>();
 
                 stopwatch.Start();
 
-                for (int i = 0; i < 10000000; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     byte[] serializedData = carSchema.Serialize(carOld);
                     Car deserializedCar = carSchema.Deserialize(serializedData);
@@ -524,7 +527,8 @@ namespace JerqAggregatorNew.Tests
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5d,
                 DateTimeDate = roundedDateTime,
-                StringName = "Car"
+                StringName = "Car",
+                PersonObjectInCar = person
             };
 
             Garage garage = new Garage()
@@ -646,12 +650,93 @@ namespace JerqAggregatorNew.Tests
                 DateOnly = new DateOnly(2022, 2, 14)
             };
 
+            Person person3 = new Person()
+            {
+                IntNumber = 1,
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
+                BoolNumber = true,
+                DateTimeDate = roundedDateTime,
+                StringName = null,
+
+                IntNumber2 = 1,
+                DecimalNumber2 = 1.5m,
+                doubleNumber2 = 2.5,
+                BoolNumber2 = true,
+                DateTimeDate2 = roundedDateTime,
+                StringName2 = "Luka",
+
+                IntNumber3 = 1,
+                DecimalNumber3 = 1.5m,
+                doubleNumber3 = 2.5,
+                BoolNumber3 = true,
+                DateTimeDate3 = roundedDateTime,
+                StringName3 = "Luka",
+
+                IntNumber4 = 1,
+                DecimalNumber4 = 1.5m,
+                doubleNumber4 = 2.5,
+                BoolNumber4 = true,
+                DateTimeDate4 = roundedDateTime,
+                StringName4 = "Luka",
+
+                IntNumber5 = 1,
+                DecimalNumber5 = 1.5m,
+                doubleNumber5 = 2.5,
+                BoolNumber5 = true,
+                DateTimeDate5 = roundedDateTime,
+                StringName5 = "Luka",
+
+                DateOnly = new DateOnly(2022, 2, 14)
+            };
+
+            Person person4 = new Person()
+            {
+                IntNumber = 1,
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
+                BoolNumber = true,
+                DateTimeDate = roundedDateTime,
+                StringName = null,
+
+                IntNumber2 = 1,
+                DecimalNumber2 = 1.5m,
+                doubleNumber2 = 2.5,
+                BoolNumber2 = true,
+                DateTimeDate2 = roundedDateTime,
+                StringName2 = "Luka",
+
+                IntNumber3 = 1,
+                DecimalNumber3 = 1.5m,
+                doubleNumber3 = 2.5,
+                BoolNumber3 = true,
+                DateTimeDate3 = roundedDateTime,
+                StringName3 = "Luka",
+
+                IntNumber4 = 1,
+                DecimalNumber4 = 1.5m,
+                doubleNumber4 = 2.5,
+                BoolNumber4 = true,
+                DateTimeDate4 = roundedDateTime,
+                StringName4 = "Luka",
+
+                IntNumber5 = 1,
+                DecimalNumber5 = 1.5m,
+                doubleNumber5 = 2.5,
+                BoolNumber5 = true,
+                DateTimeDate5 = roundedDateTime,
+                StringName5 = "Luka",
+
+                DateOnly = new DateOnly(2022, 2, 14)
+            };
+
             Car car = new Car()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5d,
                 DateTimeDate = roundedDateTime,
-                StringName = "Car"
+                StringName = "Car",
+                PersonObjectInCar = person3
             };
 
             Person person2 = new Person()
@@ -699,7 +784,8 @@ namespace JerqAggregatorNew.Tests
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5d,
                 DateTimeDate = roundedDateTime,
-                StringName = "Car"
+                StringName = "Car",
+                PersonObjectInCar = person4
             };
 
             Garage garage = new Garage()
@@ -719,7 +805,7 @@ namespace JerqAggregatorNew.Tests
                 StringNameGarage = "Garage",
                 DecimalNumberGarage = 122.5m,
                 DateTimeDateGarage = roundedDateTime,
-                doubleNumberGarage = 10.5d
+                doubleNumberGarage = 10.5d,
             };
 
             Schema<Garage> garageSchema = SchemaFactory.GetSchema<Garage>();

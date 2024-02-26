@@ -42,13 +42,11 @@ namespace JerqAggregatorNew.Schemas
         {
             int offset = 0;
             int offsetInLastByte = 0;
+            buffer[offset] = 0;
             return Serialize(schemaObject, buffer, ref offset, ref offsetInLastByte);
         }
 
         byte[] Serialize(T schemaObject, byte[] buffer, ref int offset, ref int offsetInLastByte) {
-
-            buffer[offset] = 0;
-
             foreach (MemberData<T> memberData in _memberData)
             {
                 if (!memberData.IsIncluded)
@@ -97,6 +95,12 @@ namespace JerqAggregatorNew.Schemas
             int offset = 0;
             int offsetInLastByte = 0;
             buffer[offset] = 0;
+            return Serialize(oldObject, newObject, _buffer, ref offset, ref offsetInLastByte);
+        }
+
+        public byte[] Serialize(T oldObject, T newObject, byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            //buffer[offset] = 0;
 
             foreach (MemberData<T> memberData in _memberData)
             {
@@ -124,7 +128,14 @@ namespace JerqAggregatorNew.Schemas
 
                 if (!valuesEqual || memberData.IsKeyAttribute)
                 {
-                    memberData.BinarySerializer.Encode(buffer, newValue, ref offset, ref offsetInLastByte);
+                    if (memberData.BinarySerializer is ObjectBinarySerializer)
+                    {
+                        ((ObjectBinarySerializer)memberData.BinarySerializer).Encode(buffer, oldValue, newValue, ref offset, ref offsetInLastByte);
+                    }
+                    else
+                    {
+                        memberData.BinarySerializer.Encode(buffer, newValue, ref offset, ref offsetInLastByte);
+                    }
                 }
                 else
                 {
@@ -163,7 +174,29 @@ namespace JerqAggregatorNew.Schemas
                     continue;
                 }
 
-                HeaderWithValue value = memberData.BinarySerializer.Decode(buffer, ref offset, ref offsetInLastByte);
+                HeaderWithValue value = new HeaderWithValue();
+
+                if (memberData.BinarySerializer is ObjectBinarySerializer)
+                {
+                    object? currentObject;
+
+                    if (memberData.MemberInfo is FieldInfo)
+                    {
+                        FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
+                        currentObject = memberData.GetDelegate(existing);
+                    }
+                    else
+                    {
+                        PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
+                        currentObject = memberData.GetDelegate(existing);
+                    }
+
+                    value = ((ObjectBinarySerializer)memberData.BinarySerializer).Decode(buffer, currentObject, ref offset, ref offsetInLastByte);
+                }
+                else
+                {
+                    value = memberData.BinarySerializer.Decode(buffer, ref offset, ref offsetInLastByte);
+                }
 
                 if (value.Header.IsMissing)
                 {
@@ -193,13 +226,11 @@ namespace JerqAggregatorNew.Schemas
         /// <returns> Deserialized object written into existing object of generic type </returns>
         public T Deserialize(byte[] buffer, T existing)
         {
-
             int offset = 0;
             int offsetInLastByte = 0;
 
             return Deserialize(buffer, existing, ref offset, ref offsetInLastByte);
         }
-
 
         #region ISchema
         public byte[] Serialize(object schemaObject)
@@ -221,10 +252,17 @@ namespace JerqAggregatorNew.Schemas
         {
             return Serialize((T)oldObject, (T)newObject, buffer);
         }
+
         byte[] ISchema.Serialize(object schemaObject, byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
             return Serialize((T)schemaObject, buffer, ref offset, ref offsetInLastByte);
         }
+
+        byte[] ISchema.Serialize(object oldObject, object newObject, byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            return Serialize((T)oldObject, (T)newObject, buffer, ref offset, ref offsetInLastByte);
+        }
+
         object ISchema.Deserialize(byte[] buffer)
         {
             return Deserialize(buffer);
@@ -238,6 +276,11 @@ namespace JerqAggregatorNew.Schemas
         object ISchema.Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
             return Deserialize(buffer, ref offset, ref offsetInLastByte);
+        }
+
+        object ISchema.Deserialize(byte[] buffer, object existing, ref int offset, ref int offsetInLastByte)
+        {
+            return Deserialize(buffer, (T)existing, ref offset, ref offsetInLastByte);
         }
 
         #endregion

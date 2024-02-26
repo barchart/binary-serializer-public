@@ -38,6 +38,33 @@ namespace JerqAggregatorNew.Types
             };
         }
 
+        public HeaderWithValue Decode(byte[] buffer, object existing, ref int offset, ref int offsetInLastByte)
+        {
+            Header header = new Header();
+
+            header.IsMissing = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
+
+            if (header.IsMissing)
+            {
+                return new HeaderWithValue(header, null);
+            }
+
+            header.IsNull = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
+
+            if (header.IsNull)
+            {
+                return new HeaderWithValue(header, null);
+            }
+
+            object deserializedObject = Schema.Deserialize(buffer, existing, ref offset, ref offsetInLastByte);
+
+            return new HeaderWithValue
+            {
+                Header = header,
+                Value = deserializedObject
+            };
+        }
+
         public void Encode(byte[] buffer, object? value, ref int offset, ref int offsetInLastByte)
         {
             Header header = new Header();
@@ -50,6 +77,21 @@ namespace JerqAggregatorNew.Types
             if (value != null)
             {
                 Schema.Serialize(value, buffer, ref offset, ref offsetInLastByte);
+            }
+        }
+
+        public void Encode(byte[] buffer, object oldObject, object newObject, ref int offset, ref int offsetInLastByte)
+        {
+            Header header = new Header();
+            header.IsMissing = false;
+            header.IsNull = newObject == null;
+
+            buffer.WriteBit(0, ref offset, ref offsetInLastByte);
+            buffer.WriteBit((byte)(header.IsNull ? 1 : 0), ref offset, ref offsetInLastByte);
+
+            if (newObject != null)
+            {
+                Schema.Serialize(oldObject, newObject, buffer, ref offset, ref offsetInLastByte);
             }
         }
 

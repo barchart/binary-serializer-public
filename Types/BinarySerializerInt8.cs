@@ -6,7 +6,7 @@
 
         protected override byte[] ConvertToByteArray(byte value)
         {
-            return BitConverter.GetBytes(value);
+            return new byte[] { value };
         }
 
         public override int GetLengthInBytes(byte? value)
