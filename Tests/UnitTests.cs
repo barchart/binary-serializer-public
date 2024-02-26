@@ -813,7 +813,7 @@ namespace JerqAggregatorNew.Tests
             stopwatch.Start();
 
             byte[] serializedDataDifference = garageSchema.Serialize(garage, garage2);
-            Garage deserializedCarDifference = garageSchema.Deserialize(serializedDataDifference, garage);
+            Garage deserializedGarageDifference = garageSchema.Deserialize(serializedDataDifference, garage);
 
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");

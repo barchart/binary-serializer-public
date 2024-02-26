@@ -100,8 +100,6 @@ namespace JerqAggregatorNew.Schemas
 
         public byte[] Serialize(T oldObject, T newObject, byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
-            //buffer[offset] = 0;
-
             foreach (MemberData<T> memberData in _memberData)
             {
                 if (!memberData.IsIncluded)
@@ -146,11 +144,6 @@ namespace JerqAggregatorNew.Schemas
             return buffer.Take(offset + 1).ToArray();
         }
 
-        private void EncodeMissingFlag(byte[] buffer, ref int offset, ref int offsetInLastByte)
-        {
-            buffer.WriteBit(1, ref offset, ref offsetInLastByte);
-        }
-
         /// <summary>
         ///     Deserialize array of bytes into object
         /// </summary>
@@ -158,11 +151,58 @@ namespace JerqAggregatorNew.Schemas
         /// <returns> Deserialized object written into newly created object of generic type </returns>
         public T Deserialize(byte[] buffer)
         {
-            return Deserialize(buffer, new T());
+            int offset = 0;
+            int offsetInLastByte = 0;
+            return Deserialize(buffer, ref offset, ref offsetInLastByte);
         }
 
         public T Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte) {
-            return Deserialize(buffer, new T(), ref offset, ref offsetInLastByte);
+            T existing = new T();
+
+            foreach (MemberData<T> memberData in _memberData)
+            {
+                if (!memberData.IsIncluded)
+                {
+                    continue;
+                }
+
+                HeaderWithValue value = new HeaderWithValue();
+
+                value = memberData.BinarySerializer.Decode(buffer, ref offset, ref offsetInLastByte);
+
+                if (value.Header.IsMissing)
+                {
+                    continue;
+                }
+
+                if (memberData.MemberInfo is FieldInfo)
+                {
+                    FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
+                    memberData.SetDelegate(existing, value.Value);
+                }
+                else
+                {
+                    PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
+                    memberData.SetDelegate(existing, value.Value);
+                }
+            }
+
+            return existing;
+        }
+
+
+        /// <summary>
+        ///     Deserialize array of bytes into object
+        /// </summary>
+        /// <param name="buffer">Array oy bytes which will be deserialized</param>
+        /// <param name="existing">Existing generic object</param>
+        /// <returns> Deserialized object written into existing object of generic type </returns>
+        public T Deserialize(byte[] buffer, T existing)
+        {
+            int offset = 0;
+            int offsetInLastByte = 0;
+
+            return Deserialize(buffer, existing, ref offset, ref offsetInLastByte);
         }
 
         public T Deserialize(byte[] buffer, T existing, ref int offset, ref int offsetInLastByte)
@@ -218,18 +258,10 @@ namespace JerqAggregatorNew.Schemas
             return existing;
         }
 
-        /// <summary>
-        ///     Deserialize array of bytes into object
-        /// </summary>
-        /// <param name="buffer">Array oy bytes which will be deserialized</param>
-        /// <param name="existing">Existing generic object</param>
-        /// <returns> Deserialized object written into existing object of generic type </returns>
-        public T Deserialize(byte[] buffer, T existing)
-        {
-            int offset = 0;
-            int offsetInLastByte = 0;
 
-            return Deserialize(buffer, existing, ref offset, ref offsetInLastByte);
+        private void EncodeMissingFlag(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        {
+            buffer.WriteBit(1, ref offset, ref offsetInLastByte);
         }
 
         #region ISchema
