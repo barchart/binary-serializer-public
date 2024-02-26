@@ -14,9 +14,9 @@
             return Size;
         }
 
-        protected override byte DecodeBytes(byte[] bytes, int offset)
+        protected override byte DecodeBytes(byte[] bytes)
         {
-            return bytes[offset];
+            return bytes[0];
         }
     }
 }

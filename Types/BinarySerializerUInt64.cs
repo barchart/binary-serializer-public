@@ -14,7 +14,7 @@
             return Size;
         }
 
-        protected override ulong DecodeBytes(byte[] bytes, int offset)
+        protected override ulong DecodeBytes(byte[] bytes)
         {
             return BitConverter.ToUInt64(bytes);
         }

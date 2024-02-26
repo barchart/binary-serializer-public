@@ -15,7 +15,7 @@
             return Size;
         }
   
-        protected override DateOnly DecodeBytes(byte[] bytes, int offset)
+        protected override DateOnly DecodeBytes(byte[] bytes)
         {
             int daysSinceEpoch = BitConverter.ToInt32(bytes);
             return DateOnly.MinValue.AddDays(daysSinceEpoch);

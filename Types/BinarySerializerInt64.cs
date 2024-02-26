@@ -14,7 +14,7 @@
             return Size;
         }
 
-        protected override long DecodeBytes(byte[] bytes, int offset)
+        protected override long DecodeBytes(byte[] bytes)
         {
             return BitConverter.ToInt64(bytes);
         }

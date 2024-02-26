@@ -14,7 +14,7 @@
             return Size;
         }
 
-        protected override ushort DecodeBytes(byte[] bytes, int offset)
+        protected override ushort DecodeBytes(byte[] bytes)
         {
             return BitConverter.ToUInt16(bytes);
         }

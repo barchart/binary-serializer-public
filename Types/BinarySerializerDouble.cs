@@ -14,7 +14,7 @@
             return Size;
         }
 
-        protected override double DecodeBytes(byte[] bytes, int offset)
+        protected override double DecodeBytes(byte[] bytes)
         {
             return BitConverter.ToDouble(bytes);
         }

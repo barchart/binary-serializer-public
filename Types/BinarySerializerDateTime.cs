@@ -16,7 +16,7 @@
             return Size;
         }
 
-        protected override DateTime DecodeBytes(byte[] bytes, int offset)
+        protected override DateTime DecodeBytes(byte[] bytes)
         {
             long ticksPerMillisecond = TimeSpan.TicksPerMillisecond;
             long milliSeconds = BitConverter.ToInt64(bytes, 0);

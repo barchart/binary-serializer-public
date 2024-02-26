@@ -14,9 +14,9 @@
             return Size;
         }
 
-        protected override sbyte DecodeBytes(byte[] bytes, int offset)
+        protected override sbyte DecodeBytes(byte[] bytes)
         {
-            return (sbyte)bytes[offset];
+            return (sbyte)bytes[0];
         }
     }
 }

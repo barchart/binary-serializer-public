@@ -14,7 +14,7 @@
             return Size;
         }
 
-        protected override bool DecodeBytes(byte[] bytes, int offset)
+        protected override bool DecodeBytes(byte[] bytes)
         {
             return (bytes[0] & 0x01) != 0;
         }

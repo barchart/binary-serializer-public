@@ -14,7 +14,7 @@
             return Size;
         }
 
-        protected override int DecodeBytes(byte[] bytes, int offset)
+        protected override int DecodeBytes(byte[] bytes)
         {
             return BitConverter.ToInt32(bytes);
         }

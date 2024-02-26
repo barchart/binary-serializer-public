@@ -21,7 +21,7 @@
             return Size;
         }
 
-        protected override decimal DecodeBytes(byte[] bytes, int offset)
+        protected override decimal DecodeBytes(byte[] bytes)
         {
             using (MemoryStream stream = new MemoryStream(bytes))
             {

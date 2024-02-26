@@ -14,7 +14,7 @@
             return Size;
         }
 
-        protected override float DecodeBytes(byte[] bytes, int offset)
+        protected override float DecodeBytes(byte[] bytes)
         {
             return BitConverter.ToSingle(bytes);
         }

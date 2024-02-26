@@ -51,10 +51,10 @@ namespace JerqAggregatorNew.Types
                 valueBytes[i] = buffer.ReadByte(ref offset, ref offsetInLastByte);
             }
 
-            return new HeaderWithValue(header, DecodeBytes(valueBytes, offset));
+            return new HeaderWithValue(header, DecodeBytes(valueBytes));
         }
         protected abstract byte[] ConvertToByteArray(T value);
-        protected abstract T DecodeBytes(byte[] bytes, int offset);
+        protected abstract T DecodeBytes(byte[] bytes);
         public abstract int GetLengthInBytes(T? value);
 
         #region ISerializer implementation
