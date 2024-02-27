@@ -151,16 +151,7 @@ namespace JerqAggregatorNew.Schemas
                     continue;
                 }
 
-                if (memberData.MemberInfo is FieldInfo)
-                {
-                    FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                    memberData.SetDelegate(existing, value.Value);
-                }
-                else
-                {
-                    PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                    memberData.SetDelegate(existing, value.Value);
-                }
+                memberData.SetDelegate(existing, value.Value);     
             }
 
             return existing;
@@ -210,13 +201,18 @@ namespace JerqAggregatorNew.Schemas
             return existing;
         }
 
+        public int GetLengthInBytes(T? value)
+        {
+            return 0;
+        }
+
         private void EncodeMissingFlag(BufferHelper bufferHelper)
         {
             bufferHelper.WriteBit(1);
         }
 
         #region ISchema implementation
-        public byte[] Serialize(object schemaObject)
+        byte[] ISchema.Serialize(object schemaObject)
         {
             return Serialize((T)schemaObject);
         }
@@ -265,7 +261,10 @@ namespace JerqAggregatorNew.Schemas
         {
             return Deserialize((T)existing, bufferHelper);
         }
-
+        int ISchema.GetLengthInBytes(object? value)
+        {
+            return GetLengthInBytes((T?)value);
+        }
         #endregion
     }
 
@@ -334,58 +333,4 @@ namespace JerqAggregatorNew.Schemas
             return byteToAdd;
         }
     }
-
-    //public static class BufferHelper
-    //{
-    //    public static void WriteBit(this byte[] buffer, byte bit, ref int offset, ref int offsetInLastByte)
-    //    {
-    //        buffer[offset] |= (byte)(bit << (7 - offsetInLastByte));
-    //        offsetInLastByte = (offsetInLastByte + 1) % 8;
-
-    //        if (offsetInLastByte == 0)
-    //        {
-    //            offset++;
-
-    //            if (offset >= buffer.Length)
-    //            {
-    //                throw new Exception($"Object is larger then {buffer.Length} bytes.");
-    //            }
-
-    //            buffer[offset] = 0;
-    //        }
-    //    }
-
-    //    public static byte ReadBit(this byte[] buffer, ref int offset, ref int offsetInLastByte)
-    //    {
-    //        byte bit = (byte)((buffer[offset] >> (7 - offsetInLastByte)) & 1);
-    //        offsetInLastByte = (offsetInLastByte + 1) % 8;
-
-    //        if (offsetInLastByte == 0)
-    //        {
-    //            offset++;
-    //        }
-
-    //        return bit;
-    //    }
-
-    //    public static void WriteByte(this byte[] buffer, byte valueByte, ref int offset, ref int offsetInLastByte)
-    //    {
-    //        for (int j = 7; j >= 0; j--)
-    //        {
-    //            buffer.WriteBit((byte)((valueByte >> j) & 1), ref offset, ref offsetInLastByte);
-    //        }
-    //    }
-    //    public static byte ReadByte(this byte[] buffer, ref int offset, ref int offsetInLastByte)
-    //    {
-    //        byte byteToAdd = 0;
-
-    //        for (int j = 7; j >= 0; j--)
-    //        {
-    //            byte bit = buffer.ReadBit(ref offset, ref offsetInLastByte);
-    //            byteToAdd |= (byte)(bit << j);
-    //        }
-
-    //        return byteToAdd;
-    //    }
-    //}
 }

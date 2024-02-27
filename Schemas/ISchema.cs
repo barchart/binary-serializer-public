@@ -21,6 +21,8 @@
         public object? Deserialize(byte[] buffer, object existing);
 
         internal object? Deserialize(object existing, BufferHelper bufferHelper);
+
+        public int GetLengthInBytes(object? value);
     }
 }
 
