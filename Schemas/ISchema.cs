@@ -22,7 +22,7 @@
 
         internal object? Deserialize(object existing, BufferHelper bufferHelper);
 
-        public int GetLengthInBytes(object? value);
+        public int GetLengthInBytes(object? schemaObject);
     }
 }
 

@@ -201,9 +201,15 @@ namespace JerqAggregatorNew.Schemas
             return existing;
         }
 
-        public int GetLengthInBytes(T? value)
+        public int GetLengthInBytes(T schemaObject)
         {
-            return 0;
+            int lengthInBytes = 0;
+            foreach (MemberData<T> memberData in _memberData)
+            {
+                object? value = memberData.GetDelegate(schemaObject);
+                lengthInBytes += memberData.BinarySerializer.GetLengthInBytes(value);
+            }
+            return lengthInBytes;
         }
 
         private void EncodeMissingFlag(BufferHelper bufferHelper)
@@ -261,9 +267,14 @@ namespace JerqAggregatorNew.Schemas
         {
             return Deserialize((T)existing, bufferHelper);
         }
-        int ISchema.GetLengthInBytes(object? value)
+
+        int ISchema.GetLengthInBytes(object? schemaObject)
         {
-            return GetLengthInBytes((T?)value);
+            if (schemaObject == null)
+            {
+                return 0;
+            }
+            return GetLengthInBytes((T)schemaObject);
         }
         #endregion
     }
