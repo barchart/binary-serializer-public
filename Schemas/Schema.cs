@@ -87,15 +87,6 @@ namespace JerqAggregatorNew.Schemas
             return Serialize(oldObject, newObject, bufferHelper);
         }
 
-        /// <summary>
-        ///     Serialize only a difference between the new and the old object.
-        /// </summary>
-        /// <param name="oldObject">Old object of generic type.</param>
-        /// <param name="newObject">New object of generic type.</param>
-        /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization.</param>
-        /// <param name="offset">Offset in the buffer.</param>
-        /// <param name="offsetInLastByte">Offset in the last byte.</param>
-        /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         internal byte[] Serialize(T oldObject, T newObject, BufferHelper bufferHelper)
         {
             foreach (MemberData<T> memberData in _memberData)
@@ -141,13 +132,6 @@ namespace JerqAggregatorNew.Schemas
             return Deserialize(bufferHelper);
         }
 
-        /// <summary>
-        ///     Deserialize array of bytes into object
-        /// </summary>
-        /// <param name="buffer">Array of bytes which will be deserialized.</param>
-        /// <param name="offset">Offset in the buffer.</param>
-        /// <param name="offsetInLastByte">Offset in the last byte.</param>
-        /// <returns> Deserialized object written into existing object of generic type. </returns>
         internal T Deserialize(BufferHelper bufferHelper) {
             T existing = new T();
 
@@ -194,14 +178,6 @@ namespace JerqAggregatorNew.Schemas
             return Deserialize(existing, bufferHelper);
         }
 
-        /// <summary>
-        ///     Deserialize array of bytes into object.
-        /// </summary>
-        /// <param name="buffer">Array of bytes which will be deserialized.</param>
-        /// <param name="existing">Existing generic object.</param>
-        /// <param name="offset">Offset in the buffer.</param>
-        /// <param name="offsetInLastByte">Offset in the last byte<./param>
-        /// <returns> Deserialized object written into existing object of generic type. </returns>
         internal T Deserialize(T existing, BufferHelper bufferHelper)
         {
             foreach (MemberData<T> memberData in _memberData)
