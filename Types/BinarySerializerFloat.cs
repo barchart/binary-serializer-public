@@ -11,7 +11,7 @@
 
         public override int GetLengthInBytes(float? value)
         {
-            return Size;
+            return Size + sizeof(byte);
         }
 
         protected override float DecodeBytes(byte[] bytes)

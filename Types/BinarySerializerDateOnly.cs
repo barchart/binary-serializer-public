@@ -12,9 +12,9 @@
 
         public override int GetLengthInBytes(DateOnly? value)
         {
-            return Size;
+            return Size + sizeof(byte);
         }
-  
+
         protected override DateOnly DecodeBytes(byte[] bytes)
         {
             int daysSinceEpoch = BitConverter.ToInt32(bytes);

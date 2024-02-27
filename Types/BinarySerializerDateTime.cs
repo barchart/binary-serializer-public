@@ -13,7 +13,7 @@
 
         public override int GetLengthInBytes(DateTime? value)
         {
-            return Size;
+            return Size + sizeof(byte);
         }
 
         protected override DateTime DecodeBytes(byte[] bytes)

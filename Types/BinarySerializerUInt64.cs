@@ -11,7 +11,7 @@
 
         public override int GetLengthInBytes(ulong? value)
         {
-            return Size;
+            return Size + sizeof(byte);
         }
 
         protected override ulong DecodeBytes(byte[] bytes)

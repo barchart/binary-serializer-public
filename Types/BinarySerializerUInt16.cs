@@ -11,7 +11,7 @@
 
         public override int GetLengthInBytes(ushort? value)
         {
-            return Size;
+            return Size + sizeof(byte);
         }
 
         protected override ushort DecodeBytes(byte[] bytes)

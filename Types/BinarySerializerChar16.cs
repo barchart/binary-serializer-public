@@ -11,7 +11,7 @@
 
         public override int GetLengthInBytes(char? value)
         {
-            return Size;
+            return Size + sizeof(byte);
         }
 
         protected override char DecodeBytes(byte[] bytes)

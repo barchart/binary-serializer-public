@@ -18,7 +18,7 @@
 
         public override int GetLengthInBytes(decimal? value)
         {
-            return Size;
+            return Size + sizeof(byte);
         }
 
         protected override decimal DecodeBytes(byte[] bytes)
