@@ -190,7 +190,6 @@ namespace JerqAggregatorNew.Schemas
             return existing;
         }
 
-
         /// <summary>
         ///     Deserialize array of bytes into object
         /// </summary>
@@ -295,22 +294,22 @@ namespace JerqAggregatorNew.Schemas
             return Serialize((T)oldObject, (T)newObject, buffer, ref offset, ref offsetInLastByte);
         }
 
-        object ISchema.Deserialize(byte[] buffer)
+        object? ISchema.Deserialize(byte[] buffer)
         {
             return Deserialize(buffer);
         }
 
-        object ISchema.Deserialize(byte[] buffer, object existing)
+        object? ISchema.Deserialize(byte[] buffer, object existing)
         {
             return Deserialize(buffer, (T)existing);
         }
 
-        object ISchema.Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        object? ISchema.Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
             return Deserialize(buffer, ref offset, ref offsetInLastByte);
         }
 
-        object ISchema.Deserialize(byte[] buffer, object existing, ref int offset, ref int offsetInLastByte)
+        object? ISchema.Deserialize(byte[] buffer, object existing, ref int offset, ref int offsetInLastByte)
         {
             return Deserialize(buffer, (T)existing, ref offset, ref offsetInLastByte);
         }

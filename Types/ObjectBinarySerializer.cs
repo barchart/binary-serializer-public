@@ -29,7 +29,7 @@ namespace JerqAggregatorNew.Types
                 return new HeaderWithValue(header, null);
             }
 
-            object deserializedObject = Schema.Deserialize(buffer, ref offset, ref offsetInLastByte);
+            object? deserializedObject = Schema.Deserialize(buffer, ref offset, ref offsetInLastByte);
 
             return new HeaderWithValue
             {
@@ -38,7 +38,7 @@ namespace JerqAggregatorNew.Types
             };
         }
 
-        public HeaderWithValue Decode(byte[] buffer, object existing, ref int offset, ref int offsetInLastByte)
+        public HeaderWithValue Decode(byte[] buffer, object? existing, ref int offset, ref int offsetInLastByte)
         {
             Header header = new Header();
 
@@ -56,7 +56,12 @@ namespace JerqAggregatorNew.Types
                 return new HeaderWithValue(header, null);
             }
 
-            object deserializedObject = Schema.Deserialize(buffer, existing, ref offset, ref offsetInLastByte);
+            object? deserializedObject = null;
+
+            if (existing != null)
+            {
+                deserializedObject = Schema.Deserialize(buffer, existing, ref offset, ref offsetInLastByte);
+            }
 
             return new HeaderWithValue
             {
@@ -80,7 +85,7 @@ namespace JerqAggregatorNew.Types
             }
         }
 
-        public void Encode(byte[] buffer, object oldObject, object newObject, ref int offset, ref int offsetInLastByte)
+        public void Encode(byte[] buffer, object? oldObject, object? newObject, ref int offset, ref int offsetInLastByte)
         {
             Header header = new Header();
             header.IsMissing = false;
@@ -89,7 +94,7 @@ namespace JerqAggregatorNew.Types
             buffer.WriteBit(0, ref offset, ref offsetInLastByte);
             buffer.WriteBit((byte)(header.IsNull ? 1 : 0), ref offset, ref offsetInLastByte);
 
-            if (newObject != null)
+            if (oldObject != null && newObject != null)
             {
                 Schema.Serialize(oldObject, newObject, buffer, ref offset, ref offsetInLastByte);
             }
