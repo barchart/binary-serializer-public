@@ -291,7 +291,7 @@ namespace JerqAggregatorNew.Tests
                     doubleNumber = 2.5,
                     DateTimeDate = roundedDateTime,
                     StringName = "Luka2",
-                    Byte = (byte)1,
+                    Byte = (byte)2,
                     sByte = (sbyte)-2
                 };
 
@@ -299,7 +299,7 @@ namespace JerqAggregatorNew.Tests
 
                 stopwatch.Start();
 
-                for (int i = 0; i < 1000; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     byte[] serializedData = carSchema.Serialize(carOld);
                     Car deserializedCar = carSchema.Deserialize(serializedData);

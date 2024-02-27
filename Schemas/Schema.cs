@@ -249,19 +249,7 @@ namespace JerqAggregatorNew.Schemas
 
                 if (memberData.BinarySerializer is ObjectBinarySerializer)
                 {
-                    object? currentObject;
-
-                    if (memberData.MemberInfo is FieldInfo)
-                    {
-                        FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
-                        currentObject = memberData.GetDelegate(existing);
-                    }
-                    else
-                    {
-                        PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
-                        currentObject = memberData.GetDelegate(existing);
-                    }
-
+                    object? currentObject = memberData.GetDelegate(existing);
                     value = ((ObjectBinarySerializer)memberData.BinarySerializer).Decode(buffer, currentObject, ref offset, ref offsetInLastByte);
                 }
                 else
@@ -274,16 +262,7 @@ namespace JerqAggregatorNew.Schemas
                     continue;
                 }
 
-                if (memberData.MemberInfo is FieldInfo)
-                {
-                    FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                    memberData.SetDelegate(existing, value.Value);
-                }
-                else
-                {
-                    PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                    memberData.SetDelegate(existing, value.Value);
-                }
+                memberData.SetDelegate(existing, value.Value);
             }
 
             return existing;
