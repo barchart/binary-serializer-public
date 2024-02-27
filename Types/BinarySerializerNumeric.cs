@@ -65,7 +65,7 @@ namespace JerqAggregatorNew.Types
         }
         HeaderWithValue ISerializer.Decode(BufferHelper bufferHelper)
         {
-            return (HeaderWithValue)((IBinaryTypeSerializer<T?>)this).Decode(bufferHelper);
+            return ((IBinaryTypeSerializer<T?>)this).Decode(bufferHelper);
         }
 
         int ISerializer.GetLengthInBytes(object? value)
