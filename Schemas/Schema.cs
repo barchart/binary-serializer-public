@@ -273,7 +273,7 @@ namespace JerqAggregatorNew.Schemas
             buffer.WriteBit(1, ref offset, ref offsetInLastByte);
         }
 
-        #region ISchema
+        #region ISchema implementation
         public byte[] Serialize(object schemaObject)
         {
             return Serialize((T)schemaObject);

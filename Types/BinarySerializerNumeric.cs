@@ -53,6 +53,7 @@ namespace JerqAggregatorNew.Types
 
             return new HeaderWithValue(header, DecodeBytes(valueBytes));
         }
+
         protected abstract byte[] ConvertToByteArray(T value);
         protected abstract T DecodeBytes(byte[] bytes);
         public abstract int GetLengthInBytes(T? value);
