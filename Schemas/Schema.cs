@@ -23,21 +23,21 @@ namespace JerqAggregatorNew.Schemas
         }
 
         /// <summary>
-        ///     Serialize an object of generic type
+        ///     Serialize an object of generic type.
         /// </summary>
-        /// <param name="schemaObject">Object or structure to be serialized</param>
-        /// <returns> Array of bytes that represents a result of binary serialization </returns>
+        /// <param name="schemaObject">Object or structure to be serialized.</param>
+        /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T schemaObject)
         {
             return Serialize(schemaObject, _buffer);
         }
 
         /// <summary>
-        ///     Serialize an object of generic type
+        ///     Serialize an object of generic type.
         /// </summary>
-        /// <param name="schemaObject">Object or structure to be serialized</param>
-        /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization</param>
-        /// <returns> Array of bytes that represents a result of binary serialization </returns>
+        /// <param name="schemaObject">Object or structure to be serialized.</param>
+        /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization.</param>
+        /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T schemaObject, byte[] buffer)
         {
             int offset = 0;
@@ -53,7 +53,7 @@ namespace JerqAggregatorNew.Schemas
         /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization.</param>
         /// <param name="offset">Offset in the buffer.</param>
         /// <param name="offsetInLastByte">Offset in the last byte.</param>
-        /// <returns> Array of bytes that represents a result of binary serialization </returns>
+        /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         byte[] Serialize(T schemaObject, byte[] buffer, ref int offset, ref int offsetInLastByte) {
             foreach (MemberData<T> memberData in _memberData)
             {
@@ -81,23 +81,23 @@ namespace JerqAggregatorNew.Schemas
             return buffer.Take(offset + 1).ToArray();
         }
         /// <summary>
-        ///      Serialize only a difference between the new and the old object
+        ///      Serialize only a difference between the new and the old object.
         /// </summary>
-        /// <param name="oldObject">Old object of generic type</param>
-        /// <param name="newObject">New object of generic type</param>
-        /// <returns> Array of bytes that represents a result of binary serialization </returns>
+        /// <param name="oldObject">Old object of generic type.</param>
+        /// <param name="newObject">New object of generic type.</param>
+        /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T oldObject, T newObject)
         {
             return Serialize(oldObject, newObject, _buffer);
         }
 
         /// <summary>
-        ///     Serialize only a difference between the new and the old object
+        ///     Serialize only a difference between the new and the old object.
         /// </summary>
-        /// <param name="oldObject">Old object of generic type</param>
-        /// <param name="newObject">New object of generic type</param>
-        /// <param name="buffer"></param>
-        /// <returns> Array of bytes that represents a result of binary serialization </returns>
+        /// <param name="oldObject">Old object of generic type.</param>
+        /// <param name="newObject">New object of generic type.</param>
+        /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization.</param>
+        /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T oldObject, T newObject, byte[] buffer)
         {
             int offset = 0;
@@ -114,7 +114,7 @@ namespace JerqAggregatorNew.Schemas
         /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization.</param>
         /// <param name="offset">Offset in the buffer.</param>
         /// <param name="offsetInLastByte">Offset in the last byte.</param>
-        /// <returns> Array of bytes that represents a result of binary serialization </returns>
+        /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T oldObject, T newObject, byte[] buffer, ref int offset, ref int offsetInLastByte)
         {
             foreach (MemberData<T> memberData in _memberData)
@@ -162,10 +162,10 @@ namespace JerqAggregatorNew.Schemas
         }
 
         /// <summary>
-        ///     Deserialize array of bytes into object
+        ///     Deserialize array of bytes into object.
         /// </summary>
-        /// <param name="buffer">Array oy bytes which will be deserialized</param>
-        /// <returns> Deserialized object written into newly created object of generic type </returns>
+        /// <param name="buffer">Array oy bytes which will be deserialized.</param>
+        /// <returns> Deserialized object written into newly created object of generic type. </returns>
         public T Deserialize(byte[] buffer)
         {
             int offset = 0;
@@ -176,10 +176,10 @@ namespace JerqAggregatorNew.Schemas
         /// <summary>
         ///     Deserialize array of bytes into object
         /// </summary>
-        /// <param name="buffer">Array of bytes which will be deserialized</param>
-        /// <param name="offset">Offset in the buffer</param>
-        /// <param name="offsetInLastByte">Offset in the last byte</param>
-        /// <returns> Deserialized object written into existing object of generic type </returns>
+        /// <param name="buffer">Array of bytes which will be deserialized.</param>
+        /// <param name="offset">Offset in the buffer.</param>
+        /// <param name="offsetInLastByte">Offset in the last byte.</param>
+        /// <returns> Deserialized object written into existing object of generic type. </returns>
         public T Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte) {
             T existing = new T();
 
@@ -215,11 +215,11 @@ namespace JerqAggregatorNew.Schemas
         }
 
         /// <summary>
-        ///     Deserialize array of bytes into object
+        ///     Deserialize array of bytes into object.
         /// </summary>
-        /// <param name="buffer">Array oy bytes which will be deserialized</param>
-        /// <param name="existing">Existing generic object</param>
-        /// <returns> Deserialized object written into existing object of generic type </returns>
+        /// <param name="buffer">Array oy bytes which will be deserialized.</param>
+        /// <param name="existing">Existing generic object.</param>
+        /// <returns> Deserialized object written into existing object of generic type. </returns>
         public T Deserialize(byte[] buffer, T existing)
         {
             int offset = 0;
@@ -229,13 +229,13 @@ namespace JerqAggregatorNew.Schemas
         }
 
         /// <summary>
-        ///     Deserialize array of bytes into object
+        ///     Deserialize array of bytes into object.
         /// </summary>
-        /// <param name="buffer">Array of bytes which will be deserialized</param>
-        /// <param name="existing">Existing generic object</param>
-        /// <param name="offset">Offset in the buffer</param>
-        /// <param name="offsetInLastByte">Offset in the last byte</param>
-        /// <returns> Deserialized object written into existing object of generic type </returns>
+        /// <param name="buffer">Array of bytes which will be deserialized.</param>
+        /// <param name="existing">Existing generic object.</param>
+        /// <param name="offset">Offset in the buffer.</param>
+        /// <param name="offsetInLastByte">Offset in the last byte<./param>
+        /// <returns> Deserialized object written into existing object of generic type. </returns>
         public T Deserialize(byte[] buffer, T existing, ref int offset, ref int offsetInLastByte)
         {
             foreach (MemberData<T> memberData in _memberData)
