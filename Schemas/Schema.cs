@@ -17,7 +17,7 @@ namespace JerqAggregatorNew.Schemas
             _memberData = new List<MemberData<T>>();
         }
 
-        public void AddMemberData(MemberData<T> memberData)
+        internal void AddMemberData(MemberData<T> memberData)
         {
             _memberData.Add(memberData);
         }

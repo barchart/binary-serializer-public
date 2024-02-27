@@ -1,6 +1,6 @@
 ﻿namespace JerqAggregatorNew.Schemas
 {
-	public interface ISchema
+    internal interface ISchema
 	{
         public byte[] Serialize(object schemaObject);
 

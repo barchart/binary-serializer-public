@@ -2,7 +2,7 @@
 
 namespace JerqAggregatorNew.Types
 {
-    public interface IBinaryTypeSerializer<T> : ISerializer
+    internal interface IBinaryTypeSerializer<T> : ISerializer
     {
         public void Encode(BufferHelper bufferHelper, T? value);
 
@@ -11,7 +11,7 @@ namespace JerqAggregatorNew.Types
         public int GetLengthInBytes(T? value);
     }
 
-    public interface ISerializer
+    internal interface ISerializer
     {
         public void Encode(BufferHelper bufferHelper,object? value);
 

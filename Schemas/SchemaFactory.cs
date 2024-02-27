@@ -148,7 +148,7 @@ namespace JerqAggregatorNew.Schemas
             return type.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, null, null);
         }
 
-        public static ISchema GenerateSchemaInterface(Type type)
+        internal static ISchema GenerateSchemaInterface(Type type)
         {
             Type[] types = { type };
             MethodCallExpression methodCallExpression = Expression.Call(typeof(SchemaFactory), nameof(GetSchema), types, null);
