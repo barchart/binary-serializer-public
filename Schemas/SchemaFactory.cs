@@ -69,14 +69,14 @@ namespace JerqAggregatorNew.Schemas
 
             foreach (MemberInfo memberInfo in members)
             {
-                MemberData<T>? member = ProcessMemberInfo(memberInfo, schema);
+                MemberData<T>? member = ProcessMemberInfo<T>(memberInfo);
                 if(member != null) schema.AddMemberData((MemberData<T>)member);
             }
 
             return schema;
         }
 
-        private static MemberData<T>? ProcessMemberInfo<T>(MemberInfo memberInfo, Schema<T> schema) where T : new()
+        private static MemberData<T>? ProcessMemberInfo<T>(MemberInfo memberInfo) where T : new()
         {
             Type memberType;
 
