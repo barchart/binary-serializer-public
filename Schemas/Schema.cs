@@ -40,21 +40,13 @@ namespace JerqAggregatorNew.Schemas
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T schemaObject, byte[] buffer)
         {
-            int offset = 0;
-            int offsetInLastByte = 0;
-            buffer[offset] = 0;
-            return Serialize(schemaObject, buffer, ref offset, ref offsetInLastByte);
+            BufferHelper bufferHelper = new BufferHelper(buffer);
+            bufferHelper._buffer[bufferHelper._offset] = 0;
+
+            return Serialize(schemaObject, bufferHelper);
         }
 
-        /// <summary>
-        ///     Serialize an object of generic type.
-        /// </summary>
-        /// <param name="schemaObject">Object or structure to be serialized.</param>
-        /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization.</param>
-        /// <param name="offset">Offset in the buffer.</param>
-        /// <param name="offsetInLastByte">Offset in the last byte.</param>
-        /// <returns> Array of bytes that represents a result of binary serialization. </returns>
-        byte[] Serialize(T schemaObject, byte[] buffer, ref int offset, ref int offsetInLastByte) {
+        internal byte[] Serialize(T schemaObject, BufferHelper bufferHelper) {
             foreach (MemberData<T> memberData in _memberData)
             {
                 if (!memberData.IsIncluded)
@@ -62,23 +54,12 @@ namespace JerqAggregatorNew.Schemas
                     continue;
                 }
 
-                object? value;
+                object? value = memberData.GetDelegate(schemaObject);
 
-                if (memberData.MemberInfo is FieldInfo)
-                {
-                    FieldInfo fieldInfo = ((FieldInfo)memberData.MemberInfo);
-                    value = memberData.GetDelegate(schemaObject);
-                }
-                else
-                {
-                    PropertyInfo propertyInfo = ((PropertyInfo)memberData.MemberInfo);
-                    value = memberData.GetDelegate(schemaObject);
-                }
-
-                memberData.BinarySerializer.Encode(buffer, value, ref offset, ref offsetInLastByte);
+                memberData.BinarySerializer.Encode(bufferHelper, value);
             }
 
-            return buffer.Take(offset + 1).ToArray();
+            return bufferHelper._buffer.Take(bufferHelper._offset + 1).ToArray();
         }
         /// <summary>
         ///      Serialize only a difference between the new and the old object.
@@ -100,10 +81,10 @@ namespace JerqAggregatorNew.Schemas
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T oldObject, T newObject, byte[] buffer)
         {
-            int offset = 0;
-            int offsetInLastByte = 0;
-            buffer[offset] = 0;
-            return Serialize(oldObject, newObject, _buffer, ref offset, ref offsetInLastByte);
+            BufferHelper bufferHelper = new BufferHelper(buffer);
+            bufferHelper._buffer[bufferHelper._offset] = 0;
+
+            return Serialize(oldObject, newObject, bufferHelper);
         }
 
         /// <summary>
@@ -115,7 +96,7 @@ namespace JerqAggregatorNew.Schemas
         /// <param name="offset">Offset in the buffer.</param>
         /// <param name="offsetInLastByte">Offset in the last byte.</param>
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
-        public byte[] Serialize(T oldObject, T newObject, byte[] buffer, ref int offset, ref int offsetInLastByte)
+        internal byte[] Serialize(T oldObject, T newObject, BufferHelper bufferHelper)
         {
             foreach (MemberData<T> memberData in _memberData)
             {
@@ -124,20 +105,8 @@ namespace JerqAggregatorNew.Schemas
                     continue;
                 }
 
-                object? oldValue, newValue;
-
-                if (memberData.MemberInfo is FieldInfo)
-                {
-                    FieldInfo fieldInfo = (FieldInfo)memberData.MemberInfo;
-                    oldValue = memberData.GetDelegate(oldObject);
-                    newValue = memberData.GetDelegate(newObject);
-                }
-                else
-                {
-                    PropertyInfo propertyInfo = (PropertyInfo)memberData.MemberInfo;
-                    oldValue = memberData.GetDelegate(oldObject);
-                    newValue = memberData.GetDelegate(newObject);
-                }
+                object? oldValue = memberData.GetDelegate(oldObject);
+                object? newValue = memberData.GetDelegate(newObject);
 
                 bool valuesEqual = Equals(oldValue, newValue);
 
@@ -145,20 +114,20 @@ namespace JerqAggregatorNew.Schemas
                 {
                     if (memberData.BinarySerializer is ObjectBinarySerializer)
                     {
-                        ((ObjectBinarySerializer)memberData.BinarySerializer).Encode(buffer, oldValue, newValue, ref offset, ref offsetInLastByte);
+                        ((ObjectBinarySerializer)memberData.BinarySerializer).Encode(bufferHelper, oldValue, newValue);
                     }
                     else
                     {
-                        memberData.BinarySerializer.Encode(buffer, newValue, ref offset, ref offsetInLastByte);
+                        memberData.BinarySerializer.Encode(bufferHelper, newValue);
                     }
                 }
                 else
                 {
-                    EncodeMissingFlag(buffer, ref offset, ref offsetInLastByte);
+                    EncodeMissingFlag(bufferHelper);
                 }
             }
 
-            return buffer.Take(offset + 1).ToArray();
+            return bufferHelper._buffer.Take(bufferHelper._offset + 1).ToArray();
         }
 
         /// <summary>
@@ -168,9 +137,8 @@ namespace JerqAggregatorNew.Schemas
         /// <returns> Deserialized object written into newly created object of generic type. </returns>
         public T Deserialize(byte[] buffer)
         {
-            int offset = 0;
-            int offsetInLastByte = 0;
-            return Deserialize(buffer, ref offset, ref offsetInLastByte);
+            BufferHelper bufferHelper  = new BufferHelper(buffer);
+            return Deserialize(bufferHelper);
         }
 
         /// <summary>
@@ -180,7 +148,7 @@ namespace JerqAggregatorNew.Schemas
         /// <param name="offset">Offset in the buffer.</param>
         /// <param name="offsetInLastByte">Offset in the last byte.</param>
         /// <returns> Deserialized object written into existing object of generic type. </returns>
-        public T Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte) {
+        internal T Deserialize(BufferHelper bufferHelper) {
             T existing = new T();
 
             foreach (MemberData<T> memberData in _memberData)
@@ -192,7 +160,7 @@ namespace JerqAggregatorNew.Schemas
 
                 HeaderWithValue value = new HeaderWithValue();
 
-                value = memberData.BinarySerializer.Decode(buffer, ref offset, ref offsetInLastByte);
+                value = memberData.BinarySerializer.Decode(bufferHelper);
 
                 if (value.Header.IsMissing)
                 {
@@ -222,10 +190,8 @@ namespace JerqAggregatorNew.Schemas
         /// <returns> Deserialized object written into existing object of generic type. </returns>
         public T Deserialize(byte[] buffer, T existing)
         {
-            int offset = 0;
-            int offsetInLastByte = 0;
-
-            return Deserialize(buffer, existing, ref offset, ref offsetInLastByte);
+            BufferHelper bufferHelper = new BufferHelper(buffer); 
+            return Deserialize(existing, bufferHelper);
         }
 
         /// <summary>
@@ -236,7 +202,7 @@ namespace JerqAggregatorNew.Schemas
         /// <param name="offset">Offset in the buffer.</param>
         /// <param name="offsetInLastByte">Offset in the last byte<./param>
         /// <returns> Deserialized object written into existing object of generic type. </returns>
-        public T Deserialize(byte[] buffer, T existing, ref int offset, ref int offsetInLastByte)
+        internal T Deserialize(T existing, BufferHelper bufferHelper)
         {
             foreach (MemberData<T> memberData in _memberData)
             {
@@ -250,11 +216,11 @@ namespace JerqAggregatorNew.Schemas
                 if (memberData.BinarySerializer is ObjectBinarySerializer)
                 {
                     object? currentObject = memberData.GetDelegate(existing);
-                    value = ((ObjectBinarySerializer)memberData.BinarySerializer).Decode(buffer, currentObject, ref offset, ref offsetInLastByte);
+                    value = ((ObjectBinarySerializer)memberData.BinarySerializer).Decode(bufferHelper, currentObject);
                 }
                 else
                 {
-                    value = memberData.BinarySerializer.Decode(buffer, ref offset, ref offsetInLastByte);
+                    value = memberData.BinarySerializer.Decode(bufferHelper);
                 }
 
                 if (value.Header.IsMissing)
@@ -268,9 +234,9 @@ namespace JerqAggregatorNew.Schemas
             return existing;
         }
 
-        private void EncodeMissingFlag(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        private void EncodeMissingFlag(BufferHelper bufferHelper)
         {
-            buffer.WriteBit(1, ref offset, ref offsetInLastByte);
+            bufferHelper.WriteBit(1);
         }
 
         #region ISchema implementation
@@ -294,14 +260,14 @@ namespace JerqAggregatorNew.Schemas
             return Serialize((T)oldObject, (T)newObject, buffer);
         }
 
-        byte[] ISchema.Serialize(object schemaObject, byte[] buffer, ref int offset, ref int offsetInLastByte)
+        byte[] ISchema.Serialize(object schemaObject, BufferHelper bufferHelper)
         {
-            return Serialize((T)schemaObject, buffer, ref offset, ref offsetInLastByte);
+            return Serialize((T)schemaObject, bufferHelper);
         }
 
-        byte[] ISchema.Serialize(object oldObject, object newObject, byte[] buffer, ref int offset, ref int offsetInLastByte)
+        byte[] ISchema.Serialize(object oldObject, object newObject, BufferHelper bufferHelper)
         {
-            return Serialize((T)oldObject, (T)newObject, buffer, ref offset, ref offsetInLastByte);
+            return Serialize((T)oldObject, (T)newObject, bufferHelper);
         }
 
         object? ISchema.Deserialize(byte[] buffer)
@@ -314,70 +280,136 @@ namespace JerqAggregatorNew.Schemas
             return Deserialize(buffer, (T)existing);
         }
 
-        object? ISchema.Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        object? ISchema.Deserialize(BufferHelper bufferHelper)
         {
-            return Deserialize(buffer, ref offset, ref offsetInLastByte);
+            return Deserialize(bufferHelper);
         }
 
-        object? ISchema.Deserialize(byte[] buffer, object existing, ref int offset, ref int offsetInLastByte)
+        object? ISchema.Deserialize(object existing, BufferHelper bufferHelper)
         {
-            return Deserialize(buffer, (T)existing, ref offset, ref offsetInLastByte);
+            return Deserialize((T)existing, bufferHelper);
         }
 
         #endregion
     }
 
-    public static class BufferHelper
+    public class BufferHelper
     {
-        public static void WriteBit(this byte[] buffer, byte bit, ref int offset, ref int offsetInLastByte)
+        public byte[] _buffer;
+        public int _offset;
+        public int _offsetInLastByte;
+
+        public BufferHelper(byte[] buffer)
         {
-            buffer[offset] |= (byte)(bit << (7 - offsetInLastByte));
-            offsetInLastByte = (offsetInLastByte + 1) % 8;
+            _buffer = buffer;
+            _offset = 0;
+            _offsetInLastByte = 0;
+        }
 
-            if (offsetInLastByte == 0)
+        public void WriteBit(byte bit)
+        {
+            _buffer[_offset] |= (byte)(bit << (7 - _offsetInLastByte));
+            _offsetInLastByte = (_offsetInLastByte + 1) % 8;
+
+            if (_offsetInLastByte == 0)
             {
-                offset++;
+                _offset++;
 
-                if (offset >= buffer.Length)
+                if (_offset >= _buffer.Length)
                 {
-                    throw new Exception($"Object is larger then {buffer.Length} bytes.");
+                    throw new Exception($"Object is larger then {_buffer.Length} bytes.");
                 }
 
-                buffer[offset] = 0;
+                _buffer[_offset] = 0;
             }
         }
 
-        public static byte ReadBit(this byte[] buffer, ref int offset, ref int offsetInLastByte)
+        public byte ReadBit()
         {
-            byte bit = (byte)((buffer[offset] >> (7 - offsetInLastByte)) & 1);
-            offsetInLastByte = (offsetInLastByte + 1) % 8;
+            byte bit = (byte)((_buffer[_offset] >> (7 - _offsetInLastByte)) & 1);
+            _offsetInLastByte = (_offsetInLastByte + 1) % 8;
 
-            if (offsetInLastByte == 0)
+            if (_offsetInLastByte == 0)
             {
-                offset++;
+                _offset++;
             }
 
             return bit;
         }
 
-        public static void WriteByte(this byte[] buffer, byte valueByte, ref int offset, ref int offsetInLastByte)
+        public void WriteByte(byte valueByte)
         {
             for (int j = 7; j >= 0; j--)
             {
-                buffer.WriteBit((byte)((valueByte >> j) & 1), ref offset, ref offsetInLastByte);
+                WriteBit((byte)((valueByte >> j) & 1));
             }
         }
-        public static byte ReadByte(this byte[] buffer, ref int offset, ref int offsetInLastByte)
+
+        public byte ReadByte()
         {
             byte byteToAdd = 0;
 
             for (int j = 7; j >= 0; j--)
             {
-                byte bit = buffer.ReadBit(ref offset, ref offsetInLastByte);
+                byte bit = ReadBit();
                 byteToAdd |= (byte)(bit << j);
             }
 
             return byteToAdd;
         }
     }
+
+    //public static class BufferHelper
+    //{
+    //    public static void WriteBit(this byte[] buffer, byte bit, ref int offset, ref int offsetInLastByte)
+    //    {
+    //        buffer[offset] |= (byte)(bit << (7 - offsetInLastByte));
+    //        offsetInLastByte = (offsetInLastByte + 1) % 8;
+
+    //        if (offsetInLastByte == 0)
+    //        {
+    //            offset++;
+
+    //            if (offset >= buffer.Length)
+    //            {
+    //                throw new Exception($"Object is larger then {buffer.Length} bytes.");
+    //            }
+
+    //            buffer[offset] = 0;
+    //        }
+    //    }
+
+    //    public static byte ReadBit(this byte[] buffer, ref int offset, ref int offsetInLastByte)
+    //    {
+    //        byte bit = (byte)((buffer[offset] >> (7 - offsetInLastByte)) & 1);
+    //        offsetInLastByte = (offsetInLastByte + 1) % 8;
+
+    //        if (offsetInLastByte == 0)
+    //        {
+    //            offset++;
+    //        }
+
+    //        return bit;
+    //    }
+
+    //    public static void WriteByte(this byte[] buffer, byte valueByte, ref int offset, ref int offsetInLastByte)
+    //    {
+    //        for (int j = 7; j >= 0; j--)
+    //        {
+    //            buffer.WriteBit((byte)((valueByte >> j) & 1), ref offset, ref offsetInLastByte);
+    //        }
+    //    }
+    //    public static byte ReadByte(this byte[] buffer, ref int offset, ref int offsetInLastByte)
+    //    {
+    //        byte byteToAdd = 0;
+
+    //        for (int j = 7; j >= 0; j--)
+    //        {
+    //            byte bit = buffer.ReadBit(ref offset, ref offsetInLastByte);
+    //            byteToAdd |= (byte)(bit << j);
+    //        }
+
+    //        return byteToAdd;
+    //    }
+    //}
 }

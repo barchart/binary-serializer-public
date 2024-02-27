@@ -299,7 +299,7 @@ namespace JerqAggregatorNew.Tests
 
                 stopwatch.Start();
 
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     byte[] serializedData = carSchema.Serialize(carOld);
                     Car deserializedCar = carSchema.Deserialize(serializedData);

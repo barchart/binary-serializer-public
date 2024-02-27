@@ -17,7 +17,6 @@ namespace JerqAggregatorNew.Schemas
 
     public static class SchemaFactory
     {
-
         private static readonly Dictionary<Type, ISerializer> allSerializers = new Dictionary<Type, ISerializer>();
 
         static SchemaFactory()

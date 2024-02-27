@@ -5,14 +5,14 @@ namespace JerqAggregatorNew.Types
 {
     public class BinarySerializerString : IBinaryTypeSerializer<string>
     {
-        public void Encode(byte[] buffer, string? value, ref int offset, ref int offsetInLastByte)
+        public void Encode(BufferHelper bufferHelper, string? value)
         {
             Header header = new Header();
             header.IsMissing = false;
             header.IsNull = value == null;
 
-            buffer.WriteBit(0, ref offset, ref offsetInLastByte);
-            buffer.WriteBit((byte)(header.IsNull ? 1 : 0), ref offset, ref offsetInLastByte);
+            bufferHelper.WriteBit(0);
+            bufferHelper.WriteBit((byte)(header.IsNull ? 1 : 0));
 
             if (value != null)
             {
@@ -22,33 +22,33 @@ namespace JerqAggregatorNew.Types
 
                 for (int i = 5; i >= 0; i--)
                 {
-                    buffer.WriteBit((byte)((valueLength >> i) & 1), ref offset, ref offsetInLastByte);
+                    bufferHelper.WriteBit((byte)((valueLength >> i) & 1));
                 }
 
                 byte[] valueBytes = Encoding.UTF8.GetBytes(value);
 
                 for (int i = valueBytes.Length - 1; i >= 0; i--)
                 {
-                    buffer.WriteByte(valueBytes[i], ref offset, ref offsetInLastByte);
+                    bufferHelper.WriteByte(valueBytes[i]);
                 }
             }
         }
 
-        public HeaderWithValue Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        public HeaderWithValue Decode(BufferHelper bufferHelper)
         {
             byte[]? valueBytes = null;
             int size = 0;
 
             Header header = new Header();
 
-            header.IsMissing = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
+            header.IsMissing = bufferHelper.ReadBit() == 1;
 
             if (header.IsMissing)
             {
                 return new HeaderWithValue(header, null);
             }
 
-            header.IsNull = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
+            header.IsNull = bufferHelper.ReadBit() == 1;
 
             if (header.IsNull)
             {
@@ -57,7 +57,7 @@ namespace JerqAggregatorNew.Types
 
             for (int i = 5; i >= 0; i--)
             {
-                byte bit = buffer.ReadBit(ref offset, ref offsetInLastByte);
+                byte bit = bufferHelper.ReadBit();
                 size |= (bit << i);
             }
 
@@ -65,7 +65,7 @@ namespace JerqAggregatorNew.Types
 
             for (int i = size - 1; i >= 0; i--)
             {
-                valueBytes[i] = buffer.ReadByte(ref offset, ref offsetInLastByte);
+                valueBytes[i] = bufferHelper.ReadByte();
             }
 
             string decodedString = Encoding.UTF8.GetString(valueBytes);
@@ -84,13 +84,13 @@ namespace JerqAggregatorNew.Types
         }
 
         #region ISerializer implementation
-        void ISerializer.Encode(byte[] buffer, object? value, ref int offset, ref int offsetInLastByte)
+        void ISerializer.Encode(BufferHelper bufferHelper, object? value)
         {
-            Encode(buffer, (string?)value, ref offset, ref offsetInLastByte);
+            Encode(bufferHelper, (string?)value);
         }
-        HeaderWithValue ISerializer.Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        HeaderWithValue ISerializer.Decode(BufferHelper bufferHelper)
         {
-            return (HeaderWithValue)((IBinaryTypeSerializer<string>)this).Decode(buffer, ref offset, ref offsetInLastByte);
+            return (HeaderWithValue)((IBinaryTypeSerializer<string>)this).Decode(bufferHelper);
         }
 
         int ISerializer.GetLengthInBytes(object? value)

@@ -6,21 +6,21 @@
 
         public byte[] Serialize(object schemaObject, byte[] buffer);
 
-        public byte[] Serialize(object schemaObject, byte[] buffer, ref int offset, ref int offsetInLastByte);
+        internal byte[] Serialize(object schemaObject, BufferHelper bufferHelper);
 
         public byte[] Serialize(object oldObject, object newObject);
 
         public byte[] Serialize(object oldObject, object newObject, byte[] buffer);
 
-        public byte[] Serialize(object oldObject, object newObject, byte[] buffer, ref int offset, ref int offsetInLastByte);
+        internal byte[] Serialize(object oldObject, object newObject, BufferHelper bufferHelper);
 
         public object? Deserialize(byte[] buffer);
 
-        public object? Deserialize(byte[] buffer, ref int offset, ref int offsetInLastByte);
+        internal object? Deserialize(BufferHelper bufferHelper);
 
         public object? Deserialize(byte[] buffer, object existing);
 
-        public object? Deserialize(byte[] buffer, object existing, ref int offset, ref int offsetInLastByte);
+        internal object? Deserialize(object existing, BufferHelper bufferHelper);
     }
 }
 

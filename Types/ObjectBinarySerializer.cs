@@ -4,32 +4,32 @@ namespace JerqAggregatorNew.Types
 {
     public class ObjectBinarySerializer : ISerializer
     {
-        public ISchema Schema { get; set; }
+        internal ISchema Schema { get; set; }
        
-        public ObjectBinarySerializer(ISchema schema)
+        internal ObjectBinarySerializer(ISchema schema)
         {
             Schema = schema;
         }
 
-        public HeaderWithValue Decode(byte[] buffer, ref int offset, ref int offsetInLastByte)
+        public HeaderWithValue Decode(BufferHelper bufferHelper)
         {
             Header header = new Header();
 
-            header.IsMissing = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
+            header.IsMissing = bufferHelper.ReadBit() == 1;
 
             if (header.IsMissing)
             {
                 return new HeaderWithValue(header, null);
             }
 
-            header.IsNull = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
+            header.IsNull = bufferHelper.ReadBit() == 1;
 
             if (header.IsNull)
             {
                 return new HeaderWithValue(header, null);
             }
 
-            object? deserializedObject = Schema.Deserialize(buffer, ref offset, ref offsetInLastByte);
+            object? deserializedObject = Schema.Deserialize(bufferHelper);
 
             return new HeaderWithValue
             {
@@ -38,18 +38,18 @@ namespace JerqAggregatorNew.Types
             };
         }
 
-        public HeaderWithValue Decode(byte[] buffer, object? existing, ref int offset, ref int offsetInLastByte)
+        public HeaderWithValue Decode(BufferHelper bufferHelper, object? existing)
         {
             Header header = new Header();
 
-            header.IsMissing = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
+            header.IsMissing = bufferHelper.ReadBit() == 1;
 
             if (header.IsMissing)
             {
                 return new HeaderWithValue(header, null);
             }
 
-            header.IsNull = buffer.ReadBit(ref offset, ref offsetInLastByte) == 1;
+            header.IsNull = bufferHelper.ReadBit() == 1;
 
             if (header.IsNull)
             {
@@ -60,7 +60,7 @@ namespace JerqAggregatorNew.Types
 
             if (existing != null)
             {
-                deserializedObject = Schema.Deserialize(buffer, existing, ref offset, ref offsetInLastByte);
+                deserializedObject = Schema.Deserialize(existing, bufferHelper);
             }
 
             return new HeaderWithValue
@@ -70,33 +70,33 @@ namespace JerqAggregatorNew.Types
             };
         }
 
-        public void Encode(byte[] buffer, object? value, ref int offset, ref int offsetInLastByte)
+        public void Encode(BufferHelper bufferHelper, object? value)
         {
             Header header = new Header();
             header.IsMissing = false;
             header.IsNull = value == null;
 
-            buffer.WriteBit(0, ref offset, ref offsetInLastByte);
-            buffer.WriteBit((byte)(header.IsNull ? 1 : 0), ref offset, ref offsetInLastByte);
+            bufferHelper.WriteBit(0);
+            bufferHelper.WriteBit((byte)(header.IsNull ? 1 : 0));
 
             if (value != null)
             {
-                Schema.Serialize(value, buffer, ref offset, ref offsetInLastByte);
+                Schema.Serialize(value, bufferHelper);
             }
         }
 
-        public void Encode(byte[] buffer, object? oldObject, object? newObject, ref int offset, ref int offsetInLastByte)
+        public void Encode(BufferHelper bufferHelper, object? oldObject, object? newObject)
         {
             Header header = new Header();
             header.IsMissing = false;
             header.IsNull = newObject == null;
 
-            buffer.WriteBit(0, ref offset, ref offsetInLastByte);
-            buffer.WriteBit((byte)(header.IsNull ? 1 : 0), ref offset, ref offsetInLastByte);
+            bufferHelper.WriteBit(0);
+            bufferHelper.WriteBit((byte)(header.IsNull ? 1 : 0));
 
             if (oldObject != null && newObject != null)
             {
-                Schema.Serialize(oldObject, newObject, buffer, ref offset, ref offsetInLastByte);
+                Schema.Serialize(oldObject, newObject, bufferHelper);
             }
         }
 
