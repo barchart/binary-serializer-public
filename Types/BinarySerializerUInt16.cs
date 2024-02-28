@@ -9,9 +9,14 @@
             return BitConverter.GetBytes(value);
         }
 
-        public override int GetLengthInBytes(ushort? value)
+        public override int GetLengthInBits(ushort? value)
         {
-            return Size + sizeof(byte);
+            if (value == null)
+            {
+                return NUMBER_OF_HEADER_BITS_NUMERIC;
+            }
+
+            return Size * 8 + NUMBER_OF_HEADER_BITS_NUMERIC;
         }
 
         protected override ushort DecodeBytes(byte[] bytes)

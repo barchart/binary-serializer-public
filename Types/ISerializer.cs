@@ -8,7 +8,7 @@ namespace JerqAggregatorNew.Types
 
         public new HeaderWithValue Decode(BufferHelper bufferHelper);
 
-        public int GetLengthInBytes(T? value);
+        public int GetLengthInBits(T? value);
     }
 
     internal interface ISerializer
@@ -17,6 +17,6 @@ namespace JerqAggregatorNew.Types
 
         public HeaderWithValue Decode(BufferHelper bufferHelper);
 
-        public int GetLengthInBytes(object? value);
+        public int GetLengthInBits(object? value);
     }
 }

@@ -16,9 +16,14 @@
             }
         }
 
-        public override int GetLengthInBytes(decimal? value)
+        public override int GetLengthInBits(decimal? value)
         {
-            return Size + sizeof(byte);
+            if (value == null)
+            {
+                return NUMBER_OF_HEADER_BITS_NUMERIC;
+            }
+
+            return Size * 8 + NUMBER_OF_HEADER_BITS_NUMERIC;
         }
 
         protected override decimal DecodeBytes(byte[] bytes)

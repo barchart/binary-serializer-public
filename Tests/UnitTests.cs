@@ -556,6 +556,8 @@ namespace JerqAggregatorNew.Tests
 
             Garage deserializedGarage = garageSchema.Deserialize(serializedData);
 
+            var a = garageSchema.GetLengthInBytes(garage);
+
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 

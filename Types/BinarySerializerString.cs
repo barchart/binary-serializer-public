@@ -5,6 +5,8 @@ namespace JerqAggregatorNew.Types
 {
     public class BinarySerializerString : IBinaryTypeSerializer<string>
     {
+        public const int NUMBER_OF_HEADER_BITS_STRING = 8;
+
         public void Encode(BufferHelper bufferHelper, string? value)
         {
             Header header = new Header();
@@ -72,15 +74,15 @@ namespace JerqAggregatorNew.Types
             return new HeaderWithValue(header, decodedString);
         }
 
-        public int GetLengthInBytes(string? value)
+        public int GetLengthInBits(string? value)
         {
             if (value == null)
             {
-                return sizeof(byte);
+                return NUMBER_OF_HEADER_BITS_STRING;
             }
 
             int valueLength = Encoding.UTF8.GetByteCount(value);
-            return valueLength + sizeof(byte);
+            return valueLength * 8 + NUMBER_OF_HEADER_BITS_STRING;
         }
 
         #region ISerializer implementation
@@ -93,9 +95,9 @@ namespace JerqAggregatorNew.Types
             return (HeaderWithValue)((IBinaryTypeSerializer<string>)this).Decode(bufferHelper);
         }
 
-        int ISerializer.GetLengthInBytes(object? value)
+        int ISerializer.GetLengthInBits(object? value)
         {
-            return GetLengthInBytes((string?)value);
+            return GetLengthInBits((string?)value);
         }
         #endregion
     }

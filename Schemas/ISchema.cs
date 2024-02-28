@@ -23,6 +23,9 @@
         internal object? Deserialize(object existing, BufferHelper bufferHelper);
 
         public int GetLengthInBytes(object? schemaObject);
+
+        public int GetLengthInBits(object? schemaObject);
+
     }
 }
 

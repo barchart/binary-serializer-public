@@ -4,6 +4,8 @@ namespace JerqAggregatorNew.Types
 {
     public abstract class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T?> where T : struct
     {
+        public const int NUMBER_OF_HEADER_BITS_NUMERIC = 2;
+
         public abstract int Size { get; }
 
         public void Encode(BufferHelper bufferHelper, T? value)
@@ -56,7 +58,7 @@ namespace JerqAggregatorNew.Types
 
         protected abstract byte[] ConvertToByteArray(T value);
         protected abstract T DecodeBytes(byte[] bytes);
-        public abstract int GetLengthInBytes(T? value);
+        public abstract int GetLengthInBits(T? value);
 
         #region ISerializer implementation
         void ISerializer.Encode(BufferHelper bufferHelper, object? value)
@@ -68,9 +70,9 @@ namespace JerqAggregatorNew.Types
             return ((IBinaryTypeSerializer<T?>)this).Decode(bufferHelper);
         }
 
-        int ISerializer.GetLengthInBytes(object? value)
+        int ISerializer.GetLengthInBits(object? value)
         {
-            return GetLengthInBytes((T?)value);
+            return GetLengthInBits((T?)value);
         }
         #endregion
     }
