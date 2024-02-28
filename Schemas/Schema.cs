@@ -212,7 +212,7 @@ namespace JerqAggregatorNew.Schemas
             foreach (MemberData<T> memberData in _memberData)
             {
                 object? value = memberData.GetDelegate(schemaObject);
-                lengthInBits += memberData.BinarySerializer.GetLengthInBits(value);
+                lengthInBits += memberData.BinarySerializer.GetLengthInBits(value);             
             }
 
             return lengthInBits;

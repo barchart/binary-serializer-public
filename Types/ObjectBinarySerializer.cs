@@ -102,7 +102,7 @@ namespace JerqAggregatorNew.Types
 
         public int GetLengthInBytes(object? value)
         {
-            return GetLengthInBits(value);
+            return Schema.GetLengthInBytes(value);
         }
 
         public int GetLengthInBits(object? value)
