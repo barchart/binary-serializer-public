@@ -1,4 +1,4 @@
-﻿namespace BinarySerializer
+﻿namespace Barchart.BinarySerializer
 {  
     class Program
     {

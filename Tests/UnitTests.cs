@@ -1,10 +1,10 @@
 ﻿using Xunit;
-using BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Schemas;
 using System.Diagnostics;
 using Xunit.Abstractions;
 using System.Reflection;
 
-namespace BinarySerializer.Tests
+namespace Barchart.BinarySerializer.Tests
 {
     class Person
     {

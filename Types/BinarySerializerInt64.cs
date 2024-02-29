@@ -1,4 +1,4 @@
-﻿namespace BinarySerializer.Types
+﻿namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerInt64 : BinarySerializerNumeric<long>
     {

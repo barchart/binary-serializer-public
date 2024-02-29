@@ -1,6 +1,6 @@
-﻿using BinarySerializer.Schemas;
+﻿using Barchart.BinarySerializer.Schemas;
 
-namespace BinarySerializer.Types
+namespace Barchart.BinarySerializer.Types
 {
     internal interface IBinaryTypeSerializer<T> : ISerializer
     {

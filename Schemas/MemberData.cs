@@ -1,7 +1,7 @@
-﻿using BinarySerializer.Types;
+﻿using Barchart.BinarySerializer.Types;
 using System.Reflection;
 
-namespace BinarySerializer.Schemas
+namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
     ///     Structure that represents information about a field/property fetched from reflection

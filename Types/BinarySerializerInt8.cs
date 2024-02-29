@@ -1,4 +1,4 @@
-﻿namespace BinarySerializer.Types
+﻿namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerInt8 : BinarySerializerNumeric<byte>
     {

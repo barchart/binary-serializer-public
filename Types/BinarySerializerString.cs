@@ -1,7 +1,7 @@
-﻿using BinarySerializer.Schemas;
+﻿using Barchart.BinarySerializer.Schemas;
 using System.Text;
 
-namespace BinarySerializer.Types
+namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerString : IBinaryTypeSerializer<string>
     {

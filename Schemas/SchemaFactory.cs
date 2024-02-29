@@ -1,8 +1,8 @@
-﻿using BinarySerializer.Types;
+﻿using Barchart.BinarySerializer.Types;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace BinarySerializer.Schemas
+namespace Barchart.BinarySerializer.Schemas
 {
     public class BinarySerializeAttribute : Attribute
     {

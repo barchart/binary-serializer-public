@@ -1,6 +1,6 @@
-﻿using BinarySerializer.Types;
+﻿using Barchart.BinarySerializer.Types;
 
-namespace BinarySerializer.Schemas
+namespace Barchart.BinarySerializer.Schemas
 {
     public class Schema<T> : ISchema where T : new()
     {

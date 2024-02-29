@@ -1,4 +1,4 @@
-﻿namespace BinarySerializer.Schemas
+﻿namespace Barchart.BinarySerializer.Schemas
 {
     internal interface ISchema
 	{
