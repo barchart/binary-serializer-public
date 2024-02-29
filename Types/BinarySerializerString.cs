@@ -7,7 +7,7 @@ namespace Barchart.BinarySerializer.Types
     {
         public const int NUMBER_OF_HEADER_BITS_STRING = 8;
 
-        public void Encode(BufferHelper bufferHelper, string? value)
+        public void Encode(DataBuffer bufferHelper, string? value)
         {
             Header header = new Header();
             header.IsMissing = false;
@@ -36,7 +36,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public HeaderWithValue Decode(BufferHelper bufferHelper)
+        public HeaderWithValue Decode(DataBuffer bufferHelper)
         {
             byte[]? valueBytes = null;
             int size = 0;
@@ -86,11 +86,11 @@ namespace Barchart.BinarySerializer.Types
         }
 
         #region ISerializer implementation
-        void ISerializer.Encode(BufferHelper bufferHelper, object? value)
+        void ISerializer.Encode(DataBuffer bufferHelper, object? value)
         {
             Encode(bufferHelper, (string?)value);
         }
-        HeaderWithValue ISerializer.Decode(BufferHelper bufferHelper)
+        HeaderWithValue ISerializer.Decode(DataBuffer bufferHelper)
         {
             return (HeaderWithValue)((IBinaryTypeSerializer<string>)this).Decode(bufferHelper);
         }

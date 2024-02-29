@@ -8,7 +8,7 @@ namespace Barchart.BinarySerializer.Types
 
         public abstract int Size { get; }
 
-        public void Encode(BufferHelper bufferHelper, T? value)
+        public void Encode(DataBuffer bufferHelper, T? value)
         {
             Header header = new Header();
             header.IsMissing = false;
@@ -28,7 +28,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public HeaderWithValue Decode(BufferHelper bufferHelper)
+        public HeaderWithValue Decode(DataBuffer bufferHelper)
         {
             int size = Size;
             byte[] valueBytes = new byte[size];
@@ -61,11 +61,11 @@ namespace Barchart.BinarySerializer.Types
         public abstract int GetLengthInBits(T? value);
 
         #region ISerializer implementation
-        void ISerializer.Encode(BufferHelper bufferHelper, object? value)
+        void ISerializer.Encode(DataBuffer bufferHelper, object? value)
         {
             Encode(bufferHelper, (T?)value);
         }
-        HeaderWithValue ISerializer.Decode(BufferHelper bufferHelper)
+        HeaderWithValue ISerializer.Decode(DataBuffer bufferHelper)
         {
             return ((IBinaryTypeSerializer<T?>)this).Decode(bufferHelper);
         }

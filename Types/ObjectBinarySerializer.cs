@@ -11,7 +11,7 @@ namespace Barchart.BinarySerializer.Types
             Schema = schema;
         }
 
-        public HeaderWithValue Decode(BufferHelper bufferHelper)
+        public HeaderWithValue Decode(DataBuffer bufferHelper)
         {
             Header header = new Header();
 
@@ -38,7 +38,7 @@ namespace Barchart.BinarySerializer.Types
             };
         }
 
-        public HeaderWithValue Decode(BufferHelper bufferHelper, object? existing)
+        public HeaderWithValue Decode(DataBuffer bufferHelper, object? existing)
         {
             Header header = new Header();
 
@@ -70,7 +70,7 @@ namespace Barchart.BinarySerializer.Types
             };
         }
 
-        public void Encode(BufferHelper bufferHelper, object? value)
+        public void Encode(DataBuffer bufferHelper, object? value)
         {
             Header header = new Header();
             header.IsMissing = false;
@@ -85,7 +85,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public void Encode(BufferHelper bufferHelper, object? oldObject, object? newObject)
+        public void Encode(DataBuffer bufferHelper, object? oldObject, object? newObject)
         {
             Header header = new Header();
             header.IsMissing = false;

@@ -4,8 +4,8 @@ namespace Barchart.BinarySerializer.Types
 {
     internal interface IBinaryTypeSerializer<T> : ISerializer
     {
-        public void Encode(BufferHelper bufferHelper, T? value);
-        public new HeaderWithValue Decode(BufferHelper bufferHelper);
+        public void Encode(DataBuffer bufferHelper, T? value);
+        public new HeaderWithValue Decode(DataBuffer bufferHelper);
         public int GetLengthInBits(T? value);
     }
 }
