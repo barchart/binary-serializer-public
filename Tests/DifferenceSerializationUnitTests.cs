@@ -54,7 +54,7 @@ namespace Barchart.BinarySerializer.Tests
                     byte[] serializedDataDifference = carSchema.Serialize(carOld, carNew);
                     Car deserializedCarDifference = carSchema.Deserialize(serializedDataDifference, carOld);
 
-                    Assert.Equal(carOld, deserializedCarDifference);
+                    Assert.Equal(carNew, deserializedCarDifference);
                 }
                 stopwatch.Stop();
                 output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
@@ -282,7 +282,7 @@ namespace Barchart.BinarySerializer.Tests
             byte[] serializedDataDifference = garageSchema.Serialize(garage, garage2);
             Garage deserializedGarageDifference = garageSchema.Deserialize(serializedDataDifference, garage);
 
-            Assert.Equal(garage, deserializedGarageDifference);
+            Assert.Equal(garage2, deserializedGarageDifference);
 
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");

@@ -138,6 +138,46 @@ namespace Barchart.BinarySerializer.Tests
                    DateTimeDate5 == otherPerson.DateTimeDate5 &&
                    DateOnly == otherPerson.DateOnly;
         }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode += IntNumber.GetHashCode();
+                hashCode += BoolNumber.GetHashCode();
+                hashCode += doubleNumber.GetHashCode();
+                hashCode += DecimalNumber.GetHashCode();
+                hashCode += (StringName != null ? StringName.GetHashCode() : 0);
+                hashCode += DateTimeDate.GetHashCode();
+                hashCode += (IntNumber2 != null ? IntNumber2.GetHashCode() : 0);
+                hashCode += BoolNumber2.GetHashCode();
+                hashCode += doubleNumber2.GetHashCode();
+                hashCode += DecimalNumber2.GetHashCode();
+                hashCode += (StringName2 != null ? StringName2.GetHashCode() : 0);
+                hashCode += DateTimeDate2.GetHashCode();
+                hashCode += (IntNumber3 != null ? IntNumber3.GetHashCode() : 0);
+                hashCode += BoolNumber3.GetHashCode();
+                hashCode += doubleNumber3.GetHashCode();
+                hashCode += DecimalNumber3.GetHashCode();
+                hashCode += (StringName3 != null ? StringName3.GetHashCode() : 0);
+                hashCode += DateTimeDate3.GetHashCode();
+                hashCode += (IntNumber4 != null ? IntNumber4.GetHashCode() : 0);
+                hashCode += BoolNumber4.GetHashCode();
+                hashCode += doubleNumber4.GetHashCode();
+                hashCode += DecimalNumber4.GetHashCode();
+                hashCode += (StringName4 != null ? StringName4.GetHashCode() : 0);
+                hashCode += DateTimeDate4.GetHashCode();
+                hashCode += (IntNumber5 != null ? IntNumber5.GetHashCode() : 0);
+                hashCode += BoolNumber5.GetHashCode();
+                hashCode += doubleNumber5.GetHashCode();
+                hashCode += DecimalNumber5.GetHashCode();
+                hashCode += (StringName5 != null ? StringName5.GetHashCode() : 0);
+                hashCode += DateTimeDate5.GetHashCode();
+                hashCode += (DateOnly != null ? DateOnly.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }
 

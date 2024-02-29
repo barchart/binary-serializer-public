@@ -40,7 +40,16 @@ namespace Barchart.BinarySerializer.Tests
                    DateTimeDate == otherCar.DateTimeDate &&
                    sByte == otherCar.sByte &&
                    Byte == otherCar.Byte &&
-                   PersonObjectInCar.Equals(otherCar.PersonObjectInCar);
+                   (PersonObjectInCar?.Equals(otherCar.PersonObjectInCar) ?? otherCar.PersonObjectInCar == null);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return doubleNumber.GetHashCode() + DecimalNumber.GetHashCode() + (StringName != null ? StringName.GetHashCode() : 0) + DateTimeDate.GetHashCode() +
+                    sByte.GetHashCode() + Byte.GetHashCode() + (PersonObjectInCar != null ? PersonObjectInCar.GetHashCode() : 0);
+            }
         }
     }
 }

@@ -31,14 +31,22 @@ namespace Barchart.BinarySerializer.Tests
 
             var otherGarage = (Garage)obj;
 
-            return CarObject.Equals(otherGarage.CarObject) &&
-                   PersonObject.Equals(otherGarage.PersonObject) &&
+            return (CarObject?.Equals(otherGarage.CarObject) ?? otherGarage.CarObject == null) &&
+                   (PersonObject?.Equals(otherGarage.PersonObject) ?? otherGarage.PersonObject == null) &&
                    doubleNumberGarage == otherGarage.doubleNumberGarage &&
                    DecimalNumberGarage == otherGarage.DecimalNumberGarage &&
                    StringNameGarage == otherGarage.StringNameGarage &&
                    DateTimeDateGarage == otherGarage.DateTimeDateGarage;
         }
 
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return doubleNumberGarage.GetHashCode() + DecimalNumberGarage.GetHashCode() + (StringNameGarage != null ? StringNameGarage.GetHashCode() : 0) +
+                   (DateTimeDateGarage != null ? DateTimeDateGarage.GetHashCode() : 0) + (CarObject != null ? CarObject.GetHashCode() : 0) + (PersonObject != null ? PersonObject.GetHashCode() : 0);
+            }
+        }
     }
 }
 
