@@ -1,6 +1,6 @@
 ﻿namespace Barchart.BinarySerializer.Schemas
 {
-    internal interface ISchema
+    public interface ISchema
 	{
         public byte[] Serialize(object schemaObject);
         public byte[] Serialize(object schemaObject, byte[] buffer);
