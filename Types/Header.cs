@@ -1,4 +1,4 @@
-﻿namespace JerqAggregatorNew.Types
+﻿namespace BinarySerializer.Types
 {
     /// <summary>
     ///     one more byte for header for every property/field

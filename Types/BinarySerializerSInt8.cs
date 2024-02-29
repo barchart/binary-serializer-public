@@ -1,4 +1,4 @@
-﻿namespace JerqAggregatorNew.Types
+﻿namespace BinarySerializer.Types
 {
     public class BinarySerializerSInt8 : BinarySerializerNumeric<sbyte>
     {

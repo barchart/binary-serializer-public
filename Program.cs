@@ -1,4 +1,4 @@
-﻿namespace JerqAggregatorNew
+﻿namespace BinarySerializer
 {  
     class Program
     {

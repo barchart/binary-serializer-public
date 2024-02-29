@@ -1,7 +1,7 @@
-﻿using JerqAggregatorNew.Types;
+﻿using BinarySerializer.Types;
 using System.Reflection;
 
-namespace JerqAggregatorNew.Schemas
+namespace BinarySerializer.Schemas
 {
     /// <summary>
     ///     Structure that represents information about a field/property fetched from reflection

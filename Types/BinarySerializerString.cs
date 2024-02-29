@@ -1,7 +1,7 @@
-﻿using JerqAggregatorNew.Schemas;
+﻿using BinarySerializer.Schemas;
 using System.Text;
 
-namespace JerqAggregatorNew.Types
+namespace BinarySerializer.Types
 {
     public class BinarySerializerString : IBinaryTypeSerializer<string>
     {

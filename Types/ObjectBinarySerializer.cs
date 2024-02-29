@@ -1,6 +1,6 @@
-﻿using JerqAggregatorNew.Schemas;
+﻿using BinarySerializer.Schemas;
 
-namespace JerqAggregatorNew.Types
+namespace BinarySerializer.Types
 {
     public class ObjectBinarySerializer : ISerializer
     {

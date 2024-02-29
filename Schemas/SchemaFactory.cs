@@ -1,8 +1,8 @@
-﻿using JerqAggregatorNew.Types;
+﻿using BinarySerializer.Types;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace JerqAggregatorNew.Schemas
+namespace BinarySerializer.Schemas
 {
     public class BinarySerializeAttribute : Attribute
     {

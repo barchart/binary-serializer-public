@@ -1,10 +1,10 @@
 ﻿using Xunit;
-using JerqAggregatorNew.Schemas;
+using BinarySerializer.Schemas;
 using System.Diagnostics;
 using Xunit.Abstractions;
 using System.Reflection;
 
-namespace JerqAggregatorNew.Tests
+namespace BinarySerializer.Tests
 {
     class Person
     {

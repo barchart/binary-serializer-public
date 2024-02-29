@@ -1,7 +1,6 @@
-﻿using JerqAggregatorNew.Types;
-using System.Reflection;
+﻿using BinarySerializer.Types;
 
-namespace JerqAggregatorNew.Schemas
+namespace BinarySerializer.Schemas
 {
     public class Schema<T> : ISchema where T : new()
     {

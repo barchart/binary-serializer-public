@@ -1,4 +1,4 @@
-﻿namespace JerqAggregatorNew.Schemas
+﻿namespace BinarySerializer.Schemas
 {
     internal interface ISchema
 	{
