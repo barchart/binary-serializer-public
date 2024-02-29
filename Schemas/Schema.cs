@@ -9,16 +9,11 @@ namespace Barchart.BinarySerializer.Schemas
         [ThreadStatic]
         static byte[] _buffer = new byte[BUFFER_SIZE];
 
-        private List<MemberData<T>> _memberData;
+        private List<MemberData<T>> _memberDataList;
 
-        public Schema()
+        internal Schema(List<MemberData<T>> memberDataList)
         {
-            _memberData = new List<MemberData<T>>();
-        }
-
-        internal void AddMemberData(MemberData<T> memberData)
-        {
-            _memberData.Add(memberData);
+            _memberDataList = memberDataList;
         }
 
         /// <summary>
@@ -45,8 +40,8 @@ namespace Barchart.BinarySerializer.Schemas
             return Serialize(schemaObject, bufferHelper);
         }
 
-        internal byte[] Serialize(T schemaObject, BufferHelper bufferHelper) {
-            foreach (MemberData<T> memberData in _memberData)
+        private byte[] Serialize(T schemaObject, BufferHelper bufferHelper) {
+            foreach (MemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
                 {
@@ -86,9 +81,9 @@ namespace Barchart.BinarySerializer.Schemas
             return Serialize(oldObject, newObject, bufferHelper);
         }
 
-        internal byte[] Serialize(T oldObject, T newObject, BufferHelper bufferHelper)
+        private byte[] Serialize(T oldObject, T newObject, BufferHelper bufferHelper)
         {
-            foreach (MemberData<T> memberData in _memberData)
+            foreach (MemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
                 {
@@ -131,10 +126,10 @@ namespace Barchart.BinarySerializer.Schemas
             return Deserialize(bufferHelper);
         }
 
-        internal T Deserialize(BufferHelper bufferHelper) {
+        private T Deserialize(BufferHelper bufferHelper) {
             T existing = new T();
 
-            foreach (MemberData<T> memberData in _memberData)
+            foreach (MemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
                 {
@@ -168,9 +163,9 @@ namespace Barchart.BinarySerializer.Schemas
             return Deserialize(existing, bufferHelper);
         }
 
-        internal T Deserialize(T existing, BufferHelper bufferHelper)
+        private T Deserialize(T existing, BufferHelper bufferHelper)
         {
-            foreach (MemberData<T> memberData in _memberData)
+            foreach (MemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
                 {
@@ -208,7 +203,7 @@ namespace Barchart.BinarySerializer.Schemas
         public int GetLengthInBits(T schemaObject)
         {
             int lengthInBits = 0;
-            foreach (MemberData<T> memberData in _memberData)
+            foreach (MemberData<T> memberData in _memberDataList)
             {
                 object? value = memberData.GetDelegate(schemaObject);
                 lengthInBits += memberData.BinarySerializer.GetLengthInBits(value);             

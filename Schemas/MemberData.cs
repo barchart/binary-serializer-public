@@ -8,11 +8,11 @@ namespace Barchart.BinarySerializer.Schemas
     /// </summary>
     internal struct MemberData<T>
     {
-        public Type Type { get; set; }
-        public MemberInfo MemberInfo { get; set; }
         public string Name { get; set; }
+        public Type Type { get; set; }
         public bool IsIncluded { get; set; }
         public bool IsKeyAttribute { get; set; }
+        public MemberInfo MemberInfo { get; set; }
         internal ISerializer BinarySerializer { get; set; }
         public Func<T, object?> GetDelegate { get; set; }
         public Action<T, object?> SetDelegate { get; set; }

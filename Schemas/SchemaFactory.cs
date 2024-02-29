@@ -10,6 +10,11 @@ namespace Barchart.BinarySerializer.Schemas
 
         static SchemaFactory()
         {
+            InitializeSerializers();
+        }
+
+        private static void InitializeSerializers()
+        {
             allSerializers.Add(typeof(String), new BinarySerializerString());
             allSerializers.Add(typeof(Int32), new BinarySerializerInt32());
             allSerializers.Add(typeof(Int32?), new BinarySerializerInt32());
@@ -50,19 +55,20 @@ namespace Barchart.BinarySerializer.Schemas
         /// 
         public static Schema<T> GetSchema<T>() where T : new()
         {
-            Schema<T> schema = new Schema<T>();
             Type type = typeof(T);
-
             MemberInfo[] members = GetAllMembersForType(type);
+            List<MemberData<T>> memberDataList = new List<MemberData<T>>();
 
             foreach (MemberInfo memberInfo in members)
             {
-                MemberData<T>? member = ProcessMemberInfo<T>(memberInfo);
-                if(member != null) schema.AddMemberData((MemberData<T>)member);
+                MemberData<T>? memberData = ProcessMemberInfo<T>(memberInfo);
+                if(memberData != null) memberDataList.Add((MemberData<T>)memberData);
             }
 
+            Schema<T> schema = new Schema<T>(memberDataList);
+
             return schema;
-        }
+        } 
 
         private static MemberData<T>? ProcessMemberInfo<T>(MemberInfo memberInfo) where T : new()
         {
@@ -137,7 +143,7 @@ namespace Barchart.BinarySerializer.Schemas
             return type.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, null, null);
         }
 
-        internal static ISchema GenerateSchemaInterface(Type type)
+        private static ISchema GenerateSchemaInterface(Type type)
         {
             Type[] types = { type };
             MethodCallExpression methodCallExpression = Expression.Call(typeof(SchemaFactory), nameof(GetSchema), types, null);
