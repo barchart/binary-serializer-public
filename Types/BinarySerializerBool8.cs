@@ -21,7 +21,7 @@
 
         protected override bool DecodeBytes(byte[] bytes)
         {
-            return (bytes[0] & 0x01) != 0;
+            return bytes[0] == 1;
         }
     }
 }
