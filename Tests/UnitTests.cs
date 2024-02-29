@@ -79,42 +79,7 @@ namespace Barchart.BinarySerializer.Tests
                 stopwatch.Stop();
                 output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
-                Assert.Equal(person.IntNumber, deserializedPerson.IntNumber);
-                Assert.Equal(person.BoolNumber, deserializedPerson.BoolNumber);
-                Assert.Equal(person.DecimalNumber, deserializedPerson.DecimalNumber);
-                Assert.Equal(person.doubleNumber, deserializedPerson.doubleNumber);
-                Assert.Equal(person.StringName, deserializedPerson.StringName);
-                Assert.Equal(person.DateTimeDate, deserializedPerson.DateTimeDate);
-
-                Assert.Equal(person.IntNumber2, deserializedPerson.IntNumber2);
-                Assert.Equal(person.BoolNumber2, deserializedPerson.BoolNumber2);
-                Assert.Equal(person.DecimalNumber2, deserializedPerson.DecimalNumber2);
-                Assert.Equal(person.doubleNumber2, deserializedPerson.doubleNumber2);
-                Assert.Equal(person.StringName2, deserializedPerson.StringName2);
-                Assert.Equal(person.DateTimeDate2, deserializedPerson.DateTimeDate2);
-
-                Assert.Equal(person.IntNumber3, deserializedPerson.IntNumber3);
-                Assert.Equal(person.BoolNumber3, deserializedPerson.BoolNumber3);
-                Assert.Equal(person.DecimalNumber3, deserializedPerson.DecimalNumber3);
-                Assert.Equal(person.doubleNumber3, deserializedPerson.doubleNumber3);
-                Assert.Equal(person.StringName3, deserializedPerson.StringName3);
-                Assert.Equal(person.DateTimeDate3, deserializedPerson.DateTimeDate3);
-
-                Assert.Equal(person.IntNumber4, deserializedPerson.IntNumber4);
-                Assert.Equal(person.BoolNumber4, deserializedPerson.BoolNumber4);
-                Assert.Equal(person.DecimalNumber4, deserializedPerson.DecimalNumber4);
-                Assert.Equal(person.doubleNumber4, deserializedPerson.doubleNumber4);
-                Assert.Equal(person.StringName4, deserializedPerson.StringName4);
-                Assert.Equal(person.DateTimeDate4, deserializedPerson.DateTimeDate4);
-
-                Assert.Equal(person.IntNumber5, deserializedPerson.IntNumber5);
-                Assert.Equal(person.BoolNumber5, deserializedPerson.BoolNumber5);
-                Assert.Equal(person.DecimalNumber5, deserializedPerson.DecimalNumber5);
-                Assert.Equal(person.doubleNumber5, deserializedPerson.doubleNumber5);
-                Assert.Equal(person.StringName5, deserializedPerson.StringName5);
-                Assert.Equal(person.DateTimeDate5, deserializedPerson.DateTimeDate5);
-
-                Assert.Equal(person.DateOnly, deserializedPerson.DateOnly);
+                Assert.Equal(person, deserializedPerson);
             }
             catch (Exception ex)
             {
