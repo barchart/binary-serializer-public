@@ -40,7 +40,7 @@ namespace Barchart.BinarySerializer.Tests
                    DateTimeDate == otherCar.DateTimeDate &&
                    sByte == otherCar.sByte &&
                    Byte == otherCar.Byte &&
-                   PersonObjectInCar == otherCar.PersonObjectInCar;
+                   PersonObjectInCar.Equals(otherCar.PersonObjectInCar);
         }
     }
 }
