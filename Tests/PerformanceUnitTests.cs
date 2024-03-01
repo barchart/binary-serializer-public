@@ -365,6 +365,179 @@ namespace Barchart.BinarySerializer.Tests
             output.WriteLine($"Using Equals: {stopwatch2.ElapsedTicks} ticks");
 
         }
+
+        [Fact]
+        public void DelegatesIEquatablePerformanceTest()
+        {
+            int iterations = 10000000;
+
+            Stopwatch stopwatch1 = new Stopwatch();
+            Stopwatch stopwatch2 = new Stopwatch();
+
+            DateTime now = DateTime.UtcNow;
+            long ticks = now.Ticks;
+            long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+
+            PersonIEquatable person1 = new PersonIEquatable()
+            {
+                IntNumber = 1,
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
+                BoolNumber = true,
+                DateTimeDate = roundedDateTime,
+                StringName = null,
+
+                IntNumber2 = 1,
+                DecimalNumber2 = 1.5m,
+                doubleNumber2 = 2.5,
+                BoolNumber2 = true,
+                DateTimeDate2 = roundedDateTime,
+                StringName2 = "Luka",
+
+                IntNumber3 = 1,
+                DecimalNumber3 = 1.5m,
+                doubleNumber3 = 2.5,
+                BoolNumber3 = true,
+                DateTimeDate3 = roundedDateTime,
+                StringName3 = "Luka",
+
+                IntNumber4 = 1,
+                DecimalNumber4 = 1.5m,
+                doubleNumber4 = 2.5,
+                BoolNumber4 = true,
+                DateTimeDate4 = roundedDateTime,
+                StringName4 = "Luka",
+
+                IntNumber5 = 1,
+                DecimalNumber5 = 1.5m,
+                doubleNumber5 = 2.5,
+                BoolNumber5 = true,
+                DateTimeDate5 = roundedDateTime,
+                StringName5 = "Luka",
+
+                DateOnly = new DateOnly(2022, 2, 14)
+            };
+
+            PersonIEquatable person2 = new PersonIEquatable()
+            {
+                IntNumber = 1,
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
+                BoolNumber = true,
+                DateTimeDate = roundedDateTime,
+                StringName = null,
+
+                IntNumber2 = 1,
+                DecimalNumber2 = 1.5m,
+                doubleNumber2 = 2.5,
+                BoolNumber2 = true,
+                DateTimeDate2 = roundedDateTime,
+                StringName2 = "Luka",
+
+                IntNumber3 = 1,
+                DecimalNumber3 = 1.5m,
+                doubleNumber3 = 2.5,
+                BoolNumber3 = true,
+                DateTimeDate3 = roundedDateTime,
+                StringName3 = "Luka",
+
+                IntNumber4 = 1,
+                DecimalNumber4 = 1.5m,
+                doubleNumber4 = 2.5,
+                BoolNumber4 = true,
+                DateTimeDate4 = roundedDateTime,
+                StringName4 = "Luka",
+
+                IntNumber5 = 1,
+                DecimalNumber5 = 1.5m,
+                doubleNumber5 = 2.5,
+                BoolNumber5 = true,
+                DateTimeDate5 = roundedDateTime,
+                StringName5 = "Luka",
+
+                DateOnly = new DateOnly(2022, 2, 14)
+            };
+            CarIEquatable car1 = new CarIEquatable()
+            {
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
+                DateTimeDate = roundedDateTime,
+                StringName = "Luka",
+                PersonObjectInCar = person1
+            };
+
+            CarIEquatable car2 = new CarIEquatable()
+            {
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
+                DateTimeDate = roundedDateTime,
+                StringName = "Luka",
+                PersonObjectInCar = person2
+            };
+
+            var carType1 = car1.GetType();
+            PropertyInfo? decimalNumberInfo = carType1.GetProperty("DecimalNumber");
+            FieldInfo? doubleNumberInfo = carType1.GetField("doubleNumber");
+            PropertyInfo? dateTimeDateInfo = carType1.GetProperty("DateTimeDate");
+            PropertyInfo? stringNameInfo = carType1.GetProperty("StringName");
+            PropertyInfo? personObjectInCarPropertyInfo = carType1.GetProperty("PersonObjectInCar");
+
+            if (doubleNumberInfo == null || decimalNumberInfo == null || dateTimeDateInfo == null || stringNameInfo == null || personObjectInCarPropertyInfo == null)
+            {
+                Assert.Fail();
+                return;
+            }
+
+            Func<CarIEquatable, object?> getDecimalNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable>(decimalNumberInfo);
+            Func<CarIEquatable, object?> getDoubleNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable>(doubleNumberInfo);
+            Func<CarIEquatable, object?> getDateTimeNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable>(dateTimeDateInfo);
+            Func<CarIEquatable, object?> getStringNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable>(stringNameInfo);
+            Func<CarIEquatable, object?> getPersonObjectInCarPropertyInfo = SchemaFactory.GenerateGetter<CarIEquatable>(personObjectInCarPropertyInfo);
+
+            var carType2 = car2.GetType();
+            PropertyInfo? decimalNumberInfo2 = carType2.GetProperty("DecimalNumber");
+            FieldInfo? doubleNumberInfo2 = carType2.GetField("doubleNumber");
+            PropertyInfo? dateTimeDateInfo2 = carType2.GetProperty("DateTimeDate");
+            PropertyInfo? stringNameInfo2 = carType2.GetProperty("StringName");
+            PropertyInfo? personObjectInCarPropertyInfo2 = carType2.GetProperty("PersonObjectInCar");
+
+            if (doubleNumberInfo2 == null || decimalNumberInfo2 == null || dateTimeDateInfo2 == null || stringNameInfo2 == null || personObjectInCarPropertyInfo2 == null)
+            {
+                Assert.Fail();
+                return;
+            }
+
+            Func<CarIEquatable, object?> getDecimalNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable>(decimalNumberInfo2);
+            Func<CarIEquatable, object?> getDoubleNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable>(doubleNumberInfo2);
+            Func<CarIEquatable, object?> getDateTimeNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable>(dateTimeDateInfo2);
+            Func<CarIEquatable, object?> getStringNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable>(stringNameInfo2);
+            Func<CarIEquatable, object?> getPersonObjectInCarPropertyInfo2 = SchemaFactory.GenerateGetter<CarIEquatable>(personObjectInCarPropertyInfo2);
+
+            stopwatch1.Start();
+
+            for (long i = 0; i < iterations; i++)
+            {
+                var isEqual = (decimal)getDecimalNumberMethod(car1)! == (decimal)getDecimalNumberMethod2(car2)! &&
+                (double)getDoubleNumberMethod(car1)! == (double)getDoubleNumberMethod2(car2)! &&
+                (DateTime)getDateTimeNumberMethod(car1)! == (DateTime)getDateTimeNumberMethod2(car2)! &&
+                (string)getStringNumberMethod(car1)! == (string)getStringNumberMethod2(car2)! &&
+                ((PersonIEquatable)getPersonObjectInCarPropertyInfo(car1)!).Equals((PersonIEquatable)getPersonObjectInCarPropertyInfo2(car2)!);
+            }
+
+            stopwatch1.Stop();
+
+            stopwatch2.Start();
+            for (long i = 0; i < iterations; i++)
+            {
+                var isEqual = car1.Equals(car2);
+            }
+            stopwatch2.Stop();
+
+            output.WriteLine($"Using Delegates: {stopwatch1.ElapsedTicks} ticks");
+            output.WriteLine($"Using Equals: {stopwatch2.ElapsedTicks} ticks");
+
+        }
     }
 }
 

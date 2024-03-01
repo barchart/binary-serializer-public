@@ -178,6 +178,7 @@ namespace Barchart.BinarySerializer.Tests
                 return hashCode;
             }
         }
+
     }
 }
 
