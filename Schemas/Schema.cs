@@ -4,7 +4,7 @@ namespace Barchart.BinarySerializer.Schemas
 {
     public class Schema<T> : ISchema where T : new()
     {
-        readonly static int BUFFER_SIZE = 256000000;
+        readonly private static int BUFFER_SIZE = 256000000;
 
         [ThreadStatic]
         private static byte[]? _buffer;
@@ -206,11 +206,21 @@ namespace Barchart.BinarySerializer.Schemas
             return existing;
         }
 
+        /// <summary>
+        ///     Calculates the total length of the binary representation of the provided schema object in bytes.
+        /// </summary>
+        /// <param name="schemaObject">The schema object to calculate the length for.</param>
+        /// <returns> The total length of the binary representation of the schema object in bytes. </returns>
         public int GetLengthInBytes(T schemaObject)
         {
             return (int)Math.Ceiling((double)GetLengthInBits(schemaObject) / 8);
         }
 
+        /// <summary>
+        ///     Calculates the total length of the binary representation of the provided schema object in bits.
+        /// </summary>
+        /// <param name="schemaObject">The schema object to calculate the length for.</param>
+        /// <returns> The total length of the binary representation of the schema object in bits. </returns>
         public int GetLengthInBits(T schemaObject)
         {
             int lengthInBits = 0;
