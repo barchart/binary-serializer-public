@@ -11,25 +11,25 @@ namespace Barchart.BinarySerializer.Types
             Schema = schema;
         }
 
-        public HeaderWithValue Decode(DataBuffer bufferHelper)
+        public HeaderWithValue Decode(DataBuffer dataBuffer)
         {
             Header header = new Header();
 
-            header.IsMissing = bufferHelper.ReadBit() == 1;
+            header.IsMissing = dataBuffer.ReadBit() == 1;
 
             if (header.IsMissing)
             {
                 return new HeaderWithValue(header, null);
             }
 
-            header.IsNull = bufferHelper.ReadBit() == 1;
+            header.IsNull = dataBuffer.ReadBit() == 1;
 
             if (header.IsNull)
             {
                 return new HeaderWithValue(header, null);
             }
 
-            object? deserializedObject = Schema.Deserialize(bufferHelper);
+            object? deserializedObject = Schema.Deserialize(dataBuffer);
 
             return new HeaderWithValue
             {
@@ -38,18 +38,18 @@ namespace Barchart.BinarySerializer.Types
             };
         }
 
-        public HeaderWithValue Decode(DataBuffer bufferHelper, object? existing)
+        public HeaderWithValue Decode(DataBuffer dataBuffer, object? existing)
         {
             Header header = new Header();
 
-            header.IsMissing = bufferHelper.ReadBit() == 1;
+            header.IsMissing = dataBuffer.ReadBit() == 1;
 
             if (header.IsMissing)
             {
                 return new HeaderWithValue(header, null);
             }
 
-            header.IsNull = bufferHelper.ReadBit() == 1;
+            header.IsNull = dataBuffer.ReadBit() == 1;
 
             if (header.IsNull)
             {
@@ -60,7 +60,7 @@ namespace Barchart.BinarySerializer.Types
 
             if (existing != null)
             {
-                deserializedObject = Schema.Deserialize(existing, bufferHelper);
+                deserializedObject = Schema.Deserialize(existing, dataBuffer);
             }
 
             return new HeaderWithValue
@@ -70,33 +70,33 @@ namespace Barchart.BinarySerializer.Types
             };
         }
 
-        public void Encode(DataBuffer bufferHelper, object? value)
+        public void Encode(DataBuffer dataBuffer, object? value)
         {
             Header header = new Header();
             header.IsMissing = false;
             header.IsNull = value == null;
 
-            bufferHelper.WriteBit(0);
-            bufferHelper.WriteBit((byte)(header.IsNull ? 1 : 0));
+            dataBuffer.WriteBit(0);
+            dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
 
             if (value != null)
             {
-                Schema.Serialize(value, bufferHelper);
+                Schema.Serialize(value, dataBuffer);
             }
         }
 
-        public void Encode(DataBuffer bufferHelper, object? oldObject, object? newObject)
+        public void Encode(DataBuffer dataBuffer, object? oldObject, object? newObject)
         {
             Header header = new Header();
             header.IsMissing = false;
             header.IsNull = newObject == null;
 
-            bufferHelper.WriteBit(0);
-            bufferHelper.WriteBit((byte)(header.IsNull ? 1 : 0));
+            dataBuffer.WriteBit(0);
+            dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
 
             if (oldObject != null && newObject != null)
             {
-                Schema.Serialize(oldObject, newObject, bufferHelper);
+                Schema.Serialize(oldObject, newObject, dataBuffer);
             }
         }
 

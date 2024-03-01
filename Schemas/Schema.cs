@@ -47,13 +47,13 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T schemaObject, byte[] buffer)
         {
-            DataBuffer bufferHelper = new DataBuffer(buffer);
-            bufferHelper.ResetByte();
+            DataBuffer dataBuffer = new DataBuffer(buffer);
+            dataBuffer.ResetByte();
 
-            return Serialize(schemaObject, bufferHelper);
+            return Serialize(schemaObject, dataBuffer);
         }
 
-        private byte[] Serialize(T schemaObject, DataBuffer bufferHelper) {
+        private byte[] Serialize(T schemaObject, DataBuffer dataBuffer) {
             foreach (MemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
@@ -63,10 +63,10 @@ namespace Barchart.BinarySerializer.Schemas
 
                 object? value = memberData.GetDelegate(schemaObject);
 
-                memberData.BinarySerializer.Encode(bufferHelper, value);
+                memberData.BinarySerializer.Encode(dataBuffer, value);
             }
 
-            return bufferHelper.ToBytes();
+            return dataBuffer.ToBytes();
         }
         /// <summary>
         ///      Serialize only a difference between the new and the old object.
@@ -88,13 +88,13 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T oldObject, T newObject, byte[] buffer)
         {
-            DataBuffer bufferHelper = new DataBuffer(buffer);
-            bufferHelper.ResetByte();
+            DataBuffer dataBuffer = new DataBuffer(buffer);
+            dataBuffer.ResetByte();
 
-            return Serialize(oldObject, newObject, bufferHelper);
+            return Serialize(oldObject, newObject, dataBuffer);
         }
 
-        private byte[] Serialize(T oldObject, T newObject, DataBuffer bufferHelper)
+        private byte[] Serialize(T oldObject, T newObject, DataBuffer dataBuffer)
         {
             foreach (MemberData<T> memberData in _memberDataList)
             {
@@ -112,20 +112,20 @@ namespace Barchart.BinarySerializer.Schemas
                 {
                     if (memberData.BinarySerializer is ObjectBinarySerializer)
                     {
-                        ((ObjectBinarySerializer)memberData.BinarySerializer).Encode(bufferHelper, oldValue, newValue);
+                        ((ObjectBinarySerializer)memberData.BinarySerializer).Encode(dataBuffer, oldValue, newValue);
                     }
                     else
                     {
-                        memberData.BinarySerializer.Encode(bufferHelper, newValue);
+                        memberData.BinarySerializer.Encode(dataBuffer, newValue);
                     }
                 }
                 else
                 {
-                    EncodeMissingFlag(bufferHelper);
+                    EncodeMissingFlag(dataBuffer);
                 }
             }
 
-            return bufferHelper.ToBytes();
+            return dataBuffer.ToBytes();
         }
 
         /// <summary>
@@ -135,11 +135,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns> Deserialized object written into newly created object of generic type. </returns>
         public T Deserialize(byte[] buffer)
         {
-            DataBuffer bufferHelper  = new DataBuffer(buffer);
-            return Deserialize(bufferHelper);
+            DataBuffer dataBuffer  = new DataBuffer(buffer);
+            return Deserialize(dataBuffer);
         }
 
-        private T Deserialize(DataBuffer bufferHelper) {
+        private T Deserialize(DataBuffer dataBuffer) {
             T existing = new T();
 
             foreach (MemberData<T> memberData in _memberDataList)
@@ -149,7 +149,7 @@ namespace Barchart.BinarySerializer.Schemas
                     continue;
                 }
 
-                HeaderWithValue value = memberData.BinarySerializer.Decode(bufferHelper);
+                HeaderWithValue value = memberData.BinarySerializer.Decode(dataBuffer);
 
                 if (value.Header.IsMissing)
                 {
@@ -170,11 +170,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns> Deserialized object written into existing object of generic type. </returns>
         public T Deserialize(byte[] buffer, T existing)
         {
-            DataBuffer bufferHelper = new DataBuffer(buffer); 
-            return Deserialize(existing, bufferHelper);
+            DataBuffer dataBuffer = new DataBuffer(buffer); 
+            return Deserialize(existing, dataBuffer);
         }
 
-        private T Deserialize(T existing, DataBuffer bufferHelper)
+        private T Deserialize(T existing, DataBuffer dataBuffer)
         {
             foreach (MemberData<T> memberData in _memberDataList)
             {
@@ -188,11 +188,11 @@ namespace Barchart.BinarySerializer.Schemas
                 if (memberData.BinarySerializer is ObjectBinarySerializer)
                 {
                     object? currentObject = memberData.GetDelegate(existing);
-                    value = ((ObjectBinarySerializer)memberData.BinarySerializer).Decode(bufferHelper, currentObject);
+                    value = ((ObjectBinarySerializer)memberData.BinarySerializer).Decode(dataBuffer, currentObject);
                 }
                 else
                 {
-                    value = memberData.BinarySerializer.Decode(bufferHelper);
+                    value = memberData.BinarySerializer.Decode(dataBuffer);
                 }
 
                 if (value.Header.IsMissing)
@@ -223,9 +223,9 @@ namespace Barchart.BinarySerializer.Schemas
             return lengthInBits;
         }
 
-        private void EncodeMissingFlag(DataBuffer bufferHelper)
+        private void EncodeMissingFlag(DataBuffer dataBuffer)
         {
-            bufferHelper.WriteBit(1);
+            dataBuffer.WriteBit(1);
         }
 
         #region ISchema implementation
@@ -249,14 +249,14 @@ namespace Barchart.BinarySerializer.Schemas
             return Serialize((T)oldObject, (T)newObject, buffer);
         }
 
-        byte[] ISchema.Serialize(object schemaObject, DataBuffer bufferHelper)
+        byte[] ISchema.Serialize(object schemaObject, DataBuffer dataBuffer)
         {
-            return Serialize((T)schemaObject, bufferHelper);
+            return Serialize((T)schemaObject, dataBuffer);
         }
 
-        byte[] ISchema.Serialize(object oldObject, object newObject, DataBuffer bufferHelper)
+        byte[] ISchema.Serialize(object oldObject, object newObject, DataBuffer dataBuffer)
         {
-            return Serialize((T)oldObject, (T)newObject, bufferHelper);
+            return Serialize((T)oldObject, (T)newObject, dataBuffer);
         }
 
         object? ISchema.Deserialize(byte[] buffer)
@@ -269,14 +269,14 @@ namespace Barchart.BinarySerializer.Schemas
             return Deserialize(buffer, (T)existing);
         }
 
-        object? ISchema.Deserialize(DataBuffer bufferHelper)
+        object? ISchema.Deserialize(DataBuffer dataBuffer)
         {
-            return Deserialize(bufferHelper);
+            return Deserialize(dataBuffer);
         }
 
-        object? ISchema.Deserialize(object existing, DataBuffer bufferHelper)
+        object? ISchema.Deserialize(object existing, DataBuffer dataBuffer)
         {
-            return Deserialize((T)existing, bufferHelper);
+            return Deserialize((T)existing, dataBuffer);
         }
 
         int ISchema.GetLengthInBytes(object? schemaObject)

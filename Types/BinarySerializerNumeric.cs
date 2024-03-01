@@ -8,14 +8,14 @@ namespace Barchart.BinarySerializer.Types
 
         public abstract int Size { get; }
 
-        public void Encode(DataBuffer bufferHelper, T? value)
+        public void Encode(DataBuffer dataBuffer, T? value)
         {
             Header header = new Header();
             header.IsMissing = false;
             header.IsNull = value == null;
 
-            bufferHelper.WriteBit(0);
-            bufferHelper.WriteBit((byte)(header.IsNull ? 1 : 0));
+            dataBuffer.WriteBit(0);
+            dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
 
             if (value.HasValue)
             {
@@ -23,25 +23,25 @@ namespace Barchart.BinarySerializer.Types
 
                 for (int i = valueBytes.Length - 1; i >= 0; i--)
                 {
-                    bufferHelper.WriteByte(valueBytes[i]);
+                    dataBuffer.WriteByte(valueBytes[i]);
                 }
             }
         }
 
-        public HeaderWithValue Decode(DataBuffer bufferHelper)
+        public HeaderWithValue Decode(DataBuffer dataBuffer)
         {
             int size = Size;
             byte[] valueBytes = new byte[size];
 
             Header header = new Header();
-            header.IsMissing = bufferHelper.ReadBit() == 1;
+            header.IsMissing = dataBuffer.ReadBit() == 1;
 
             if (header.IsMissing)
             {
                 return new HeaderWithValue(header, null);
             }
 
-            header.IsNull = bufferHelper.ReadBit() == 1;
+            header.IsNull = dataBuffer.ReadBit() == 1;
 
             if (header.IsNull)
             {
@@ -50,7 +50,7 @@ namespace Barchart.BinarySerializer.Types
 
             for (int i = size - 1; i >= 0; i--)
             {
-                valueBytes[i] = bufferHelper.ReadByte();
+                valueBytes[i] = dataBuffer.ReadByte();
             }
 
             return new HeaderWithValue(header, DecodeBytes(valueBytes));
@@ -61,13 +61,13 @@ namespace Barchart.BinarySerializer.Types
         public abstract int GetLengthInBits(T? value);
 
         #region ISerializer implementation
-        void ISerializer.Encode(DataBuffer bufferHelper, object? value)
+        void ISerializer.Encode(DataBuffer dataBuffer, object? value)
         {
-            Encode(bufferHelper, (T?)value);
+            Encode(dataBuffer, (T?)value);
         }
-        HeaderWithValue ISerializer.Decode(DataBuffer bufferHelper)
+        HeaderWithValue ISerializer.Decode(DataBuffer dataBuffer)
         {
-            return ((IBinaryTypeSerializer<T?>)this).Decode(bufferHelper);
+            return ((IBinaryTypeSerializer<T?>)this).Decode(dataBuffer);
         }
 
         int ISerializer.GetLengthInBits(object? value)
