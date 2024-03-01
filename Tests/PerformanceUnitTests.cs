@@ -65,11 +65,11 @@ namespace Barchart.BinarySerializer.Tests
                 StringName = "Luka",
             };
 
-            stopwatch.Start();
-
             Type carType = typeof(Car);
             PropertyInfo? decimalNumberProperty = carType.GetProperty("DecimalNumber");
             FieldInfo? doubleNumberProperty = carType.GetField("doubleNumber");
+
+            stopwatch.Start();
 
             for (long i = 0; i < iterations; i++)
             {
@@ -77,6 +77,7 @@ namespace Barchart.BinarySerializer.Tests
                 double? a = (double?)doubleNumberProperty?.GetValue(carOld);
             }
             stopwatch.Stop();
+
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
 
@@ -99,10 +100,10 @@ namespace Barchart.BinarySerializer.Tests
                 StringName = "Luka",
             };
 
-            stopwatch.Start();
-
             var getter = (Car carold) => carold.DecimalNumber;
             var setter = (Car carold, decimal value) => carold.DecimalNumber = value;
+
+            stopwatch.Start();
 
             for (long i = 0; i < iterations; i++)
             {
@@ -110,6 +111,7 @@ namespace Barchart.BinarySerializer.Tests
                 setter(carOld, 22.5m);
             }
             stopwatch.Stop();
+
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
 
@@ -131,11 +133,12 @@ namespace Barchart.BinarySerializer.Tests
                 DateTimeDate = roundedDateTime,
                 StringName = "Luka",
             };
-            stopwatch.Start();
 
             var carType = carOld.GetType();
             var getMethod = carType.GetProperty("DecimalNumber")!.GetGetMethod()!.CreateDelegate<Func<Car, decimal>>()!;
             var setMethod = carType.GetProperty("DecimalNumber")!.GetSetMethod()!.CreateDelegate<Action<Car, decimal>>()!;
+
+            stopwatch.Start();
 
             for (long i = 0; i < iterations; i++)
             {
@@ -165,8 +168,6 @@ namespace Barchart.BinarySerializer.Tests
                 StringName = "Luka"
             };
 
-            stopwatch.Start();
-
             var carType = carOld.GetType();
             FieldInfo? fieldInfo = carType.GetField("doubleNumber");
             PropertyInfo? propertyInfo = carType.GetProperty("DecimalNumber");
@@ -179,6 +180,8 @@ namespace Barchart.BinarySerializer.Tests
 
             Func<Car, object?> getMethod = SchemaFactory.GenerateGetter<Car>(fieldInfo);
             Action<Car, object?> setMethod = SchemaFactory.GenerateSetter<Car>(propertyInfo);
+
+            stopwatch.Start();
 
             for (long i = 0; i < iterations; i++)
             {
@@ -193,7 +196,7 @@ namespace Barchart.BinarySerializer.Tests
         [Fact]
         public void DelegatesPerformanceTest()
         {
-            int iterations = int.MaxValue / 2;
+            int iterations = 100000000;
 
             Stopwatch stopwatch1 = new Stopwatch();
             Stopwatch stopwatch2 = new Stopwatch();
@@ -203,7 +206,7 @@ namespace Barchart.BinarySerializer.Tests
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
             DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
 
-            Car car = new Car()
+            Car car1 = new Car()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5,
@@ -211,18 +214,66 @@ namespace Barchart.BinarySerializer.Tests
                 StringName = "Luka",
             };
 
-            stopwatch1.Start();
+            Car car2 = new Car()
+            {
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
+                DateTimeDate = roundedDateTime,
+                StringName = "Luka",
+            };
 
-            var carType = car.GetType();
-            var getMethod = carType.GetProperty("DecimalNumber")!.GetGetMethod()!.CreateDelegate<Func<Car, decimal>>()!;
-            var setMethod = carType.GetProperty("DecimalNumber")!.GetSetMethod()!.CreateDelegate<Action<Car, decimal>>()!;
+            var carType1 = car1.GetType();
+            PropertyInfo? decimalNumberInfo = carType1.GetProperty("DecimalNumber");
+            FieldInfo? doubleNumberInfo = carType1.GetField("doubleNumber");
+            PropertyInfo? dateTimeDateInfo = carType1.GetProperty("DateTimeDate");
+            PropertyInfo? stringNameInfo = carType1.GetProperty("StringName");
+
+            if (doubleNumberInfo == null || decimalNumberInfo == null || dateTimeDateInfo == null || stringNameInfo == null)
+            {
+                Assert.Fail();
+                return;
+            }
+
+            Func<Car, object?> getDecimalNumberMethod = SchemaFactory.GenerateGetter<Car>(decimalNumberInfo);
+            Func<Car, object?> getDoubleNumberMethod = SchemaFactory.GenerateGetter<Car>(doubleNumberInfo);
+            Func<Car, object?> getDateTimeNumberMethod = SchemaFactory.GenerateGetter<Car>(dateTimeDateInfo);
+            Func<Car, object?> getStringNumberMethod = SchemaFactory.GenerateGetter<Car>(stringNameInfo);
+         
+            var carType2 = car2.GetType();
+            PropertyInfo? decimalNumberInfo2 = carType2.GetProperty("DecimalNumber");
+            FieldInfo? doubleNumberInfo2 = carType2.GetField("doubleNumber");
+            PropertyInfo? dateTimeDateInfo2 = carType2.GetProperty("DateTimeDate");
+            PropertyInfo? stringNameInfo2 = carType2.GetProperty("StringName");
+
+            if (doubleNumberInfo2 == null || decimalNumberInfo2 == null || dateTimeDateInfo2 == null || stringNameInfo2 == null)
+            {
+                Assert.Fail();
+                return;
+            }
+
+            Func<Car, object?> getDecimalNumberMethod2 = SchemaFactory.GenerateGetter<Car>(decimalNumberInfo2);
+            Func<Car, object?> getDoubleNumberMethod2 = SchemaFactory.GenerateGetter<Car>(doubleNumberInfo2);
+            Func<Car, object?> getDateTimeNumberMethod2 = SchemaFactory.GenerateGetter<Car>(dateTimeDateInfo2);
+            Func<Car, object?> getStringNumberMethod2 = SchemaFactory.GenerateGetter<Car>(stringNameInfo2);
+
+            stopwatch1.Start();
 
             for (long i = 0; i < iterations; i++)
             {
-                setMethod(car, 22.5m);
-                var x = getMethod(car);
+                _ = getDecimalNumberMethod(car1) == getDecimalNumberMethod2(car2) &&
+                getDoubleNumberMethod(car1) == getDoubleNumberMethod2(car2) &&
+                getDateTimeNumberMethod(car1) == getDateTimeNumberMethod2(car2) &&
+                getStringNumberMethod(car1) == getStringNumberMethod2(car2);
             }
+
             stopwatch1.Stop();
+
+            stopwatch2.Start();
+            for (long i = 0; i < iterations; i++)
+            {
+                car1.Equals(car2);
+            }
+            stopwatch2.Stop();
 
             output.WriteLine($"Using Delegates: {stopwatch1.ElapsedTicks} ticks");
             output.WriteLine($"Using Equals: {stopwatch2.ElapsedTicks} ticks");
