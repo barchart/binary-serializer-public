@@ -56,6 +56,7 @@ namespace Barchart.BinarySerializer.Tests
 
                     Assert.Equal(carNew, deserializedCarDifference);
                 }
+
                 stopwatch.Stop();
                 output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
@@ -68,14 +69,13 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void ClassPropertiesDifferenceTest()
+        public void ClassPropertiesDifferenceSerializationTest()
         {
             Stopwatch stopwatch = new Stopwatch();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
             DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
-            stopwatch.Start();
 
             Person person = new Person()
             {
@@ -282,10 +282,10 @@ namespace Barchart.BinarySerializer.Tests
             byte[] serializedDataDifference = garageSchema.Serialize(garage, garage2);
             Garage deserializedGarageDifference = garageSchema.Deserialize(serializedDataDifference, garage);
 
-            Assert.Equal(garage2, deserializedGarageDifference);
-
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+            Assert.Equal(garage2, deserializedGarageDifference);
         }
     }
 }

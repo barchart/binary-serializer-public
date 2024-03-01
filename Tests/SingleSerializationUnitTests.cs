@@ -72,7 +72,6 @@ namespace Barchart.BinarySerializer.Tests
                 stopwatch.Start();
 
                 byte[] serializedData = personSchema.Serialize(person);
-
                 Person deserializedPerson = personSchema.Deserialize(serializedData);
 
                 stopwatch.Stop();
@@ -88,14 +87,13 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void TestClassProperties()
+        public void ClassPropertiesSerializationTest()
         {
             Stopwatch stopwatch = new Stopwatch();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
             DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
-            stopwatch.Start();
 
             Person person = new Person()
             {
@@ -161,7 +159,6 @@ namespace Barchart.BinarySerializer.Tests
             stopwatch.Start();
 
             byte[] serializedData = garageSchema.Serialize(garage);
-
             Garage deserializedGarage = garageSchema.Deserialize(serializedData);
 
             stopwatch.Stop();

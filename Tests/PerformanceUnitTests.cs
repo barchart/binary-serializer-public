@@ -16,14 +16,15 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void TestDirect()
+        public void DirectAccessTest()
         {
+            int iterations = int.MaxValue / 2;
+
             Stopwatch stopwatch = new Stopwatch();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
             DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
-            stopwatch.Start();
 
             Car carOld = new Car()
             {
@@ -33,11 +34,14 @@ namespace Barchart.BinarySerializer.Tests
                 StringName = "Luka",
             };
 
-            for (long i = 0; i < int.MaxValue / 2; i++)
+            stopwatch.Start();
+
+            for (long i = 0; i < iterations; i++)
             {
                 carOld.DecimalNumber = 22.5m;
                 var x = carOld.DecimalNumber;
             }
+
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
@@ -45,12 +49,13 @@ namespace Barchart.BinarySerializer.Tests
         [Fact]
         public void TestReflection()
         {
+            int iterations = int.MaxValue / 2;
+
             Stopwatch stopwatch = new Stopwatch();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
             DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
-            stopwatch.Start();
 
             Car carOld = new Car()
             {
@@ -60,11 +65,13 @@ namespace Barchart.BinarySerializer.Tests
                 StringName = "Luka",
             };
 
+            stopwatch.Start();
+
             Type carType = typeof(Car);
             PropertyInfo? decimalNumberProperty = carType.GetProperty("DecimalNumber");
             FieldInfo? doubleNumberProperty = carType.GetField("doubleNumber");
 
-            for (long i = 0; i < int.MaxValue / 2; i++)
+            for (long i = 0; i < iterations; i++)
             {
                 decimalNumberProperty?.SetValue(carOld, 22.5m);
                 double? a = (double?)doubleNumberProperty?.GetValue(carOld);
@@ -74,14 +81,15 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void TestLambda()
+        public void LambdaTest()
         {
+            int iterations = int.MaxValue / 2;
+
             Stopwatch stopwatch = new Stopwatch();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
             DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
-            stopwatch.Start();
 
             Car carOld = new Car()
             {
@@ -91,10 +99,12 @@ namespace Barchart.BinarySerializer.Tests
                 StringName = "Luka",
             };
 
+            stopwatch.Start();
+
             var getter = (Car carold) => carold.DecimalNumber;
             var setter = (Car carold, decimal value) => carold.DecimalNumber = value;
 
-            for (long i = 0; i < int.MaxValue / 2; i++)
+            for (long i = 0; i < iterations; i++)
             {
                 getter(carOld);
                 setter(carOld, 22.5m);
@@ -104,14 +114,15 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void TestDelegate()
+        public void DelegateTest()
         {
+            int iterations = int.MaxValue / 2;
+
             Stopwatch stopwatch = new Stopwatch();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
             DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
-            stopwatch.Start();
 
             Car carOld = new Car()
             {
@@ -120,12 +131,13 @@ namespace Barchart.BinarySerializer.Tests
                 DateTimeDate = roundedDateTime,
                 StringName = "Luka",
             };
+            stopwatch.Start();
 
             var carType = carOld.GetType();
             var getMethod = carType.GetProperty("DecimalNumber")!.GetGetMethod()!.CreateDelegate<Func<Car, decimal>>()!;
             var setMethod = carType.GetProperty("DecimalNumber")!.GetSetMethod()!.CreateDelegate<Action<Car, decimal>>()!;
 
-            for (long i = 0; i < int.MaxValue / 2; i++)
+            for (long i = 0; i < iterations; i++)
             {
                 setMethod(carOld, 22.5m);
                 var x = getMethod(carOld);
@@ -136,14 +148,14 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void TestDelegateGetterSetter()
+        public void DelegateGetterSetterTest()
         {
+            int iterations = int.MaxValue / 2;
             Stopwatch stopwatch = new Stopwatch();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
             DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
-            stopwatch.Start();
 
             Car carOld = new Car()
             {
@@ -152,6 +164,8 @@ namespace Barchart.BinarySerializer.Tests
                 DateTimeDate = roundedDateTime,
                 StringName = "Luka"
             };
+
+            stopwatch.Start();
 
             var carType = carOld.GetType();
             FieldInfo? fieldInfo = carType.GetField("doubleNumber");
@@ -166,7 +180,7 @@ namespace Barchart.BinarySerializer.Tests
             Func<Car, object?> getMethod = SchemaFactory.GenerateGetter<Car>(fieldInfo);
             Action<Car, object?> setMethod = SchemaFactory.GenerateSetter<Car>(propertyInfo);
 
-            for (long i = 0; i < int.MaxValue / 2; i++)
+            for (long i = 0; i < iterations; i++)
             {
                 setMethod(carOld, 22.5m);
                 var x = getMethod(carOld);
@@ -174,6 +188,45 @@ namespace Barchart.BinarySerializer.Tests
 
             stopwatch.Stop();
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+        }
+
+        [Fact]
+        public void DelegatesPerformanceTest()
+        {
+            int iterations = int.MaxValue / 2;
+
+            Stopwatch stopwatch1 = new Stopwatch();
+            Stopwatch stopwatch2 = new Stopwatch();
+
+            DateTime now = DateTime.UtcNow;
+            long ticks = now.Ticks;
+            long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
+            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+
+            Car car = new Car()
+            {
+                DecimalNumber = 1.5m,
+                doubleNumber = 2.5,
+                DateTimeDate = roundedDateTime,
+                StringName = "Luka",
+            };
+
+            stopwatch1.Start();
+
+            var carType = car.GetType();
+            var getMethod = carType.GetProperty("DecimalNumber")!.GetGetMethod()!.CreateDelegate<Func<Car, decimal>>()!;
+            var setMethod = carType.GetProperty("DecimalNumber")!.GetSetMethod()!.CreateDelegate<Action<Car, decimal>>()!;
+
+            for (long i = 0; i < iterations; i++)
+            {
+                setMethod(car, 22.5m);
+                var x = getMethod(car);
+            }
+            stopwatch1.Stop();
+
+            output.WriteLine($"Using Delegates: {stopwatch1.ElapsedTicks} ticks");
+            output.WriteLine($"Using Equals: {stopwatch2.ElapsedTicks} ticks");
+
         }
     }
 }
