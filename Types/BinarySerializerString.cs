@@ -5,6 +5,7 @@ namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerString : IBinaryTypeSerializer<string>
     {
+        public const int NUMBER_OF_HEADER_BITS_NULL_STRING = 2;
         public const int NUMBER_OF_HEADER_BITS_STRING = 8;
 
         public void Encode(DataBuffer dataBuffer, string? value)
@@ -78,7 +79,7 @@ namespace Barchart.BinarySerializer.Types
         {
             if (value == null)
             {
-                return NUMBER_OF_HEADER_BITS_STRING;
+                return NUMBER_OF_HEADER_BITS_NULL_STRING;
             }
 
             int valueLength = Encoding.UTF8.GetByteCount(value);
