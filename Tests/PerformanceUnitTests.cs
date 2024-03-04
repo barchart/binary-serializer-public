@@ -39,7 +39,7 @@ namespace Barchart.BinarySerializer.Tests
             for (long i = 0; i < iterations; i++)
             {
                 carOld.DecimalNumber = 22.5m;
-                var x = carOld.DecimalNumber;
+                _ = carOld.DecimalNumber;
             }
 
             stopwatch.Stop();
@@ -74,7 +74,7 @@ namespace Barchart.BinarySerializer.Tests
             for (long i = 0; i < iterations; i++)
             {
                 decimalNumberProperty?.SetValue(carOld, 22.5m);
-                double? a = (double?)doubleNumberProperty?.GetValue(carOld);
+                _ = (double?)doubleNumberProperty?.GetValue(carOld);
             }
             stopwatch.Stop();
 
@@ -143,7 +143,7 @@ namespace Barchart.BinarySerializer.Tests
             for (long i = 0; i < iterations; i++)
             {
                 setMethod(carOld, 22.5m);
-                var x = getMethod(carOld);
+                _ = getMethod(carOld);
             }
 
             stopwatch.Stop();
@@ -186,7 +186,8 @@ namespace Barchart.BinarySerializer.Tests
             for (long i = 0; i < iterations; i++)
             {
                 setMethod(carOld, 22.5m);
-                var x = getMethod(carOld);
+
+                _ = getMethod(carOld);
             }
 
             stopwatch.Stop();
@@ -345,7 +346,7 @@ namespace Barchart.BinarySerializer.Tests
 
             for (long i = 0; i < iterations; i++)
             {
-                var isEqual = (decimal)getDecimalNumberMethod(car1)! == (decimal)getDecimalNumberMethod2(car2)! &&
+                _ = (decimal)getDecimalNumberMethod(car1)! == (decimal)getDecimalNumberMethod2(car2)! &&
                 (double)getDoubleNumberMethod(car1)! == (double)getDoubleNumberMethod2(car2)! &&
                 (DateTime)getDateTimeNumberMethod(car1)! == (DateTime)getDateTimeNumberMethod2(car2)! &&
                 (string)getStringNumberMethod(car1)! == (string)getStringNumberMethod2(car2)! &&
@@ -357,7 +358,7 @@ namespace Barchart.BinarySerializer.Tests
             stopwatch2.Start();
             for (long i = 0; i < iterations; i++)
             {
-                var isEqual = car1.Equals(car2);
+                _ = car1.Equals(car2);
             }
             stopwatch2.Stop();
 
@@ -518,7 +519,7 @@ namespace Barchart.BinarySerializer.Tests
 
             for (long i = 0; i < iterations; i++)
             {
-                var isEqual = (decimal)getDecimalNumberMethod(car1)! == (decimal)getDecimalNumberMethod2(car2)! &&
+                _ = (decimal)getDecimalNumberMethod(car1)! == (decimal)getDecimalNumberMethod2(car2)! &&
                 (double)getDoubleNumberMethod(car1)! == (double)getDoubleNumberMethod2(car2)! &&
                 (DateTime)getDateTimeNumberMethod(car1)! == (DateTime)getDateTimeNumberMethod2(car2)! &&
                 (string)getStringNumberMethod(car1)! == (string)getStringNumberMethod2(car2)! &&
@@ -530,7 +531,7 @@ namespace Barchart.BinarySerializer.Tests
             stopwatch2.Start();
             for (long i = 0; i < iterations; i++)
             {
-                var isEqual = car1.Equals(car2);
+                _ = car1.Equals(car2);
             }
             stopwatch2.Stop();
 
