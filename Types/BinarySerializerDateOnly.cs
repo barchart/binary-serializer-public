@@ -10,16 +10,6 @@
             return BitConverter.GetBytes(daysSinceEpoch);
         }
 
-        public override int GetLengthInBits(DateOnly? value)
-        {
-            if (value == null)
-            {
-                return NUMBER_OF_HEADER_BITS_NUMERIC;
-            }
-
-            return Size * 8 + NUMBER_OF_HEADER_BITS_NUMERIC;
-        }
-
         protected override DateOnly DecodeBytes(byte[] bytes)
         {
             int daysSinceEpoch = BitConverter.ToInt32(bytes);

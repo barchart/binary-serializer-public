@@ -11,16 +11,6 @@
             return BitConverter.GetBytes(unixTime);
         }
 
-        public override int GetLengthInBits(DateTime? value)
-        {
-            if (value == null)
-            {
-                return NUMBER_OF_HEADER_BITS_NUMERIC;
-            }
-
-            return Size * 8 + NUMBER_OF_HEADER_BITS_NUMERIC;
-        }
-
         protected override DateTime DecodeBytes(byte[] bytes)
         {
             long ticksPerMillisecond = TimeSpan.TicksPerMillisecond;

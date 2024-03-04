@@ -10,9 +10,11 @@ namespace Barchart.BinarySerializer.Types
 
         public void Encode(DataBuffer dataBuffer, string? value)
         {
-            Header header = new Header();
-            header.IsMissing = false;
-            header.IsNull = value == null;
+            var header = new Header
+            {
+                IsMissing = false,
+                IsNull = value == null
+            };
 
             dataBuffer.WriteBit(0);
             dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
@@ -42,9 +44,10 @@ namespace Barchart.BinarySerializer.Types
             byte[]? valueBytes = null;
             int size = 0;
 
-            Header header = new Header();
-
-            header.IsMissing = dataBuffer.ReadBit() == 1;
+            Header header = new Header
+            {
+                IsMissing = dataBuffer.ReadBit() == 1
+            };
 
             if (header.IsMissing)
             {

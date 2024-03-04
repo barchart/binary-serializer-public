@@ -10,9 +10,11 @@ namespace Barchart.BinarySerializer.Types
 
         public void Encode(DataBuffer dataBuffer, T? value)
         {
-            Header header = new Header();
-            header.IsMissing = false;
-            header.IsNull = value == null;
+            var header = new Header()
+            {
+                IsMissing = false,
+                IsNull = value == null
+            };
 
             dataBuffer.WriteBit(0);
             dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
@@ -33,8 +35,10 @@ namespace Barchart.BinarySerializer.Types
             int size = Size;
             byte[] valueBytes = new byte[size];
 
-            Header header = new Header();
-            header.IsMissing = dataBuffer.ReadBit() == 1;
+            var header = new Header
+            {
+                IsMissing = dataBuffer.ReadBit() == 1
+            };
 
             if (header.IsMissing)
             {
@@ -56,9 +60,18 @@ namespace Barchart.BinarySerializer.Types
             return new HeaderWithValue(header, DecodeBytes(valueBytes));
         }
 
+        public int GetLengthInBits(T? value)
+        {
+            if (value == null)
+            {
+                return NUMBER_OF_HEADER_BITS_NUMERIC;
+            }
+
+            return Size * 8 + NUMBER_OF_HEADER_BITS_NUMERIC;
+        }
+
         protected abstract byte[] ConvertToByteArray(T value);
         protected abstract T DecodeBytes(byte[] bytes);
-        public abstract int GetLengthInBits(T? value);
 
         #region ISerializer implementation
         void ISerializer.Encode(DataBuffer dataBuffer, object? value)
