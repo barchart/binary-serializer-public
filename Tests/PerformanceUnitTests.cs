@@ -541,4 +541,3 @@ namespace Barchart.BinarySerializer.Tests
         }
     }
 }
-

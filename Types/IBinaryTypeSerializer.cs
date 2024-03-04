@@ -9,4 +9,3 @@ namespace Barchart.BinarySerializer.Types
         public int GetLengthInBits(T? value);
     }
 }
-

@@ -49,4 +49,3 @@ namespace Barchart.BinarySerializer.Tests
         }
     }
 }
-

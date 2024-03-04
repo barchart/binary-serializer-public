@@ -116,4 +116,3 @@ namespace Barchart.BinarySerializer.Types
         }
     }
 }
-

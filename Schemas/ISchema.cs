@@ -20,4 +20,3 @@
         public int GetLengthInBits(object? oldObject, object? newObject);
     }
 }
-

@@ -16,7 +16,6 @@
 
         public byte? StringLength
         {
-
             get
             {
                 return _stringLength;
