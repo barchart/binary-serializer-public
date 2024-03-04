@@ -42,7 +42,7 @@ namespace Barchart.BinarySerializer.Tests
                     DateTimeDate = roundedDateTime,
                     StringName = "Luka2",
                     Byte = (byte)2,
-                    sByte = (sbyte)-2
+                    sByte = (sbyte)2
                 };
 
                 Schema<Car> carSchema = SchemaFactory.GetSchema<Car>();
@@ -53,7 +53,6 @@ namespace Barchart.BinarySerializer.Tests
                 {
                     byte[] serializedDataDifference = carSchema.Serialize(carOld, carNew);
                     Car deserializedCarDifference = carSchema.Deserialize(serializedDataDifference, carOld);
-
                     Assert.Equal(carNew, deserializedCarDifference);
                 }
 

@@ -1,10 +1,12 @@
 ﻿using Barchart.BinarySerializer.Types;
+using Newtonsoft.Json.Linq;
 
 namespace Barchart.BinarySerializer.Schemas
 {
     public class Schema<T> : ISchema where T : new()
     {
         readonly private static int BUFFER_SIZE = 256000000;
+        readonly private static int IS_MISSING_NUMBER_OF_BITS = 1;
 
         [ThreadStatic]
         private static byte[]? _buffer;
@@ -217,6 +219,17 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
+        ///     Calculates the total length of the binary representation of the difference between the provided schema objects in bytes.
+        /// </summary>
+        /// <param name="oldObject">The old schema object.</param>
+        /// <param name="newObject">The new schema object.</param>
+        /// <returns> The total length of the binary representation of the difference between the provided schema objects in bytes. </returns>
+        public int GetLengthInBytes(T oldObject, T newObject)
+        {
+            return (int)Math.Ceiling((double)GetLengthInBits(oldObject, newObject) / 8);
+        }
+
+        /// <summary>
         ///     Calculates the total length of the binary representation of the provided schema object in bits.
         /// </summary>
         /// <param name="schemaObject">The schema object to calculate the length for.</param>
@@ -228,6 +241,35 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 object? value = memberData.GetDelegate(schemaObject);
                 lengthInBits += memberData.BinarySerializer.GetLengthInBits(value);             
+            }
+
+            return lengthInBits;
+        }
+
+        /// <summary>
+        ///     Calculates the total length of the binary representation of the difference between the provided schema objects in bits.
+        /// </summary>
+        /// <param name="oldObject">The old schema object to calculate the length for.</param>
+        /// <param name="newObject">The new schema object to calculate the length for.</param>
+        /// <returns> The total length of the binary representation of the difference between the provided schema objects in bits. </returns>
+        public int GetLengthInBits(T oldObject, T newObject)
+        {
+            int lengthInBits = 0;
+            foreach (MemberData<T> memberData in _memberDataList)
+            {
+                object? oldValue = memberData.GetDelegate(oldObject);
+                object? newValue = memberData.GetDelegate(newObject);
+
+                bool valuesEqual = Equals(oldValue, newValue);
+
+                if (!valuesEqual || memberData.IsKeyAttribute)
+                {
+                    lengthInBits += memberData.BinarySerializer.GetLengthInBits(newValue);
+                }
+                else
+                {
+                    lengthInBits += IS_MISSING_NUMBER_OF_BITS;
+                }
             }
 
             return lengthInBits;
