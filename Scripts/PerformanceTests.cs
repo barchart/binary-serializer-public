@@ -6,11 +6,11 @@ using Barchart.BinarySerializer.Schemas;
 
 namespace Barchart.BinarySerializer.Tests
 {
-    public class PerformanceUnitTests
+    public class PerformanceTests
     {
         private readonly ITestOutputHelper output;
 
-        public PerformanceUnitTests(ITestOutputHelper output)
+        public PerformanceTests(ITestOutputHelper output)
         {
             this.output = output;
         }
