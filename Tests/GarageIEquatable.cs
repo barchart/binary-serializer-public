@@ -11,7 +11,7 @@ namespace Barchart.BinarySerializer.Tests
         public PersonIEquatable? PersonObject { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public double doubleNumberGarage;
+        public double doubleNumberGarage = 0;
 
         [BinarySerialize(include: true, key: false)]
         public decimal DecimalNumberGarage { get; set; }
