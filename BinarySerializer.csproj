@@ -8,7 +8,7 @@
 	<GenerateProgramFile>false</GenerateProgramFile>
 	<IsPackable>true</IsPackable>
 	<PackageId>binary-serialization-net</PackageId>
-	<Version>1.0.2</Version>
+	<Version>1.0.3</Version>
 	<Authors>Luka Sotra</Authors>
 	<Company>BarChart</Company>
   </PropertyGroup>
@@ -26,4 +26,7 @@
     <Folder Include="Scripts\" />
   </ItemGroup>
 
+ <ItemGroup>
+    <Content Include="**\*.*" Exclude="**\Scripts\**;**\Tests\**;**\output\**" />
+  </ItemGroup>
 </Project>
