@@ -237,6 +237,7 @@ namespace Barchart.BinarySerializer.Schemas
         public int GetLengthInBits(T schemaObject)
         {
             int lengthInBits = 0;
+
             foreach (MemberData<T> memberData in _memberDataList)
             {
                 object? value = memberData.GetDelegate(schemaObject);
@@ -255,6 +256,7 @@ namespace Barchart.BinarySerializer.Schemas
         public int GetLengthInBits(T oldObject, T newObject)
         {
             int lengthInBits = 0;
+
             foreach (MemberData<T> memberData in _memberDataList)
             {
                 object? oldValue = memberData.GetDelegate(oldObject);
@@ -264,7 +266,14 @@ namespace Barchart.BinarySerializer.Schemas
 
                 if (!valuesEqual || memberData.IsKeyAttribute)
                 {
-                    lengthInBits += memberData.BinarySerializer.GetLengthInBits(newValue);
+                    if (memberData.BinarySerializer is ObjectBinarySerializer)
+                    {
+                        lengthInBits += ((ObjectBinarySerializer)memberData.BinarySerializer).GetLengthInBits(oldValue, newValue);
+                    }
+                    else
+                    {
+                        lengthInBits += memberData.BinarySerializer.GetLengthInBits(newValue);
+                    }
                 }
                 else
                 {
@@ -340,6 +349,26 @@ namespace Barchart.BinarySerializer.Schemas
             return GetLengthInBytes((T)schemaObject);
         }
 
+        int ISchema.GetLengthInBytes(object? oldObject, object? newObject)
+        {
+            if (oldObject == null && newObject == null)
+            {
+                return 0;
+            }
+
+            if (oldObject != null && newObject == null)
+            {
+                return GetLengthInBits((T)oldObject);
+            }
+
+            if (oldObject == null && newObject != null)
+            {
+                return GetLengthInBytes((T)newObject);
+            }
+
+            return GetLengthInBytes((T)oldObject!, (T)newObject!);
+        }
+
         int ISchema.GetLengthInBits(object? schemaObject)
         {
             if (schemaObject == null)
@@ -347,6 +376,26 @@ namespace Barchart.BinarySerializer.Schemas
                 return 0;
             }
             return GetLengthInBits((T)schemaObject);
+        }
+
+        int ISchema.GetLengthInBits(object? oldObject, object? newObject)
+        {
+            if (oldObject == null && newObject == null)
+            {
+                return 0;
+            }
+
+            if(oldObject != null && newObject == null)
+            {
+                return GetLengthInBits((T)oldObject);
+            }
+
+            if (oldObject == null && newObject != null)
+            {
+                return GetLengthInBits((T)newObject);
+            }
+
+            return GetLengthInBits((T)oldObject!, (T)newObject!);
         }
         #endregion
     }

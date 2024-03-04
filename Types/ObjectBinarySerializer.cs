@@ -109,6 +109,11 @@ namespace Barchart.BinarySerializer.Types
         {
             return Schema.GetLengthInBits(value);
         }
+
+        public int GetLengthInBits(object? oldValue, object? newValue)
+        {
+            return Schema.GetLengthInBits(oldValue, newValue);
+        }
     }
 }
 
