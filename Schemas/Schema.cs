@@ -1,5 +1,4 @@
 ﻿using Barchart.BinarySerializer.Types;
-using Newtonsoft.Json.Linq;
 
 namespace Barchart.BinarySerializer.Schemas
 {
