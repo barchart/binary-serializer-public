@@ -9,8 +9,8 @@
     <GenerateProgramFile>false</GenerateProgramFile>
     <IsPackable>true</IsPackable>
     <PackageId>binary-serialization-net</PackageId>
-    <Title>PackageId>binary-serialization-net</Title>
-    <Version>1.0.13</Version>
+    <Title>PackageId&gt;binary-serialization-net</Title>
+    <Version>1.0.14</Version>
     <Authors>Luka Sotra</Authors>
     <Company>BarChart</Company>
 
@@ -26,22 +26,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Scripts\" />
-    <Folder Include="output\" />
+    <None Remove="output\**" />
+    <None Remove="Scripts\PackagePublishScript.ps1" />
+    <None Remove="Scripts\RunTests.sh" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="output\" />
+    <Compile Remove="Scripts\PerformanceTests.cs" />
+    <Compile Remove="Tests\CarIEquatable.cs" />
+    <Compile Remove="Tests\DifferenceSerializationUnitTests.cs" />
+    <Compile Remove="Tests\Garage.cs" />
+    <Compile Remove="Tests\Car.cs" />
+    <Compile Remove="Tests\GarageIEquatable.cs" />
+    <Compile Remove="Tests\Person.cs" />
+    <Compile Remove="Tests\SingleSerializationUnitTests.cs" />
+    <Compile Remove="Tests\PersonIEquatable.cs" />
   </ItemGroup>
-
-
-  <ItemGroup>
-    <Compile Remove="output\**" />
-    <Content Include="output\**" />
-    <Compile Remove="Scripts\**" />
-    <Content Include="Scripts\**" />
-    <Compile Remove="Tests\**" />
-    <Content Include="Tests\**" />
-  </ItemGroup>
-
 </Project>
