@@ -25,21 +25,5 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="output\**" />
-    <None Remove="Scripts\**" />
-    <None Remove="Tests\**" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="output\**" />
-    <Compile Remove="Scripts\**" />
-    <Compile Remove="Tests\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="output\**" />
-    <None Include="Scripts\**" />
-    <None Include="Tests\**" />
-  </ItemGroup>
 </Project>
