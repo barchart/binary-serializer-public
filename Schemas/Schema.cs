@@ -5,9 +5,9 @@ namespace Barchart.BinarySerializer.Schemas
 {
     public class Schema<T> : ISchema where T : new()
     {
-        readonly private static int BUFFER_SIZE = 256000000;
-        readonly private static int IS_MISSING_NUMBER_OF_BITS = 1;
-
+        private const int BUFFER_SIZE = 256000000;
+        private const int IS_MISSING_NUMBER_OF_BITS = 1;
+        
         [ThreadStatic]
         private static byte[]? _buffer;
 
