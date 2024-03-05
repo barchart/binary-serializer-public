@@ -1,16 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <OutputPath>bin\$(Configuration)\net6.0\</OutputPath>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<GenerateProgramFile>false</GenerateProgramFile>
-	<IsPackable>true</IsPackable>
-	<PackageId>binary-serialization-net</PackageId>
-	<Version>1.0.4</Version>
-	<Authors>Luka Sotra</Authors>
-	<Company>BarChart</Company>
+    <GenerateProgramFile>false</GenerateProgramFile>
+    <IsPackable>true</IsPackable>
+    <PackageId>binary-serialization-net</PackageId>
+    <Title>PackageId>binary-serialization-net</Title>
+    <Version>1.0.13</Version>
+    <Authors>Luka Sotra</Authors>
+    <Company>BarChart</Company>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,11 +27,21 @@
 
   <ItemGroup>
     <Folder Include="Scripts\" />
+    <Folder Include="output\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Tests\**" Pack="false" />
-    <Content Include="output\**" Pack="false" />
-    <Content Include="Scripts\**" Pack="false" />
+    <None Remove="output\" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Remove="output\**" />
+    <Content Include="output\**" />
+    <Compile Remove="Scripts\**" />
+    <Content Include="Scripts\**" />
+    <Compile Remove="Tests\**" />
+    <Content Include="Tests\**" />
+  </ItemGroup>
+
 </Project>
