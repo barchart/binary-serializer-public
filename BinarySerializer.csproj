@@ -10,7 +10,7 @@
     <IsPackable>true</IsPackable>
     <PackageId>binary-serialization-net</PackageId>
     <Title>PackageId&gt;binary-serialization-net</Title>
-    <Version>1.0.15</Version>
+    <Version>1.0.16</Version>
     <Authors>Luka Sotra</Authors>
     <Company>BarChart</Company>
 
@@ -35,5 +35,11 @@
     <Compile Remove="output\**" />
     <Compile Remove="Scripts\**" />
     <Compile Remove="Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="output\**" />
+    <None Include="Scripts\**" />
+    <None Include="Tests\**" />
   </ItemGroup>
 </Project>
