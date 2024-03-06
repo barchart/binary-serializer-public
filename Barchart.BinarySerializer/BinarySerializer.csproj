@@ -31,4 +31,10 @@
     <Content Include="Tests\**" Pack="false" />
   </ItemGroup>
 
+ <ItemGroup>
+   <None Remove="Tests\Data\" />
+ </ItemGroup>
+ <ItemGroup>
+   <Folder Include="Tests\Data\" />
+ </ItemGroup>
 </Project>
