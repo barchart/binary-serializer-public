@@ -24,11 +24,13 @@ app.Map("/ws", async context => {
         using var ws = await context.WebSockets.AcceptWebSocketAsync();
         Schema<StockData> stockDataSchema = SchemaFactory.GetSchema<StockData>();
 
+        StockData oldStockData = new StockData();
+
         while (true)
         {
             Random random = new Random();
 
-            StockData stockData = new StockData()
+            StockData newStockData = new StockData()
             {
                 Symbol = "TSLA",
                 Synthetic = random.Next(2) == 0,
@@ -81,7 +83,7 @@ app.Map("/ws", async context => {
                 PreviousTime = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture)
             };
 
-            byte[] serializedData = stockDataSchema.Serialize(stockData);
+            byte[] serializedData = stockDataSchema.Serialize(oldStockData, newStockData);
             var arraySegment = new ArraySegment<byte>(serializedData, 0, serializedData.Length);
             if (ws.State == WebSocketState.Open)
             {
@@ -91,6 +93,8 @@ app.Map("/ws", async context => {
             {
                 break;
             }
+
+            CopyStockData(newStockData, old);
 
             Thread.Sleep(1000);
         }
@@ -108,3 +112,55 @@ app.MapFallbackToPage("/_Host");
 
 await app.RunAsync();
 
+void CopyStockData(StockData source, StockData target)
+{
+    target.Symbol = source.Symbol;
+    target.Synthetic = source.Synthetic;
+    target.Online = source.Online;
+    target.Active = source.Active;
+    target.Sequence = source.Sequence;
+    target.Mode = source.Mode;
+    target.DayNum = source.DayNum;
+    target.BidPrice = source.BidPrice;
+    target.BidSize = source.BidSize;
+    target.AskPrice = source.AskPrice;
+    target.AskSize = source.AskSize;
+    target.TradePrice = source.TradePrice;
+    target.TradeSize = source.TradeSize;
+    target.NumberOfTrades = source.NumberOfTrades;
+    target.Vwap1 = source.Vwap1;
+    target.OpenPrice = source.OpenPrice;
+    target.VolumeSpecial = source.VolumeSpecial;
+    target.PriceChange = source.PriceChange;
+    target.PercentChange = source.PercentChange;
+    target.LastPriceDirection = source.LastPriceDirection;
+    target.Time = source.Time;
+    target.TimeActual = source.TimeActual;
+    target.TimeDateDisplayLong = source.TimeDateDisplayLong;
+    target.SessionDateDisplayLong = source.SessionDateDisplayLong;
+    target.PreviousTimeDateDisplayLong = source.PreviousTimeDateDisplayLong;
+    target.YesterdayDateDisplay = source.YesterdayDateDisplay;
+    target.TradeTime = source.TradeTime;
+    target.TradeTimeActual = source.TradeTimeActual;
+    target.TradeTimeDisplay = source.TradeTimeDisplay;
+    target.TradeDateDisplay = source.TradeDateDisplay;
+    target.PreviousOpenPrice = source.PreviousOpenPrice;
+    target.PreviousHighPrice = source.PreviousHighPrice;
+    target.PreviousLowPrice = source.PreviousLowPrice;
+    target.LastPriceHigh = source.LastPriceHigh;
+    target.LastPriceLow = source.LastPriceLow;
+    target.Day = source.Day;
+    target.Session = source.Session;
+    target.TodayPrice = source.TodayPrice;
+    target.PreviousPrice = source.PreviousPrice;
+    target.LastPrice = source.LastPrice;
+    target.LastPriceT = source.LastPriceT;
+    target.HighPrice = source.HighPrice;
+    target.LowPrice = source.LowPrice;
+    target.TimeDateDisplay = source.TimeDateDisplay;
+    target.TimeDisplay = source.TimeDisplay;
+    target.Volume = source.Volume;
+    target.VolumePrevious = source.VolumePrevious;
+    target.PriceVol = source.PriceVol;
+    target.PreviousTime = source.PreviousTime;
+}

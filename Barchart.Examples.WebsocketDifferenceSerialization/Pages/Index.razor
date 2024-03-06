@@ -6,7 +6,7 @@
 
 @implements IDisposable
 
-<h1>Websocket serialization example</h1>
+<h1>Websocket difference serialization example:</h1>
 <h3>State: @webSocket.State</h3>
 
 @if (webSocket.State == WebSocketState.Open)
@@ -30,7 +30,7 @@
     {
         if (firstRender)
         {
-            await webSocket.ConnectAsync(new Uri("wss://localhost:7059/ws"), disposalTokenSource.Token);
+            await webSocket.ConnectAsync(new Uri("wss://localhost:7289/ws"), disposalTokenSource.Token);
             StateHasChanged();
             _ = ReceiveLoop();
         }
