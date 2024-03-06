@@ -1,0 +1,61 @@
+﻿@page "/"
+@using System.Net.WebSockets
+@using System.Threading
+@using Barchart.BinarySerializer.Schemas
+@using Barchart.BinarySerializer.SerializationData;
+
+@implements IDisposable
+
+<h1>Websocket</h1>
+<h3>State: @webSocket.State</h3>
+
+@if (webSocket.State == WebSocketState.Open)
+{
+    <h4>Bytes sent:</h4>
+    <h6>@bytes</h6>
+    @foreach (var property in typeof(StockData).GetProperties())
+    {
+        <h4>@property.Name:</h4>
+        <h6>@property.GetValue(stockData)</h6>
+    }
+}
+
+@code {
+    CancellationTokenSource disposalTokenSource = new CancellationTokenSource();
+    ClientWebSocket webSocket = new ClientWebSocket();
+    StockData stockData = new StockData();
+    int bytes = 0;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await webSocket.ConnectAsync(new Uri("wss://localhost:7059/ws"), disposalTokenSource.Token);
+            StateHasChanged();
+            _ = ReceiveLoop();
+        }
+    }
+
+
+    async Task ReceiveLoop()
+    {
+        Schema<StockData> stockDataSchema = SchemaFactory.GetSchema<StockData>();
+
+        var buffer = new ArraySegment<byte>(new byte[10000]);
+        while (!disposalTokenSource.IsCancellationRequested)
+        {
+            var received = await webSocket.ReceiveAsync(buffer, disposalTokenSource.Token);
+            StockData deserializedStockData = stockDataSchema.Deserialize(buffer.ToArray());
+            stockData = deserializedStockData;
+            bytes = received.Count;
+            StateHasChanged();
+
+        }
+    }
+
+    public void Dispose()
+    {
+        disposalTokenSource.Cancel();
+        //_ = webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
+    }
+}
