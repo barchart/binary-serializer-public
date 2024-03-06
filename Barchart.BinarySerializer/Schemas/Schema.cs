@@ -55,6 +55,11 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         private byte[] Serialize(T schemaObject, DataBuffer dataBuffer) {
+            if (schemaObject == null)
+            {
+                throw new ArgumentNullException(nameof(schemaObject), "SchemaObject object cannot be null.");
+            }
+
             foreach (MemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
@@ -97,6 +102,11 @@ namespace Barchart.BinarySerializer.Schemas
 
         private byte[] Serialize(T oldObject, T newObject, DataBuffer dataBuffer)
         {
+            if (oldObject == null)
+            {
+                throw new ArgumentNullException(nameof(oldObject), "Old object cannot be null.");
+            }
+
             foreach (MemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
