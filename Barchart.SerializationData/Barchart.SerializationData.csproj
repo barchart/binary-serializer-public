@@ -7,13 +7,19 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
 	<PackageId>SerializationData</PackageId>
-	<Version>1.0.6</Version>
+	<Version>1.0.7</Version>
 	<Authors>Luka Sotra</Authors>
 	<Company>Barchart</Company>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="binary-serialization-net" Version="1.0.17" />
+    <PackageReference Include="binary-serialization-net" Version="1.0.18" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="output\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="output\" />
+  </ItemGroup>
 </Project>

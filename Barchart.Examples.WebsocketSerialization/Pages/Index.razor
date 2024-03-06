@@ -2,7 +2,7 @@
 @using System.Net.WebSockets
 @using System.Threading
 @using Barchart.BinarySerializer.Schemas
-@using Barchart.BinarySerializer.SerializationData;
+@using Barchart.SerializationData;
 
 @implements IDisposable
 
@@ -54,6 +54,10 @@
     public void Dispose()
     {
         disposalTokenSource.Cancel();
-        _ = webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
+
+        if (webSocket.State == WebSocketState.Open || webSocket.State == WebSocketState.CloseSent)
+        {
+            _ = webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
+        }
     }
 }

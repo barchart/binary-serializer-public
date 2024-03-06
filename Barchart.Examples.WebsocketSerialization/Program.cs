@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Net.WebSockets;
 using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.SerializationData;
+using Barchart.SerializationData;
 
 var builder = WebApplication.CreateBuilder(args);
 
