@@ -107,8 +107,6 @@ namespace Barchart.BinarySerializer.Schemas
 
     public class ObjectMemberData<T, V> : MemberData<T, V> where V : new()
     {
-        public new ObjectBinarySerializer<V> BinarySerializer { get; set; }
-
         public ObjectMemberData(Type type, string name) : base(type, name) {}
 
         public override void EncodeCompare(T newObject, T oldObject, DataBuffer buffer)
@@ -120,7 +118,7 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (!valuesEqual || IsKeyAttribute)
             {
-                BinarySerializer.Encode(buffer, oldValue, newValue);               
+                ((ObjectBinarySerializer<V>)BinarySerializer).Encode(buffer, oldValue, newValue);               
             }
             else
             {
@@ -133,7 +131,15 @@ namespace Barchart.BinarySerializer.Schemas
             HeaderWithValue<V> header;
 
             V currentObject = GetDelegate(existing);
-            header = BinarySerializer.Decode(buffer, currentObject);
+
+            if (currentObject == null)
+            {
+                header = ((ObjectBinarySerializer<V>)BinarySerializer).Decode(buffer);
+            }
+            else
+            {
+                header = ((ObjectBinarySerializer<V>)BinarySerializer).Decode(buffer, currentObject);
+            }
 
             if (header.Header.IsMissing)
             {
@@ -152,7 +158,7 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (!valuesEqual || IsKeyAttribute)
             {
-              return BinarySerializer.GetLengthInBits(oldValue, newValue);
+              return ((ObjectBinarySerializer<V>)BinarySerializer).GetLengthInBits(oldValue, newValue);
             }
             else
             {
