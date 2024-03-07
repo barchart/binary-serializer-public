@@ -6,7 +6,7 @@ namespace Barchart.BinarySerializer.Schemas
 {
     public static class SchemaFactory
     {
-        private static readonly Dictionary<Type, ISerializer> allSerializers = new Dictionary<Type, ISerializer>();
+        private static readonly Dictionary<Type, object> allSerializers = new Dictionary<Type, object>();
 
         static SchemaFactory()
         {
@@ -17,35 +17,35 @@ namespace Barchart.BinarySerializer.Schemas
         {
             allSerializers.Add(typeof(String), new BinarySerializerString());
             allSerializers.Add(typeof(Int32), new BinarySerializerInt32());
-            allSerializers.Add(typeof(Int32?), new BinarySerializerInt32());
+            allSerializers.Add(typeof(Int32?), new BinarySerializerInt32Nullable());
             allSerializers.Add(typeof(Int16), new BinarySerializerInt16());
-            allSerializers.Add(typeof(Int16?), new BinarySerializerInt16());
+            allSerializers.Add(typeof(Int16?), new BinarySerializerInt16Nullable());
             allSerializers.Add(typeof(Char), new BinarySerializerChar16());
-            allSerializers.Add(typeof(Char?), new BinarySerializerChar16());
+            allSerializers.Add(typeof(Char?), new BinarySerializerChar16Nullable());
             allSerializers.Add(typeof(SByte), new BinarySerializerSInt8());
-            allSerializers.Add(typeof(SByte?), new BinarySerializerSInt8());
+            allSerializers.Add(typeof(SByte?), new BinarySerializerSInt8Nullable());
             allSerializers.Add(typeof(Byte), new BinarySerializerInt8());
-            allSerializers.Add(typeof(Byte?), new BinarySerializerInt8());
+            allSerializers.Add(typeof(Byte?), new BinarySerializerInt8Nullable());
             allSerializers.Add(typeof(Boolean), new BinarySerializerBool8());
-            allSerializers.Add(typeof(Boolean?), new BinarySerializerBool8());
+            allSerializers.Add(typeof(Boolean?), new BinarySerializerBool8Nullable());
             allSerializers.Add(typeof(Int64), new BinarySerializerInt64());
-            allSerializers.Add(typeof(Int64?), new BinarySerializerInt64());
+            allSerializers.Add(typeof(Int64?), new BinarySerializerInt64Nullable());
             allSerializers.Add(typeof(UInt16), new BinarySerializerUInt16());
-            allSerializers.Add(typeof(UInt16?), new BinarySerializerUInt16());
+            allSerializers.Add(typeof(UInt16?), new BinarySerializerUInt16Nullable());
             allSerializers.Add(typeof(UInt32), new BinarySerializerUInt32());
-            allSerializers.Add(typeof(UInt32?), new BinarySerializerUInt32());
+            allSerializers.Add(typeof(UInt32?), new BinarySerializerUInt32Nullable());
             allSerializers.Add(typeof(UInt64), new BinarySerializerUInt64());
-            allSerializers.Add(typeof(UInt64?), new BinarySerializerUInt64());
+            allSerializers.Add(typeof(UInt64?), new BinarySerializerUInt64Nullable());
             allSerializers.Add(typeof(Single), new BinarySerializerFloat());
-            allSerializers.Add(typeof(Single?), new BinarySerializerFloat());
+            allSerializers.Add(typeof(Single?), new BinarySerializerFloatNullable());
             allSerializers.Add(typeof(Double), new BinarySerializerDouble());
-            allSerializers.Add(typeof(Double?), new BinarySerializerDouble());
+            allSerializers.Add(typeof(Double?), new BinarySerializerDoubleNullable());
             allSerializers.Add(typeof(Decimal), new BinarySerializerDecimal());
-            allSerializers.Add(typeof(Decimal?), new BinarySerializerDecimal());
+            allSerializers.Add(typeof(Decimal?), new BinarySerializerDecimalNullable());
             allSerializers.Add(typeof(DateTime), new BinarySerializerDateTime());
-            allSerializers.Add(typeof(DateTime?), new BinarySerializerDateTime());
+            allSerializers.Add(typeof(DateTime?), new BinarySerializerDateTimeNullable());
             allSerializers.Add(typeof(DateOnly), new BinarySerializerDateOnly());
-            allSerializers.Add(typeof(DateOnly?), new BinarySerializerDateOnly());
+            allSerializers.Add(typeof(DateOnly?), new BinarySerializerDateOnlyNullable());
         }
 
         /// <summary>
@@ -57,12 +57,12 @@ namespace Barchart.BinarySerializer.Schemas
         {
             Type type = typeof(T);
             MemberInfo[] members = GetAllMembersForType(type);
-            List<MemberData<T>> memberDataList = new List<MemberData<T>>();
+            List<IMemberData<T>> memberDataList = new List<IMemberData<T>>();
 
             foreach (MemberInfo memberInfo in members)
             {
-                MemberData<T>? memberData = ProcessMemberInfo<T>(memberInfo);
-                if(memberData != null) memberDataList.Add((MemberData<T>)memberData);
+                IMemberData<T>? memberData = ProcessMemberInfo<T>(memberInfo);
+                if(memberData != null) memberDataList.Add(memberData);
             }
 
             Schema<T> schema = new Schema<T>(memberDataList);
@@ -70,7 +70,7 @@ namespace Barchart.BinarySerializer.Schemas
             return schema;
         } 
 
-        private static MemberData<T>? ProcessMemberInfo<T>(MemberInfo memberInfo) where T : new()
+        private static IMemberData<T>? ProcessMemberInfo<T>(MemberInfo memberInfo) where T : new()
         {
             Type memberType;
 
@@ -90,52 +90,34 @@ namespace Barchart.BinarySerializer.Schemas
             bool include = attribute.Include;
             bool key = attribute.Key;
 
-            ISerializer? serializer;
-            allSerializers.TryGetValue(memberType, out serializer);
-
-            if (IsClassMember(serializer, memberType))
+            if (IsReferenceType(memberType))
             {
                 ISchema nestedSchema = GenerateSchemaInterface(memberType);
-                var getterNestedClass = GenerateGetter<T>(memberInfo);
-                var setterNestedClass = GenerateSetter<T>(memberInfo);
-                var objectbinarySerializer = new ObjectBinarySerializer(nestedSchema);
-
-                MemberData<T> newMemberDataNestedClass = new MemberData<T>()
-                {
-                    Type = memberType,
-                    Name = memberInfo.Name,
-                    IsIncluded = include,
-                    IsKeyAttribute = key,
-                    BinarySerializer = objectbinarySerializer,
-                    MemberInfo = memberInfo,
-                };
-
-                newMemberDataNestedClass.GetDelegate = getterNestedClass;
-                newMemberDataNestedClass.SetDelegate = setterNestedClass;
+                IMemberData<T> newMemberDataNestedClass = GenerateObjectMemberDataInterface<T>(nestedSchema, memberType, memberInfo);
+                newMemberDataNestedClass.IsIncluded = include;
+                newMemberDataNestedClass.IsKeyAttribute = key;
                 return newMemberDataNestedClass;
             }
-
-            MemberData<T> newMemberData = new MemberData<T>()
+            else
             {
-                Type = memberType,
-                Name = memberInfo.Name,
-                IsIncluded = include,
-                IsKeyAttribute = key,
-                BinarySerializer = serializer!,
-                MemberInfo = memberInfo
-            };
-
-            var getter = GenerateGetter<T>(memberInfo);
-            var setter = GenerateSetter<T>(memberInfo);
-            newMemberData.GetDelegate = getter;
-            newMemberData.SetDelegate = setter;
-           
-            return newMemberData;
+                IMemberData<T> newMemberData = GenerateMemberDataInterface<T>(memberType, memberInfo);
+                newMemberData.IsIncluded = include;
+                newMemberData.IsKeyAttribute = key;
+                return newMemberData;
+            }
         }
 
-        private static bool IsClassMember(ISerializer? serializer, Type memberType)
+        private static bool IsReferenceType(Type type)
         {
-            return (serializer == null && memberType.IsClass);
+            return !type.IsValueType && type != typeof(string);
+        }
+
+        private static IBinaryTypeSerializer<V>? GetSerializer<V>()
+        {
+            object? serializer = null;
+            allSerializers.TryGetValue(typeof(V), out serializer);
+
+            return (IBinaryTypeSerializer<V>?) serializer;
         }
 
         private static MemberInfo[] GetAllMembersForType(Type type) {
@@ -153,30 +135,60 @@ namespace Barchart.BinarySerializer.Schemas
             return schemaInterface;
         }
 
-        public static Action<T, object?> GenerateSetter<T>(MemberInfo memberInfo)
+        public static IMemberData<T> GenerateData<T, V> (MemberInfo memberInfo) 
         {
-            var instance = Expression.Parameter(typeof(T), "instance");
-            var value = Expression.Parameter(typeof(object), "value");
-            var member = Expression.MakeMemberAccess(instance, memberInfo);
-            var memberType = memberInfo switch
-            {
-                PropertyInfo propertyInfo => propertyInfo.PropertyType,
-                FieldInfo fieldInfo => fieldInfo.FieldType,
-                _ => throw new NotImplementedException(),
-            };
-            var convert = Expression.Convert(value, memberType);
-            var assign = Expression.Assign(member, convert);
-
-            return Expression.Lambda<Action<T, object?>>(assign, instance, value).Compile();
+            MemberData<T, V> newMemberData = new MemberData<T, V>(typeof(V), memberInfo.Name);
+            newMemberData.MemberInfo = memberInfo;
+            newMemberData.SetDelegate = GenerateSetter<T, V>(memberInfo);
+            newMemberData.GetDelegate = GenerateGetter<T, V>(memberInfo);
+            newMemberData.BinarySerializer = GetSerializer<V>();
+            return newMemberData;
         }
 
-        public static Func<T, object?> GenerateGetter<T>(MemberInfo memberInfo)
+        public static IMemberData<T> GenerateObjectData<T, V>(ISchema nestedSchema, MemberInfo memberInfo) where V : new()
+        {
+            ObjectBinarySerializer<V> serializer = new ObjectBinarySerializer<V>((Schema<V>)nestedSchema);
+            ObjectMemberData<T, V> newMemberData = new ObjectMemberData<T, V>(typeof(V), memberInfo.Name);
+            newMemberData.MemberInfo = memberInfo;
+            newMemberData.SetDelegate = GenerateSetter<T, V>(memberInfo);
+            newMemberData.GetDelegate = GenerateGetter<T, V>(memberInfo);
+     
+            newMemberData.BinarySerializer = serializer;
+            return newMemberData;
+        }
+
+        public static IMemberData<T> GenerateMemberDataInterface<T>(Type memberType, MemberInfo memberInfo)
+        {
+            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateData)).MakeGenericMethod(typeof(T), memberType);
+            var newMemberData = generateDataMethod.Invoke(null, new object[] { memberInfo });
+
+            return (IMemberData<T>)newMemberData;
+        }
+
+        public static IMemberData<T> GenerateObjectMemberDataInterface<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
+        {
+            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData)).MakeGenericMethod(typeof(T), memberType);
+            var newMemberData = generateDataMethod.Invoke(null, new object[] { nestedSchema, memberInfo });
+
+            return (IMemberData<T>)newMemberData;
+        }
+
+        public static Action<T, V> GenerateSetter<T, V>(MemberInfo memberInfo)
+        {
+            var instance = Expression.Parameter(typeof(T), "instance");
+            var value = Expression.Parameter(typeof(V), "value");
+            var member = Expression.MakeMemberAccess(instance, memberInfo);
+            var assign = Expression.Assign(member, value);
+
+            return Expression.Lambda<Action<T, V>>(assign, instance, value).Compile();
+        }
+
+        public static Func<T, V> GenerateGetter<T, V>(MemberInfo memberInfo)
         {
             var instance = Expression.Parameter(typeof(T), "instance");
             var member = Expression.MakeMemberAccess(instance, memberInfo);
-            var convert = Expression.Convert(member, typeof(object));
 
-            return Expression.Lambda<Func<T, object?>>(convert, instance).Compile();
+            return Expression.Lambda<Func<T, V>>(member, instance).Compile();
         }
     }
 }

@@ -14,4 +14,19 @@
             return BitConverter.ToInt32(bytes);
         }
     }
+
+    public class BinarySerializerInt32Nullable : BinarySerializerNullableNumeric<int>
+    {
+        public override int Size => sizeof(int);
+
+        protected override byte[] ConvertToByteArray(int value)
+        {
+            return BitConverter.GetBytes(value);
+        }
+
+        protected override int DecodeBytes(byte[] bytes)
+        {
+            return BitConverter.ToInt32(bytes);
+        }
+    }
 }

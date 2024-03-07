@@ -178,8 +178,8 @@ namespace Barchart.BinarySerializer.Tests
                 return;
             }
 
-            Func<Car, object?> getMethod = SchemaFactory.GenerateGetter<Car>(fieldInfo);
-            Action<Car, object?> setMethod = SchemaFactory.GenerateSetter<Car>(propertyInfo);
+            Func<Car, object?> getMethod = SchemaFactory.GenerateGetter<Car, object?>(fieldInfo);
+            Action<Car, object?> setMethod = SchemaFactory.GenerateSetter<Car, object?>(propertyInfo);
 
             stopwatch.Start();
 
@@ -317,11 +317,11 @@ namespace Barchart.BinarySerializer.Tests
                 return;
             }
 
-            Func<Car, object?> getDecimalNumberMethod = SchemaFactory.GenerateGetter<Car>(decimalNumberInfo);
-            Func<Car, object?> getDoubleNumberMethod = SchemaFactory.GenerateGetter<Car>(doubleNumberInfo);
-            Func<Car, object?> getDateTimeNumberMethod = SchemaFactory.GenerateGetter<Car>(dateTimeDateInfo);
-            Func<Car, object?> getStringNumberMethod = SchemaFactory.GenerateGetter<Car>(stringNameInfo);
-            Func<Car, object?> getPersonObjectInCarPropertyInfo = SchemaFactory.GenerateGetter<Car>(personObjectInCarPropertyInfo);
+            Func<Car, decimal> getDecimalNumberMethod = SchemaFactory.GenerateGetter<Car, decimal>(decimalNumberInfo);
+            Func<Car, double> getDoubleNumberMethod = SchemaFactory.GenerateGetter<Car, double>(doubleNumberInfo);
+            Func<Car, DateTime?> getDateTimeNumberMethod = SchemaFactory.GenerateGetter<Car, DateTime?>(dateTimeDateInfo);
+            Func<Car, string?> getStringNumberMethod = SchemaFactory.GenerateGetter<Car, string?>(stringNameInfo);
+            Func<Car, Person?> getPersonObjectInCarPropertyInfo = SchemaFactory.GenerateGetter<Car, Person?>(personObjectInCarPropertyInfo);
 
             var carType2 = car2.GetType();
             PropertyInfo? decimalNumberInfo2 = carType2.GetProperty("DecimalNumber");
@@ -336,11 +336,11 @@ namespace Barchart.BinarySerializer.Tests
                 return;
             }
 
-            Func<Car, object?> getDecimalNumberMethod2 = SchemaFactory.GenerateGetter<Car>(decimalNumberInfo2);
-            Func<Car, object?> getDoubleNumberMethod2 = SchemaFactory.GenerateGetter<Car>(doubleNumberInfo2);
-            Func<Car, object?> getDateTimeNumberMethod2 = SchemaFactory.GenerateGetter<Car>(dateTimeDateInfo2);
-            Func<Car, object?> getStringNumberMethod2 = SchemaFactory.GenerateGetter<Car>(stringNameInfo2);
-            Func<Car, object?> getPersonObjectInCarPropertyInfo2 = SchemaFactory.GenerateGetter<Car>(personObjectInCarPropertyInfo2);
+            Func<Car, decimal> getDecimalNumberMethod2 = SchemaFactory.GenerateGetter<Car, decimal>(decimalNumberInfo2);
+            Func<Car, double> getDoubleNumberMethod2 = SchemaFactory.GenerateGetter<Car, double>(doubleNumberInfo2);
+            Func<Car, DateTime?> getDateTimeNumberMethod2 = SchemaFactory.GenerateGetter<Car, DateTime?>(dateTimeDateInfo2);
+            Func<Car, string?> getStringNumberMethod2 = SchemaFactory.GenerateGetter<Car, string?>(stringNameInfo2);
+            Func<Car, Person?> getPersonObjectInCarPropertyInfo2 = SchemaFactory.GenerateGetter<Car, Person?>(personObjectInCarPropertyInfo2);
 
             stopwatch1.Start();
 
@@ -490,11 +490,11 @@ namespace Barchart.BinarySerializer.Tests
                 return;
             }
 
-            Func<CarIEquatable, object?> getDecimalNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable>(decimalNumberInfo);
-            Func<CarIEquatable, object?> getDoubleNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable>(doubleNumberInfo);
-            Func<CarIEquatable, object?> getDateTimeNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable>(dateTimeDateInfo);
-            Func<CarIEquatable, object?> getStringNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable>(stringNameInfo);
-            Func<CarIEquatable, object?> getPersonObjectInCarPropertyInfo = SchemaFactory.GenerateGetter<CarIEquatable>(personObjectInCarPropertyInfo);
+            Func<CarIEquatable, decimal> getDecimalNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable, decimal>(decimalNumberInfo);
+            Func<CarIEquatable, double> getDoubleNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable, double>(doubleNumberInfo);
+            Func<CarIEquatable, DateTime?> getDateTimeNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable, DateTime?>(dateTimeDateInfo);
+            Func<CarIEquatable, string?> getStringNumberMethod = SchemaFactory.GenerateGetter<CarIEquatable, string?>(stringNameInfo);
+            Func<CarIEquatable, PersonIEquatable?> getPersonObjectInCarPropertyInfo = SchemaFactory.GenerateGetter<CarIEquatable, PersonIEquatable?>(personObjectInCarPropertyInfo);
 
             var carType2 = car2.GetType();
             PropertyInfo? decimalNumberInfo2 = carType2.GetProperty("DecimalNumber");
@@ -509,11 +509,11 @@ namespace Barchart.BinarySerializer.Tests
                 return;
             }
 
-            Func<CarIEquatable, object?> getDecimalNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable>(decimalNumberInfo2);
-            Func<CarIEquatable, object?> getDoubleNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable>(doubleNumberInfo2);
-            Func<CarIEquatable, object?> getDateTimeNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable>(dateTimeDateInfo2);
-            Func<CarIEquatable, object?> getStringNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable>(stringNameInfo2);
-            Func<CarIEquatable, object?> getPersonObjectInCarPropertyInfo2 = SchemaFactory.GenerateGetter<CarIEquatable>(personObjectInCarPropertyInfo2);
+            Func<CarIEquatable, decimal> getDecimalNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable, decimal>(decimalNumberInfo2);
+            Func<CarIEquatable, double> getDoubleNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable, double>(doubleNumberInfo2);
+            Func<CarIEquatable, DateTime?> getDateTimeNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable, DateTime?>(dateTimeDateInfo2);
+            Func<CarIEquatable, string?> getStringNumberMethod2 = SchemaFactory.GenerateGetter<CarIEquatable, string?>(stringNameInfo2);
+            Func<CarIEquatable, PersonIEquatable?> getPersonObjectInCarPropertyInfo2 = SchemaFactory.GenerateGetter<CarIEquatable, PersonIEquatable>(personObjectInCarPropertyInfo2);
 
             stopwatch1.Start();
 

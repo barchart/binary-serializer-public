@@ -39,7 +39,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public HeaderWithValue Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<string> Decode(DataBuffer dataBuffer)
         {
             byte[]? valueBytes = null;
             int size = 0;
@@ -51,14 +51,14 @@ namespace Barchart.BinarySerializer.Types
 
             if (header.IsMissing)
             {
-                return new HeaderWithValue(header, null);
+                return new HeaderWithValue<string>(header, default);
             }
 
             header.IsNull = dataBuffer.ReadBit() == 1;
 
             if (header.IsNull)
             {
-                return new HeaderWithValue(header, null);
+                return new HeaderWithValue<string>(header, default);
             }
 
             for (int i = 5; i >= 0; i--)
@@ -75,7 +75,7 @@ namespace Barchart.BinarySerializer.Types
             }
 
             string decodedString = Encoding.UTF8.GetString(valueBytes);
-            return new HeaderWithValue(header, decodedString);
+            return new HeaderWithValue<string>(header, decodedString);
         }
 
         public int GetLengthInBits(string? value)
@@ -88,21 +88,5 @@ namespace Barchart.BinarySerializer.Types
             int valueLength = Encoding.UTF8.GetByteCount(value);
             return valueLength * 8 + NUMBER_OF_HEADER_BITS_STRING;
         }
-
-        #region ISerializer implementation
-        void ISerializer.Encode(DataBuffer dataBuffer, object? value)
-        {
-            Encode(dataBuffer, (string?)value);
-        }
-        HeaderWithValue ISerializer.Decode(DataBuffer dataBuffer)
-        {
-            return (HeaderWithValue)((IBinaryTypeSerializer<string>)this).Decode(dataBuffer);
-        }
-
-        int ISerializer.GetLengthInBits(object? value)
-        {
-            return GetLengthInBits((string?)value);
-        }
-        #endregion
     }
 }

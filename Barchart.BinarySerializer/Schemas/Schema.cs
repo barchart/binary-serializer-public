@@ -1,11 +1,8 @@
-﻿using Barchart.BinarySerializer.Types;
-
-namespace Barchart.BinarySerializer.Schemas
+﻿namespace Barchart.BinarySerializer.Schemas
 {
     public class Schema<T> : ISchema where T : new()
     {
         private const int BUFFER_SIZE = 256000000;
-        private const int IS_MISSING_NUMBER_OF_BITS = 1;
         
         [ThreadStatic]
         private static byte[]? _buffer;
@@ -23,9 +20,9 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
-        private List<MemberData<T>> _memberDataList;
+        private List<IMemberData<T>> _memberDataList;
 
-        internal Schema(List<MemberData<T>> memberDataList)
+        public Schema(List<IMemberData<T>> memberDataList)
         {
             _memberDataList = memberDataList;
         }
@@ -54,22 +51,21 @@ namespace Barchart.BinarySerializer.Schemas
             return Serialize(schemaObject, dataBuffer);
         }
 
-        private byte[] Serialize(T schemaObject, DataBuffer dataBuffer) {
+        internal byte[] Serialize(T schemaObject, DataBuffer dataBuffer) {
+
             if (schemaObject == null)
             {
                 throw new ArgumentNullException(nameof(schemaObject), "SchemaObject object cannot be null.");
             }
 
-            foreach (MemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
                 {
                     continue;
                 }
 
-                object? value = memberData.GetDelegate(schemaObject);
-
-                memberData.BinarySerializer.Encode(dataBuffer, value);
+                memberData.Encode(schemaObject, dataBuffer);
             }
 
             return dataBuffer.ToBytes();
@@ -100,40 +96,20 @@ namespace Barchart.BinarySerializer.Schemas
             return Serialize(oldObject, newObject, dataBuffer);
         }
 
-        private byte[] Serialize(T oldObject, T newObject, DataBuffer dataBuffer)
+        internal byte[] Serialize(T oldObject, T newObject, DataBuffer dataBuffer)
         {
             if (oldObject == null)
             {
-                throw new ArgumentNullException(nameof(oldObject), "Old object cannot be null.");
+                return Serialize(newObject, dataBuffer);
             }
 
-            foreach (MemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
                 {
                     continue;
                 }
-
-                object? oldValue = memberData.GetDelegate(oldObject);
-                object? newValue = memberData.GetDelegate(newObject);
-
-                bool valuesEqual = Equals(oldValue, newValue);
-
-                if (!valuesEqual || memberData.IsKeyAttribute)
-                {
-                    if (memberData.BinarySerializer is ObjectBinarySerializer)
-                    {
-                        ((ObjectBinarySerializer)memberData.BinarySerializer).Encode(dataBuffer, oldValue, newValue);
-                    }
-                    else
-                    {
-                        memberData.BinarySerializer.Encode(dataBuffer, newValue);
-                    }
-                }
-                else
-                {
-                    EncodeMissingFlag(dataBuffer);
-                }
+                memberData.EncodeCompare(newObject, oldObject, dataBuffer);
             }
 
             return dataBuffer.ToBytes();
@@ -150,24 +126,17 @@ namespace Barchart.BinarySerializer.Schemas
             return Deserialize(dataBuffer);
         }
 
-        private T Deserialize(DataBuffer dataBuffer) {
+        internal T Deserialize(DataBuffer dataBuffer) {
             T existing = new T();
 
-            foreach (MemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
                 {
                     continue;
                 }
 
-                HeaderWithValue value = memberData.BinarySerializer.Decode(dataBuffer);
-
-                if (value.Header.IsMissing)
-                {
-                    continue;
-                }
-
-                memberData.SetDelegate(existing, value.Value);     
+                memberData.Decode(existing, dataBuffer);     
             }
 
             return existing;
@@ -185,33 +154,16 @@ namespace Barchart.BinarySerializer.Schemas
             return Deserialize(existing, dataBuffer);
         }
 
-        private T Deserialize(T existing, DataBuffer dataBuffer)
+        internal T Deserialize(T existing, DataBuffer dataBuffer)
         {
-            foreach (MemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<T> memberData in _memberDataList)
             {
                 if (!memberData.IsIncluded)
                 {
                     continue;
                 }
 
-                HeaderWithValue value = new HeaderWithValue();
-
-                if (memberData.BinarySerializer is ObjectBinarySerializer)
-                {
-                    object? currentObject = memberData.GetDelegate(existing);
-                    value = ((ObjectBinarySerializer)memberData.BinarySerializer).Decode(dataBuffer, currentObject);
-                }
-                else
-                {
-                    value = memberData.BinarySerializer.Decode(dataBuffer);
-                }
-
-                if (value.Header.IsMissing)
-                {
-                    continue;
-                }
-
-                memberData.SetDelegate(existing, value.Value);
+                memberData.Decode(existing, dataBuffer);
             }
 
             return existing;
@@ -247,10 +199,9 @@ namespace Barchart.BinarySerializer.Schemas
         {
             int lengthInBits = 0;
 
-            foreach (MemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<T> memberData in _memberDataList)
             {
-                object? value = memberData.GetDelegate(schemaObject);
-                lengthInBits += memberData.BinarySerializer.GetLengthInBits(value);             
+                lengthInBits += memberData.GetLengthInBits(schemaObject);           
             }
 
             return lengthInBits;
@@ -266,36 +217,12 @@ namespace Barchart.BinarySerializer.Schemas
         {
             int lengthInBits = 0;
 
-            foreach (MemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<T> memberData in _memberDataList)
             {
-                object? oldValue = memberData.GetDelegate(oldObject);
-                object? newValue = memberData.GetDelegate(newObject);
-
-                bool valuesEqual = Equals(oldValue, newValue);
-
-                if (!valuesEqual || memberData.IsKeyAttribute)
-                {
-                    if (memberData.BinarySerializer is ObjectBinarySerializer)
-                    {
-                        lengthInBits += ((ObjectBinarySerializer)memberData.BinarySerializer).GetLengthInBits(oldValue, newValue);
-                    }
-                    else
-                    {
-                        lengthInBits += memberData.BinarySerializer.GetLengthInBits(newValue);
-                    }
-                }
-                else
-                {
-                    lengthInBits += IS_MISSING_NUMBER_OF_BITS;
-                }
+                lengthInBits += memberData.GetLengthInBits(oldObject, newObject);
             }
 
             return lengthInBits;
-        }
-
-        private void EncodeMissingFlag(DataBuffer dataBuffer)
-        {
-            dataBuffer.WriteBit(1);
         }
 
         #region ISchema implementation

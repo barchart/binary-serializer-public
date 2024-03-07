@@ -14,4 +14,19 @@
             return BitConverter.ToInt16(bytes);
         }
     }
+
+    public class BinarySerializerInt16Nullable : BinarySerializerNullableNumeric<short>
+    {
+        public override int Size => sizeof(short);
+
+        protected override byte[] ConvertToByteArray(short value)
+        {
+            return BitConverter.GetBytes(value);
+        }
+
+        protected override short DecodeBytes(byte[] bytes)
+        {
+            return BitConverter.ToInt16(bytes);
+        }
+    }
 }

@@ -1,12 +1,12 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
-    public struct HeaderWithValue
+    public struct HeaderWithValue<T>
     {
         public Header Header { get; set; }
 
-        public object? Value { get; set; }
+        public T Value { get; set; }
 
-        public HeaderWithValue(Header header, object? value = null)
+        public HeaderWithValue(Header header, T value = default)
         {
             Header = header;
             Value = value;
