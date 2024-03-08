@@ -1,5 +1,7 @@
 ﻿namespace Barchart.BinarySerializer.Schemas
 {
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+
     public class BinarySerializeAttribute : Attribute
     {
         private readonly bool _include;
