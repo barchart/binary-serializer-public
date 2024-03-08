@@ -159,18 +159,33 @@ namespace Barchart.BinarySerializer.Schemas
 
         public static IMemberData<T> GenerateMemberDataInterface<T>(Type memberType, MemberInfo memberInfo)
         {
-            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateData)).MakeGenericMethod(typeof(T), memberType);
-            var newMemberData = generateDataMethod.Invoke(null, new object[] { memberInfo });
+            var memberTypeExpr = Expression.Constant(memberType);
+            var memberInfoExpr = Expression.Constant(memberInfo);
+            var genericArgs = new Type[] { typeof(T), memberType };
+            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateData)).MakeGenericMethod(genericArgs);
+            var generateDataCallExpr = Expression.Call(null, generateDataMethod, memberInfoExpr);
+            var convertExpr = Expression.Convert(generateDataCallExpr, typeof(IMemberData<T>));
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(convertExpr);
+            var func = lambdaExpr.Compile();
+            var memberData = func();
 
-            return (IMemberData<T>)newMemberData;
+            return memberData;
         }
 
         public static IMemberData<T> GenerateObjectMemberDataInterface<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
         {
-            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData)).MakeGenericMethod(typeof(T), memberType);
-            var newMemberData = generateDataMethod.Invoke(null, new object[] { nestedSchema, memberInfo });
+            var nestedSchemaExpr = Expression.Constant(nestedSchema);
+            var memberTypeExpr = Expression.Constant(memberType);
+            var memberInfoExpr = Expression.Constant(memberInfo);
+            var genericArgs = new Type[] { typeof(T), memberType };
+            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData)).MakeGenericMethod(genericArgs);
+            var generateDataCallExpr = Expression.Call(null, generateDataMethod, nestedSchemaExpr, memberInfoExpr);
+            var convertExpr = Expression.Convert(generateDataCallExpr, typeof(IMemberData<T>));
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(convertExpr);
+            var func = lambdaExpr.Compile();
+            var memberData = func();
 
-            return (IMemberData<T>)newMemberData;
+            return memberData;
         }
 
         public static Action<T, V> GenerateSetter<T, V>(MemberInfo memberInfo)
