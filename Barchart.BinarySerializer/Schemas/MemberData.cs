@@ -27,8 +27,8 @@ namespace Barchart.BinarySerializer.Schemas
     {
         protected const int IS_MISSING_NUMBER_OF_BITS = 1;
 
-        public string Name { get; set; }
         public Type Type { get; set; }
+        public string Name { get; set; }
         public bool IsIncluded { get; set; }
         public bool IsKeyAttribute { get; set; }
         public MemberInfo MemberInfo { get; set; }
@@ -36,10 +36,17 @@ namespace Barchart.BinarySerializer.Schemas
         public Action<T, V> SetDelegate { get; set; }
         public IBinaryTypeSerializer<V> BinarySerializer { get; set; }
 
-        public MemberData(Type type, string name)
+        public MemberData(Type type, string name, bool isIncluded, bool isKeyAttribute, MemberInfo memberInfo,
+            Func<T, V> getDelegate, Action<T, V> setDelegate, IBinaryTypeSerializer<V> binarySerializer)
         {
             Type = type;
             Name = name;
+            IsIncluded = isIncluded;
+            IsKeyAttribute = isKeyAttribute;
+            MemberInfo = memberInfo;
+            GetDelegate = getDelegate;
+            SetDelegate = setDelegate;
+            BinarySerializer = binarySerializer;
         }
 
         public void Encode(T value, DataBuffer buffer) {
@@ -107,7 +114,9 @@ namespace Barchart.BinarySerializer.Schemas
 
     public class ObjectMemberData<T, V> : MemberData<T, V> where V : new()
     {
-        public ObjectMemberData(Type type, string name) : base(type, name) {}
+        public ObjectMemberData(Type type, string name, bool isIncluded, bool isKeyAttribute, MemberInfo memberInfo,
+            Func<T, V> getDelegate, Action<T, V> setDelegate, IBinaryTypeSerializer<V> binarySerializer)
+            : base(type, name, isIncluded, isKeyAttribute, memberInfo, getDelegate, setDelegate, binarySerializer) {}
 
         public override void EncodeCompare(T newObject, T oldObject, DataBuffer buffer)
         {

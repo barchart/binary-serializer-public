@@ -83,26 +83,15 @@ namespace Barchart.BinarySerializer.Schemas
                 memberType = ((PropertyInfo)memberInfo).PropertyType;
             }
 
-            BinarySerializeAttribute? attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
-
-            if (attribute == null) { return null; }
-
-            bool include = attribute.Include;
-            bool key = attribute.Key;
-
             if (IsReferenceType(memberType))
             {
                 ISchema nestedSchema = GenerateSchemaInterface(memberType);
                 IMemberData<T> newMemberDataNestedClass = GenerateObjectMemberDataInterface<T>(nestedSchema, memberType, memberInfo);
-                newMemberDataNestedClass.IsIncluded = include;
-                newMemberDataNestedClass.IsKeyAttribute = key;
                 return newMemberDataNestedClass;
             }
             else
             {
                 IMemberData<T> newMemberData = GenerateMemberDataInterface<T>(memberType, memberInfo);
-                newMemberData.IsIncluded = include;
-                newMemberData.IsKeyAttribute = key;
                 return newMemberData;
             }
         }
@@ -125,6 +114,18 @@ namespace Barchart.BinarySerializer.Schemas
             return type.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, null, null);
         }
 
+        private static bool GetIncludeAttributeValue(MemberInfo memberInfo)
+        {
+            var attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
+            return attribute?.Include ?? false;
+        }
+
+        private static bool GetKeyAttributeValue(MemberInfo memberInfo)
+        {
+            var attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
+            return attribute?.Key ?? false;
+        }
+
         private static ISchema GenerateSchemaInterface(Type type)
         {
             Type[] types = { type };
@@ -137,23 +138,34 @@ namespace Barchart.BinarySerializer.Schemas
 
         public static IMemberData<T> GenerateData<T, V> (MemberInfo memberInfo) 
         {
-            MemberData<T, V> newMemberData = new MemberData<T, V>(typeof(V), memberInfo.Name);
-            newMemberData.MemberInfo = memberInfo;
-            newMemberData.SetDelegate = GenerateSetter<T, V>(memberInfo);
-            newMemberData.GetDelegate = GenerateGetter<T, V>(memberInfo);
-            newMemberData.BinarySerializer = GetSerializer<V>();
+            MemberData<T, V> newMemberData = new MemberData<T, V>(
+                typeof(V),
+                memberInfo.Name,
+                GetIncludeAttributeValue(memberInfo),
+                GetKeyAttributeValue(memberInfo),
+                memberInfo,
+                GenerateGetter<T, V>(memberInfo),
+                GenerateSetter<T, V>(memberInfo),
+                GetSerializer<V>()
+                );
             return newMemberData;
         }
 
         public static IMemberData<T> GenerateObjectData<T, V>(ISchema nestedSchema, MemberInfo memberInfo) where V : new()
         {
             ObjectBinarySerializer<V> serializer = new ObjectBinarySerializer<V>((Schema<V>)nestedSchema);
-            ObjectMemberData<T, V> newMemberData = new ObjectMemberData<T, V>(typeof(V), memberInfo.Name);
-            newMemberData.MemberInfo = memberInfo;
-            newMemberData.SetDelegate = GenerateSetter<T, V>(memberInfo);
-            newMemberData.GetDelegate = GenerateGetter<T, V>(memberInfo);
-     
-            newMemberData.BinarySerializer = serializer;
+
+            ObjectMemberData<T, V> newMemberData = new ObjectMemberData<T, V>(
+                typeof(V),
+                memberInfo.Name,
+                GetIncludeAttributeValue(memberInfo),
+                GetKeyAttributeValue(memberInfo),
+                memberInfo,
+                GenerateGetter<T, V>(memberInfo),
+                GenerateSetter<T, V>(memberInfo),
+                serializer
+                );
+
             return newMemberData;
         }
 
@@ -164,8 +176,7 @@ namespace Barchart.BinarySerializer.Schemas
             var genericArgs = new Type[] { typeof(T), memberType };
             var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateData))!.MakeGenericMethod(genericArgs);
             var generateDataCallExpr = Expression.Call(null, generateDataMethod, memberInfoExpr);
-            var convertExpr = Expression.Convert(generateDataCallExpr, typeof(IMemberData<T>));
-            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(convertExpr);
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(generateDataCallExpr);
             var func = lambdaExpr.Compile();
             var memberData = func();
 
@@ -180,8 +191,7 @@ namespace Barchart.BinarySerializer.Schemas
             var genericArgs = new Type[] { typeof(T), memberType };
             var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData))!.MakeGenericMethod(genericArgs);
             var generateDataCallExpr = Expression.Call(null, generateDataMethod, nestedSchemaExpr, memberInfoExpr);
-            var convertExpr = Expression.Convert(generateDataCallExpr, typeof(IMemberData<T>));
-            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(convertExpr);
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(generateDataCallExpr);
             var func = lambdaExpr.Compile();
             var memberData = func();
 
