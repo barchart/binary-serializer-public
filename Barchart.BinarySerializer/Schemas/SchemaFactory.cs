@@ -86,12 +86,12 @@ namespace Barchart.BinarySerializer.Schemas
             if (IsReferenceType(memberType))
             {
                 ISchema nestedSchema = GenerateSchemaInterface(memberType);
-                IMemberData<T> newMemberDataNestedClass = GenerateObjectMemberDataInterface<T>(nestedSchema, memberType, memberInfo);
+                IMemberData<T>? newMemberDataNestedClass = GenerateObjectMemberDataInterface<T>(nestedSchema, memberType, memberInfo);
                 return newMemberDataNestedClass;
             }
             else
             {
-                IMemberData<T> newMemberData = GenerateMemberDataInterface<T>(memberType, memberInfo);
+                IMemberData<T>? newMemberData = GenerateMemberDataInterface<T>(memberType, memberInfo);
                 return newMemberData;
             }
         }
@@ -126,7 +126,7 @@ namespace Barchart.BinarySerializer.Schemas
             return attribute?.Key ?? false;
         }
 
-        private static ISchema GenerateSchemaInterface(Type type)
+        public static ISchema GenerateSchemaInterface(Type type)
         {
             Type[] types = { type };
             MethodCallExpression methodCallExpression = Expression.Call(typeof(SchemaFactory), nameof(GetSchema), types, null);
@@ -136,12 +136,19 @@ namespace Barchart.BinarySerializer.Schemas
             return schemaInterface;
         }
 
-        public static IMemberData<T> GenerateData<T, V> (MemberInfo memberInfo) 
+        public static IMemberData<T>? GenerateData<T, V> (MemberInfo memberInfo) 
         {
+            bool include = GetIncludeAttributeValue(memberInfo);
+
+            if (!include)
+            {
+                return null;
+            }
+
             MemberData<T, V> newMemberData = new MemberData<T, V>(
                 typeof(V),
                 memberInfo.Name,
-                GetIncludeAttributeValue(memberInfo),
+                include,
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
                 GenerateGetter<T, V>(memberInfo),
@@ -151,14 +158,21 @@ namespace Barchart.BinarySerializer.Schemas
             return newMemberData;
         }
 
-        private static IMemberData<T> GenerateObjectData<T, V>(ISchema nestedSchema, MemberInfo memberInfo) where V : new()
+        public static IMemberData<T>? GenerateObjectData<T, V>(ISchema nestedSchema, MemberInfo memberInfo) where V : new()
         {
+            bool include = GetIncludeAttributeValue(memberInfo);
+
+            if (!include)
+            {
+                return null;
+            }
+
             ObjectBinarySerializer<V> serializer = new ObjectBinarySerializer<V>((Schema<V>)nestedSchema);
 
             ObjectMemberData<T, V> newMemberData = new ObjectMemberData<T, V>(
                 typeof(V),
                 memberInfo.Name,
-                GetIncludeAttributeValue(memberInfo),
+                include,
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
                 GenerateGetter<T, V>(memberInfo),
@@ -169,21 +183,21 @@ namespace Barchart.BinarySerializer.Schemas
             return newMemberData;
         }
 
-        private static IMemberData<T> GenerateMemberDataInterface<T>(Type memberType, MemberInfo memberInfo)
+        public static IMemberData<T>? GenerateMemberDataInterface<T>(Type memberType, MemberInfo memberInfo)
         {
             var memberTypeExpr = Expression.Constant(memberType);
             var memberInfoExpr = Expression.Constant(memberInfo);
             var genericArgs = new Type[] { typeof(T), memberType };
             var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateData))!.MakeGenericMethod(genericArgs);
             var generateDataCallExpr = Expression.Call(null, generateDataMethod, memberInfoExpr);
-            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(generateDataCallExpr);
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>?>>(generateDataCallExpr);
             var func = lambdaExpr.Compile();
             var memberData = func();
 
             return memberData;
         }
 
-        private static IMemberData<T> GenerateObjectMemberDataInterface<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
+        public static IMemberData<T>? GenerateObjectMemberDataInterface<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
         {
             var nestedSchemaExpr = Expression.Constant(nestedSchema);
             var memberTypeExpr = Expression.Constant(memberType);
@@ -191,7 +205,7 @@ namespace Barchart.BinarySerializer.Schemas
             var genericArgs = new Type[] { typeof(T), memberType };
             var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData))!.MakeGenericMethod(genericArgs);
             var generateDataCallExpr = Expression.Call(null, generateDataMethod, nestedSchemaExpr, memberInfoExpr);
-            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(generateDataCallExpr);
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>?>>(generateDataCallExpr);
             var func = lambdaExpr.Compile();
             var memberData = func();
 
