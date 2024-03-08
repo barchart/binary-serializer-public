@@ -70,7 +70,7 @@ namespace Barchart.BinarySerializer.Types
             };
         }
 
-        public void Encode(DataBuffer dataBuffer, T value)
+        public void Encode(DataBuffer dataBuffer, T? value)
         {
             Header header = new Header();
             header.IsMissing = false;
@@ -105,14 +105,14 @@ namespace Barchart.BinarySerializer.Types
             return Schema.GetLengthInBytes(value);
         }
 
-        public int GetLengthInBits(T value)
+        public int GetLengthInBits(T? value)
         {
-            return Schema.GetLengthInBits(value);
+            return((ISchema)Schema).GetLengthInBits(value);
         }
 
-        public int GetLengthInBits(T oldValue, T newValue)
+        public int GetLengthInBits(T? oldValue, T? newValue)
         {
-            return Schema.GetLengthInBits(oldValue, newValue);
+            return ((ISchema)Schema).GetLengthInBits(oldValue, newValue);
         }
     }
 }

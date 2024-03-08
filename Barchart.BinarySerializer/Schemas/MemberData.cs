@@ -9,7 +9,7 @@ namespace Barchart.BinarySerializer.Schemas
         public Type Type { get; set; }
         public bool IsIncluded { get; set; }
         public bool IsKeyAttribute { get; set; }
-        public MemberInfo? MemberInfo { get; set; }
+        public MemberInfo MemberInfo { get; set; }
 
         void Encode(T value, DataBuffer buffer);
         void EncodeCompare(T newValue, T oldValue, DataBuffer buffer);
@@ -75,7 +75,7 @@ namespace Barchart.BinarySerializer.Schemas
             HeaderWithValue<V> header;
             header = BinarySerializer.Decode(buffer);
            
-            if (header.Header.IsMissing)
+            if (header.Header.IsMissing || header.Value == null)
             {
                 return;
             }
@@ -150,7 +150,7 @@ namespace Barchart.BinarySerializer.Schemas
                 header = ((ObjectBinarySerializer<V>)BinarySerializer).Decode(buffer, currentObject);
             }
 
-            if (header.Header.IsMissing)
+            if (header.Header.IsMissing || header.Value == null)
             {
                 return;
             }

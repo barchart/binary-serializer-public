@@ -139,8 +139,9 @@ namespace Barchart.BinarySerializer.Schemas
         public static IMemberData<T>? GenerateData<T, V> (MemberInfo memberInfo) 
         {
             bool include = GetIncludeAttributeValue(memberInfo);
+            IBinaryTypeSerializer<V>? serializer = GetSerializer<V>();
 
-            if (!include)
+            if (!include || serializer == null)
             {
                 return null;
             }
@@ -153,7 +154,7 @@ namespace Barchart.BinarySerializer.Schemas
                 memberInfo,
                 GenerateGetter<T, V>(memberInfo),
                 GenerateSetter<T, V>(memberInfo),
-                GetSerializer<V>()
+                serializer
                 );
             return newMemberData;
         }
