@@ -151,7 +151,7 @@ namespace Barchart.BinarySerializer.Schemas
             return newMemberData;
         }
 
-        public static IMemberData<T> GenerateObjectData<T, V>(ISchema nestedSchema, MemberInfo memberInfo) where V : new()
+        private static IMemberData<T> GenerateObjectData<T, V>(ISchema nestedSchema, MemberInfo memberInfo) where V : new()
         {
             ObjectBinarySerializer<V> serializer = new ObjectBinarySerializer<V>((Schema<V>)nestedSchema);
 
@@ -169,7 +169,7 @@ namespace Barchart.BinarySerializer.Schemas
             return newMemberData;
         }
 
-        public static IMemberData<T> GenerateMemberDataInterface<T>(Type memberType, MemberInfo memberInfo)
+        private static IMemberData<T> GenerateMemberDataInterface<T>(Type memberType, MemberInfo memberInfo)
         {
             var memberTypeExpr = Expression.Constant(memberType);
             var memberInfoExpr = Expression.Constant(memberInfo);
@@ -183,7 +183,7 @@ namespace Barchart.BinarySerializer.Schemas
             return memberData;
         }
 
-        public static IMemberData<T> GenerateObjectMemberDataInterface<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
+        private static IMemberData<T> GenerateObjectMemberDataInterface<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
         {
             var nestedSchemaExpr = Expression.Constant(nestedSchema);
             var memberTypeExpr = Expression.Constant(memberType);
