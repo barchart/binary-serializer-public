@@ -162,7 +162,7 @@ namespace Barchart.BinarySerializer.Schemas
             var memberTypeExpr = Expression.Constant(memberType);
             var memberInfoExpr = Expression.Constant(memberInfo);
             var genericArgs = new Type[] { typeof(T), memberType };
-            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateData)).MakeGenericMethod(genericArgs);
+            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateData))!.MakeGenericMethod(genericArgs);
             var generateDataCallExpr = Expression.Call(null, generateDataMethod, memberInfoExpr);
             var convertExpr = Expression.Convert(generateDataCallExpr, typeof(IMemberData<T>));
             var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(convertExpr);
@@ -178,7 +178,7 @@ namespace Barchart.BinarySerializer.Schemas
             var memberTypeExpr = Expression.Constant(memberType);
             var memberInfoExpr = Expression.Constant(memberInfo);
             var genericArgs = new Type[] { typeof(T), memberType };
-            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData)).MakeGenericMethod(genericArgs);
+            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData))!.MakeGenericMethod(genericArgs);
             var generateDataCallExpr = Expression.Call(null, generateDataMethod, nestedSchemaExpr, memberInfoExpr);
             var convertExpr = Expression.Convert(generateDataCallExpr, typeof(IMemberData<T>));
             var lambdaExpr = Expression.Lambda<Func<IMemberData<T>>>(convertExpr);
