@@ -1,5 +1,8 @@
 ﻿namespace Barchart.BinarySerializer.Schemas
 {
+    /// <summary>
+    /// A data type that helps to use a buffer efficiently with the possibility to read or write bytes and bits
+    /// </summary>
     public class DataBuffer
     {
         private byte[] _buffer;

@@ -3,6 +3,9 @@ using System.Text;
 
 namespace Barchart.BinarySerializer.Types
 {
+    /// <summary>
+    /// Represents a binary serializer for string members of the class or structure.
+    /// </summary>
     public class BinarySerializerString : IBinaryTypeSerializer<string?>
     {
         public const int NUMBER_OF_HEADER_BITS_NULL_STRING = 2;

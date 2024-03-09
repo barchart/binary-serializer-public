@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace Barchart.BinarySerializer.Schemas
 {
+    /// <summary>
+    /// Factory class for generating schemas for binary serialization.
+    /// </summary>
     public static class SchemaFactory
     {
         private static readonly Dictionary<Type, object> allSerializers = new Dictionary<Type, object>();
@@ -49,10 +52,10 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        ///     Processes a class of generic type and collects data about fields and properties and their attributes
+        /// Retrieves the schema for the specified type <typeparamref name="T"/>.
         /// </summary>
-        /// <returns>Schema with all necessary data</returns>
-        /// 
+        /// <typeparam name="T">The type of object for which the schema is generated.</typeparam>
+        /// <returns>The schema for the specified type.</returns>
         public static Schema<T> GetSchema<T>() where T : new()
         {
             Type type = typeof(T);
@@ -126,6 +129,11 @@ namespace Barchart.BinarySerializer.Schemas
             return attribute?.Key ?? false;
         }
 
+        /// <summary>
+        /// Generates a schema interface for the specified type.
+        /// </summary>
+        /// <param name="type">The type for which to generate the schema interface.</param>
+        /// <returns>The schema interface for the specified type.</returns>
         public static ISchema GenerateSchemaInterface(Type type)
         {
             Type[] types = { type };
@@ -136,6 +144,13 @@ namespace Barchart.BinarySerializer.Schemas
             return schemaInterface;
         }
 
+        /// <summary>
+        /// Generates member data for the specified member.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="V">The type of the member.</typeparam>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The member data if successful; otherwise, <see langword="null"/>.</returns>
         public static IMemberData<T>? GenerateData<T, V> (MemberInfo memberInfo) 
         {
             bool include = GetIncludeAttributeValue(memberInfo);
@@ -159,6 +174,14 @@ namespace Barchart.BinarySerializer.Schemas
             return newMemberData;
         }
 
+        /// <summary>
+        /// Generates object member data for the specified member.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="V">The type of the object member.</typeparam>
+        /// <param name="nestedSchema">The nested schema for the member object.</param>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The object member data if successful; otherwise, <see langword="null"/>.</returns>
         public static IMemberData<T>? GenerateObjectData<T, V>(ISchema nestedSchema, MemberInfo memberInfo) where V : new()
         {
             bool include = GetIncludeAttributeValue(memberInfo);
@@ -184,6 +207,13 @@ namespace Barchart.BinarySerializer.Schemas
             return newMemberData;
         }
 
+        /// <summary>
+        /// Generates member data interface for the specified member type and information.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <param name="memberType">The type of the member.</param>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The member data interface for the specified member.</returns>
         public static IMemberData<T>? GenerateMemberDataInterface<T>(Type memberType, MemberInfo memberInfo)
         {
             var memberTypeExpr = Expression.Constant(memberType);
@@ -198,6 +228,14 @@ namespace Barchart.BinarySerializer.Schemas
             return memberData;
         }
 
+        /// <summary>
+        /// Generates object member data interface for the specified member type and information.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <param name="nestedSchema">The nested schema for the object member.</param>
+        /// <param name="memberType">The type of the member.</param>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The object member data interface for the specified member.</returns>
         public static IMemberData<T>? GenerateObjectMemberDataInterface<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
         {
             var nestedSchemaExpr = Expression.Constant(nestedSchema);
@@ -213,6 +251,13 @@ namespace Barchart.BinarySerializer.Schemas
             return memberData;
         }
 
+        /// <summary>
+        /// Generates a setter function for the specified member.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="V">The type of the member.</typeparam>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The setter function for the specified member.</returns>
         public static Action<T, V> GenerateSetter<T, V>(MemberInfo memberInfo)
         {
             var instance = Expression.Parameter(typeof(T), "instance");
@@ -223,6 +268,13 @@ namespace Barchart.BinarySerializer.Schemas
             return Expression.Lambda<Action<T, V>>(assign, instance, value).Compile();
         }
 
+        /// <summary>
+        /// Generates a getter function for the specified member.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="V">The type of the member.</typeparam>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The getter function for the specified member.</returns>
         public static Func<T, V> GenerateGetter<T, V>(MemberInfo memberInfo)
         {
             var instance = Expression.Parameter(typeof(T), "instance");

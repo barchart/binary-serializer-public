@@ -1,7 +1,7 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    ///     one more byte for header for every property/field
+    ///     Representing additional byte for a header for every property/field.
     ///     7_ 6_ 5_ 4_ 3_ 2_ 1_ 0_ (byte structure)
     ///     7 (Missing bit) 
     ///     6 (Null bit)
@@ -31,8 +31,9 @@
                 _stringLength = value;
             }
         }
+
         /// <summary>
-        ///     returns header byte in specified format based on missing/null bits and string length bits
+        ///     Stores header byte in a specified format based on missing/null bits and string length bits.
         /// </summary>
         public byte HeaderInformation
         {

@@ -1,5 +1,8 @@
 ﻿namespace Barchart.BinarySerializer.Schemas
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ISchema
 	{
         public byte[] Serialize(object schemaObject);

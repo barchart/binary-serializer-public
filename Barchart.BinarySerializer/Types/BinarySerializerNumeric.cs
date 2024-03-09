@@ -2,6 +2,10 @@
 
 namespace Barchart.BinarySerializer.Types
 {
+    /// <summary>
+    /// Represents a base class for binary serializers handling numeric types.
+    /// </summary>
+    /// <typeparam name="T">The underlying numeric type.</typeparam>
     public abstract class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T> where T : struct
     {
         public const int NUMBER_OF_HEADER_BITS_NUMERIC = 2;

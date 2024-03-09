@@ -3,6 +3,10 @@ using System.Reflection;
 
 namespace Barchart.BinarySerializer.Schemas
 {
+    /// <summary>
+    /// Represents the interface for collecting metadata about members of a class or structure with encoding/decoding functionality.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IMemberData<T>
     {
         public string Name { get; set; }
@@ -21,8 +25,10 @@ namespace Barchart.BinarySerializer.Schemas
     }
 
     /// <summary>
-    ///     Structure that represents information about a field/property fetched from reflection
+    /// Represents metadata about a member of a class or structure with encoding/decoding functionality.
     /// </summary>
+    /// <typeparam name="T">The type of the class or structure.</typeparam>
+    /// <typeparam name="V">The type of the member.</typeparam>
     public class MemberData<T, V> : IMemberData<T> 
     {
         protected const int IS_MISSING_NUMBER_OF_BITS = 1;
@@ -112,6 +118,11 @@ namespace Barchart.BinarySerializer.Schemas
         }
     }
 
+    /// <summary>
+    /// Represents metadata about an object member of a class or structure with encoding/decoding functionality.
+    /// </summary>
+    /// <typeparam name="T">The type of the class or structure.</typeparam>
+    /// <typeparam name="V">The type of the member.</typeparam>
     public class ObjectMemberData<T, V> : MemberData<T, V> where V : new()
     {
         public ObjectMemberData(Type type, string name, bool isIncluded, bool isKeyAttribute, MemberInfo memberInfo,

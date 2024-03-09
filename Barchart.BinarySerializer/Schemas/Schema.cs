@@ -1,5 +1,9 @@
 ﻿namespace Barchart.BinarySerializer.Schemas
 {
+    /// <summary>
+    /// Represents a schema for serializing and deserializing objects of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of objects serialized and deserialized by this schema.</typeparam>
     public class Schema<T> : ISchema where T : new()
     {
         private const int BUFFER_SIZE = 256000000;
