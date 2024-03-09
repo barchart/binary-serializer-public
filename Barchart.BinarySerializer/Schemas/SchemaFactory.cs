@@ -216,7 +216,6 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>The member data interface for the specified member.</returns>
         public static IMemberData<T>? GenerateMemberDataInterface<T>(Type memberType, MemberInfo memberInfo)
         {
-            var memberTypeExpr = Expression.Constant(memberType);
             var memberInfoExpr = Expression.Constant(memberInfo);
             var genericArgs = new Type[] { typeof(T), memberType };
             var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateData))!.MakeGenericMethod(genericArgs);
@@ -239,7 +238,6 @@ namespace Barchart.BinarySerializer.Schemas
         public static IMemberData<T>? GenerateObjectMemberDataInterface<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
         {
             var nestedSchemaExpr = Expression.Constant(nestedSchema);
-            var memberTypeExpr = Expression.Constant(memberType);
             var memberInfoExpr = Expression.Constant(memberInfo);
             var genericArgs = new Type[] { typeof(T), memberType };
             var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData))!.MakeGenericMethod(genericArgs);
