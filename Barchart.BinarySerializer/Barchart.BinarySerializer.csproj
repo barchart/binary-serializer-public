@@ -10,10 +10,9 @@
     <IsPackable>true</IsPackable>
     <PackageId>binary-serialization-net</PackageId>
     <Title>PackageId&gt;binary-serialization-net</Title>
-    <Version>1.0.37</Version>
+    <Version>1.0.45</Version>
     <Authors>Luka Sotra</Authors>
     <Company>Barchart</Company>
-
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,16 +24,11 @@
     </PackageReference>
   </ItemGroup>
 
- <ItemGroup>
-    <Content Include="output\**" Pack="false" />
-    <Content Include="Scripts\**" Pack="false" />
-    <Content Include="Tests\**" Pack="false" />
-  </ItemGroup>
+  <Target Name="RemoveFilesFromRelease" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <Compile Remove="Tests\**\*.cs" Condition="'$(Configuration)'=='Release'"/>
+      <Compile Remove="Scripts\**\*.cs" Condition="'$(Configuration)'=='Release'" />
+    </ItemGroup>
+  </Target>
 
- <ItemGroup>
-   <None Remove="Tests\Data\" />
- </ItemGroup>
- <ItemGroup>
-   <Folder Include="Tests\Data\" />
- </ItemGroup>
 </Project>
