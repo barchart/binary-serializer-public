@@ -106,8 +106,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         private static IBinaryTypeSerializer<V>? GetSerializer<V>()
         {
-            object? serializer = null;
-            allSerializers.TryGetValue(typeof(V), out serializer);
+            allSerializers.TryGetValue(typeof(V), out object? serializer);
 
             return (IBinaryTypeSerializer<V>?) serializer;
         }
