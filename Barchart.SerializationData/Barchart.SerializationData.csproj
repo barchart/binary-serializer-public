@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="binary-serialization-net" Version="1.0.45" />
+    <PackageReference Include="openfeed.net" Version="1.0.18" />
   </ItemGroup>
 
 </Project>
