@@ -160,7 +160,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return null;
             }
 
-            MemberData<T, V> newMemberData = new MemberData<T, V>(
+            MemberData<T, V> newMemberData = new(
                 typeof(V),
                 memberInfo.Name,
                 include,
@@ -190,9 +190,9 @@ namespace Barchart.BinarySerializer.Schemas
                 return null;
             }
 
-            ObjectBinarySerializer<V> serializer = new ObjectBinarySerializer<V>((Schema<V>)nestedSchema);
+            ObjectBinarySerializer<V> serializer = new((Schema<V>)nestedSchema);
 
-            ObjectMemberData<T, V> newMemberData = new ObjectMemberData<T, V>(
+            ObjectMemberData<T, V> newMemberData = new(
                 typeof(V),
                 memberInfo.Name,
                 include,
