@@ -9,7 +9,9 @@ namespace Barchart.BinarySerializer.Schemas
     /// </summary>
     public static class SchemaFactory
     {
-        private static readonly Dictionary<Type, object> allSerializers = new Dictionary<Type, object>();
+        private static readonly Dictionary<Type, object> allSerializers = new();
+
+        static public bool DefaultIncludeValue { get; set; } = false;
 
         static SchemaFactory()
         {
@@ -60,7 +62,7 @@ namespace Barchart.BinarySerializer.Schemas
         {
             Type type = typeof(T);
             MemberInfo[] members = GetAllMembersForType(type);
-            List<IMemberData<T>> memberDataList = new List<IMemberData<T>>();
+            List<IMemberData<T>> memberDataList = new();
 
             foreach (MemberInfo memberInfo in members)
             {
@@ -68,7 +70,7 @@ namespace Barchart.BinarySerializer.Schemas
                 if(memberData != null) memberDataList.Add(memberData);
             }
 
-            Schema<T> schema = new Schema<T>(memberDataList);
+            Schema<T> schema = new(memberDataList);
 
             return schema;
         } 
@@ -119,7 +121,7 @@ namespace Barchart.BinarySerializer.Schemas
         private static bool GetIncludeAttributeValue(MemberInfo memberInfo)
         {
             var attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
-            return attribute?.Include ?? false;
+            return attribute?.Include ?? DefaultIncludeValue;
         }
 
         private static bool GetKeyAttributeValue(MemberInfo memberInfo)
