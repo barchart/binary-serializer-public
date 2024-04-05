@@ -1,4 +1,5 @@
 ﻿using Barchart.BinarySerializer.Schemas;
+using Google.Protobuf;
 
 namespace Barchart.BinarySerializer.Tests
 {
@@ -6,6 +7,9 @@ namespace Barchart.BinarySerializer.Tests
     {
         [BinarySerialize(include: true, key: false)]
         public List<string>? roomNumbers;
+
+        [BinarySerialize(include: true, key: false)]
+        public ByteString? Data;
 
         public override bool Equals(object? obj)
         {
@@ -16,27 +20,33 @@ namespace Barchart.BinarySerializer.Tests
 
             Hotel otherHotel = (Hotel)obj;
 
-            if (roomNumbers?.Count != otherHotel.roomNumbers?.Count)
+            if ((roomNumbers?.Count ?? 0) != (otherHotel.roomNumbers?.Count ?? 0))
             {
                 return false;
             }
 
-            for (int i = 0; i < roomNumbers?.Count; i++)
+            if (roomNumbers != null)
             {
-                if (roomNumbers[i] != otherHotel?.roomNumbers?[i])
+                for (int i = 0; i < roomNumbers.Count; i++)
                 {
-                    return false;
+                    if (roomNumbers[i] != otherHotel?.roomNumbers?[i])
+                    {
+                        return false;
+                    }
                 }
             }
 
-            return true;
+            return Data == otherHotel.Data;
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return roomNumbers != null? roomNumbers.GetHashCode() : 0;
+                int hashCode = 0;
+                hashCode += roomNumbers != null ? roomNumbers.GetHashCode() : 0;
+                hashCode += Data != null ? Data.GetHashCode() : 0;
+                return hashCode;
             }
         }
     }
