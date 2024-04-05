@@ -31,7 +31,7 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="V">The type of the member.</typeparam>
     public class MemberData<T, V> : IMemberData<T> 
     {
-        protected const int IS_MISSING_NUMBER_OF_BITS = 1;
+        protected const int NumberOfBitsIsMissing = 1;
 
         public Type Type { get; set; }
         public string Name { get; set; }
@@ -108,7 +108,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                return IS_MISSING_NUMBER_OF_BITS;
+                return NumberOfBitsIsMissing;
             }
         }
 
@@ -182,7 +182,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                return IS_MISSING_NUMBER_OF_BITS;
+                return NumberOfBitsIsMissing;
             }
         }
     }

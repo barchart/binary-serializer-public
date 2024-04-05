@@ -8,7 +8,7 @@ namespace Barchart.BinarySerializer.Types
     /// <typeparam name="T">The underlying numeric type.</typeparam>
     public abstract class BinarySerializerNullableNumeric<T> : IBinaryTypeSerializer<T?> where T : struct
     {
-        public const int NUMBER_OF_HEADER_BITS_NUMERIC = 2;
+        public const int NumberOfHeaderBitsNumeric = 2;
 
         public abstract int Size { get; }
 

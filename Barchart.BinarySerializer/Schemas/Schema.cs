@@ -6,7 +6,7 @@
     /// <typeparam name="T">The type of objects serialized and deserialized by this schema.</typeparam>
     public class Schema<T> : ISchema where T : new()
     {
-        private const int BUFFER_SIZE = 256000000;
+        private const int BufferSize = 256000000;
         
         [ThreadStatic]
         private static byte[]? _buffer;
@@ -17,7 +17,7 @@
             {
                 if (_buffer == null)
                 {
-                    return _buffer = new byte[BUFFER_SIZE];
+                    return _buffer = new byte[BufferSize];
                 }
 
                 return _buffer;
