@@ -68,10 +68,10 @@ namespace Barchart.BinarySerializer.Types
         {
             if (value == null)
             {
-                return NUMBER_OF_HEADER_BITS_NUMERIC;
+                return NumberOfHeaderBitsNumeric;
             }
 
-            return Size * 8 + NUMBER_OF_HEADER_BITS_NUMERIC;
+            return Size * 8 + NumberOfHeaderBitsNumeric;
         }
 
         protected abstract byte[] ConvertToByteArray(T value);

@@ -52,7 +52,7 @@ namespace Barchart.BinarySerializer.Types
 
         public int GetLengthInBits(T value)
         {
-            return Size * 8 + NUMBER_OF_HEADER_BITS_NUMERIC;
+            return Size * 8 + NumberOfHeaderBitsNumeric;
         }
 
         protected abstract byte[] ConvertToByteArray(T value);
