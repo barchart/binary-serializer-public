@@ -5,7 +5,7 @@ using static Org.Openfeed.InstrumentDefinition.Types;
 
 namespace Barchart.SerializationData;
 
-public class StockData
+public class MarketData
 {
     [BinarySerialize(include: true, key: false)]
     public SubscriptionResponse? SubscriptionResponse { get; set; }
@@ -15,6 +15,9 @@ public class StockData
 
     [BinarySerialize(include: true, key: false)]
     public MarketSnapshot? MarketSnapshot { get; set; }
+
+    [BinarySerialize(include: true, key: false)]
+    public MarketUpdate? MarketUpdate{ get; set; }
 }
 
 public class SubscriptionResponse
