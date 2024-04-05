@@ -19,7 +19,7 @@ namespace Barchart.BinarySerializer.Tests
         {
             try
             {
-                Stopwatch stopwatch = new Stopwatch();
+                Stopwatch stopwatch = new();
 
                 // Date is in UTC format and only milliseconds needs to be transmitted to the receiver side
                 DateTime now = DateTime.UtcNow;
@@ -27,7 +27,7 @@ namespace Barchart.BinarySerializer.Tests
                 long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
                 DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
 
-                Person person = new Person()
+                Person person = new()
                 {
                     IntNumber = 1,
                     DecimalNumber = 1.5m,
@@ -89,13 +89,13 @@ namespace Barchart.BinarySerializer.Tests
         [Fact]
         public void ClassPropertiesSerializationTest()
         {
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
             DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
 
-            Person person = new Person()
+            Person person = new()
             {
                 IntNumber = 1,
                 DecimalNumber = 1.5m,
@@ -135,7 +135,7 @@ namespace Barchart.BinarySerializer.Tests
                 DateOnly = new DateOnly(2022, 2, 14)
             };
 
-            Car car = new Car()
+            Car car = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5d,
@@ -144,7 +144,7 @@ namespace Barchart.BinarySerializer.Tests
                 PersonObjectInCar = person
             };
 
-            Garage garage = new Garage()
+            Garage garage = new()
             {
                 CarObject = car,
                 PersonObject = person,
@@ -165,6 +165,37 @@ namespace Barchart.BinarySerializer.Tests
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
             Assert.Equal(garage, deserializedGarage);
+        }
+
+        [Fact]
+        public void ListSerializationTest()
+        {
+            try
+            {
+                Stopwatch stopwatch = new();
+
+                Hotel hotel = new()
+                {
+                    roomNumbers = new List<string> { "101", "102", "103" }
+                };
+
+                Schema<Hotel> hotelSchema = SchemaFactory.GetSchema<Hotel>();
+
+                stopwatch.Start();
+
+                byte[] serializedData = hotelSchema.Serialize(hotel);
+                Hotel deserializedHotel = hotelSchema.Deserialize(serializedData);
+
+                stopwatch.Stop();
+                output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+                Assert.Equal(hotel, deserializedHotel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
     }
 }

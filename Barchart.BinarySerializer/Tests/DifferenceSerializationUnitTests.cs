@@ -19,13 +19,13 @@ namespace Barchart.BinarySerializer.Tests
         {
             try
             {
-                Stopwatch stopwatch = new Stopwatch();
+                Stopwatch stopwatch = new();
                 DateTime now = DateTime.UtcNow;
                 long ticks = now.Ticks;
                 long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
                 DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
 
-                Car carOld = new Car()
+                Car carOld = new()
                 {
                     DecimalNumber = 1.5m,
                     doubleNumber = 2.5,
@@ -70,13 +70,13 @@ namespace Barchart.BinarySerializer.Tests
         [Fact]
         public void ClassPropertiesDifferenceSerializationTest()
         {
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
-            Person person = new Person()
+            Person person = new()
             {
                 IntNumber = 1,
                 DecimalNumber = 1.5m,
@@ -116,7 +116,7 @@ namespace Barchart.BinarySerializer.Tests
                 DateOnly = new DateOnly(2022, 2, 14)
             };
 
-            Person person2 = new Person()
+            Person person2 = new()
             {
                 IntNumber = 4,
                 DecimalNumber = 1.5m,
@@ -156,7 +156,7 @@ namespace Barchart.BinarySerializer.Tests
                 DateOnly = new DateOnly(2022, 2, 15)
             };
 
-            Person person3 = new Person()
+            Person person3 = new()
             {
                 IntNumber = 1,
                 DecimalNumber = 1.5m,
@@ -196,7 +196,7 @@ namespace Barchart.BinarySerializer.Tests
                 DateOnly = new DateOnly(2022, 2, 14)
             };
 
-            Person person4 = new Person()
+            Person person4 = new()
             {
                 IntNumber = 1,
                 DecimalNumber = 1.5m,
@@ -236,7 +236,7 @@ namespace Barchart.BinarySerializer.Tests
                 DateOnly = new DateOnly(2022, 2, 14)
             };
 
-            Car car = new Car()
+            Car car = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5d,
@@ -245,7 +245,7 @@ namespace Barchart.BinarySerializer.Tests
                 PersonObjectInCar = person3
             };
 
-            Car car2 = new Car()
+            Car car2 = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5d,
@@ -254,7 +254,7 @@ namespace Barchart.BinarySerializer.Tests
                 PersonObjectInCar = person4
             };
 
-            Garage garage = new Garage()
+            Garage garage = new()
             {
                 CarObject = car,
                 PersonObject = person,
@@ -264,7 +264,7 @@ namespace Barchart.BinarySerializer.Tests
                 doubleNumberGarage = 10.5d
             };
 
-            Garage garage2 = new Garage()
+            Garage garage2 = new()
             {
                 CarObject = car2,
                 PersonObject = person2,
