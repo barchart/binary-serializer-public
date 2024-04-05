@@ -22,6 +22,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Google.Protobuf" Version="3.26.1" />
   </ItemGroup>
 
   <Target Name="RemoveFilesFromRelease" BeforeTargets="BeforeBuild">
