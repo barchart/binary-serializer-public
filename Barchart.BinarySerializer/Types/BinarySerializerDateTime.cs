@@ -15,7 +15,7 @@
         {
             long ticksPerMillisecond = TimeSpan.TicksPerMillisecond;
             long milliSeconds = BitConverter.ToInt64(bytes, 0);
-            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime epoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return epoch.AddTicks(milliSeconds * ticksPerMillisecond);
         }
     }
@@ -35,7 +35,7 @@
         {
             long ticksPerMillisecond = TimeSpan.TicksPerMillisecond;
             long milliSeconds = BitConverter.ToInt64(bytes, 0);
-            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime epoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return epoch.AddTicks(milliSeconds * ticksPerMillisecond);
         }
     }

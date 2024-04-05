@@ -13,7 +13,7 @@ namespace Barchart.BinarySerializer.Types
 
         public void Encode(DataBuffer dataBuffer, string? value)
         {
-            var header = new Header
+            Header header = new()
             {
                 IsMissing = false,
                 IsNull = value == null
@@ -44,10 +44,9 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<string?> Decode(DataBuffer dataBuffer)
         {
-            byte[]? valueBytes = null;
             int size = 0;
 
-            Header header = new Header
+            Header header = new()
             {
                 IsMissing = dataBuffer.ReadBit() == 1
             };
@@ -70,7 +69,7 @@ namespace Barchart.BinarySerializer.Types
                 size |= (bit << i);
             }
 
-            valueBytes = new byte[size];
+            byte[]? valueBytes = new byte[size];
 
             for (int i = size - 1; i >= 0; i--)
             {

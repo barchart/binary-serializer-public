@@ -30,7 +30,7 @@ namespace Barchart.BinarySerializer.Types
             int size = Size;
             byte[] valueBytes = new byte[size];
 
-            var header = new Header
+            Header header = new()
             {
                 IsMissing = dataBuffer.ReadBit() == 1
             };
