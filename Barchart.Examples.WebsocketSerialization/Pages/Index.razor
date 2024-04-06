@@ -13,17 +13,22 @@
 {
     <h4>Bytes sent:</h4>
     <h6>@bytes</h6>
-    @foreach (var property in typeof(StockData).GetProperties())
-    {
-        <h4>@property.Name:</h4>
-        <h6>@property.GetValue(stockData)</h6>
-    }
+    <h4>MarketData:</h4>
+    <div>
+        @foreach (var property in typeof(MarketData).GetProperties())
+        {
+            <div>
+                <h5>@property.Name:</h5>
+                <p>@property.GetValue(marketData)</p>
+            </div>
+        }
+    </div>
 }
 
 @code {
     CancellationTokenSource disposalTokenSource = new CancellationTokenSource();
     ClientWebSocket webSocket = new ClientWebSocket();
-    StockData stockData = new StockData();
+    MarketData marketData = new();
     int bytes = 0;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -38,14 +43,14 @@
 
     async Task ReceiveLoop()
     {
-        Schema<StockData> stockDataSchema = SchemaFactory.GetSchema<StockData>();
+        Schema<MarketData> marketDataSchema = SchemaFactory.GetSchema<MarketData>();
 
         var buffer = new ArraySegment<byte>(new byte[10000]);
         while (!disposalTokenSource.IsCancellationRequested)
         {
             var received = await webSocket.ReceiveAsync(buffer, disposalTokenSource.Token);
-            StockData deserializedStockData = stockDataSchema.Deserialize(buffer.ToArray());
-            stockData = deserializedStockData;
+            MarketData deserializedMarketData = marketDataSchema.Deserialize(buffer.ToArray());
+            marketData = deserializedMarketData;
             bytes = received.Count;
             StateHasChanged();
         }
