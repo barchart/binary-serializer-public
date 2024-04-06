@@ -121,9 +121,10 @@ namespace Barchart.BinarySerializer.Schemas
             return isNotValueType && isNotStringType && isNotByteStringType && (!isNotGenericType || isListGenericType);
         }
 
-        public static BinarySerializerList<T> GetListSerializer<T>()
+        public static BinarySerializerList<T>? GetListSerializer<T>()
         {
-            var serializer = GetSerializer<T>();
+            IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
+            if (serializer == null) return null;
             return new BinarySerializerList<T>(serializer);
         }
 

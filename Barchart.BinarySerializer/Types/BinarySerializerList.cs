@@ -1,5 +1,4 @@
 ﻿using Barchart.BinarySerializer.Schemas;
-using Google.Protobuf;
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -13,7 +12,7 @@ namespace Barchart.BinarySerializer.Types
             _serializer = serializer;
         }
 
-        public HeaderWithValue<List<T>> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<List<T>?> Decode(DataBuffer dataBuffer)
         {
             Header header = new()
             {
@@ -22,14 +21,14 @@ namespace Barchart.BinarySerializer.Types
 
             if (header.IsMissing)
             {
-                return new HeaderWithValue<List<T>>(header, default);
+                return new HeaderWithValue<List<T>?>(header, default);
             }
 
             header.IsNull = dataBuffer.ReadBit() == 1;
 
             if (header.IsNull)
             {
-                return new HeaderWithValue<List<T>>(header, default);
+                return new HeaderWithValue<List<T>?>(header, default);
             }
 
             byte[] lengthBytes = new byte[sizeof(int)];
@@ -49,7 +48,7 @@ namespace Barchart.BinarySerializer.Types
                 if(value != null) list.Add(value);
             }
 
-            return new HeaderWithValue<List<T>>(header, list);
+            return new HeaderWithValue<List<T>?>(header, list);
         }
 
         public void Encode(DataBuffer dataBuffer, List<T>? value)
