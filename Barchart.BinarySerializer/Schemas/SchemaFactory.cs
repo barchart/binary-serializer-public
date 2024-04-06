@@ -1,4 +1,5 @@
 ﻿using Barchart.BinarySerializer.Types;
+using Google.Protobuf;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -51,6 +52,8 @@ namespace Barchart.BinarySerializer.Schemas
             allSerializers.Add(typeof(DateTime?), new BinarySerializerDateTimeNullable());
             allSerializers.Add(typeof(DateOnly), new BinarySerializerDateOnly());
             allSerializers.Add(typeof(DateOnly?), new BinarySerializerDateOnlyNullable());
+            allSerializers.Add(typeof(ByteString), new BinarySerializerByteString());
+
         }
 
         /// <summary>
@@ -88,7 +91,7 @@ namespace Barchart.BinarySerializer.Schemas
                 memberType = ((PropertyInfo)memberInfo).PropertyType;
             }
 
-            if (IsReferenceType(memberType))
+            if (IsComplexType(memberType))
             {
                 ISchema nestedSchema = GenerateSchemaInterface(memberType);
                 IMemberData<T>? newMemberDataNestedClass = GenerateObjectMemberDataInterface<T>(nestedSchema, memberType, memberInfo);
@@ -101,16 +104,60 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
-        private static bool IsReferenceType(Type type)
+        /// <summary>
+        /// Determines whether the specified type is a complex type, i.e., not a value type, 
+        /// not a string, and not a ByteString.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <returns>True if the type is a complex type; otherwise, false.</returns>
+        private static bool IsComplexType(Type type)
         {
-            return !type.IsValueType && type != typeof(string);
+            var isNotValueType = !type.IsValueType;
+            var isNotStringType = type != typeof(string);
+            var isNotByteStringType = type != typeof(ByteString);
+            var isNotGenericType = type.IsGenericType;
+            var isListGenericType = type.IsGenericType && type.GetGenericTypeDefinition() != typeof(List<>);
+
+            return isNotValueType && isNotStringType && isNotByteStringType && (!isNotGenericType || isListGenericType);
+        }
+
+        public static BinarySerializerList<T> GetListSerializer<T>()
+        {
+            var serializer = GetSerializer<T>();
+            return new BinarySerializerList<T>(serializer);
         }
 
         private static IBinaryTypeSerializer<V>? GetSerializer<V>()
         {
-            allSerializers.TryGetValue(typeof(V), out object? serializer);
+            if (IsListType<V>())
+            {
+                Type elementsType = typeof(V).GetGenericArguments()[0];
+                if (allSerializers.TryGetValue(elementsType, out object? listElementsSerializer))
+                {
+                    var genericArgs = new Type[] { elementsType };
+                    var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListSerializer))!.MakeGenericMethod(genericArgs);
+                    var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
+                    var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                    var func = lambdaExpr.Compile();
+                    var result = func();
 
-            return (IBinaryTypeSerializer<V>?) serializer;
+                    return result;
+                }
+            }
+            else
+            {
+                if (allSerializers.TryGetValue(typeof(V), out object? serializer))
+                {
+                    return (IBinaryTypeSerializer<V>?)serializer;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool IsListType<V>()
+        {
+            return typeof(V).IsGenericType && typeof(V).GetGenericTypeDefinition() == typeof(List<>);
         }
 
         private static MemberInfo[] GetAllMembersForType(Type type) {
