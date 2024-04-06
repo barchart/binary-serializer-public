@@ -53,7 +53,6 @@ namespace Barchart.BinarySerializer.Schemas
             allSerializers.Add(typeof(DateOnly), new BinarySerializerDateOnly());
             allSerializers.Add(typeof(DateOnly?), new BinarySerializerDateOnlyNullable());
             allSerializers.Add(typeof(ByteString), new BinarySerializerByteString());
-
         }
 
         /// <summary>
