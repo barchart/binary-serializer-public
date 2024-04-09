@@ -1,4 +1,5 @@
 ﻿using Barchart.BinarySerializer.Schemas;
+using Google.Protobuf;
 using System.Diagnostics;
 using Xunit;
 using Xunit.Abstractions;
@@ -285,6 +286,44 @@ namespace Barchart.BinarySerializer.Tests
             output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
             Assert.Equal(garage2, deserializedGarageDifference);
+        }
+
+        [Fact]
+        public void ListAndByteStringDifferenceSerializationTest()
+        {
+            try
+            {
+                Stopwatch stopwatch = new();
+
+                Hotel hotel1 = new()
+                {
+                    roomNumbers = new List<string> { "101", "105", "103" },
+                    Data = ByteString.CopyFromUtf8("104")
+                };
+
+                Hotel hotel2 = new()
+                {
+                    roomNumbers = new List<string> { "101", "102", "103" },
+                    Data = ByteString.CopyFromUtf8("105")
+                };
+
+                Schema<Hotel> hotelSchema = SchemaFactory.GetSchema<Hotel>();
+
+                stopwatch.Start();
+
+                byte[] serializedData = hotelSchema.Serialize(hotel1, hotel2);
+                Hotel deserializedHotel = hotelSchema.Deserialize(serializedData, hotel1);
+
+                stopwatch.Stop();
+                output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+                Assert.Equal(hotel2, deserializedHotel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
     }
 }
