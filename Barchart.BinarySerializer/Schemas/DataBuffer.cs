@@ -46,15 +46,22 @@
 
         public byte ReadBit()
         {
-            byte bit = (byte)((_buffer[_offset] >> (7 - _offsetInLastByte)) & 1);
-            _offsetInLastByte = (_offsetInLastByte + 1) % 8;
-
-            if (_offsetInLastByte == 0)
+            try
             {
-                _offset++;
-            }
+                byte bit = (byte)((_buffer[_offset] >> (7 - _offsetInLastByte)) & 1);
+                _offsetInLastByte = (_offsetInLastByte + 1) % 8;
 
-            return bit;
+                if (_offsetInLastByte == 0)
+                {
+                    _offset++;
+                }
+                return bit;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return 0;
         }
 
         public void WriteByte(byte valueByte)

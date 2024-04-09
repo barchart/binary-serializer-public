@@ -14,38 +14,23 @@ namespace Barchart.BinarySerializer.Types
 
         public void Encode(DataBuffer dataBuffer, T value)
         {
-            dataBuffer.WriteBit(0);
-            dataBuffer.WriteBit(0);
-     
-            byte[] valueBytes = ConvertToByteArray(value);
+            Header header = new() { IsMissing = false, IsNull = false };
+            WriteHeader(dataBuffer, header);
 
-            for (int i = valueBytes.Length - 1; i >= 0; i--)
-            {
-                dataBuffer.WriteByte(valueBytes[i]);
-            }
+            byte[] valueBytes = ConvertToByteArray(value);
+            WriteValueBytes(dataBuffer, valueBytes);
         }
 
         public HeaderWithValue<T> Decode(DataBuffer dataBuffer)
         {
-            int size = Size;
-            byte[] valueBytes = new byte[size];
+            Header header = ReadHeader(dataBuffer);
 
-            Header header = new()
-            {
-                IsMissing = dataBuffer.ReadBit() == 1
-            };
-
-            if (header.IsMissing)
+            if (header.IsMissing || header.IsNull)
             {
                 return new HeaderWithValue<T>(header, default);
             }
 
-            header.IsNull = dataBuffer.ReadBit() == 1;
-
-            for (int i = size - 1; i >= 0; i--)
-            {
-                valueBytes[i] = dataBuffer.ReadByte();
-            }
+            byte[] valueBytes = ReadValueBytes(dataBuffer);
 
             return new HeaderWithValue<T>(header, DecodeBytes(valueBytes));
         }
@@ -57,5 +42,41 @@ namespace Barchart.BinarySerializer.Types
 
         protected abstract byte[] ConvertToByteArray(T value);
         protected abstract T DecodeBytes(byte[] bytes);
+
+        private void WriteHeader(DataBuffer dataBuffer, Header header)
+        {
+            dataBuffer.WriteBit((byte)(header.IsMissing ? 1 : 0));
+            dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
+        }
+
+        private Header ReadHeader(DataBuffer dataBuffer)
+        {
+            Header header = new() { IsMissing = dataBuffer.ReadBit() == 1 };
+
+            if (!header.IsMissing)
+            {
+                header.IsNull = dataBuffer.ReadBit() == 1;
+            }
+
+            return header;
+        }
+
+        private void WriteValueBytes(DataBuffer dataBuffer, byte[] valueBytes)
+        {
+            for (int i = valueBytes.Length - 1; i >= 0; i--)
+            {
+                dataBuffer.WriteByte(valueBytes[i]);
+            }
+        }
+
+        private byte[] ReadValueBytes(DataBuffer dataBuffer)
+        {
+            byte[] valueBytes = new byte[Size];
+            for (int i = Size - 1; i >= 0; i--)
+            {
+                valueBytes[i] = dataBuffer.ReadByte();
+            }
+            return valueBytes;
+        }
     }
 }
