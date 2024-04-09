@@ -1,36 +1,52 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerDateOnly : BinarySerializerNumeric<DateOnly>
+    public static class DateOnlyHelper
     {
-        public override int Size => sizeof(int);
+        public static int GetSizeOfDateOnly()
+        {
+            return sizeof(int);
+        }
 
-        protected override byte[] ConvertToByteArray(DateOnly value)
+        public static byte[] ConvertDateToByteArray(DateOnly value)
         {
             int daysSinceEpoch = value.DayNumber - DateOnly.MinValue.DayNumber;
             return BitConverter.GetBytes(daysSinceEpoch);
         }
 
-        protected override DateOnly DecodeBytes(byte[] bytes)
+        public static DateOnly ConvertBytesToDate(byte[] bytes)
         {
             int daysSinceEpoch = BitConverter.ToInt32(bytes);
             return DateOnly.MinValue.AddDays(daysSinceEpoch);
         }
     }
 
-    public class BinarySerializerDateOnlyNullable : BinarySerializerNullableNumeric<DateOnly>
+    public class BinarySerializerDateOnly : BinarySerializerNumeric<DateOnly>
     {
-        public override int Size => sizeof(int);
+        public override int Size => DateOnlyHelper.GetSizeOfDateOnly();
 
         protected override byte[] ConvertToByteArray(DateOnly value)
         {
-            int daysSinceEpoch = value.DayNumber - DateOnly.MinValue.DayNumber;
-            return BitConverter.GetBytes(daysSinceEpoch);
+            return DateOnlyHelper.ConvertDateToByteArray(value);
         }
 
         protected override DateOnly DecodeBytes(byte[] bytes)
         {
-            int daysSinceEpoch = BitConverter.ToInt32(bytes);
-            return DateOnly.MinValue.AddDays(daysSinceEpoch);
+            return DateOnlyHelper.ConvertBytesToDate(bytes);
+        }
+    }
+
+    public class BinarySerializerDateOnlyNullable : BinarySerializerNullableNumeric<DateOnly>
+    {
+        public override int Size => DateOnlyHelper.GetSizeOfDateOnly();
+
+        protected override byte[] ConvertToByteArray(DateOnly value)
+        {
+            return DateOnlyHelper.ConvertDateToByteArray(value);
+        }
+
+        protected override DateOnly DecodeBytes(byte[] bytes)
+        {
+            return DateOnlyHelper.ConvertBytesToDate(bytes);
         }
     }
 }

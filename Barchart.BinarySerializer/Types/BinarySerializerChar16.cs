@@ -1,32 +1,50 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerChar16 : BinarySerializerNumeric<char>
+    public static class CharHelper
     {
-        public override int Size => sizeof(char);
+        public static int GetSizeOfChar()
+        {
+            return sizeof(char);
+        }
 
-        protected override byte[] ConvertToByteArray(char value)
+        public static byte[] ConvertToByteArray(char value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        protected override char DecodeBytes(byte[] bytes)
+        public static char DecodeBytes(byte[] bytes)
         {
             return BitConverter.ToChar(bytes);
         }
     }
 
-    public class BinarySerializerChar16Nullable : BinarySerializerNullableNumeric<char>
+    public class BinarySerializerChar16 : BinarySerializerNumeric<char>
     {
-        public override int Size => sizeof(char);
+        public override int Size => CharHelper.GetSizeOfChar();
 
         protected override byte[] ConvertToByteArray(char value)
         {
-            return BitConverter.GetBytes(value);
+            return CharHelper.ConvertToByteArray(value);
         }
 
         protected override char DecodeBytes(byte[] bytes)
         {
-            return BitConverter.ToChar(bytes);
+            return CharHelper.DecodeBytes(bytes);
+        }
+    }
+
+    public class BinarySerializerChar16Nullable : BinarySerializerNullableNumeric<char>
+    {
+        public override int Size => CharHelper.GetSizeOfChar();
+
+        protected override byte[] ConvertToByteArray(char value)
+        {
+            return CharHelper.ConvertToByteArray(value);
+        }
+
+        protected override char DecodeBytes(byte[] bytes)
+        {
+            return CharHelper.DecodeBytes(bytes);
         }
     }
 }

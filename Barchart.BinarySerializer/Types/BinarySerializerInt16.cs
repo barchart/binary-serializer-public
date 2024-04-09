@@ -1,32 +1,50 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerInt16 : BinarySerializerNumeric<short>
+    public static class Int16Helper
     {
-        public override int Size => sizeof(short);
+        public static int GetSizeOfInt16()
+        {
+            return sizeof(short);
+        }
 
-        protected override byte[] ConvertToByteArray(short value)
+        public static byte[] ConvertInt16ToByteArray(short value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        protected override short DecodeBytes(byte[] bytes)
+        public static short ConvertBytesToInt16(byte[] bytes)
         {
             return BitConverter.ToInt16(bytes);
         }
     }
 
-    public class BinarySerializerInt16Nullable : BinarySerializerNullableNumeric<short>
+    public class BinarySerializerInt16 : BinarySerializerNumeric<short>
     {
-        public override int Size => sizeof(short);
+        public override int Size => Int16Helper.GetSizeOfInt16();
 
         protected override byte[] ConvertToByteArray(short value)
         {
-            return BitConverter.GetBytes(value);
+            return Int16Helper.ConvertInt16ToByteArray(value);
         }
 
         protected override short DecodeBytes(byte[] bytes)
         {
-            return BitConverter.ToInt16(bytes);
+            return Int16Helper.ConvertBytesToInt16(bytes);
+        }
+    }
+
+    public class BinarySerializerInt16Nullable : BinarySerializerNullableNumeric<short>
+    {
+        public override int Size => Int16Helper.GetSizeOfInt16();
+
+        protected override byte[] ConvertToByteArray(short value)
+        {
+            return Int16Helper.ConvertInt16ToByteArray(value);
+        }
+
+        protected override short DecodeBytes(byte[] bytes)
+        {
+            return Int16Helper.ConvertBytesToInt16(bytes);
         }
     }
 }

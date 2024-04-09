@@ -1,32 +1,50 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerInt8 : BinarySerializerNumeric<byte>
+    public static class ByteHelper
     {
-        public override int Size => sizeof(byte);
+        public static int GetSizeOfByte()
+        {
+            return sizeof(byte);
+        }
 
-        protected override byte[] ConvertToByteArray(byte value)
+        public static byte[] ConvertByteToByteArray(byte value)
         {
             return new byte[] { value };
         }
 
-        protected override byte DecodeBytes(byte[] bytes)
+        public static byte ConvertBytesToByte(byte[] bytes)
         {
             return bytes[0];
         }
     }
 
-    public class BinarySerializerInt8Nullable : BinarySerializerNullableNumeric<byte>
+    public class BinarySerializerInt8 : BinarySerializerNumeric<byte>
     {
-        public override int Size => sizeof(byte);
+        public override int Size => ByteHelper.GetSizeOfByte();
 
         protected override byte[] ConvertToByteArray(byte value)
         {
-            return new byte[] { value };
+            return ByteHelper.ConvertByteToByteArray(value);
         }
 
         protected override byte DecodeBytes(byte[] bytes)
         {
-            return bytes[0];
+            return ByteHelper.ConvertBytesToByte(bytes);
+        }
+    }
+
+    public class BinarySerializerInt8Nullable : BinarySerializerNullableNumeric<byte>
+    {
+        public override int Size => ByteHelper.GetSizeOfByte();
+
+        protected override byte[] ConvertToByteArray(byte value)
+        {
+            return ByteHelper.ConvertByteToByteArray(value);
+        }
+
+        protected override byte DecodeBytes(byte[] bytes)
+        {
+            return ByteHelper.ConvertBytesToByte(bytes);
         }
     }
 }

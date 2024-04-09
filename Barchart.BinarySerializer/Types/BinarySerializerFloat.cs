@@ -1,32 +1,50 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerFloat : BinarySerializerNumeric<float>
+    public static class FloatHelper
     {
-        public override int Size => sizeof(float);
+        public static int GetSizeOfFloat()
+        {
+            return sizeof(float);
+        }
 
-        protected override byte[] ConvertToByteArray(float value)
+        public static byte[] ConvertFloatToByteArray(float value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        protected override float DecodeBytes(byte[] bytes)
+        public static float ConvertBytesToFloat(byte[] bytes)
         {
             return BitConverter.ToSingle(bytes);
         }
     }
 
-    public class BinarySerializerFloatNullable : BinarySerializerNullableNumeric<float>
+    public class BinarySerializerFloat : BinarySerializerNumeric<float>
     {
-        public override int Size => sizeof(float);
+        public override int Size => FloatHelper.GetSizeOfFloat();
 
         protected override byte[] ConvertToByteArray(float value)
         {
-            return BitConverter.GetBytes(value);
+            return FloatHelper.ConvertFloatToByteArray(value);
         }
 
         protected override float DecodeBytes(byte[] bytes)
         {
-            return BitConverter.ToSingle(bytes);
+            return FloatHelper.ConvertBytesToFloat(bytes);
+        }
+    }
+
+    public class BinarySerializerFloatNullable : BinarySerializerNullableNumeric<float>
+    {
+        public override int Size => FloatHelper.GetSizeOfFloat();
+
+        protected override byte[] ConvertToByteArray(float value)
+        {
+            return FloatHelper.ConvertFloatToByteArray(value);
+        }
+
+        protected override float DecodeBytes(byte[] bytes)
+        {
+            return FloatHelper.ConvertBytesToFloat(bytes);
         }
     }
 }
