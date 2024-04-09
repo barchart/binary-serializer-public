@@ -13,11 +13,55 @@
 {
     <h4>Bytes sent:</h4>
     <h6>@bytes</h6>
-    @foreach (var property in typeof(MarketData).GetProperties())
-    {
-        <h4>@property.Name:</h4>
-        <h6>@property.GetValue(marketData)</h6>
-    }
+    <div>
+        @if (marketData?.SubscriptionResponse != null)
+        {
+            <div>
+                <h5>SubscriptionResponse:</h5>
+                <p>Symbol: @marketData.SubscriptionResponse.Symbol</p>
+                <p>CorrelationId: @marketData.SubscriptionResponse.CorrelationId</p>
+                <p>MarketId: @marketData.SubscriptionResponse.MarketId</p>
+                <p>Exchange: @marketData.SubscriptionResponse.Exchange</p>
+                <p>ChannelId: @marketData.SubscriptionResponse.ChannelId</p>
+                <p>NumberOfDefinitions: @marketData.SubscriptionResponse.NumberOfDefinitions</p>
+                <p>Unsubscribe: @marketData.SubscriptionResponse.Unsubscribe</p>
+                <p>SnapshotIntervalSeconds: @marketData.SubscriptionResponse.SnapshotIntervalSeconds</p>
+            </div>
+        }
+        @if (marketData?.InstrumentDefinition != null)
+        {
+            <div>
+                <h5>InstrumentDefinition:</h5>
+                <p>MarketId: @marketData.InstrumentDefinition.MarketId</p>
+                <p>BookDepth: @marketData.InstrumentDefinition.BookDepth</p>
+                <p>VendorId: @marketData.InstrumentDefinition.VendorId</p>
+                <p>Symbol: @marketData.InstrumentDefinition.Symbol</p>
+                <p>Description: @marketData.InstrumentDefinition.Description</p>
+            </div>
+        }
+        @if (marketData?.MarketSnapshot != null)
+        {
+            <div>
+                <h5>MarketSnapshot:</h5>
+                <p>MarketId: @marketData.MarketSnapshot.MarketId</p>
+                <p>TransactionTime: @marketData.MarketSnapshot.TransactionTime</p>
+                <p>MarketSequence: @marketData.MarketSnapshot.MarketSequence</p>
+                <p>TradeDate: @marketData.MarketSnapshot.TradeDate</p>
+            </div>
+        }
+        @if (marketData?.MarketUpdate != null)
+        {
+            <div>
+                <h5>MarketUpdate:</h5>
+                <p>MarketId: @marketData.MarketUpdate.MarketId</p>
+                <p>Symbol: @marketData.MarketUpdate.Symbol</p>
+                <p>TransactionTime: @marketData.MarketUpdate.TransactionTime</p>
+                <p>DistributionTime: @marketData.MarketUpdate.DistributionTime</p>
+                <p>MarketSequence: @marketData.MarketUpdate.MarketSequence</p>
+                <p>SourceSequence: @marketData.MarketUpdate.SourceSequence</p>
+            </div>
+        }
+    </div>
 }
 
 @code {
