@@ -20,13 +20,13 @@ namespace Barchart.BinarySerializer.Tests
         {
             int iterations = int.MaxValue / 2;
 
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
-            Car carOld = new Car()
+            Car carOld = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5,
@@ -51,13 +51,13 @@ namespace Barchart.BinarySerializer.Tests
         {
             int iterations = int.MaxValue / 2;
 
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
-            Car carOld = new Car()
+            Car carOld = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5,
@@ -86,13 +86,13 @@ namespace Barchart.BinarySerializer.Tests
         {
             int iterations = int.MaxValue / 2;
 
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
-            Car carOld = new Car()
+            Car carOld = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5,
@@ -120,13 +120,13 @@ namespace Barchart.BinarySerializer.Tests
         {
             int iterations = int.MaxValue / 2;
 
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
-            Car carOld = new Car()
+            Car carOld = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5d,
@@ -154,13 +154,13 @@ namespace Barchart.BinarySerializer.Tests
         public void DelegateGetterSetterTest()
         {
             int iterations = int.MaxValue / 2;
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
-            Car carOld = new Car()
+            Car carOld = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5d,
@@ -199,15 +199,15 @@ namespace Barchart.BinarySerializer.Tests
         {
             int iterations = 10000000;
 
-            Stopwatch stopwatch1 = new Stopwatch();
-            Stopwatch stopwatch2 = new Stopwatch();
+            Stopwatch stopwatch1 = new();
+            Stopwatch stopwatch2 = new();
 
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
-            Person person1 = new Person()
+            Person person1 = new()
             {
                 IntNumber = 1,
                 DecimalNumber = 1.5m,
@@ -247,7 +247,7 @@ namespace Barchart.BinarySerializer.Tests
                 DateOnly = new DateOnly(2022, 2, 14)
             };
 
-            Person person2 = new Person()
+            Person person2 = new()
             {
                 IntNumber = 1,
                 DecimalNumber = 1.5m,
@@ -286,7 +286,8 @@ namespace Barchart.BinarySerializer.Tests
 
                 DateOnly = new DateOnly(2022, 2, 14)
             };
-            Car car1 = new Car()
+
+            Car car1 = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5,
@@ -295,7 +296,7 @@ namespace Barchart.BinarySerializer.Tests
                 PersonObjectInCar = person1
             };
 
-            Car car2 = new Car()
+            Car car2 = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5,
@@ -346,10 +347,10 @@ namespace Barchart.BinarySerializer.Tests
 
             for (long i = 0; i < iterations; i++)
             {
-                _ = (decimal)getDecimalNumberMethod(car1)! == (decimal)getDecimalNumberMethod2(car2)! &&
+                _ = getDecimalNumberMethod(car1)! == getDecimalNumberMethod2(car2)! &&
                 (double)getDoubleNumberMethod(car1)! == (double)getDoubleNumberMethod2(car2)! &&
                 (DateTime)getDateTimeNumberMethod(car1)! == (DateTime)getDateTimeNumberMethod2(car2)! &&
-                (string)getStringNumberMethod(car1)! == (string)getStringNumberMethod2(car2)! &&
+                getStringNumberMethod(car1)! == getStringNumberMethod2(car2)! &&
                 getPersonObjectInCarPropertyInfo(car1)!.Equals(getPersonObjectInCarPropertyInfo2(car2));
             }
 
@@ -372,15 +373,15 @@ namespace Barchart.BinarySerializer.Tests
         {
             int iterations = 10000000;
 
-            Stopwatch stopwatch1 = new Stopwatch();
-            Stopwatch stopwatch2 = new Stopwatch();
+            Stopwatch stopwatch1 = new();
+            Stopwatch stopwatch2 = new();
 
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
-            long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            long roundedTicks = ticks / TimeSpan.TicksPerMillisecond * TimeSpan.TicksPerMillisecond;
+            DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
-            PersonIEquatable person1 = new PersonIEquatable()
+            PersonIEquatable person1 = new()
             {
                 IntNumber = 1,
                 DecimalNumber = 1.5m,
@@ -420,7 +421,7 @@ namespace Barchart.BinarySerializer.Tests
                 DateOnly = new DateOnly(2022, 2, 14)
             };
 
-            PersonIEquatable person2 = new PersonIEquatable()
+            PersonIEquatable person2 = new()
             {
                 IntNumber = 1,
                 DecimalNumber = 1.5m,
@@ -459,7 +460,8 @@ namespace Barchart.BinarySerializer.Tests
 
                 DateOnly = new DateOnly(2022, 2, 14)
             };
-            CarIEquatable car1 = new CarIEquatable()
+
+            CarIEquatable car1 = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5,
@@ -468,7 +470,7 @@ namespace Barchart.BinarySerializer.Tests
                 PersonObjectInCar = person1
             };
 
-            CarIEquatable car2 = new CarIEquatable()
+            CarIEquatable car2 = new()
             {
                 DecimalNumber = 1.5m,
                 doubleNumber = 2.5,
@@ -519,11 +521,11 @@ namespace Barchart.BinarySerializer.Tests
 
             for (long i = 0; i < iterations; i++)
             {
-                _ = (decimal)getDecimalNumberMethod(car1)! == (decimal)getDecimalNumberMethod2(car2)! &&
+                _ = getDecimalNumberMethod(car1)! == getDecimalNumberMethod2(car2)! &&
                 (double)getDoubleNumberMethod(car1)! == (double)getDoubleNumberMethod2(car2)! &&
                 (DateTime)getDateTimeNumberMethod(car1)! == (DateTime)getDateTimeNumberMethod2(car2)! &&
-                (string)getStringNumberMethod(car1)! == (string)getStringNumberMethod2(car2)! &&
-                ((PersonIEquatable)getPersonObjectInCarPropertyInfo(car1)!).Equals((PersonIEquatable)getPersonObjectInCarPropertyInfo2(car2)!);
+                getStringNumberMethod(car1)! == getStringNumberMethod2(car2)! &&
+                getPersonObjectInCarPropertyInfo(car1)!.Equals(getPersonObjectInCarPropertyInfo2(car2)!);
             }
 
             stopwatch1.Stop();
