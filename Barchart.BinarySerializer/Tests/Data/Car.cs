@@ -17,7 +17,7 @@ namespace Barchart.BinarySerializer.Tests
         public DateTime? DateTimeDate { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public sbyte? sByte { get; set; }
+        public sbyte? SByte { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public byte? Byte { get; set; }
@@ -38,7 +38,7 @@ namespace Barchart.BinarySerializer.Tests
                    DecimalNumber == otherCar.DecimalNumber &&
                    StringName == otherCar.StringName &&
                    DateTimeDate == otherCar.DateTimeDate &&
-                   sByte == otherCar.sByte &&
+                   SByte == otherCar.SByte &&
                    Byte == otherCar.Byte &&
                    (PersonObjectInCar?.Equals(otherCar.PersonObjectInCar) ?? otherCar.PersonObjectInCar == null);
         }
@@ -48,7 +48,7 @@ namespace Barchart.BinarySerializer.Tests
             unchecked
             {
                 return doubleNumber.GetHashCode() + DecimalNumber.GetHashCode() + (StringName != null ? StringName.GetHashCode() : 0) + DateTimeDate.GetHashCode() +
-                    sByte.GetHashCode() + Byte.GetHashCode() + (PersonObjectInCar != null ? PersonObjectInCar.GetHashCode() : 0);
+                    SByte.GetHashCode() + Byte.GetHashCode() + (PersonObjectInCar != null ? PersonObjectInCar.GetHashCode() : 0);
             }
         }
     }

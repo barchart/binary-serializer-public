@@ -17,7 +17,7 @@ namespace Barchart.BinarySerializer.Tests
         public DateTime? DateTimeDate { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public sbyte? sByte { get; set; }
+        public sbyte? SByte { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public byte? Byte { get; set; }
@@ -33,7 +33,7 @@ namespace Barchart.BinarySerializer.Tests
                 DecimalNumber == other.DecimalNumber &&
                 StringName == other.StringName &&
                 DateTimeDate == other.DateTimeDate &&
-                sByte == other.sByte &&
+                SByte == other.SByte &&
                 Byte == other.Byte &&
                 (PersonObjectInCar?.Equals(other.PersonObjectInCar) ?? other.PersonObjectInCar == null);
         }

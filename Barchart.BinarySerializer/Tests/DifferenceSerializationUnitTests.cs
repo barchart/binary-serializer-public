@@ -31,8 +31,8 @@ namespace Barchart.BinarySerializer.Tests
                     doubleNumber = 2.5,
                     DateTimeDate = roundedDateTime,
                     StringName = "Luka",
-                    Byte = (byte)1,
-                    sByte = (sbyte)2
+                    Byte = 1,
+                    SByte = 2
                 };
 
                 Car carNew = new Car()
@@ -41,8 +41,8 @@ namespace Barchart.BinarySerializer.Tests
                     doubleNumber = 2.5,
                     DateTimeDate = roundedDateTime,
                     StringName = "Luka2",
-                    Byte = (byte)2,
-                    sByte = (sbyte)2
+                    Byte = 2,
+                    SByte = 2
                 };
 
                 Schema<Car> carSchema = SchemaFactory.GetSchema<Car>();
