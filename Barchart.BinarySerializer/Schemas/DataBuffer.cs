@@ -5,7 +5,7 @@
     /// </summary>
     public class DataBuffer
     {
-        private byte[] _buffer;
+        private readonly byte[] _buffer;
         private int _offset;
         private int _offsetInLastByte;
 

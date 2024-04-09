@@ -26,7 +26,7 @@ namespace Barchart.BinarySerializer.Tests
                 DateTime now = DateTime.UtcNow;
                 long ticks = now.Ticks;
                 long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-                DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+                DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
                 Person person = new()
                 {
@@ -94,7 +94,7 @@ namespace Barchart.BinarySerializer.Tests
             DateTime now = DateTime.UtcNow;
             long ticks = now.Ticks;
             long roundedTicks = (ticks / TimeSpan.TicksPerMillisecond) * TimeSpan.TicksPerMillisecond;
-            DateTime roundedDateTime = new DateTime(roundedTicks, DateTimeKind.Utc);
+            DateTime roundedDateTime = new(roundedTicks, DateTimeKind.Utc);
 
             Person person = new()
             {

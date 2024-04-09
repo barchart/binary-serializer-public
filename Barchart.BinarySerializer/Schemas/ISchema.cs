@@ -1,7 +1,7 @@
 ﻿namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    /// 
+    /// Interface for defining custom serialization schemas.
     /// </summary>
     public interface ISchema
 	{

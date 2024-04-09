@@ -18,7 +18,7 @@ namespace Barchart.BinarySerializer.Tests
             try
             {
                 int numberOfThreads = Environment.ProcessorCount;
-                var testInstance = new SingleSerializationUnitTests(output);
+                SingleSerializationUnitTests testInstance = new(output);
 
                 Parallel.For(0, numberOfThreads, index =>
                 {
@@ -38,7 +38,7 @@ namespace Barchart.BinarySerializer.Tests
             try
             {
                 int numberOfThreads = Environment.ProcessorCount;
-                var testInstance = new SingleSerializationUnitTests(output);
+                SingleSerializationUnitTests testInstance = new(output);
 
                 Parallel.For(0, numberOfThreads, index =>
                 {
@@ -58,7 +58,7 @@ namespace Barchart.BinarySerializer.Tests
             try
             {
                 int numberOfThreads = Environment.ProcessorCount;
-                var testInstance = new DifferenceSerializationUnitTests(output);
+                DifferenceSerializationUnitTests testInstance = new(output);
 
                 Parallel.For(0, numberOfThreads, index =>
                 {
@@ -78,7 +78,7 @@ namespace Barchart.BinarySerializer.Tests
             try
             {
                 int numberOfThreads = Environment.ProcessorCount;
-                var testInstance = new DifferenceSerializationUnitTests(output);
+                DifferenceSerializationUnitTests testInstance = new(output);
 
                 Parallel.For(0, numberOfThreads, index =>
                 {

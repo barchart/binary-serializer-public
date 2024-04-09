@@ -24,7 +24,7 @@
             }
         }
 
-        private List<IMemberData<T>> _memberDataList;
+        private readonly IList<IMemberData<T>> _memberDataList;
 
         public Schema(List<IMemberData<T>> memberDataList)
         {
@@ -49,7 +49,7 @@
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T schemaObject, byte[] buffer)
         {
-            DataBuffer dataBuffer = new DataBuffer(buffer);
+            DataBuffer dataBuffer = new(buffer);
             dataBuffer.ResetByte();
 
             return Serialize(schemaObject, dataBuffer);
@@ -74,6 +74,7 @@
 
             return dataBuffer.ToBytes();
         }
+
         /// <summary>
         ///      Serialize only a difference between the new and the old object.
         /// </summary>
@@ -94,7 +95,7 @@
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(T oldObject, T newObject, byte[] buffer)
         {
-            DataBuffer dataBuffer = new DataBuffer(buffer);
+            DataBuffer dataBuffer = new(buffer);
             dataBuffer.ResetByte();
 
             return Serialize(oldObject, newObject, dataBuffer);
@@ -126,12 +127,12 @@
         /// <returns> Deserialized object written into newly created object of generic type. </returns>
         public T Deserialize(byte[] buffer)
         {
-            DataBuffer dataBuffer  = new DataBuffer(buffer);
+            DataBuffer dataBuffer  = new(buffer);
             return Deserialize(dataBuffer);
         }
 
         internal T Deserialize(DataBuffer dataBuffer) {
-            T existing = new T();
+            T existing = new();
 
             foreach (IMemberData<T> memberData in _memberDataList)
             {
@@ -154,7 +155,7 @@
         /// <returns> Deserialized object written into existing object of generic type. </returns>
         public T Deserialize(byte[] buffer, T existing)
         {
-            DataBuffer dataBuffer = new DataBuffer(buffer); 
+            DataBuffer dataBuffer = new(buffer); 
             return Deserialize(existing, dataBuffer);
         }
 

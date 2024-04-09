@@ -11,8 +11,7 @@ namespace Barchart.BinarySerializer.Schemas
     public static class SchemaFactory
     {
         private static readonly Dictionary<Type, object> allSerializers = new();
-
-        static public bool DefaultIncludeValue { get; set; } = false;
+        private static bool DefaultIncludeValue { get; set; } = false;
 
         static SchemaFactory()
         {
@@ -90,7 +89,7 @@ namespace Barchart.BinarySerializer.Schemas
                 memberType = ((PropertyInfo)memberInfo).PropertyType;
             }
 
-            if (IsComplexType(memberType))
+            if (IsMemberComplexType(memberType))
             {
                 ISchema nestedSchema = GenerateSchemaInterface(memberType);
                 IMemberData<T>? newMemberDataNestedClass = GenerateObjectMemberDataInterface<T>(nestedSchema, memberType, memberInfo);
@@ -109,15 +108,15 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a complex type; otherwise, false.</returns>
-        private static bool IsComplexType(Type type)
+        private static bool IsMemberComplexType(Type type)
         {
             var isNotValueType = !type.IsValueType;
             var isNotStringType = type != typeof(string);
             var isNotByteStringType = type != typeof(ByteString);
-            var isNotGenericType = type.IsGenericType;
-            var isListGenericType = type.IsGenericType && type.GetGenericTypeDefinition() != typeof(List<>);
+            var isGenericType = type.IsGenericType;
+            var isListGenericType = isGenericType && type.GetGenericTypeDefinition() != typeof(List<>);
 
-            return isNotValueType && isNotStringType && isNotByteStringType && (!isNotGenericType || isListGenericType);
+            return isNotValueType && isNotStringType && isNotByteStringType && (!isGenericType || isListGenericType);
         }
 
         public static BinarySerializerList<T>? GetListSerializer<T>()
@@ -129,7 +128,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         private static IBinaryTypeSerializer<V>? GetSerializer<V>()
         {
-            if (IsListType<V>())
+            if (IsMemberListType<V>())
             {
                 Type elementsType = typeof(V).GetGenericArguments()[0];
                 if (allSerializers.TryGetValue(elementsType, out object? listElementsSerializer))
@@ -148,14 +147,14 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 if (allSerializers.TryGetValue(typeof(V), out object? serializer))
                 {
-                    return (IBinaryTypeSerializer<V>?)serializer;
+                    return (IBinaryTypeSerializer<V>?) serializer;
                 }
             }
 
             return null;
         }
 
-        private static bool IsListType<V>()
+        private static bool IsMemberListType<V>()
         {
             return typeof(V).IsGenericType && typeof(V).GetGenericTypeDefinition() == typeof(List<>);
         }
@@ -189,6 +188,7 @@ namespace Barchart.BinarySerializer.Schemas
             Expression<Func<ISchema>> lambdaExpression = Expression.Lambda<Func<ISchema>>(methodCallExpression);
             Func<ISchema> function = lambdaExpression.Compile();
             ISchema schemaInterface = function();
+
             return schemaInterface;
         }
 
@@ -218,7 +218,8 @@ namespace Barchart.BinarySerializer.Schemas
                 GenerateGetter<T, V>(memberInfo),
                 GenerateSetter<T, V>(memberInfo),
                 serializer
-                );
+            );
+
             return newMemberData;
         }
 
@@ -250,7 +251,7 @@ namespace Barchart.BinarySerializer.Schemas
                 GenerateGetter<T, V>(memberInfo),
                 GenerateSetter<T, V>(memberInfo),
                 serializer
-                );
+            );
 
             return newMemberData;
         }
