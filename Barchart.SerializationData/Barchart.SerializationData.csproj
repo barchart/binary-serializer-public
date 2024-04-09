@@ -7,13 +7,13 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
 	<PackageId>SerializationData</PackageId>
-	<Version>1.0.11</Version>
+	<Version>1.0.12</Version>
 	<Authors>Luka Sotra</Authors>
 	<Company>Barchart</Company>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="binary-serialization-net" Version="1.0.47" />
+    <PackageReference Include="binary-serialization-net" Version="1.0.48" />
     <PackageReference Include="openfeed.net" Version="1.0.18" />
   </ItemGroup>
 
