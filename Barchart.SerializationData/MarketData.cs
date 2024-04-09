@@ -227,12 +227,6 @@ public class InstrumentDefinition
     public string? Commodity { get; set; }
 
     [BinarySerialize(include: true, key: false)]
-    public int? ExchangeId { get; set; }
-
-    [BinarySerialize(include: true, key: false)]
-    public int? PriceScalingExponent { get; set; }
-
-    [BinarySerialize(include: true, key: false)]
     public long? UnderlyingOpenfeedMarketId { get; set; }
 }
 
@@ -486,28 +480,4 @@ public class MarketUpdate
 
     [BinarySerialize(include: true, key: false)]
     public LowRolling? LowRolling { get; set; }
-
-    [BinarySerialize(include: true, key: false)]
-    public RequestForQuote? RequestForQuote { get; set; }
-}
-
-public class RequestForQuote
-{
-    [BinarySerialize(include: true, key: false)]
-    public string? QuoteRequestId { get; set; }
-
-    [BinarySerialize(include: true, key: false)]
-    public string? Symbol { get; set; }
-
-    [BinarySerialize(include: true, key: false)]
-    public long? SecurityId { get; set; }
-
-    [BinarySerialize(include: true, key: false)]
-    public int? OrderQuantity { get; set; }
-
-    [BinarySerialize(include: true, key: false)]
-    public int? QuoteType { get; set; }
-
-    [BinarySerialize(include: true, key: false)]
-    public int? Side { get; set; }
 }
