@@ -4,27 +4,6 @@ using System.Reflection;
 namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    /// Represents the interface for collecting metadata about members of a class or structure with encoding/decoding functionality.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IMemberData<T>
-    {
-        public string Name { get; set; }
-        public Type Type { get; set; }
-        public bool IsIncluded { get; set; }
-        public bool IsKeyAttribute { get; set; }
-        public MemberInfo MemberInfo { get; set; }
-
-        void Encode(T value, DataBuffer buffer);
-        void EncodeCompare(T newValue, T oldValue, DataBuffer buffer);
-
-        void Decode(T value, DataBuffer buffer);
-
-        public int GetLengthInBits(T schemaObject);
-        public int GetLengthInBits(T oldObject, T newObject);
-    }
-
-    /// <summary>
     /// Represents metadata about a member of a class or structure with encoding/decoding functionality.
     /// </summary>
     /// <typeparam name="T">The type of the class or structure.</typeparam>
@@ -115,75 +94,6 @@ namespace Barchart.BinarySerializer.Schemas
         protected void EncodeMissingFlag(DataBuffer dataBuffer)
         {
             dataBuffer.WriteBit(1);
-        }
-    }
-
-    /// <summary>
-    /// Represents metadata about an object member of a class or structure with encoding/decoding functionality.
-    /// </summary>
-    /// <typeparam name="T">The type of the class or structure.</typeparam>
-    /// <typeparam name="V">The type of the member.</typeparam>
-    public class ObjectMemberData<T, V> : MemberData<T, V> where V : new()
-    {
-        public ObjectMemberData(Type type, string name, bool isIncluded, bool isKeyAttribute, MemberInfo memberInfo,
-            Func<T, V> getDelegate, Action<T, V> setDelegate, IBinaryTypeSerializer<V> binarySerializer)
-            : base(type, name, isIncluded, isKeyAttribute, memberInfo, getDelegate, setDelegate, binarySerializer) {}
-
-        public override void EncodeCompare(T newObject, T oldObject, DataBuffer buffer)
-        {
-            V oldValue = GetDelegate(oldObject);
-            V newValue = GetDelegate(newObject);
-
-            bool valuesEqual = Equals(oldValue, newValue);
-
-            if (!valuesEqual || IsKeyAttribute)
-            {
-                ((ObjectBinarySerializer<V>)BinarySerializer).Encode(buffer, oldValue, newValue);               
-            }
-            else
-            {
-                EncodeMissingFlag(buffer);
-            }
-        }
-
-        public override void Decode(T existing, DataBuffer buffer)
-        {
-            HeaderWithValue<V> header;
-
-            V currentObject = GetDelegate(existing);
-
-            if (currentObject == null)
-            {
-                header = ((ObjectBinarySerializer<V>)BinarySerializer).Decode(buffer);
-            }
-            else
-            {
-                header = ((ObjectBinarySerializer<V>)BinarySerializer).Decode(buffer, currentObject);
-            }
-
-            if (header.Header.IsMissing || header.Value == null)
-            {
-                return;
-            }
-
-            SetDelegate(existing, header.Value);
-        }
-
-        public override int GetLengthInBits(T oldObject, T newObject)
-        {
-            var oldValue = GetDelegate(oldObject);
-            var newValue = GetDelegate(newObject);
-
-            bool valuesEqual = Equals(oldValue, newValue);
-
-            if (!valuesEqual || IsKeyAttribute)
-            {
-              return ((ObjectBinarySerializer<V>)BinarySerializer).GetLengthInBits(oldValue, newValue);
-            }
-            else
-            {
-                return NumberOfBitsIsMissing;
-            }
         }
     }
 }
