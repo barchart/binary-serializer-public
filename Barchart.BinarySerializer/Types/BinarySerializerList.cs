@@ -2,7 +2,7 @@
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerList<T> : IBinaryTypeSerializer<List<T>?>
+    public class BinarySerializerList<T> : IBinaryTypeObjectSerializer<List<T>?>
     {
         public const int NumberOfHeaderBitsNumeric = 2;
         private readonly IBinaryTypeSerializer<T> _serializer;
@@ -29,6 +29,45 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
+        public void Encode(DataBuffer dataBuffer, List<T>? oldValue, List<T>? newValue)
+        {
+            Header header = new() { IsMissing = false, IsNull = newValue == null };
+            WriteHeader(dataBuffer, header);
+
+            if (newValue != null)
+            {
+                int length = newValue.Count;
+                WriteLength(dataBuffer, length);
+
+                for (int i = 0; i < newValue.Count; i++)
+                {
+                    if (oldValue != null && i < oldValue.Count && Equals(oldValue[i], newValue[i]))
+                    {
+                       EncodeMissingFlag(dataBuffer);
+                    }
+                    else
+                    {
+                        _serializer.Encode(dataBuffer, newValue[i]);
+                    }
+                }
+            }
+        }
+
+        public HeaderWithValue<List<T>?> Decode(DataBuffer dataBuffer, List<T>? existing)
+        {
+            Header header = ReadHeader(dataBuffer);
+
+            if (header.IsMissing || header.IsNull)
+            {
+                return new HeaderWithValue<List<T>?>(header, default);
+            }
+
+            int length = ReadLength(dataBuffer);
+            List<T> list = ReadList(dataBuffer, length, existing);
+
+            return new HeaderWithValue<List<T>?>(header, list);
+        }
+
         public HeaderWithValue<List<T>?> Decode(DataBuffer dataBuffer)
         {
             Header header = ReadHeader(dataBuffer);
@@ -39,7 +78,7 @@ namespace Barchart.BinarySerializer.Types
             }
 
             int length = ReadLength(dataBuffer);
-            List<T> list = ReadList(dataBuffer, length);
+            List<T> list = ReadList(dataBuffer, length, null);
 
             return new HeaderWithValue<List<T>?>(header, list);
         }
@@ -64,6 +103,11 @@ namespace Barchart.BinarySerializer.Types
             }
 
             return length;
+        }
+
+        private void EncodeMissingFlag(DataBuffer dataBuffer)
+        {
+            dataBuffer.WriteBit(1);
         }
 
         private Header ReadHeader(DataBuffer dataBuffer)
@@ -110,13 +154,25 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        private List<T> ReadList(DataBuffer dataBuffer, int length)
+        private List<T> ReadList(DataBuffer dataBuffer, int length, List<T>? existing = null)
         {
             List<T> list = new();
 
             for (int i = 0; i < length; i++)
             {
-                T? value = _serializer.Decode(dataBuffer).Value;
+                var headerWithValue  = _serializer.Decode(dataBuffer);
+                var value = headerWithValue.Value;
+                var header = headerWithValue.Header;
+
+                if (header.IsMissing)
+                {
+                    if (existing != null)
+                    {
+                        list.Add(existing[i]);
+                        continue;
+                    }
+                }
+
                 if (value != null) list.Add(value);
             }
 

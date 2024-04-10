@@ -92,19 +92,24 @@ namespace Barchart.BinarySerializer.Schemas
             if (IsMemberComplexType(memberType))
             {
                 ISchema nestedSchema = GenerateSchemaInterface(memberType);
-                IMemberData<T>? newMemberDataNestedClass = GenerateObjectMemberDataInterface<T>(nestedSchema, memberType, memberInfo);
+                IMemberData<T>? newMemberDataNestedClass = GenerateObjectMemberData<T>(nestedSchema, memberType, memberInfo);
+                return newMemberDataNestedClass;
+            }
+            else if (IsMemberListType(memberType))
+            {
+                IMemberData<T>? newMemberDataNestedClass = GenerateListMemberData<T>(memberType, memberInfo);
                 return newMemberDataNestedClass;
             }
             else
             {
-                IMemberData<T>? newMemberData = GenerateMemberDataInterface<T>(memberType, memberInfo);
+                IMemberData<T>? newMemberData = GenerateMemberData<T>(memberType, memberInfo);
                 return newMemberData;
             }
         }
 
         /// <summary>
         /// Determines whether the specified type is a complex type, i.e., not a value type, 
-        /// not a string, and not a ByteString.
+        /// string, ByteString or List.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a complex type; otherwise, false.</returns>
@@ -113,10 +118,19 @@ namespace Barchart.BinarySerializer.Schemas
             var isNotValueType = !type.IsValueType;
             var isNotStringType = type != typeof(string);
             var isNotByteStringType = type != typeof(ByteString);
-            var isGenericType = type.IsGenericType;
-            var isListGenericType = isGenericType && type.GetGenericTypeDefinition() != typeof(List<>);
+            var isListGenericType = type.IsGenericType && type.GetGenericTypeDefinition() != typeof(List<>);
 
-            return isNotValueType && isNotStringType && isNotByteStringType && (!isGenericType || isListGenericType);
+            return isNotValueType && isNotStringType && isNotByteStringType && isListGenericType;
+        }
+
+        /// <summary>
+        /// Determines whether the specified type is a List type, 
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <returns>True if the type is a list type; otherwise, false./returns>
+        private static bool IsMemberListType(Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
         }
 
         public static BinarySerializerList<T>? GetListSerializer<T>()
@@ -128,7 +142,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         private static IBinaryTypeSerializer<V>? GetSerializer<V>()
         {
-            if (IsMemberListType<V>())
+            if (IsMemberListType(typeof(V)))
             {
                 Type elementsType = typeof(V).GetGenericArguments()[0];
                 if (allSerializers.TryGetValue(elementsType, out object? listElementsSerializer))
@@ -154,10 +168,7 @@ namespace Barchart.BinarySerializer.Schemas
             return null;
         }
 
-        private static bool IsMemberListType<V>()
-        {
-            return typeof(V).IsGenericType && typeof(V).GetGenericTypeDefinition() == typeof(List<>);
-        }
+    
 
         private static MemberInfo[] GetAllMembersForType(Type type) {
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
@@ -241,7 +252,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             ObjectBinarySerializer<V> serializer = new((Schema<V>)nestedSchema);
-
+            
             ObjectMemberData<T, V> newMemberData = new(
                 typeof(V),
                 memberInfo.Name,
@@ -257,13 +268,50 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
+        /// Generates object member data for the specified member.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="V">The type of the object member.</typeparam>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The object member data if successful; otherwise, <see langword="null"/>.</returns>
+        public static IMemberData<T>? GenerateListData<T, V>(MemberInfo memberInfo) where V : new()
+        {
+            bool include = GetIncludeAttributeValue(memberInfo);
+
+            if (!include)
+            {
+                return null;
+            }
+
+            IBinaryTypeSerializer<V>? serializer = GetSerializer<V>();
+
+            if(serializer == null)
+            {
+                return null;
+            }
+
+            ObjectMemberData<T, V> newMemberData = new(
+                typeof(V),
+                memberInfo.Name,
+                include,
+                GetKeyAttributeValue(memberInfo),
+                memberInfo,
+                GenerateGetter<T, V>(memberInfo),
+                GenerateSetter<T, V>(memberInfo),
+                (IBinaryTypeObjectSerializer<V>)serializer
+            );
+
+            return newMemberData;
+        }
+
+        /// <summary>
         /// Generates member data interface for the specified member type and information.
         /// </summary>
         /// <typeparam name="T">The type of object.</typeparam>
         /// <param name="memberType">The type of the member.</param>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The member data interface for the specified member.</returns>
-        public static IMemberData<T>? GenerateMemberDataInterface<T>(Type memberType, MemberInfo memberInfo)
+        public static IMemberData<T>? GenerateMemberData<T>(Type memberType, MemberInfo memberInfo)
         {
             var memberInfoExpr = Expression.Constant(memberInfo);
             var genericArgs = new Type[] { typeof(T), memberType };
@@ -284,13 +332,33 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="memberType">The type of the member.</param>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The object member data interface for the specified member.</returns>
-        public static IMemberData<T>? GenerateObjectMemberDataInterface<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
+        public static IMemberData<T>? GenerateObjectMemberData<T>(ISchema nestedSchema,Type memberType, MemberInfo memberInfo)
         {
             var nestedSchemaExpr = Expression.Constant(nestedSchema);
             var memberInfoExpr = Expression.Constant(memberInfo);
             var genericArgs = new Type[] { typeof(T), memberType };
             var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData))!.MakeGenericMethod(genericArgs);
             var generateDataCallExpr = Expression.Call(null, generateDataMethod, nestedSchemaExpr, memberInfoExpr);
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>?>>(generateDataCallExpr);
+            var func = lambdaExpr.Compile();
+            var memberData = func();
+
+            return memberData;
+        }
+
+        /// <summary>
+        /// Generates object member data interface for the specified member type and information.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <param name="memberType">The type of the member.</param>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The object member data interface for the specified member.</returns>
+        public static IMemberData<T>? GenerateListMemberData<T>(Type memberType, MemberInfo memberInfo)
+        {
+            var memberInfoExpr = Expression.Constant(memberInfo);
+            var genericArgs = new Type[] { typeof(T), memberType };
+            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateListData))!.MakeGenericMethod(genericArgs);
+            var generateDataCallExpr = Expression.Call(null, generateDataMethod, memberInfoExpr);
             var lambdaExpr = Expression.Lambda<Func<IMemberData<T>?>>(generateDataCallExpr);
             var func = lambdaExpr.Compile();
             var memberData = func();

@@ -6,7 +6,7 @@ namespace Barchart.BinarySerializer.Types
     /// Represents a binary serializer for objects of type <typeparamref name="T"/> using a specified schema.
     /// </summary>
     /// <typeparam name="T">The type of objects to be serialized.</typeparam>
-    public class ObjectBinarySerializer<T> : IBinaryTypeSerializer<T> where T : new()
+    public class ObjectBinarySerializer<T> : IBinaryTypeObjectSerializer<T> where T : new()
     {
         public Schema<T> Schema { get; set; }
 
@@ -61,7 +61,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public void Encode(DataBuffer dataBuffer, T oldObject, T newObject)
+        public void Encode(DataBuffer dataBuffer, T? oldObject, T? newObject)
         {
             WriteHeader(dataBuffer, newObject);
 
