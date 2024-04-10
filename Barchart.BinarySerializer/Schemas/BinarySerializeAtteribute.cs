@@ -12,7 +12,7 @@
         public bool Include { get { return _include; } }
         public bool Key { get { return _key; } }
 
-        public BinarySerializeAttribute(bool include, bool key)
+        public BinarySerializeAttribute(bool include = true, bool key = false)
         {
             _include = include;
             _key = key;
