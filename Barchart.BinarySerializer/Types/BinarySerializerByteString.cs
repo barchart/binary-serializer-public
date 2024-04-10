@@ -42,7 +42,10 @@ namespace Barchart.BinarySerializer.Types
                 return NumberOfHeaderBitsNumeric;
             }
 
-            return value.Length * 8 + sizeof(int) * 8 + NumberOfHeaderBitsNumeric;
+            byte[] valueBytes = value.ToByteArray();
+            byte[] lengthBytes = BitConverter.GetBytes(valueBytes.Length);
+
+            return lengthBytes.Length * 8 + valueBytes.Length * 8 + NumberOfHeaderBitsNumeric;
         }
 
         private Header ReadHeader(DataBuffer dataBuffer)
