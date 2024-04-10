@@ -177,7 +177,7 @@ namespace Barchart.BinarySerializer.Tests
 
                 Hotel hotel = new()
                 {
-                    roomNumbers = new List<string> { "101", "102", "103" },
+                    roomNumbers = new List<int> { 101, 102, 103 },
                     Data = ByteString.CopyFromUtf8("104")
                 };
 

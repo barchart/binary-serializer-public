@@ -297,19 +297,21 @@ namespace Barchart.BinarySerializer.Tests
 
                 Hotel hotel1 = new()
                 {
-                    roomNumbers = new List<string> { "101", "105", "103" },
+                    roomNumbers = new List<int> { 101, 105, 103 },
                     Data = ByteString.CopyFromUtf8("104")
                 };
 
                 Hotel hotel2 = new()
                 {
-                    roomNumbers = new List<string> { "101", "102", "103" },
+                    roomNumbers = new List<int> { 101, 102, 103 },
                     Data = ByteString.CopyFromUtf8("105")
                 };
 
                 Schema<Hotel> hotelSchema = SchemaFactory.GetSchema<Hotel>();
 
                 stopwatch.Start();
+
+                byte[] serialData = hotelSchema.Serialize(hotel2);
 
                 byte[] serializedData = hotelSchema.Serialize(hotel1, hotel2);
                 Hotel deserializedHotel = hotelSchema.Deserialize(serializedData, hotel1);

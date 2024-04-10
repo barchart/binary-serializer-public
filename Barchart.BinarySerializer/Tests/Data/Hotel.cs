@@ -6,7 +6,7 @@ namespace Barchart.BinarySerializer.Tests
     class Hotel
     {
         [BinarySerialize(include: true, key: false)]
-        public List<string>? roomNumbers { get; set; }
+        public List<int>? roomNumbers { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public ByteString? Data { get; set; }
