@@ -5,10 +5,10 @@ namespace Barchart.BinarySerializer.Tests
     class Car
     {
         [BinarySerialize(include: true, key: false)]
-        public double doubleNumber;
+        public double? doubleNumber;
 
         [BinarySerialize(include: true, key: false)]
-        public decimal DecimalNumber { get; set; }
+        public decimal? DecimalNumber { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public string? StringName { get; set; }

@@ -11,10 +11,10 @@ namespace Barchart.BinarySerializer.Tests
         public bool? BoolNumber { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public double doubleNumber;
+        public double? doubleNumber;
 
         [BinarySerialize(include: true, key: false)]
-        public decimal DecimalNumber { get; set; }
+        public decimal? DecimalNumber { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public string? StringName { get; set; }
@@ -29,10 +29,10 @@ namespace Barchart.BinarySerializer.Tests
         public bool? BoolNumber2 { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public double doubleNumber2;
+        public double? doubleNumber2;
 
         [BinarySerialize(include: true, key: false)]
-        public decimal DecimalNumber2 { get; set; }
+        public decimal? DecimalNumber2 { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public string? StringName2 { get; set; }
@@ -47,10 +47,10 @@ namespace Barchart.BinarySerializer.Tests
         public bool? BoolNumber3 { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public double doubleNumber3;
+        public double? doubleNumber3;
 
         [BinarySerialize(include: true, key: false)]
-        public decimal DecimalNumber3 { get; set; }
+        public decimal? DecimalNumber3 { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public string? StringName3 { get; set; }
@@ -65,10 +65,10 @@ namespace Barchart.BinarySerializer.Tests
         public bool? BoolNumber4 { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public double doubleNumber4;
+        public double? doubleNumber4;
 
         [BinarySerialize(include: true, key: false)]
-        public decimal DecimalNumber4 { get; set; }
+        public decimal? DecimalNumber4 { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public string? StringName4 { get; set; }
@@ -83,10 +83,10 @@ namespace Barchart.BinarySerializer.Tests
         public bool? BoolNumber5 { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public double doubleNumber5;
+        public double? doubleNumber5;
 
         [BinarySerialize(include: true, key: false)]
-        public decimal DecimalNumber5 { get; set; }
+        public decimal? DecimalNumber5 { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public string? StringName5 { get; set; }

@@ -11,10 +11,10 @@ namespace Barchart.BinarySerializer.Tests
         public Person? PersonObject { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public double doubleNumberGarage;
+        public double? doubleNumberGarage;
 
         [BinarySerialize(include: true, key: false)]
-        public decimal DecimalNumberGarage { get; set; }
+        public decimal? DecimalNumberGarage { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public string? StringNameGarage { get; set; }
