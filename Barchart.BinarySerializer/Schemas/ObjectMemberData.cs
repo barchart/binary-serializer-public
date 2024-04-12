@@ -46,7 +46,7 @@ namespace Barchart.BinarySerializer.Schemas
                 header = ((IBinaryTypeObjectSerializer<V>)BinarySerializer).Decode(buffer, currentObject);
             }
 
-            if (header.Header.IsMissing || header.Value == null)
+            if (header.Header.IsMissing)
             {
                 return;
             }
