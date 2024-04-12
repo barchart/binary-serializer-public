@@ -323,7 +323,7 @@ namespace Barchart.BinarySerializer.Tests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
                 throw;
             }
         }
