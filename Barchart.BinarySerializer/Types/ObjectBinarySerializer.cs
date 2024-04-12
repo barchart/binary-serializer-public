@@ -64,11 +64,7 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, T? oldObject, T? newObject)
         {
             WriteHeader(dataBuffer, newObject);
-
-            if (oldObject != null && newObject != null)
-            {
-                Schema.Serialize(oldObject, newObject, dataBuffer);
-            }
+            Schema.Serialize(oldObject!, newObject!, dataBuffer);
         }
 
         public int GetLengthInBytes(T value)
