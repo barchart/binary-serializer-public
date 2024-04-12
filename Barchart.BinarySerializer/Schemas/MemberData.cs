@@ -60,7 +60,7 @@ namespace Barchart.BinarySerializer.Schemas
             HeaderWithValue<V> header;
             header = BinarySerializer.Decode(buffer);
            
-            if (header.Header.IsMissing || header.Value == null)
+            if (header.Header.IsMissing)
             {
                 return;
             }
