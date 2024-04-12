@@ -51,7 +51,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return;
             }
 
-            SetDelegate(existing, header.Value);
+            SetDelegate(existing, header.Value!);
         }
 
         public override int GetLengthInBits(T oldObject, T newObject)

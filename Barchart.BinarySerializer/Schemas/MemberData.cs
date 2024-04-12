@@ -65,7 +65,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return;
             }
 
-            SetDelegate(existing, header.Value);
+            SetDelegate(existing, header.Value!);
         }
 
         public int GetLengthInBits(T schemaObject)
