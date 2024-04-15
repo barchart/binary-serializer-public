@@ -10,7 +10,7 @@ namespace Barchart.BinarySerializer.Schemas
     /// </summary>
     public static class SchemaFactory
     {
-        private static readonly Dictionary<Type, object> allSerializers = new();
+        private static readonly IDictionary<Type, object> allSerializers = new Dictionary<Type, object>();
         public static bool DefaultIncludeValue { get; set; } = false;
 
         static SchemaFactory()
@@ -107,6 +107,11 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
+        /// <summary>
+        /// Gets a serializer for a list of elements of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
         public static BinarySerializerList<T>? GetListSerializer<T>()
         {
             IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
@@ -114,7 +119,12 @@ namespace Barchart.BinarySerializer.Schemas
             return new BinarySerializerList<T>(serializer);
         }
 
-        private static IBinaryTypeSerializer<V>? GetSerializer<V>()
+        /// <summary>
+        /// Gets a serializer for the specified type <typeparamref name="V"/>.
+        /// </summary>
+        /// <typeparam name="V">The type for which to get the serializer.</typeparam>
+        /// <returns>A serializer for the specified type <typeparamref name="V"/> if available; otherwise, <c>null</c>.</returns>
+        public static IBinaryTypeSerializer<V>? GetSerializer<V>()
         {
             if (IsMemberListType(typeof(V)))
             {

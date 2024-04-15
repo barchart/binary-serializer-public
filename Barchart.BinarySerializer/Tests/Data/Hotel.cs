@@ -6,7 +6,7 @@ namespace Barchart.BinarySerializer.Tests
     class Hotel
     {
         [BinarySerialize(include: true, key: false)]
-        public List<int>? roomNumbers { get; set; }
+        public List<int>? RoomNumbers { get; set; }
 
         [BinarySerialize(include: true, key: false)]
         public ByteString? Data { get; set; }
@@ -20,16 +20,16 @@ namespace Barchart.BinarySerializer.Tests
 
             Hotel otherHotel = (Hotel)obj;
 
-            if ((roomNumbers?.Count ?? 0) != (otherHotel.roomNumbers?.Count ?? 0))
+            if ((RoomNumbers?.Count ?? 0) != (otherHotel.RoomNumbers?.Count ?? 0))
             {
                 return false;
             }
 
-            if (roomNumbers != null)
+            if (RoomNumbers != null)
             {
-                for (int i = 0; i < roomNumbers.Count; i++)
+                for (int i = 0; i < RoomNumbers.Count; i++)
                 {
-                    if (roomNumbers[i] != otherHotel?.roomNumbers?[i])
+                    if (RoomNumbers[i] != otherHotel?.RoomNumbers?[i])
                     {
                         return false;
                     }
@@ -44,7 +44,7 @@ namespace Barchart.BinarySerializer.Tests
             unchecked
             {
                 int hashCode = 0;
-                hashCode += roomNumbers != null ? roomNumbers.GetHashCode() : 0;
+                hashCode += RoomNumbers != null ? RoomNumbers.GetHashCode() : 0;
                 hashCode += Data != null ? Data.GetHashCode() : 0;
                 return hashCode;
             }

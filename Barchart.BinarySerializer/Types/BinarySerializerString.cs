@@ -66,13 +66,13 @@ namespace Barchart.BinarySerializer.Types
             return valueLength * 8 + NumberOfHeaderBitsString;
         }
 
-        private void WriteHeader(DataBuffer dataBuffer, Header header)
+        private static void WriteHeader(DataBuffer dataBuffer, Header header)
         {
             dataBuffer.WriteBit((byte)(header.IsMissing ? 1 : 0));
             dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
         }
 
-        private Header ReadHeader(DataBuffer dataBuffer)
+        private static Header ReadHeader(DataBuffer dataBuffer)
         {
             Header header = new() { IsMissing = dataBuffer.ReadBit() == 1 };
 
@@ -84,7 +84,7 @@ namespace Barchart.BinarySerializer.Types
             return header;
         }
 
-        private void WriteStringLength(DataBuffer dataBuffer, int length)
+        private static void WriteStringLength(DataBuffer dataBuffer, int length)
         {
             for (int i = 5; i >= 0; i--)
             {
@@ -92,7 +92,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        private int ReadStringLength(DataBuffer dataBuffer)
+        private static int ReadStringLength(DataBuffer dataBuffer)
         {
             int size = 0;
 

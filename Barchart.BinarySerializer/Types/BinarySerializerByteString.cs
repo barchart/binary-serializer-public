@@ -48,7 +48,7 @@ namespace Barchart.BinarySerializer.Types
             return lengthBytes.Length * 8 + valueBytes.Length * 8 + NumberOfHeaderBitsNumeric;
         }
 
-        private Header ReadHeader(DataBuffer dataBuffer)
+        private static Header ReadHeader(DataBuffer dataBuffer)
         {
             Header header = new() { IsMissing = dataBuffer.ReadBit() == 1 };
 
@@ -60,7 +60,7 @@ namespace Barchart.BinarySerializer.Types
             return header;
         }
 
-        private void WriteHeader(DataBuffer dataBuffer, Header header)
+        private static void WriteHeader(DataBuffer dataBuffer, Header header)
         {
             dataBuffer.WriteBit((byte)(header.IsMissing ? 1 : 0));
 
@@ -70,7 +70,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        private int ReadLength(DataBuffer dataBuffer)
+        private static int ReadLength(DataBuffer dataBuffer)
         {
             byte[] lengthBytes = new byte[sizeof(int)];
 
@@ -82,7 +82,7 @@ namespace Barchart.BinarySerializer.Types
             return BitConverter.ToInt32(lengthBytes, 0);
         }
 
-        private void WriteLength(DataBuffer dataBuffer, int length)
+        private static void WriteLength(DataBuffer dataBuffer, int length)
         {
             byte[] lengthBytes = BitConverter.GetBytes(length);
 
@@ -92,7 +92,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        private ByteString ReadValue(DataBuffer dataBuffer, int length)
+        private static ByteString ReadValue(DataBuffer dataBuffer, int length)
         {
             byte[] valueBytes = new byte[length];
 
@@ -104,7 +104,7 @@ namespace Barchart.BinarySerializer.Types
             return ByteString.CopyFrom(valueBytes);
         }
 
-        private void WriteValue(DataBuffer dataBuffer, byte[] valueBytes)
+        private static void WriteValue(DataBuffer dataBuffer, byte[] valueBytes)
         {
             for (int i = valueBytes.Length - 1; i >= 0; i--)
             {

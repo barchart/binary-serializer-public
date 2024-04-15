@@ -46,13 +46,13 @@ namespace Barchart.BinarySerializer.Types
         protected abstract byte[] ConvertToByteArray(T value);
         protected abstract T DecodeBytes(byte[] bytes);
 
-        private void WriteHeader(DataBuffer dataBuffer, Header header)
+        private static void WriteHeader(DataBuffer dataBuffer, Header header)
         {
             dataBuffer.WriteBit((byte)(header.IsMissing ? 1 : 0));
             dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
         }
 
-        private Header ReadHeader(DataBuffer dataBuffer)
+        private static Header ReadHeader(DataBuffer dataBuffer)
         {
             Header header = new() { IsMissing = dataBuffer.ReadBit() == 1 };
 
@@ -64,7 +64,7 @@ namespace Barchart.BinarySerializer.Types
             return header;
         }
 
-        private void WriteValueBytes(DataBuffer dataBuffer, byte[] valueBytes)
+        private static void WriteValueBytes(DataBuffer dataBuffer, byte[] valueBytes)
         {
             for (int i = valueBytes.Length - 1; i >= 0; i--)
             {

@@ -17,7 +17,7 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<T> Decode(DataBuffer dataBuffer)
         {
-            Header header = ReadHeader(dataBuffer);
+            Header header = ObjectBinarySerializer<T>.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
@@ -35,7 +35,7 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<T> Decode(DataBuffer dataBuffer, T existing)
         {
-            Header header = ReadHeader(dataBuffer);
+            Header header = ObjectBinarySerializer<T>.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
@@ -53,7 +53,7 @@ namespace Barchart.BinarySerializer.Types
 
         public void Encode(DataBuffer dataBuffer, T? value)
         {
-            WriteHeader(dataBuffer, value);
+            ObjectBinarySerializer<T>.WriteHeader(dataBuffer, value);
 
             if (value != null)
             {
@@ -63,7 +63,7 @@ namespace Barchart.BinarySerializer.Types
 
         public void Encode(DataBuffer dataBuffer, T? oldObject, T? newObject)
         {
-            WriteHeader(dataBuffer, newObject);
+            ObjectBinarySerializer<T>.WriteHeader(dataBuffer, newObject);
             Schema.Serialize(oldObject!, newObject!, dataBuffer);
         }
 
@@ -82,7 +82,7 @@ namespace Barchart.BinarySerializer.Types
             return ((ISchema)Schema).GetLengthInBits(oldValue, newValue);
         }
 
-        private Header ReadHeader(DataBuffer dataBuffer)
+        private static Header ReadHeader(DataBuffer dataBuffer)
         {
             Header header = new() { IsMissing = dataBuffer.ReadBit() == 1 };
 
@@ -94,7 +94,7 @@ namespace Barchart.BinarySerializer.Types
             return header;
         }
 
-        private Header WriteHeader(DataBuffer dataBuffer, T? value)
+        private static Header WriteHeader(DataBuffer dataBuffer, T? value)
         {
             Header header = new()
             {
