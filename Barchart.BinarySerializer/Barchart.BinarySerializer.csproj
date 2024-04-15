@@ -23,13 +23,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Google.Protobuf" Version="3.26.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="output\" />
+    <None Remove="Utility\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="output\" />
+    <Folder Include="Utility\" />
   </ItemGroup>
   <Target Name="RemoveFilesFromRelease" BeforeTargets="BeforeBuild">
     <ItemGroup>
