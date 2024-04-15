@@ -8,11 +8,11 @@ namespace Barchart.BinarySerializer.Tests
 {
     public class PerformanceTests
     {
-        private readonly ITestOutputHelper output;
+        private readonly ITestOutputHelper _output;
 
         public PerformanceTests(ITestOutputHelper output)
         {
-            this.output = output;
+            _output = output;
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace Barchart.BinarySerializer.Tests
             }
 
             stopwatch.Stop();
-            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+            _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Barchart.BinarySerializer.Tests
             }
             stopwatch.Stop();
 
-            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+            _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace Barchart.BinarySerializer.Tests
             }
             stopwatch.Stop();
 
-            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+            _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace Barchart.BinarySerializer.Tests
             }
 
             stopwatch.Stop();
-            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+            _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
 
         [Fact]
@@ -191,7 +191,7 @@ namespace Barchart.BinarySerializer.Tests
             }
 
             stopwatch.Stop();
-            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+            _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
         }
 
         [Fact]
@@ -363,8 +363,8 @@ namespace Barchart.BinarySerializer.Tests
             }
             stopwatch2.Stop();
 
-            output.WriteLine($"Using Delegates: {stopwatch1.ElapsedTicks} ticks");
-            output.WriteLine($"Using Equals: {stopwatch2.ElapsedTicks} ticks");
+            _output.WriteLine($"Using Delegates: {stopwatch1.ElapsedTicks} ticks");
+            _output.WriteLine($"Using Equals: {stopwatch2.ElapsedTicks} ticks");
 
         }
 
@@ -537,9 +537,8 @@ namespace Barchart.BinarySerializer.Tests
             }
             stopwatch2.Stop();
 
-            output.WriteLine($"Using Delegates: {stopwatch1.ElapsedTicks} ticks");
-            output.WriteLine($"Using Equals: {stopwatch2.ElapsedTicks} ticks");
-
+            _output.WriteLine($"Using Delegates: {stopwatch1.ElapsedTicks} ticks");
+            _output.WriteLine($"Using Equals: {stopwatch2.ElapsedTicks} ticks");
         }
     }
 }

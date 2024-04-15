@@ -9,12 +9,12 @@ namespace Barchart.BinarySerializer.Tests
 {
     public class SingleSerializationUnitTests
     {
-        private readonly ITestOutputHelper output;
+        private readonly ITestOutputHelper _output;
 
         public SingleSerializationUnitTests(ITestOutputHelper output)
         {
             LoggerWrapper.InitializeLogger();
-            this.output = output;
+            _output = output;
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Barchart.BinarySerializer.Tests
                 Person deserializedPerson = personSchema.Deserialize(serializedData);
 
                 stopwatch.Stop();
-                output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
                 Assert.Equal(person, deserializedPerson);
             }
@@ -165,7 +165,7 @@ namespace Barchart.BinarySerializer.Tests
             Garage deserializedGarage = garageSchema.Deserialize(serializedData);
 
             stopwatch.Stop();
-            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+            _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
             Assert.Equal(garage, deserializedGarage);
         }
@@ -191,7 +191,7 @@ namespace Barchart.BinarySerializer.Tests
                 Hotel deserializedHotel = hotelSchema.Deserialize(serializedData);
 
                 stopwatch.Stop();
-                output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
                 Assert.Equal(hotel, deserializedHotel);
             }

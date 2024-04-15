@@ -6,12 +6,12 @@ namespace Barchart.BinarySerializer.Tests
 {
     public class MultiThreadSerializationUnitTests
 	{
-        private readonly ITestOutputHelper output;
+        private readonly ITestOutputHelper _output;
 
         public MultiThreadSerializationUnitTests(ITestOutputHelper output)
         {
             LoggerWrapper.InitializeLogger();
-            this.output = output;
+            _output = output;
         }
 
         [Fact]
@@ -20,7 +20,7 @@ namespace Barchart.BinarySerializer.Tests
             try
             {
                 int numberOfThreads = Environment.ProcessorCount;
-                SingleSerializationUnitTests testInstance = new(output);
+                SingleSerializationUnitTests testInstance = new(_output);
 
                 Parallel.For(0, numberOfThreads, index =>
                 {
@@ -40,7 +40,7 @@ namespace Barchart.BinarySerializer.Tests
             try
             {
                 int numberOfThreads = Environment.ProcessorCount;
-                SingleSerializationUnitTests testInstance = new(output);
+                SingleSerializationUnitTests testInstance = new(_output);
 
                 Parallel.For(0, numberOfThreads, index =>
                 {
@@ -60,7 +60,7 @@ namespace Barchart.BinarySerializer.Tests
             try
             {
                 int numberOfThreads = Environment.ProcessorCount;
-                DifferenceSerializationUnitTests testInstance = new(output);
+                DifferenceSerializationUnitTests testInstance = new(_output);
 
                 Parallel.For(0, numberOfThreads, index =>
                 {
@@ -80,7 +80,7 @@ namespace Barchart.BinarySerializer.Tests
             try
             {
                 int numberOfThreads = Environment.ProcessorCount;
-                DifferenceSerializationUnitTests testInstance = new(output);
+                DifferenceSerializationUnitTests testInstance = new(_output);
 
                 Parallel.For(0, numberOfThreads, index =>
                 {

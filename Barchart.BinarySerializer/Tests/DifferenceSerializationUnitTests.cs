@@ -9,12 +9,12 @@ namespace Barchart.BinarySerializer.Tests
 {
     public class DifferenceSerializationUnitTests
 	{
-        private readonly ITestOutputHelper output;
+        private readonly ITestOutputHelper _output;
 
         public DifferenceSerializationUnitTests(ITestOutputHelper output)
         {
             LoggerWrapper.InitializeLogger();
-            this.output = output;
+            _output = output;
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Barchart.BinarySerializer.Tests
                 }
 
                 stopwatch.Stop();
-                output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
             }
             catch (Exception ex)
@@ -285,7 +285,7 @@ namespace Barchart.BinarySerializer.Tests
             Garage deserializedGarageDifference = garageSchema.Deserialize(serializedDataDifference, garage);
 
             stopwatch.Stop();
-            output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+            _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
             Assert.Equal(garage2, deserializedGarageDifference);
         }
@@ -319,7 +319,7 @@ namespace Barchart.BinarySerializer.Tests
                 Hotel deserializedHotel = hotelSchema.Deserialize(serializedData, hotel1);
 
                 stopwatch.Stop();
-                output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
                 Assert.Equal(hotel2, deserializedHotel);
             }
