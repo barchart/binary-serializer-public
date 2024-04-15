@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Schemas
+﻿using Barchart.BinarySerializer.Utility;
+
+namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
     /// A data type that helps to use a buffer efficiently with the possibility to read or write bytes and bits
@@ -59,7 +61,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                LoggerWrapper.LogError(ex.Message);
             }
             return 0;
         }

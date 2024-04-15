@@ -1,4 +1,5 @@
 ﻿using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Utility;
 using Google.Protobuf;
 using System.Diagnostics;
 using Xunit;
@@ -63,7 +64,7 @@ namespace Barchart.BinarySerializer.Tests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                LoggerWrapper.LogError(ex.Message);
                 throw;
             }
         }
@@ -297,13 +298,13 @@ namespace Barchart.BinarySerializer.Tests
 
                 Hotel hotel1 = new()
                 {
-                    roomNumbers = new List<int> { 101, 105, 103 },
+                    RoomNumbers = new List<int> { 101, 105, 103 },
                     Data = ByteString.CopyFromUtf8("104")
                 };
 
                 Hotel hotel2 = new()
                 {
-                    roomNumbers = new List<int> { 101, 102, 103 },
+                    RoomNumbers = new List<int> { 101, 102, 103 },
                     Data = ByteString.CopyFromUtf8("105")
                 };
 
@@ -323,7 +324,7 @@ namespace Barchart.BinarySerializer.Tests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                LoggerWrapper.LogError(ex.Message);
                 throw;
             }
         }

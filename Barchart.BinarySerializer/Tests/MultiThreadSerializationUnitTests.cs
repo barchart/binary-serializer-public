@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Barchart.BinarySerializer.Utility;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Barchart.BinarySerializer.Tests
@@ -27,7 +28,7 @@ namespace Barchart.BinarySerializer.Tests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                LoggerWrapper.LogError(ex.Message);
                 throw;
             }
         }
@@ -47,7 +48,7 @@ namespace Barchart.BinarySerializer.Tests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                LoggerWrapper.LogError(ex.Message);
                 throw;
             }
         }
@@ -67,7 +68,7 @@ namespace Barchart.BinarySerializer.Tests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                LoggerWrapper.LogError(ex.Message);
                 throw;
             }
         }
@@ -77,6 +78,8 @@ namespace Barchart.BinarySerializer.Tests
         {
             try
             {
+                throw new Exception();
+
                 int numberOfThreads = Environment.ProcessorCount;
                 DifferenceSerializationUnitTests testInstance = new(output);
 
@@ -87,7 +90,7 @@ namespace Barchart.BinarySerializer.Tests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                LoggerWrapper.LogError(ex.Message);
                 throw;
             }
         }
