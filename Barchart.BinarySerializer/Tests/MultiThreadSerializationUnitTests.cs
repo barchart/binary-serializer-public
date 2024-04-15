@@ -78,8 +78,6 @@ namespace Barchart.BinarySerializer.Tests
         {
             try
             {
-                throw new Exception();
-
                 int numberOfThreads = Environment.ProcessorCount;
                 DifferenceSerializationUnitTests testInstance = new(output);
 
