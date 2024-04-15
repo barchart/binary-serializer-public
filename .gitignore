@@ -3,5 +3,6 @@
 bin/
 obj/
 output/
+Logs/
 
 .idea/
