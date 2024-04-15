@@ -25,6 +25,7 @@
     <PackageReference Include="Google.Protobuf" Version="3.26.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
+    <PackageReference Include="openfeed.net" Version="1.0.18" />
   </ItemGroup>
 
   <ItemGroup>
