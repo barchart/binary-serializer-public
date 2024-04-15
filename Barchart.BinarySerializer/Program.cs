@@ -1,7 +1,11 @@
-﻿namespace Barchart.BinarySerializer
+﻿using Barchart.BinarySerializer.Utility;
+
+namespace Barchart.BinarySerializer
 {  
     class Program
     {
-        static void Main(string[] args) { }
+        static void Main(string[] args) {
+            LoggerWrapper.InitializeLogger();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Serilog;
+
 namespace Barchart.BinarySerializer.Utility
 {
     /// <summary>

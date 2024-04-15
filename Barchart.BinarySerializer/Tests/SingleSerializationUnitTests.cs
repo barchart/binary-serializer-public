@@ -13,6 +13,7 @@ namespace Barchart.BinarySerializer.Tests
 
         public SingleSerializationUnitTests(ITestOutputHelper output)
         {
+            LoggerWrapper.InitializeLogger();
             this.output = output;
         }
 

@@ -10,6 +10,7 @@ namespace Barchart.BinarySerializer.Tests
 
         public MultiThreadSerializationUnitTests(ITestOutputHelper output)
         {
+            LoggerWrapper.InitializeLogger();
             this.output = output;
         }
 
