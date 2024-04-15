@@ -2,6 +2,7 @@
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Utility;
 using Google.Protobuf;
+using Org.Openfeed;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -194,6 +195,60 @@ namespace Barchart.BinarySerializer.Tests
                 _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
                 Assert.Equal(hotel, deserializedHotel);
+            }
+            catch (Exception ex)
+            {
+                LoggerWrapper.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        [Fact]
+        public void MarketSnapshotTest()
+        {
+            try
+            {
+                Stopwatch stopwatch = new();
+
+                MarketSnapshot marketSnapshot = new()
+                {
+                    MarketId = 5389879102616877808,
+                    TransactionTime = 1713192945516374835,
+                    MarketSequence = 1754155,
+                    TradeDate = 20240415,
+                    TotalChunks = 1,
+                    CurrentChunk = 1,
+                    Symbol = "AAPL",
+                    PriceDenominator = 0,
+                    Service = Service.Delayed,
+                    InstrumentStatus = new InstrumentStatus
+                    {
+                        TradingStatus = InstrumentTradingStatus.Open,
+                        TradeDate = 20240415
+                    },
+                    Bbo = new BestBidOffer
+                    {
+                        BidPrice = 1749400,
+                        BidQuantity = 2,
+                        BidOriginator = ByteString.CopyFromUtf8("UA == "),
+                        OfferPrice = 1749500,
+                        OfferQuantity = 3,
+                        OfferOriginator = ByteString.CopyFromUtf8("UQ=="),
+                        QuoteCondition = ByteString.CopyFromUtf8("Ug==")
+                    }
+                };
+
+                Schema<MarketSnapshot> marketSnapshotSchema = SchemaFactory.GetSchema<MarketSnapshot>();
+
+                stopwatch.Start();
+
+                byte[] serializedData = marketSnapshotSchema.Serialize(marketSnapshot);
+                MarketSnapshot deserializedMarletSnapshot = marketSnapshotSchema.Deserialize(serializedData);
+
+                stopwatch.Stop();
+                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+                Assert.Equal(marketSnapshot, deserializedMarletSnapshot);
             }
             catch (Exception ex)
             {
