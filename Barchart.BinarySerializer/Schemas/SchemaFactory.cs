@@ -1,5 +1,6 @@
 ﻿using Barchart.BinarySerializer.Types;
 using Google.Protobuf;
+using Google.Protobuf.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -11,7 +12,7 @@ namespace Barchart.BinarySerializer.Schemas
     public static class SchemaFactory
     {
         private static readonly IDictionary<Type, object> allSerializers = new Dictionary<Type, object>();
-        public static bool DefaultIncludeValue { get; set; } = false;
+        public static bool DefaultIncludeValue { get; set; } = true;
 
         static SchemaFactory()
         {
@@ -374,7 +375,7 @@ namespace Barchart.BinarySerializer.Schemas
             var isNotValueType = !type.IsValueType;
             var isNotStringType = type != typeof(string);
             var isNotByteStringType = type != typeof(ByteString);
-            var isListGenericType = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
+            var isListGenericType = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(RepeatedField<>) || type.GetGenericTypeDefinition() == typeof(List<>);
 
             return isNotValueType && isNotStringType && isNotByteStringType && !isListGenericType;
         }
@@ -386,7 +387,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>True if the type is a list type; otherwise, false./returns>
         private static bool IsMemberListType(Type type)
         {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(RepeatedField<>) || type.GetGenericTypeDefinition() == typeof(List<>);
         }
 
         private static MemberInfo[] GetAllMembersForType(Type type)
