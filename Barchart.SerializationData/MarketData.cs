@@ -1,5 +1,6 @@
 ﻿using Barchart.BinarySerializer.Schemas;
 using Google.Protobuf;
+using Google.Protobuf.Collections;
 using Org.Openfeed;
 using static Org.Openfeed.InstrumentDefinition.Types;
 
@@ -62,7 +63,7 @@ public class InstrumentDefinition
     public InstrumentType? InstrumentType { get; set; }
 
     [BinarySerialize(include: true, key: false)]
-    public List<BookType>? SupportBookTypes { get; set; }
+    public RepeatedField<BookType>? SupportBookTypes { get; set; }
 
     [BinarySerialize(include: true, key: false)]
     public int? BookDepth { get; set; }
@@ -143,7 +144,7 @@ public class InstrumentDefinition
     public ByteString? AuxiliaryData { get; set; }
 
     [BinarySerialize(include: true, key: false)]
-    public List<Symbol>? Symbols { get; set; }
+    public RepeatedField<Symbol>? Symbols { get; set; }
 
     [BinarySerialize(include: true, key: false)]
     public long? OptionStrike { get; set; }
@@ -161,7 +162,7 @@ public class InstrumentDefinition
     public string? SpreadCode { get; set; }
 
     [BinarySerialize(include: true, key: false)]
-    public List<SpreadLeg>? SpreadLeg { get; set; }
+    public RepeatedField<SpreadLeg>? SpreadLeg { get; set; }
 
     [BinarySerialize(include: true, key: false)]
     public bool? UserDefinedSpread { get; set; }
@@ -269,10 +270,10 @@ public class MarketSnapshot
     public IndexValue? Index { get; set; }
 
     [BinarySerialize(include: true, key: false)]
-    public List<AddPriceLevel>? PriceLevels { get; set; }
+    public RepeatedField<AddPriceLevel>? PriceLevels { get; set; }
 
     [BinarySerialize(include: true, key: false)]
-    public List<AddOrder>? Orders { get; set; }
+    public RepeatedField<AddOrder>? Orders { get; set; }
 
     [BinarySerialize(include: true, key: false)]
     public News? News { get; set; }
