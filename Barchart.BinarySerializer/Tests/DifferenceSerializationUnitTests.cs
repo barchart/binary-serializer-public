@@ -313,8 +313,6 @@ namespace Barchart.BinarySerializer.Tests
 
                 stopwatch.Start();
 
-                byte[] serialData = hotelSchema.Serialize(hotel2);
-
                 byte[] serializedData = hotelSchema.Serialize(hotel1, hotel2);
                 Hotel deserializedHotel = hotelSchema.Deserialize(serializedData, hotel1);
 
