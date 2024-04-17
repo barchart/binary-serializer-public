@@ -96,10 +96,15 @@ namespace Barchart.BinarySerializer.Schemas
                 IMemberData<T>? newMemberDataNestedClass = GenerateObjectMemberData<T>(nestedSchema, memberType, memberInfo);
                 return newMemberDataNestedClass;
             }
-            else if (IsMemberListType(memberType))
+            else if (IsMemberListOrRepeatedFieldType(memberType))
             {
-                IMemberData<T>? newMemberDataNestedClass = GenerateListMemberData<T>(memberType, memberInfo);
-                return newMemberDataNestedClass;
+                IMemberData<T>? newMemberDataList = GenerateListMemberData<T>(memberType, memberInfo);
+                return newMemberDataList;
+            }
+            else if (IsMemberEnumType(memberType))
+            {
+                IMemberData<T>? newMemberDataEnum = GenerateEnumMemberData<T>(memberType, memberInfo);
+                return newMemberDataEnum;
             }
             else
             {
@@ -109,15 +114,76 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
+        /// Gets a serializer for a Complex type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
+        public static ObjectBinarySerializer<T> GetObjectSerializer<T>(Schema<T> schema) where T: new()
+        {
+            return new ObjectBinarySerializer<T>(schema);
+        }
+
+        /// <summary>
         /// Gets a serializer for a list of elements of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
-        public static BinarySerializerList<T>? GetListSerializer<T>()
+        public static BinarySerializerIList<List<T>, T>? GetListSerializer<T>()
         {
             IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
             if (serializer == null) return null;
-            return new BinarySerializerList<T>(serializer);
+            return new BinarySerializerIList<List<T>, T>(serializer);
+        }
+
+        /// <summary>
+        /// Gets a serializer for a list of elements of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
+        public static BinarySerializerIList<List<T>, T>? GetListObjectSerializer<T>() where T: new()
+        {
+            Schema<T> schema = (Schema<T>)GenerateSchemaInterface(typeof(T));
+            IBinaryTypeSerializer<T>? serializer = GetObjectSerializer(schema);
+
+            if (serializer == null) return null;
+            return new BinarySerializerIList<List<T>, T>(serializer);
+        }
+
+
+        /// <summary>
+        /// Gets a serializer for a RepeatedField type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
+        public static BinarySerializerIList<RepeatedField<T>, T>? GetRepeatedFieldSerializer<T>()
+        {
+            IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
+            if (serializer == null) return null;
+            return new BinarySerializerIList<RepeatedField<T>, T>(serializer);
+        }
+
+        /// <summary>
+        /// Gets a serializer for a RepeatedField type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
+        public static BinarySerializerIList<RepeatedField<T>, T>? GetRepeatedFieldObjectSerializer<T>() where T: new()
+        {
+            Schema<T> schema = (Schema<T>)GenerateSchemaInterface(typeof(T));
+            IBinaryTypeSerializer<T>? serializer = GetObjectSerializer(schema);
+
+            if (serializer == null) return null;
+            return new BinarySerializerIList<RepeatedField<T>, T>(serializer);
+        }
+
+        /// <summary>
+        /// Gets a serializer for a Enum type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
+        public static BinarySerializerEnum<T>? GetEnumSerializer<T>() where T : struct, Enum
+        {
+            return new BinarySerializerEnum<T>((BinarySerializerInt32)GetSerializer<int>()!);
         }
 
         /// <summary>
@@ -130,10 +196,70 @@ namespace Barchart.BinarySerializer.Schemas
             if (IsMemberListType(typeof(V)))
             {
                 Type elementsType = typeof(V).GetGenericArguments()[0];
-                if (allSerializers.TryGetValue(elementsType, out object? listElementsSerializer))
+
+                if (IsMemberComplexType(elementsType))
                 {
                     var genericArgs = new Type[] { elementsType };
-                    var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListSerializer))!.MakeGenericMethod(genericArgs);
+                    var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListObjectSerializer))!.MakeGenericMethod(genericArgs);
+                    var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
+                    var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                    var func = lambdaExpr.Compile();
+                    var result = func();
+
+                    return result;
+                }
+                else
+                {
+                    if (allSerializers.TryGetValue(elementsType, out object? listElementsSerializer))
+                    {
+                        var genericArgs = new Type[] { elementsType };
+                        var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListObjectSerializer))!.MakeGenericMethod(genericArgs);
+                        var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
+                        var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                        var func = lambdaExpr.Compile();
+                        var result = func();
+
+                        return result;
+                    }
+                }
+            }
+            else if (IsMemberRepeatedFieldType(typeof(V)))
+            {
+                Type elementsType = typeof(V).GetGenericArguments()[0];
+
+                if (IsMemberComplexType(elementsType))
+                {
+                    var genericArgs = new Type[] { elementsType };
+                    var generateSerializerForRepeatedFieldElements = typeof(SchemaFactory).GetMethod(nameof(GetRepeatedFieldObjectSerializer))!.MakeGenericMethod(genericArgs);
+                    var generateSerializerCallExpr = Expression.Call(null, generateSerializerForRepeatedFieldElements);
+                    var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                    var func = lambdaExpr.Compile();
+                    var result = func();
+
+                    return result;
+                }
+                else
+                {
+                    if (allSerializers.TryGetValue(elementsType, out object? repeatedFieldElementsSerializer))
+                    {
+                        var genericArgs = new Type[] { elementsType };
+                        var generateSerializerForRepeatedFieldElements = typeof(SchemaFactory).GetMethod(nameof(GetRepeatedFieldSerializer))!.MakeGenericMethod(genericArgs);
+                        var generateSerializerCallExpr = Expression.Call(null, generateSerializerForRepeatedFieldElements);
+                        var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                        var func = lambdaExpr.Compile();
+                        var result = func();
+
+                        return result;
+                    }
+                }
+            }
+            else if (IsMemberEnumType(typeof(V)))
+            {
+                Type elementsType = typeof(int);
+                if (allSerializers.TryGetValue(elementsType, out object? repeatedFieldElementsSerializer))
+                {
+                    var genericArgs = new Type[] { elementsType };
+                    var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetEnumSerializer))!.MakeGenericMethod(genericArgs);
                     var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
                     var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
                     var func = lambdaExpr.Compile();
@@ -176,7 +302,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <typeparam name="V">The type of the member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The member data if successful; otherwise, <see langword="null"/>.</returns>
-        public static IMemberData<T>? GenerateData<T, V> (MemberInfo memberInfo) 
+        public static IMemberData<T>? GenerateData<T, V> (MemberInfo memberInfo)
         {
             bool include = GetIncludeAttributeValue(memberInfo);
             IBinaryTypeSerializer<V>? serializer = GetSerializer<V>();
@@ -248,7 +374,7 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 return null;
             }
-
+            
             IBinaryTypeSerializer<V>? serializer = GetSerializer<V>();
 
             if(serializer == null)
@@ -263,8 +389,40 @@ namespace Barchart.BinarySerializer.Schemas
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
                 GenerateGetter<T, V>(memberInfo),
-                GenerateSetter<T, V>(memberInfo),
+                GenerateRepeatedFieldSetter<T, V>(memberInfo),
                 (IBinaryTypeObjectSerializer<V>)serializer
+            );
+
+            return newMemberData;
+        }
+
+        /// <summary>
+        /// Generates object member data for the specified member.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="V">The type of the object member.</typeparam>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The object member data if successful; otherwise, <see langword="null"/>.</returns>
+        public static IMemberData<T>? GenerateEnumData<T, V>(MemberInfo memberInfo) where V : Enum
+        {
+            bool include = GetIncludeAttributeValue(memberInfo);
+
+            if (!include)
+            {
+                return null;
+            }
+
+            IBinaryTypeSerializer<V>? serializer = new BinarySerializerEnum<V>((BinarySerializerInt32)GetSerializer<int>()!);
+
+            MemberData<T, V> newMemberData = new(
+                typeof(V),
+                memberInfo.Name,
+                include,
+                GetKeyAttributeValue(memberInfo),
+                memberInfo,
+                GenerateGetter<T, V>(memberInfo),
+                GenerateSetter<T, V>(memberInfo),
+                serializer
             );
 
             return newMemberData;
@@ -333,6 +491,25 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
+        /// Generates object member data interface for the specified member type and information.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The object member data interface for the specified member.</returns>
+        public static IMemberData<T>? GenerateEnumMemberData<T>(Type memberType, MemberInfo memberInfo)
+        {
+            var memberInfoExpr = Expression.Constant(memberInfo);
+            var genericArgs = new Type[] { typeof(T), memberType };
+            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateEnumData))!.MakeGenericMethod(genericArgs);
+            var generateDataCallExpr = Expression.Call(null, generateDataMethod, memberInfoExpr);
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>?>>(generateDataCallExpr);
+            var func = lambdaExpr.Compile();
+            var memberData = func();
+
+            return memberData;
+        }
+
+        /// <summary>
         /// Generates a setter function for the specified member.
         /// </summary>
         /// <typeparam name="T">The type of object.</typeparam>
@@ -350,6 +527,30 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
+        /// Generates a setter function for the repeated field member.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="V">The type of the member.</typeparam>
+        /// <param name="memberInfo">The member information.</param>
+        /// <returns>The setter function for the specified member.</returns>
+        public static Action<T, V> GenerateRepeatedFieldSetter<T, V>(MemberInfo memberInfo)
+        {
+            var instance = Expression.Parameter(typeof(T), "instance");
+            var value = Expression.Parameter(typeof(V), "value");
+
+            var member = Expression.MakeMemberAccess(instance, memberInfo);
+            var addRangeMethod = typeof(V).GetMethod("AddRange");
+            var clearMethod = typeof(V).GetMethod("Clear");
+
+
+            var clearCall = Expression.Call(member, clearMethod);
+            var addRangeCall = Expression.Call(member, addRangeMethod, value);
+            var block = Expression.Block(clearCall, addRangeCall);
+
+            return Expression.Lambda<Action<T, V>>(block, instance, value).Compile();
+        }
+
+        /// <summary>
         /// Generates a getter function for the specified member.
         /// </summary>
         /// <typeparam name="T">The type of object.</typeparam>
@@ -364,9 +565,19 @@ namespace Barchart.BinarySerializer.Schemas
             return Expression.Lambda<Func<T, V>>(member, instance).Compile();
         }
 
+        private static Type GetMemberType(MemberInfo memberInfo)
+        {
+            return memberInfo.MemberType switch
+            {
+                MemberTypes.Field => ((FieldInfo)memberInfo).FieldType,
+                MemberTypes.Property => ((PropertyInfo)memberInfo).PropertyType,
+                _ => throw new ArgumentException("Unknown member type: " + memberInfo.MemberType),
+            };
+        }
+
         /// <summary>
         /// Determines whether the specified type is a complex type, i.e., not a value type, 
-        /// string, ByteString or List.
+        /// string, ByteString, Enum or List.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a complex type; otherwise, false.</returns>
@@ -375,9 +586,20 @@ namespace Barchart.BinarySerializer.Schemas
             var isNotValueType = !type.IsValueType;
             var isNotStringType = type != typeof(string);
             var isNotByteStringType = type != typeof(ByteString);
-            var isListGenericType = type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(RepeatedField<>) || type.GetGenericTypeDefinition() == typeof(List<>));
+            var isNotEnumType = !type.IsEnum;
+            var isListOrRepeatedFieldGenericType = type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(RepeatedField<>) || type.GetGenericTypeDefinition() == typeof(List<>));
 
-            return isNotValueType && isNotStringType && isNotByteStringType && !isListGenericType;
+            return isNotValueType && isNotEnumType && isNotStringType && isNotByteStringType && !isListOrRepeatedFieldGenericType;
+        }
+
+        /// <summary>
+        /// Determines whether the specified type is a List or RepeatedField type, 
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <returns>True if the type is a list type; otherwise, false./returns>
+        private static bool IsMemberListOrRepeatedFieldType(Type type)
+        {
+            return IsMemberListType(type) || IsMemberRepeatedFieldType(type);
         }
 
         /// <summary>
@@ -387,7 +609,27 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>True if the type is a list type; otherwise, false./returns>
         private static bool IsMemberListType(Type type)
         {
-            return type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(RepeatedField<>) || type.GetGenericTypeDefinition() == typeof(List<>));
+            return type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(List<>));
+        }
+
+        /// <summary>
+        /// Determines whether the specified type is a Enum type, 
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <returns>True if the type is a list type; otherwise, false./returns>
+        private static bool IsMemberEnumType(Type type)
+        {
+            return type.IsEnum;
+        }
+
+        /// <summary>
+        /// Determines whether the specified type is a RepeatedField type, 
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <returns>True if the type is a list type; otherwise, false./returns>
+        private static bool IsMemberRepeatedFieldType(Type type)
+        {
+            return type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(RepeatedField<>));
         }
 
         private static MemberInfo[] GetAllMembersForType(Type type)
