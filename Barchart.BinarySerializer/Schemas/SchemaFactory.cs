@@ -213,7 +213,7 @@ namespace Barchart.BinarySerializer.Schemas
                     if (allSerializers.TryGetValue(elementsType, out object? listElementsSerializer))
                     {
                         var genericArgs = new Type[] { elementsType };
-                        var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListObjectSerializer))!.MakeGenericMethod(genericArgs);
+                        var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListSerializer))!.MakeGenericMethod(genericArgs);
                         var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
                         var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
                         var func = lambdaExpr.Compile();
