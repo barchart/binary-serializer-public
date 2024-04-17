@@ -1,4 +1,5 @@
 ﻿using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Utility;
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -15,12 +16,12 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, List<T>? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
-            WriteHeader(dataBuffer, header);
+            BufferHelper.WriteHeader(dataBuffer, header);
 
             if (value != null)
             {
                 int length = value.Count;
-                WriteLength(dataBuffer, length);
+                BufferHelper.WriteLength(dataBuffer, length);
 
                 foreach (var item in value)
                 {
@@ -32,18 +33,18 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, List<T>? oldValue, List<T>? newValue)
         {
             Header header = new() { IsMissing = false, IsNull = newValue == null };
-            WriteHeader(dataBuffer, header);
+            BufferHelper.WriteHeader(dataBuffer, header);
 
             if (newValue != null)
             {
                 int length = newValue.Count;
-                WriteLength(dataBuffer, length);
+                BufferHelper.WriteLength(dataBuffer, length);
 
                 for (int i = 0; i < newValue.Count; i++)
                 {
                     if (oldValue != null && i < oldValue.Count && Equals(oldValue[i], newValue[i]))
                     {
-                        EncodeMissingFlag(dataBuffer);
+                        BufferHelper.EncodeMissingFlag(dataBuffer);
                     }
                     else
                     {
@@ -55,14 +56,14 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<List<T>?> Decode(DataBuffer dataBuffer, List<T>? existing)
         {
-            Header header = ReadHeader(dataBuffer);
+            Header header = BufferHelper.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
                 return new HeaderWithValue<List<T>?>(header, default);
             }
 
-            int length = ReadLength(dataBuffer);
+            int length = BufferHelper.ReadLength(dataBuffer);
             List<T> list = ReadList(dataBuffer, length, existing);
 
             return new HeaderWithValue<List<T>?>(header, list);
@@ -70,14 +71,14 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<List<T>?> Decode(DataBuffer dataBuffer)
         {
-            Header header = ReadHeader(dataBuffer);
+            Header header = BufferHelper.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
                 return new HeaderWithValue<List<T>?>(header, default);
             }
 
-            int length = ReadLength(dataBuffer);
+            int length = BufferHelper.ReadLength(dataBuffer);
             List<T> list = ReadList(dataBuffer, length, null);
 
             return new HeaderWithValue<List<T>?>(header, list);
@@ -103,55 +104,6 @@ namespace Barchart.BinarySerializer.Types
             }
 
             return length;
-        }
-
-        private static void EncodeMissingFlag(DataBuffer dataBuffer)
-        {
-            dataBuffer.WriteBit(1);
-        }
-
-        private static Header ReadHeader(DataBuffer dataBuffer)
-        {
-            Header header = new() { IsMissing = dataBuffer.ReadBit() == 1 };
-
-            if (!header.IsMissing)
-            {
-                header.IsNull = dataBuffer.ReadBit() == 1;
-            }
-
-            return header;
-        }
-
-        private static void WriteHeader(DataBuffer dataBuffer, Header header)
-        {
-            dataBuffer.WriteBit((byte)(header.IsMissing ? 1 : 0));
-
-            if (!header.IsMissing)
-            {
-                dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
-            }
-        }
-
-        private static int ReadLength(DataBuffer dataBuffer)
-        {
-            byte[] lengthBytes = new byte[sizeof(int)];
-
-            for (int i = lengthBytes.Length - 1; i >= 0; i--)
-            {
-                lengthBytes[i] = dataBuffer.ReadByte();
-            }
-
-            return BitConverter.ToInt32(lengthBytes, 0);
-        }
-
-        private static void WriteLength(DataBuffer dataBuffer, int length)
-        {
-            byte[] lengthBytes = BitConverter.GetBytes(length);
-
-            for (int i = lengthBytes.Length - 1; i >= 0; i--)
-            {
-                dataBuffer.WriteByte(lengthBytes[i]);
-            }
         }
 
         private List<T> ReadList(DataBuffer dataBuffer, int length, List<T>? existing = null)
