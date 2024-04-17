@@ -1,4 +1,5 @@
 ﻿using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Utility;
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -17,7 +18,7 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<T> Decode(DataBuffer dataBuffer)
         {
-            Header header = ObjectBinarySerializer<T>.ReadHeader(dataBuffer);
+            Header header = BufferHelper.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
@@ -35,7 +36,7 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<T> Decode(DataBuffer dataBuffer, T existing)
         {
-            Header header = ObjectBinarySerializer<T>.ReadHeader(dataBuffer);
+            Header header = BufferHelper.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
@@ -53,7 +54,8 @@ namespace Barchart.BinarySerializer.Types
 
         public void Encode(DataBuffer dataBuffer, T? value)
         {
-            ObjectBinarySerializer<T>.WriteHeader(dataBuffer, value);
+            Header header = new() { IsMissing = false, IsNull = value == null };
+            BufferHelper.WriteHeader(dataBuffer, header);
 
             if (value != null)
             {
@@ -63,7 +65,9 @@ namespace Barchart.BinarySerializer.Types
 
         public void Encode(DataBuffer dataBuffer, T? oldObject, T? newObject)
         {
-            ObjectBinarySerializer<T>.WriteHeader(dataBuffer, newObject);
+            Header header = new() { IsMissing = false, IsNull = newObject == null };
+            BufferHelper.WriteHeader(dataBuffer, header);
+
             Schema.Serialize(oldObject!, newObject!, dataBuffer);
         }
 
@@ -80,32 +84,6 @@ namespace Barchart.BinarySerializer.Types
         public int GetLengthInBits(T? oldValue, T? newValue)
         {
             return ((ISchema)Schema).GetLengthInBits(oldValue, newValue);
-        }
-
-        private static Header ReadHeader(DataBuffer dataBuffer)
-        {
-            Header header = new() { IsMissing = dataBuffer.ReadBit() == 1 };
-
-            if (!header.IsMissing)
-            {
-                header.IsNull = dataBuffer.ReadBit() == 1;
-            }
-
-            return header;
-        }
-
-        private static Header WriteHeader(DataBuffer dataBuffer, T? value)
-        {
-            Header header = new()
-            {
-                IsMissing = false,
-                IsNull = value == null
-            };
-
-            dataBuffer.WriteBit(0);
-            dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
-
-            return header;
         }
     }
 }
