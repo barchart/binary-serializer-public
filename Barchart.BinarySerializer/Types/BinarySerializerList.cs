@@ -15,12 +15,12 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, List<T>? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
-            BinarySerializerList<T>.WriteHeader(dataBuffer, header);
+            WriteHeader(dataBuffer, header);
 
             if (value != null)
             {
                 int length = value.Count;
-                BinarySerializerList<T>.WriteLength(dataBuffer, length);
+                WriteLength(dataBuffer, length);
 
                 foreach (var item in value)
                 {
@@ -32,18 +32,18 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, List<T>? oldValue, List<T>? newValue)
         {
             Header header = new() { IsMissing = false, IsNull = newValue == null };
-            BinarySerializerList<T>.WriteHeader(dataBuffer, header);
+            WriteHeader(dataBuffer, header);
 
             if (newValue != null)
             {
                 int length = newValue.Count;
-                BinarySerializerList<T>.WriteLength(dataBuffer, length);
+                WriteLength(dataBuffer, length);
 
                 for (int i = 0; i < newValue.Count; i++)
                 {
                     if (oldValue != null && i < oldValue.Count && Equals(oldValue[i], newValue[i]))
                     {
-                        BinarySerializerList<T>.EncodeMissingFlag(dataBuffer);
+                        EncodeMissingFlag(dataBuffer);
                     }
                     else
                     {
@@ -55,14 +55,14 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<List<T>?> Decode(DataBuffer dataBuffer, List<T>? existing)
         {
-            Header header = BinarySerializerList<T>.ReadHeader(dataBuffer);
+            Header header = ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
                 return new HeaderWithValue<List<T>?>(header, default);
             }
 
-            int length = BinarySerializerList<T>.ReadLength(dataBuffer);
+            int length = ReadLength(dataBuffer);
             List<T> list = ReadList(dataBuffer, length, existing);
 
             return new HeaderWithValue<List<T>?>(header, list);
@@ -70,14 +70,14 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<List<T>?> Decode(DataBuffer dataBuffer)
         {
-            Header header = BinarySerializerList<T>.ReadHeader(dataBuffer);
+            Header header = ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
                 return new HeaderWithValue<List<T>?>(header, default);
             }
 
-            int length = BinarySerializerList<T>.ReadLength(dataBuffer);
+            int length = ReadLength(dataBuffer);
             List<T> list = ReadList(dataBuffer, length, null);
 
             return new HeaderWithValue<List<T>?>(header, list);
