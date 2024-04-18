@@ -539,8 +539,8 @@ namespace Barchart.BinarySerializer.Schemas
             var value = Expression.Parameter(typeof(V), "value");
 
             var member = Expression.MakeMemberAccess(instance, memberInfo);
-            var addRangeMethod = typeof(V).GetMethod("AddRange");
-            var clearMethod = typeof(V).GetMethod("Clear");
+            var addRangeMethod = typeof(V).GetMethod("AddRange")!;
+            var clearMethod = typeof(V).GetMethod("Clear")!;
 
 
             var clearCall = Expression.Call(member, clearMethod);
