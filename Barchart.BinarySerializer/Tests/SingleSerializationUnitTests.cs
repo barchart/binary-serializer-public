@@ -172,13 +172,13 @@ namespace Barchart.BinarySerializer.Tests
             Assert.Equal(garage, deserializedGarage);
         }
 
-        class A
+        class TestClass
         {
-            public MyEnum a;
+            public TestEnum enumField;
             public RepeatedField<int> repeatedField = new() { 2 , 3 };
         }
 
-        enum MyEnum
+        enum TestEnum
         {
             Option1,
             Option2,
@@ -192,22 +192,22 @@ namespace Barchart.BinarySerializer.Tests
             {
                 Stopwatch stopwatch = new();
 
-                A hotel = new()
+                TestClass testClass = new()
                 {
-                    a = MyEnum.Option1
+                    enumField = TestEnum.Option1
                 };
 
-                Schema<A> hotelSchema = SchemaFactory.GetSchema<A>();
+                Schema<TestClass> testClassSchema = SchemaFactory.GetSchema<TestClass>();
                 stopwatch.Start();
 
-                byte[] serializedData = hotelSchema.Serialize(hotel);
-                A deserializedHotel = hotelSchema.Deserialize(serializedData);
+                byte[] serializedData = testClassSchema.Serialize(testClass);
+                TestClass deserializedTestClass = testClassSchema.Deserialize(serializedData);
 
                 stopwatch.Stop();
                 _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
-                Assert.Equal(hotel.a, deserializedHotel.a);
-                Assert.Equal(hotel.repeatedField, deserializedHotel.repeatedField);
+                Assert.Equal(testClass.enumField, deserializedTestClass.enumField);
+                Assert.Equal(testClass.repeatedField, deserializedTestClass.repeatedField);
 
             }
             catch (Exception ex)
