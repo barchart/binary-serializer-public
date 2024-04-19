@@ -142,18 +142,6 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
-        public static BinarySerializerIList<List<T>, T>? GetListSerializer<T>()
-        {
-            IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
-            if (serializer == null) return null;
-            return new BinarySerializerIList<List<T>, T>(serializer);
-        }
-
-        /// <summary>
-        /// Gets a serializer for a list of elements of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of elements in the list.</typeparam>
-        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
         public static BinarySerializerIList<List<T>, T>? GetListObjectSerializer<T>() where T: new()
         {
             Schema<T> schema = (Schema<T>)GenerateSchemaInterface(typeof(T));
@@ -163,17 +151,16 @@ namespace Barchart.BinarySerializer.Schemas
             return new BinarySerializerIList<List<T>, T>(serializer);
         }
 
-
         /// <summary>
-        /// Gets a serializer for a RepeatedField type <typeparamref name="T"/>.
+        /// Gets a serializer for a list of elements of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
-        public static BinarySerializerIList<RepeatedField<T>, T>? GetRepeatedFieldSerializer<T>()
+        public static BinarySerializerIList<TList, T>? GetListSerializer<T, TList>() where TList : IList<T>, new()
         {
             IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
             if (serializer == null) return null;
-            return new BinarySerializerIList<RepeatedField<T>, T>(serializer);
+            return new BinarySerializerIList<TList, T>(serializer);
         }
 
         /// <summary>
@@ -249,36 +236,6 @@ namespace Barchart.BinarySerializer.Schemas
                         var genericArgs = new Type[] { elementsType };
                         var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListSerializer))!.MakeGenericMethod(genericArgs);
                         var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
-                        var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
-                        var func = lambdaExpr.Compile();
-                        var result = func();
-
-                        return result;
-                    }
-                }
-            }
-            else if (IsMemberRepeatedFieldType(typeof(V)))
-            {
-                Type elementsType = typeof(V).GetGenericArguments()[0];
-
-                if (IsMemberComplexType(elementsType))
-                {
-                    var genericArgs = new Type[] { elementsType };
-                    var generateSerializerForRepeatedFieldElements = typeof(SchemaFactory).GetMethod(nameof(GetRepeatedFieldObjectSerializer))!.MakeGenericMethod(genericArgs);
-                    var generateSerializerCallExpr = Expression.Call(null, generateSerializerForRepeatedFieldElements);
-                    var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
-                    var func = lambdaExpr.Compile();
-                    var result = func();
-
-                    return result;
-                }
-                else
-                {
-                    if (allSerializers.TryGetValue(elementsType, out object? repeatedFieldElementsSerializer))
-                    {
-                        var genericArgs = new Type[] { elementsType };
-                        var generateSerializerForRepeatedFieldElements = typeof(SchemaFactory).GetMethod(nameof(GetRepeatedFieldSerializer))!.MakeGenericMethod(genericArgs);
-                        var generateSerializerCallExpr = Expression.Call(null, generateSerializerForRepeatedFieldElements);
                         var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
                         var func = lambdaExpr.Compile();
                         var result = func();

@@ -1,50 +1,17 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
-    public static class FloatHelper
+    public class BinarySerializerFloat : BinarySerializerNumeric<float>
     {
-        public static int GetSizeOfFloat()
-        {
-            return sizeof(float);
-        }
+        public override int Size => sizeof(float);
 
-        public static byte[] ConvertFloatToByteArray(float value)
+        protected override byte[] ConvertToByteArray(float value)
         {
             return BitConverter.GetBytes(value);
         }
 
-        public static float ConvertBytesToFloat(byte[] bytes)
+        protected override float DecodeBytes(byte[] bytes)
         {
             return BitConverter.ToSingle(bytes);
-        }
-    }
-
-    public class BinarySerializerFloat : BinarySerializerNumeric<float>
-    {
-        public override int Size => FloatHelper.GetSizeOfFloat();
-
-        protected override byte[] ConvertToByteArray(float value)
-        {
-            return FloatHelper.ConvertFloatToByteArray(value);
-        }
-
-        protected override float DecodeBytes(byte[] bytes)
-        {
-            return FloatHelper.ConvertBytesToFloat(bytes);
-        }
-    }
-
-    public class BinarySerializerFloatNullable : BinarySerializerNullableNumeric<float>
-    {
-        public override int Size => FloatHelper.GetSizeOfFloat();
-
-        protected override byte[] ConvertToByteArray(float value)
-        {
-            return FloatHelper.ConvertFloatToByteArray(value);
-        }
-
-        protected override float DecodeBytes(byte[] bytes)
-        {
-            return FloatHelper.ConvertBytesToFloat(bytes);
         }
     }
 }
