@@ -21,38 +21,57 @@ namespace Barchart.BinarySerializer.Schemas
 
         private static void InitializeSerializers()
         {
-            allSerializers.Add(typeof(String), new BinarySerializerString());
-            allSerializers.Add(typeof(Int32), new BinarySerializerInt32());
-            allSerializers.Add(typeof(Int32?), new BinarySerializerInt32Nullable());
-            allSerializers.Add(typeof(Int16), new BinarySerializerInt16());
-            allSerializers.Add(typeof(Int16?), new BinarySerializerInt16Nullable());
-            allSerializers.Add(typeof(Char), new BinarySerializerChar16());
-            allSerializers.Add(typeof(Char?), new BinarySerializerChar16Nullable());
-            allSerializers.Add(typeof(SByte), new BinarySerializerSInt8());
-            allSerializers.Add(typeof(SByte?), new BinarySerializerSInt8Nullable());
-            allSerializers.Add(typeof(Byte), new BinarySerializerInt8());
-            allSerializers.Add(typeof(Byte?), new BinarySerializerInt8Nullable());
-            allSerializers.Add(typeof(Boolean), new BinarySerializerBool8());
-            allSerializers.Add(typeof(Boolean?), new BinarySerializerBool8Nullable());
-            allSerializers.Add(typeof(Int64), new BinarySerializerInt64());
-            allSerializers.Add(typeof(Int64?), new BinarySerializerInt64Nullable());
-            allSerializers.Add(typeof(UInt16), new BinarySerializerUInt16());
-            allSerializers.Add(typeof(UInt16?), new BinarySerializerUInt16Nullable());
-            allSerializers.Add(typeof(UInt32), new BinarySerializerUInt32());
-            allSerializers.Add(typeof(UInt32?), new BinarySerializerUInt32Nullable());
-            allSerializers.Add(typeof(UInt64), new BinarySerializerUInt64());
-            allSerializers.Add(typeof(UInt64?), new BinarySerializerUInt64Nullable());
-            allSerializers.Add(typeof(Single), new BinarySerializerFloat());
-            allSerializers.Add(typeof(Single?), new BinarySerializerFloatNullable());
-            allSerializers.Add(typeof(Double), new BinarySerializerDouble());
-            allSerializers.Add(typeof(Double?), new BinarySerializerDoubleNullable());
-            allSerializers.Add(typeof(Decimal), new BinarySerializerDecimal());
-            allSerializers.Add(typeof(Decimal?), new BinarySerializerDecimalNullable());
-            allSerializers.Add(typeof(DateTime), new BinarySerializerDateTime());
-            allSerializers.Add(typeof(DateTime?), new BinarySerializerDateTimeNullable());
-            allSerializers.Add(typeof(DateOnly), new BinarySerializerDateOnly());
-            allSerializers.Add(typeof(DateOnly?), new BinarySerializerDateOnlyNullable());
-            allSerializers.Add(typeof(ByteString), new BinarySerializerByteString());
+            BinarySerializerString stringSerializer = new();
+            BinarySerializerInt32 intSerializer = new();
+            BinarySerializerInt16 shortSerializer = new();
+            BinarySerializerChar16 charSerializer = new();
+            BinarySerializerSInt8 sbyteSerializer = new();
+            BinarySerializerInt8 byteSerializer = new();
+            BinarySerializerBool8 boolSerializer = new();
+            BinarySerializerInt64 longSerializer = new();
+            BinarySerializerUInt16 ushortSerializer = new();
+            BinarySerializerUInt32 uintSerializer = new();
+            BinarySerializerUInt64 ulongSerializer = new();
+            BinarySerializerFloat floatSerializer = new();
+            BinarySerializerDouble doubleSerializer = new();
+            BinarySerializerDecimal decimalSerializer = new();
+            BinarySerializerDateTime dateTimeSerializer = new();
+            BinarySerializerDateOnly dateOnlySerializer = new();
+            BinarySerializerByteString byteStringSerializer = new();
+
+            allSerializers.Add(typeof(string), stringSerializer);
+            allSerializers.Add(typeof(int), intSerializer);
+            allSerializers.Add(typeof(short), shortSerializer);
+            allSerializers.Add(typeof(char), charSerializer);
+            allSerializers.Add(typeof(sbyte), sbyteSerializer);
+            allSerializers.Add(typeof(byte), byteSerializer);
+            allSerializers.Add(typeof(bool), boolSerializer);
+            allSerializers.Add(typeof(long), longSerializer);
+            allSerializers.Add(typeof(ushort), ushortSerializer);
+            allSerializers.Add(typeof(uint), uintSerializer);
+            allSerializers.Add(typeof(ulong), ulongSerializer);
+            allSerializers.Add(typeof(float), floatSerializer);
+            allSerializers.Add(typeof(double), doubleSerializer);
+            allSerializers.Add(typeof(decimal), decimalSerializer);
+            allSerializers.Add(typeof(DateTime), dateTimeSerializer);
+            allSerializers.Add(typeof(DateOnly), dateOnlySerializer);
+            allSerializers.Add(typeof(ByteString), byteStringSerializer);
+
+            allSerializers.Add(typeof(int?), new BinarySerializerNullable<int>(intSerializer));
+            allSerializers.Add(typeof(short?), new BinarySerializerNullable<short>(shortSerializer));
+            allSerializers.Add(typeof(char?), new BinarySerializerNullable<char>(charSerializer));
+            allSerializers.Add(typeof(sbyte?), new BinarySerializerNullable<sbyte>(sbyteSerializer));
+            allSerializers.Add(typeof(byte?), new BinarySerializerNullable<byte>(byteSerializer));
+            allSerializers.Add(typeof(bool?), new BinarySerializerNullable<bool>(boolSerializer));
+            allSerializers.Add(typeof(long?), new BinarySerializerNullable<long>(longSerializer));
+            allSerializers.Add(typeof(ushort?), new BinarySerializerNullable<ushort>(ushortSerializer));
+            allSerializers.Add(typeof(uint?), new BinarySerializerNullable<uint>(uintSerializer));
+            allSerializers.Add(typeof(ulong?), new BinarySerializerNullable<ulong>(ulongSerializer));
+            allSerializers.Add(typeof(float?), new BinarySerializerNullable<float>(floatSerializer));
+            allSerializers.Add(typeof(double?), new BinarySerializerNullable<double>(doubleSerializer));
+            allSerializers.Add(typeof(decimal?), new BinarySerializerNullable<decimal>(decimalSerializer));
+            allSerializers.Add(typeof(DateTime?), new BinarySerializerNullable<DateTime>(dateTimeSerializer));
+            allSerializers.Add(typeof(DateOnly?), new BinarySerializerNullable<DateOnly>(dateOnlySerializer));
         }
 
         /// <summary>
@@ -100,11 +119,6 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 IMemberData<T>? newMemberDataList = GenerateListMemberData<T>(memberType, memberInfo);
                 return newMemberDataList;
-            }
-            else if (IsMemberEnumType(memberType))
-            {
-                IMemberData<T>? newMemberDataEnum = GenerateEnumMemberData<T>(memberType, memberInfo);
-                return newMemberDataEnum;
             }
             else
             {
@@ -181,10 +195,30 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
-        public static BinarySerializerEnum<T>? GetEnumSerializer<T>() where T : struct, Enum
+        public static BinarySerializerEnum<T> GetEnumSerializer<T>() where T : struct, Enum
         {
             return new BinarySerializerEnum<T>((BinarySerializerInt32)GetSerializer<int>()!);
         }
+
+        /// <summary>
+        /// Gets a serializer for a Enum type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
+        public static BinarySerializerNullable<T>? GetNullableSerializer<T>() where T : struct
+        {
+            if (allSerializers.TryGetValue(typeof(T?), out object? serializer))
+            {
+                return (BinarySerializerNullable<T>) serializer;
+            }
+
+            IBinaryTypeSerializer<T>? newSerializer = GetSerializer<T>();
+            if (newSerializer == null) return null;
+            allSerializers.Add(typeof(T?), newSerializer);
+
+            return new BinarySerializerNullable<T>(newSerializer);
+        }
+
 
         /// <summary>
         /// Gets a serializer for the specified type <typeparamref name="V"/>.
@@ -255,12 +289,28 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else if (IsMemberEnumType(typeof(V)))
             {
-                Type elementsType = typeof(int);
-                if (allSerializers.TryGetValue(elementsType, out object? repeatedFieldElementsSerializer))
+                var genericArgs = new Type[] { typeof(V) };
+                var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetEnumSerializer))!.MakeGenericMethod(genericArgs);
+                var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
+                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                var func = lambdaExpr.Compile();
+                var result = func();
+
+                return result;
+            }
+            else if (IsNullableNumericType(typeof(V)))
+            {
+                Type? underlyingType = Nullable.GetUnderlyingType(typeof(V));
+
+                if (underlyingType == null) return null;
+
+                if (allSerializers.TryGetValue(underlyingType, out object? nullableFieldElementsSerializer))
                 {
-                    var genericArgs = new Type[] { elementsType };
-                    var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetEnumSerializer))!.MakeGenericMethod(genericArgs);
-                    var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
+                    //var arguments = Expression.Constant(nullableFieldElementsSerializer);
+
+                    var genericArgs = new Type[] { underlyingType };
+                    var generateNullableSerializer = typeof(SchemaFactory).GetMethod(nameof(GetNullableSerializer))!.MakeGenericMethod(genericArgs);
+                    var generateSerializerCallExpr = Expression.Call(null, generateNullableSerializer);
                     var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
                     var func = lambdaExpr.Compile();
                     var result = func();
@@ -272,7 +322,7 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 if (allSerializers.TryGetValue(typeof(V), out object? serializer))
                 {
-                    return (IBinaryTypeSerializer<V>?) serializer;
+                    return (IBinaryTypeSerializer<V>?)serializer;
                 }
             }
 
@@ -305,9 +355,15 @@ namespace Barchart.BinarySerializer.Schemas
         public static IMemberData<T>? GenerateData<T, V> (MemberInfo memberInfo)
         {
             bool include = GetIncludeAttributeValue(memberInfo);
+
+            if (!include)
+            {
+                return null;
+            }
+
             IBinaryTypeSerializer<V>? serializer = GetSerializer<V>();
 
-            if (!include || serializer == null)
+            if (serializer == null)
             {
                 return null;
             }
@@ -320,7 +376,7 @@ namespace Barchart.BinarySerializer.Schemas
                 memberInfo,
                 GenerateGetter<T, V>(memberInfo),
                 GenerateSetter<T, V>(memberInfo),
-                serializer
+               serializer
             );
 
             return newMemberData;
@@ -344,7 +400,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             ObjectBinarySerializer<V> serializer = new((Schema<V>)nestedSchema);
-            
+
             ObjectMemberData<T, V> newMemberData = new(
                 typeof(V),
                 memberInfo.Name,
@@ -391,38 +447,6 @@ namespace Barchart.BinarySerializer.Schemas
                 GenerateGetter<T, V>(memberInfo),
                 GenerateRepeatedFieldSetter<T, V>(memberInfo),
                 (IBinaryTypeObjectSerializer<V>)serializer
-            );
-
-            return newMemberData;
-        }
-
-        /// <summary>
-        /// Generates object member data for the specified member.
-        /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
-        /// <typeparam name="V">The type of the object member.</typeparam>
-        /// <param name="memberInfo">The member information.</param>
-        /// <returns>The object member data if successful; otherwise, <see langword="null"/>.</returns>
-        public static IMemberData<T>? GenerateEnumData<T, V>(MemberInfo memberInfo) where V : Enum
-        {
-            bool include = GetIncludeAttributeValue(memberInfo);
-
-            if (!include)
-            {
-                return null;
-            }
-
-            IBinaryTypeSerializer<V>? serializer = new BinarySerializerEnum<V>((BinarySerializerInt32)GetSerializer<int>()!);
-
-            MemberData<T, V> newMemberData = new(
-                typeof(V),
-                memberInfo.Name,
-                include,
-                GetKeyAttributeValue(memberInfo),
-                memberInfo,
-                GenerateGetter<T, V>(memberInfo),
-                GenerateSetter<T, V>(memberInfo),
-                serializer
             );
 
             return newMemberData;
@@ -491,25 +515,6 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Generates object member data interface for the specified member type and information.
-        /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
-        /// <param name="memberInfo">The member information.</param>
-        /// <returns>The object member data interface for the specified member.</returns>
-        public static IMemberData<T>? GenerateEnumMemberData<T>(Type memberType, MemberInfo memberInfo)
-        {
-            var memberInfoExpr = Expression.Constant(memberInfo);
-            var genericArgs = new Type[] { typeof(T), memberType };
-            var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateEnumData))!.MakeGenericMethod(genericArgs);
-            var generateDataCallExpr = Expression.Call(null, generateDataMethod, memberInfoExpr);
-            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>?>>(generateDataCallExpr);
-            var func = lambdaExpr.Compile();
-            var memberData = func();
-
-            return memberData;
-        }
-
-        /// <summary>
         /// Generates a setter function for the specified member.
         /// </summary>
         /// <typeparam name="T">The type of object.</typeparam>
@@ -541,7 +546,6 @@ namespace Barchart.BinarySerializer.Schemas
             var member = Expression.MakeMemberAccess(instance, memberInfo);
             var addRangeMethod = typeof(V).GetMethod("AddRange")!;
             var clearMethod = typeof(V).GetMethod("Clear")!;
-
 
             var clearCall = Expression.Call(member, clearMethod);
             var addRangeCall = Expression.Call(member, addRangeMethod, value);
@@ -620,6 +624,11 @@ namespace Barchart.BinarySerializer.Schemas
         private static bool IsMemberEnumType(Type type)
         {
             return type.IsEnum;
+        }
+
+        private static bool IsNullableNumericType(Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         /// <summary>
