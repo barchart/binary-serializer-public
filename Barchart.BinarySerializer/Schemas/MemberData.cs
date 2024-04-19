@@ -57,15 +57,15 @@ namespace Barchart.BinarySerializer.Schemas
 
         public virtual void Decode(T existing, DataBuffer buffer) {
 
-            HeaderWithValue<V> header;
-            header = BinarySerializer.Decode(buffer);
+            HeaderWithValue<V> headerWithValue;
+            headerWithValue = BinarySerializer.Decode(buffer);
            
-            if (header.Header.IsMissing)
+            if (headerWithValue.Header.IsMissing)
             {
                 return;
             }
 
-            SetDelegate(existing, header.Value!);
+            SetDelegate(existing, headerWithValue.Value!);
         }
 
         public int GetLengthInBits(T schemaObject)

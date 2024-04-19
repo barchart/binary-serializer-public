@@ -33,25 +33,25 @@ namespace Barchart.BinarySerializer.Schemas
 
         public override void Decode(T existing, DataBuffer buffer)
         {
-            HeaderWithValue<V> header;
+            HeaderWithValue<V> headerWithValue;
 
             V currentObject = GetDelegate(existing);
 
             if (currentObject == null)
             {
-                header = ((IBinaryTypeObjectSerializer<V>)BinarySerializer).Decode(buffer);
+                headerWithValue = ((IBinaryTypeObjectSerializer<V>)BinarySerializer).Decode(buffer);
             }
             else
             {
-                header = ((IBinaryTypeObjectSerializer<V>)BinarySerializer).Decode(buffer, currentObject);
+                headerWithValue = ((IBinaryTypeObjectSerializer<V>)BinarySerializer).Decode(buffer, currentObject);
             }
 
-            if (header.Header.IsMissing)
+            if (headerWithValue.Header.IsMissing)
             {
                 return;
             }
 
-            SetDelegate(existing, header.Value!);
+            SetDelegate(existing, headerWithValue.Value!);
         }
 
         public override int GetLengthInBits(T oldObject, T newObject)
