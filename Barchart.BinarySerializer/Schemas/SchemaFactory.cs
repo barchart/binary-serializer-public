@@ -219,17 +219,14 @@ namespace Barchart.BinarySerializer.Schemas
                 }
                 else
                 {
-                    if (allSerializers.TryGetValue(elementsType, out object? listElementsSerializer))
-                    {
-                        var genericArgs = new Type[] { elementsType, typeof(V) };
-                        var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListSerializer))!.MakeGenericMethod(genericArgs);
-                        var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
-                        var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
-                        var func = lambdaExpr.Compile();
-                        var result = func();
+                    var genericArgs = new Type[] { elementsType, typeof(V)};
+                    var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListSerializer))!.MakeGenericMethod(genericArgs);
+                    var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
+                    var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                    var func = lambdaExpr.Compile();
+                    var result = func();
 
-                        return result;
-                    }
+                    return result;
                 }
             }
             else if (IsMemberEnumType(typeof(V)))
@@ -249,19 +246,14 @@ namespace Barchart.BinarySerializer.Schemas
 
                 if (underlyingType == null) return null;
 
-                if (allSerializers.TryGetValue(underlyingType, out object? nullableFieldElementsSerializer))
-                {
-                    //var arguments = Expression.Constant(nullableFieldElementsSerializer);
+                var genericArgs = new Type[] { underlyingType };
+                var generateNullableSerializer = typeof(SchemaFactory).GetMethod(nameof(GetNullableSerializer))!.MakeGenericMethod(genericArgs);
+                var generateSerializerCallExpr = Expression.Call(null, generateNullableSerializer);
+                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                var func = lambdaExpr.Compile();
+                var result = func();
 
-                    var genericArgs = new Type[] { underlyingType };
-                    var generateNullableSerializer = typeof(SchemaFactory).GetMethod(nameof(GetNullableSerializer))!.MakeGenericMethod(genericArgs);
-                    var generateSerializerCallExpr = Expression.Call(null, generateNullableSerializer);
-                    var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
-                    var func = lambdaExpr.Compile();
-                    var result = func();
-
-                    return result;
-                }
+                return result;
             }
             else
             {
@@ -390,7 +382,7 @@ namespace Barchart.BinarySerializer.Schemas
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
                 GenerateGetter<T, V>(memberInfo),
-                GenerateRepeatedFieldSetter<T, V>(memberInfo),
+                IsMemberRepeatedFieldType(typeof(V)) ? GenerateRepeatedFieldSetter<T, V>(memberInfo): GenerateSetter<T, V>(memberInfo),
                 (IBinaryTypeObjectSerializer<V>)serializer
             );
 
