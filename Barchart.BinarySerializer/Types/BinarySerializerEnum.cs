@@ -6,7 +6,6 @@ namespace Barchart.BinarySerializer.Types
     {
         private readonly BinarySerializerInt32 _serializer;
 
-
         public BinarySerializerEnum(BinarySerializerInt32 serializer)
         {
             _serializer = serializer;
