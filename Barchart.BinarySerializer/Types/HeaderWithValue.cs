@@ -8,9 +8,9 @@
     {
         public Header Header { get; set; }
 
-        public T? Value { get; set; }
+        public T Value { get; set; }
 
-        public HeaderWithValue(Header header, T? value = default)
+        public HeaderWithValue(Header header, T value)
         {
             Header = header;
             Value = value;

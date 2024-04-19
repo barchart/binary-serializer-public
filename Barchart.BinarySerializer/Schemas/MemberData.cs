@@ -8,7 +8,7 @@ namespace Barchart.BinarySerializer.Schemas
     /// </summary>
     /// <typeparam name="T">The type of the class or structure.</typeparam>
     /// <typeparam name="V">The type of the member.</typeparam>
-    public class MemberData<T, V> : IMemberData<T> 
+    public class MemberData<T, V> : IMemberData<T>
     {
         protected const int NumberOfBitsIsMissing = 1;
 
