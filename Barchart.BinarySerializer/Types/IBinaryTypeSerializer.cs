@@ -8,8 +8,8 @@ namespace Barchart.BinarySerializer.Types
     /// <typeparam name="T">The type of the value to be serialized.</typeparam>
     public interface IBinaryTypeSerializer<T>
     {
-        public void Encode(DataBuffer dataBuffer, T? value);
+        public void Encode(DataBuffer dataBuffer, T value);
         public HeaderWithValue<T> Decode(DataBuffer dataBuffer);
-        public int GetLengthInBits(T? value);
+        public int GetLengthInBits(T value);
     }
 }
