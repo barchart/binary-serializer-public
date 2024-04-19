@@ -94,8 +94,14 @@ namespace Barchart.BinarySerializer.Schemas
             Schema<T> schema = new(memberDataList);
 
             return schema;
-        } 
+        }
 
+        /// <summary>
+        /// Processes the provided member information to generate member data for the specified type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of object.</typeparam>
+        /// <param name="memberInfo">The member information to process.</param>
+        /// <returns>The generated member data for the specified type <typeparamref name="T"/> if successful; otherwise, <see langword="null"/>.</returns>
         public static IMemberData<T>? ProcessMemberInfo<T>(MemberInfo memberInfo) where T : new()
         {
             Type memberType;
@@ -133,11 +139,11 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Gets a serializer for type <typeparamref name="TList"/> of elements <typeparamref name="T" type/>.
+        /// Gets a serializer for a list type <typeparamref name="TList"/> containing elements of type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TList"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <typeparam name="TList">The type of list for which to get the serializer.</typeparam>
+        /// <returns>A serializer for the specified list type <typeparamref name="TList"/> containing elements of type <typeparamref name="T"/> if successful; otherwise, <see langword="null"/>.</returns>
         public static BinarySerializerIList<TList, T>? GetListSerializer<T, TList>() where TList : IList<T>, new()
         {
             IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
@@ -146,20 +152,32 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Gets a serializer for a Enum type <typeparamref name="T"/>.
+        /// Gets a serializer for an enum type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T">The type of elements in the list.</typeparam>
-        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
+        /// <typeparam name="T">The enum type for which to get the serializer.</typeparam>
+        /// <returns>A serializer for the specified enum type <typeparamref name="T"/> if successful; otherwise, <see langword="null"/>.</returns>
+        /// <remarks>
+        /// The method assumes that the underlying storage type for the enum is `int`, and retrieves a serializer for `int` type to serialize the enum values.
+        /// </remarks>
         public static BinarySerializerEnum<T> GetEnumSerializer<T>() where T : struct, Enum
         {
             return new BinarySerializerEnum<T>((BinarySerializerInt32)GetSerializer<int>()!);
         }
 
         /// <summary>
-        /// Gets a serializer for a Enum type <typeparamref name="T"/>.
+        /// Gets a serializer for a nullable value type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T">The type of elements in the list.</typeparam>
-        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
+        /// <typeparam name="T">The nullable value type for which to get the serializer.</typeparam>
+        /// <returns>
+        /// A serializer for the specified nullable value type <typeparamref name="T"/> if successful; otherwise, <see langword="null"/>.
+        /// </returns>
+        /// <remarks>
+        /// The method first attempts to retrieve a serializer for the nullable type <typeparamref name="T"/> from the <paramref name="allSerializers"/> dictionary.
+        /// If a serializer is found, it is cast to the appropriate type and returned.
+        /// If a serializer is not found, the method retrieves a serializer for the underlying non-nullable type <typeparamref name="T"/>.
+        /// If the retrieval is successful, the method constructs and returns a new serializer for the nullable type <typeparamref name="T"/>.
+        /// If the retrieval fails, the method returns <see langword="null"/>.
+        /// </remarks>
         public static BinarySerializerNullable<T>? GetNullableSerializer<T>() where T : struct 
         {
             if (allSerializers.TryGetValue(typeof(T?), out object? serializer))
@@ -173,7 +191,6 @@ namespace Barchart.BinarySerializer.Schemas
 
             return new BinarySerializerNullable<T>(newSerializer);
         }
-
 
         /// <summary>
         /// Gets a serializer for the specified type <typeparamref name="V"/>.
@@ -337,7 +354,6 @@ namespace Barchart.BinarySerializer.Schemas
             return memberData;
         }
 
-
         /// <summary>
         /// Generates object member data interface for the specified member type and information.
         /// </summary>
@@ -376,7 +392,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Generates a setter function for the repeated field member.
+        /// Generates a setter function for the member of the RepeatedField type.
         /// </summary>
         /// <typeparam name="T">The type of object.</typeparam>
         /// <typeparam name="V">The type of the member.</typeparam>
@@ -415,7 +431,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         /// <summary>
         /// Determines whether the specified type is a complex type, i.e., not a value type, 
-        /// string, ByteString, Enum or List.
+        /// string, ByteString, Enum or List/RepeatedField.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a complex type; otherwise, false.</returns>
