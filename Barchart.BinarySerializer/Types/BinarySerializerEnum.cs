@@ -14,7 +14,11 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, T? value)
         {
             int? val = value != null? Convert.ToInt32(value) : null;
-            _serializer.Encode(dataBuffer, (int)val);
+
+            if (val != null)
+            {
+                _serializer.Encode(dataBuffer, (int)val);
+            }
         }
 
         public HeaderWithValue<T> Decode(DataBuffer dataBuffer)
@@ -28,7 +32,13 @@ namespace Barchart.BinarySerializer.Types
         public int GetLengthInBits(T? value)
         {
             int? val = value != null ? Convert.ToInt32(value) : null;
-            return _serializer.GetLengthInBits((int)val);
+
+            if (val != null)
+            {
+                return _serializer.GetLengthInBits((int)val);
+
+            }
+            return 0;
         }
     }
 }
