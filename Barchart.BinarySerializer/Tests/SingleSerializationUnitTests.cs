@@ -2,6 +2,7 @@
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Utility;
 using Google.Protobuf;
+using Google.Protobuf.Collections;
 using Org.Openfeed;
 using Xunit;
 using Xunit.Abstractions;
@@ -171,6 +172,51 @@ namespace Barchart.BinarySerializer.Tests
             Assert.Equal(garage, deserializedGarage);
         }
 
+        class A
+        {
+            public MyEnum a;
+            public RepeatedField<int> repeatedField = new() { 2 , 3 };
+        }
+
+        enum MyEnum
+        {
+            Option1,
+            Option2,
+            Option3
+        }
+
+        [Fact]
+        public void EnumSerializationTest()
+        {
+            try
+            {
+                Stopwatch stopwatch = new();
+
+                A hotel = new()
+                {
+                    a = MyEnum.Option1
+                };
+
+                Schema<A> hotelSchema = SchemaFactory.GetSchema<A>();
+                stopwatch.Start();
+
+                byte[] serializedData = hotelSchema.Serialize(hotel);
+                A deserializedHotel = hotelSchema.Deserialize(serializedData);
+
+                stopwatch.Stop();
+                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+                Assert.Equal(hotel.a, deserializedHotel.a);
+                Assert.Equal(hotel.repeatedField, deserializedHotel.repeatedField);
+
+            }
+            catch (Exception ex)
+            {
+                LoggerWrapper.LogError(ex.Message);
+                throw;
+            }
+        }
+
         [Fact]
         public void ListAndByteStringSerializationTest()
         {
@@ -185,7 +231,6 @@ namespace Barchart.BinarySerializer.Tests
                 };
 
                 Schema<Hotel> hotelSchema = SchemaFactory.GetSchema<Hotel>();
-
                 stopwatch.Start();
 
                 byte[] serializedData = hotelSchema.Serialize(hotel);
@@ -243,12 +288,46 @@ namespace Barchart.BinarySerializer.Tests
                 stopwatch.Start();
 
                 byte[] serializedData = marketSnapshotSchema.Serialize(marketSnapshot);
-                MarketSnapshot deserializedMarletSnapshot = marketSnapshotSchema.Deserialize(serializedData);
+                MarketSnapshot deserializedMarketSnapshot = marketSnapshotSchema.Deserialize(serializedData);
 
                 stopwatch.Stop();
                 _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
-                Assert.Equal(marketSnapshot, deserializedMarletSnapshot);
+                Assert.Equal(marketSnapshot, deserializedMarketSnapshot);
+            }
+            catch (Exception ex)
+            {
+                LoggerWrapper.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        [Fact]
+        public void MarketSnapshotRepeatedFieldTest()
+        {
+            try
+            {
+                Stopwatch stopwatch = new();
+
+                MarketSnapshot marketSnapshot = new()
+                {
+                };
+
+                marketSnapshot.PriceLevels.Add(new AddPriceLevel() { Price = 2 });
+                marketSnapshot.PriceLevels.Add(new AddPriceLevel() { Price = 5 });
+                marketSnapshot.PriceLevels.Add(new AddPriceLevel() { Price = 10 });
+
+                Schema<MarketSnapshot> marketSnapshotSchema = SchemaFactory.GetSchema<MarketSnapshot>();
+
+                stopwatch.Start();
+
+                byte[] serializedData = marketSnapshotSchema.Serialize(marketSnapshot);
+                MarketSnapshot deserializedMarketSnapshot = marketSnapshotSchema.Deserialize(serializedData);
+
+                stopwatch.Stop();
+                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+                Assert.Equal(marketSnapshot, deserializedMarketSnapshot);
             }
             catch (Exception ex)
             {
