@@ -179,13 +179,13 @@ namespace Barchart.BinarySerializer.Tests
             }
 
             Func<Car, object?> getMethod = SchemaFactory.GenerateGetter<Car, object?>(fieldInfo);
-            Action<Car, object?> setMethod = SchemaFactory.GenerateSetter<Car, object?>(propertyInfo);
+            Action<Car, object?>? setMethod = SchemaFactory.GenerateSetter<Car, object?>(propertyInfo);
 
             stopwatch.Start();
 
             for (long i = 0; i < iterations; i++)
             {
-                setMethod(carOld, 22.5m);
+                if(setMethod != null) setMethod(carOld, 22.5m);
 
                 _ = getMethod(carOld);
             }

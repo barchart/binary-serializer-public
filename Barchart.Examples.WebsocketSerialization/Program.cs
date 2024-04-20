@@ -1,7 +1,6 @@
 ﻿using System.Net.WebSockets;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.SerializationData;
-using Org.Openfeed;
 
 var builder = WebApplication.CreateBuilder(args);
 

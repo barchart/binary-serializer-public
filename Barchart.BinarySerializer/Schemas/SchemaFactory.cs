@@ -11,6 +11,7 @@ namespace Barchart.BinarySerializer.Schemas
     /// </summary>
     public static class SchemaFactory
     {
+        private static readonly object _lock = new();
         private static readonly IDictionary<Type, object> allSerializers = new Dictionary<Type, object>();
         public static bool DefaultIncludeValue { get; set; } = true;
 
@@ -187,7 +188,14 @@ namespace Barchart.BinarySerializer.Schemas
 
             IBinaryTypeSerializer<T>? newSerializer = GetSerializer<T>();
             if (newSerializer == null) return null;
-            allSerializers.Add(typeof(T?), newSerializer);
+
+            lock (_lock)
+            {
+                if (!allSerializers.ContainsKey(typeof(T?)))
+                {
+                    allSerializers.Add(typeof(T?), newSerializer);
+                }
+            }
 
             return new BinarySerializerNullable<T>(newSerializer);
         }
@@ -381,8 +389,13 @@ namespace Barchart.BinarySerializer.Schemas
         /// <typeparam name="V">The type of the member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The setter function for the specified member.</returns>
-        public static Action<T, V> GenerateSetter<T, V>(MemberInfo memberInfo)
+        public static Action<T, V>? GenerateSetter<T, V>(MemberInfo memberInfo)
         {
+            if (memberInfo is PropertyInfo propertyInfo && propertyInfo.CanWrite == false)
+            {
+                return null;
+            }
+
             var instance = Expression.Parameter(typeof(T), "instance");
             var value = Expression.Parameter(typeof(V), "value");
             var member = Expression.MakeMemberAccess(instance, memberInfo);
@@ -398,8 +411,13 @@ namespace Barchart.BinarySerializer.Schemas
         /// <typeparam name="V">The type of the member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The setter function for the specified member.</returns>
-        public static Action<T, V> GenerateRepeatedFieldSetter<T, V>(MemberInfo memberInfo)
+        public static Action<T, V>? GenerateRepeatedFieldSetter<T, V>(MemberInfo memberInfo)
         {
+            if (memberInfo is PropertyInfo propertyInfo && propertyInfo.CanWrite == false)
+            {
+                return null;
+            }
+
             var instance = Expression.Parameter(typeof(T), "instance");
             var value = Expression.Parameter(typeof(V), "value");
 
@@ -437,10 +455,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>True if the type is a complex type; otherwise, false.</returns>
         private static bool IsMemberComplexType(Type type)
         {
+            Type? rawType = Nullable.GetUnderlyingType(type);
             var isNotValueType = !type.IsValueType;
             var isNotStringType = type != typeof(string);
             var isNotByteStringType = type != typeof(ByteString);
-            var isNotEnumType = !type.IsEnum;
+            var isNotEnumType = rawType == null ? !type.IsEnum : !rawType.IsEnum;
             var isListOrRepeatedFieldGenericType = type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(RepeatedField<>) || type.GetGenericTypeDefinition() == typeof(List<>));
 
             return isNotValueType && isNotEnumType && isNotStringType && isNotByteStringType && !isListOrRepeatedFieldGenericType;
