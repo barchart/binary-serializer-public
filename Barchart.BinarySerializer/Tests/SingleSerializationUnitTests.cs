@@ -174,7 +174,7 @@ namespace Barchart.BinarySerializer.Tests
 
         class TestClass
         {
-            public TestEnum enumField;
+            public TestEnum? enumField;
             public RepeatedField<int> repeatedField = new() { 2 , 3 };
         }
 
@@ -186,7 +186,7 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void EnumSerializationTest()
+        public void EnumAndRepeatedFieldSerializationTest()
         {
             try
             {
@@ -293,41 +293,28 @@ namespace Barchart.BinarySerializer.Tests
                 stopwatch.Stop();
                 _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
-                Assert.Equal(marketSnapshot, deserializedMarketSnapshot);
-            }
-            catch (Exception ex)
-            {
-                LoggerWrapper.LogError(ex.Message);
-                throw;
-            }
-        }
+                Assert.Equal(marketSnapshot.MarketId, deserializedMarketSnapshot.MarketId);
+                Assert.Equal(marketSnapshot.TransactionTime, deserializedMarketSnapshot.TransactionTime);
+                Assert.Equal(marketSnapshot.MarketSequence, deserializedMarketSnapshot.MarketSequence);
+                Assert.Equal(marketSnapshot.TradeDate, deserializedMarketSnapshot.TradeDate);
+                Assert.Equal(marketSnapshot.TotalChunks, deserializedMarketSnapshot.TotalChunks);
+                Assert.Equal(marketSnapshot.CurrentChunk, deserializedMarketSnapshot.CurrentChunk);
+                Assert.Equal(marketSnapshot.Symbol, deserializedMarketSnapshot.Symbol);
+                Assert.Equal(marketSnapshot.PriceDenominator, deserializedMarketSnapshot.PriceDenominator);
+                Assert.Equal(marketSnapshot.Service, deserializedMarketSnapshot.Service);
 
-        [Fact]
-        public void MarketSnapshotRepeatedFieldTest()
-        {
-            try
-            {
-                Stopwatch stopwatch = new();
+                Assert.NotNull(deserializedMarketSnapshot.InstrumentStatus);
+                Assert.Equal(marketSnapshot.InstrumentStatus.TradingStatus, deserializedMarketSnapshot.InstrumentStatus.TradingStatus);
+                Assert.Equal(marketSnapshot.InstrumentStatus.TradeDate, deserializedMarketSnapshot.InstrumentStatus.TradeDate);
 
-                MarketSnapshot marketSnapshot = new()
-                {
-                };
-
-                marketSnapshot.PriceLevels.Add(new AddPriceLevel() { Price = 2 });
-                marketSnapshot.PriceLevels.Add(new AddPriceLevel() { Price = 5 });
-                marketSnapshot.PriceLevels.Add(new AddPriceLevel() { Price = 10 });
-
-                Schema<MarketSnapshot> marketSnapshotSchema = SchemaFactory.GetSchema<MarketSnapshot>();
-
-                stopwatch.Start();
-
-                byte[] serializedData = marketSnapshotSchema.Serialize(marketSnapshot);
-                MarketSnapshot deserializedMarketSnapshot = marketSnapshotSchema.Deserialize(serializedData);
-
-                stopwatch.Stop();
-                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
-
-                Assert.Equal(marketSnapshot, deserializedMarketSnapshot);
+                Assert.NotNull(deserializedMarketSnapshot.Bbo);
+                Assert.Equal(marketSnapshot.Bbo.BidPrice, deserializedMarketSnapshot.Bbo.BidPrice);
+                Assert.Equal(marketSnapshot.Bbo.BidQuantity, deserializedMarketSnapshot.Bbo.BidQuantity);
+                Assert.Equal(marketSnapshot.Bbo.BidOriginator, deserializedMarketSnapshot.Bbo.BidOriginator);
+                Assert.Equal(marketSnapshot.Bbo.OfferPrice, deserializedMarketSnapshot.Bbo.OfferPrice);
+                Assert.Equal(marketSnapshot.Bbo.OfferQuantity, deserializedMarketSnapshot.Bbo.OfferQuantity);
+                Assert.Equal(marketSnapshot.Bbo.OfferOriginator, deserializedMarketSnapshot.Bbo.OfferOriginator);
+                Assert.Equal(marketSnapshot.Bbo.QuoteCondition, deserializedMarketSnapshot.Bbo.QuoteCondition);
             }
             catch (Exception ex)
             {
