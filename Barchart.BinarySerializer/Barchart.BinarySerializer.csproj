@@ -10,7 +10,7 @@
     <IsPackable>true</IsPackable>
     <PackageId>binary-serialization-net</PackageId>
     <Title>PackageId&gt;binary-serialization-net</Title>
-    <Version>1.0.58</Version>
+    <Version>1.0.64</Version>
     <Authors>Luka Sotra</Authors>
     <Company>Barchart</Company>
   </PropertyGroup>

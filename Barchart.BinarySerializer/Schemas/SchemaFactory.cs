@@ -202,7 +202,6 @@ namespace Barchart.BinarySerializer.Schemas
             return nullableSerializer;
         }
 
-
         /// <summary>
         /// Gets a serializer for the specified type <typeparamref name="V"/>.
         /// </summary>
