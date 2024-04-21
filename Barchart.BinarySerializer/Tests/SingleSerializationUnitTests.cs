@@ -175,6 +175,7 @@ namespace Barchart.BinarySerializer.Tests
         class TestClass
         {
             public TestEnum? enumField;
+            public TestEnum? enumField2;
             public RepeatedField<int> repeatedField = new() { 2 , 3 };
         }
 
@@ -194,7 +195,8 @@ namespace Barchart.BinarySerializer.Tests
 
                 TestClass testClass = new()
                 {
-                    enumField = TestEnum.Option1
+                    enumField = TestEnum.Option1,
+                    enumField2 = TestEnum.Option3
                 };
 
                 Schema<TestClass> testClassSchema = SchemaFactory.GetSchema<TestClass>();

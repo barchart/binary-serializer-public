@@ -179,26 +179,29 @@ namespace Barchart.BinarySerializer.Schemas
         /// If the retrieval is successful, the method constructs and returns a new serializer for the nullable type <typeparamref name="T"/>.
         /// If the retrieval fails, the method returns <see langword="null"/>.
         /// </remarks>
-        public static BinarySerializerNullable<T>? GetNullableSerializer<T>() where T : struct 
+        public static BinarySerializerNullable<T>? GetNullableSerializer<T>() where T : struct
         {
             if (allSerializers.TryGetValue(typeof(T?), out object? serializer))
             {
-                return (BinarySerializerNullable<T>) serializer;
+                return (BinarySerializerNullable<T>)serializer;
             }
 
             IBinaryTypeSerializer<T>? newSerializer = GetSerializer<T>();
             if (newSerializer == null) return null;
 
+            BinarySerializerNullable<T> nullableSerializer = new(newSerializer);
+
             lock (_lock)
             {
                 if (!allSerializers.ContainsKey(typeof(T?)))
                 {
-                    allSerializers.Add(typeof(T?), newSerializer);
+                    allSerializers.Add(typeof(T?), nullableSerializer);
                 }
             }
 
-            return new BinarySerializerNullable<T>(newSerializer);
+            return nullableSerializer;
         }
+
 
         /// <summary>
         /// Gets a serializer for the specified type <typeparamref name="V"/>.
@@ -335,7 +338,7 @@ namespace Barchart.BinarySerializer.Schemas
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
                 GenerateGetter<T, V>(memberInfo),
-                IsMemberRepeatedFieldType(typeof(V)) ? GenerateRepeatedFieldSetter<T, V>(memberInfo): GenerateSetter<T, V>(memberInfo),
+                GenerateSetter<T, V>(memberInfo),
                 (IBinaryTypeObjectSerializer<V>)serializer
             );
 
@@ -405,29 +408,6 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Generates a setter function for the member of the RepeatedField type.
-        /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
-        /// <typeparam name="V">The type of the member.</typeparam>
-        /// <param name="memberInfo">The member information.</param>
-        /// <returns>The setter function for the specified member.</returns>
-        public static Action<T, V>? GenerateRepeatedFieldSetter<T, V>(MemberInfo memberInfo)
-        {
-            var instance = Expression.Parameter(typeof(T), "instance");
-            var value = Expression.Parameter(typeof(V), "value");
-
-            var member = Expression.MakeMemberAccess(instance, memberInfo);
-            var addRangeMethod = typeof(V).GetMethod("AddRange")!;
-            var clearMethod = typeof(V).GetMethod("Clear")!;
-
-            var clearCall = Expression.Call(member, clearMethod);
-            var addRangeCall = Expression.Call(member, addRangeMethod, value);
-            var block = Expression.Block(clearCall, addRangeCall);
-
-            return Expression.Lambda<Action<T, V>>(block, instance, value).Compile();
-        }
-
-        /// <summary>
         /// Generates a getter function for the specified member.
         /// </summary>
         /// <typeparam name="T">The type of object.</typeparam>
@@ -450,14 +430,14 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>True if the type is a complex type; otherwise, false.</returns>
         private static bool IsMemberComplexType(Type type)
         {
-            Type? rawType = Nullable.GetUnderlyingType(type);
-            var isNotValueType = !type.IsValueType;
-            var isNotStringType = type != typeof(string);
-            var isNotByteStringType = type != typeof(ByteString);
-            var isNotEnumType = rawType == null ? !type.IsEnum : !rawType.IsEnum;
+            Type? underLyingType = Nullable.GetUnderlyingType(type);
+            var isValueType = type.IsValueType;
+            var isStringType = type == typeof(string);
+            var isByteStringType = type == typeof(ByteString);
+            var isEnumType = underLyingType == null ? type.IsEnum : underLyingType.IsEnum;
             var isListOrRepeatedFieldGenericType = type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(RepeatedField<>) || type.GetGenericTypeDefinition() == typeof(List<>));
 
-            return isNotValueType && isNotEnumType && isNotStringType && isNotByteStringType && !isListOrRepeatedFieldGenericType;
+            return !isValueType && !isEnumType && !isStringType && !isByteStringType && !isListOrRepeatedFieldGenericType;
         }
 
         /// <summary>
