@@ -8,11 +8,11 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="T"></typeparam>
     public interface IMemberData<T>
     {
-        public string Name { get; set; }
-        public Type Type { get; set; }
-        public bool IsIncluded { get; set; }
-        public bool IsKeyAttribute { get; set; }
-        public MemberInfo MemberInfo { get; set; }
+        public string Name { get; }
+        public Type Type { get; }
+        public bool IsIncluded { get; }
+        public bool IsKeyAttribute { get; }
+        public MemberInfo MemberInfo { get; }
 
         void Encode(T value, DataBuffer buffer);
         void EncodeCompare(T newValue, T oldValue, DataBuffer buffer);

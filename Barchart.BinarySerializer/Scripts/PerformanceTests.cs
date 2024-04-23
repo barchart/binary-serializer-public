@@ -318,8 +318,8 @@ namespace Barchart.BinarySerializer.Tests
                 return;
             }
 
-            Func<Car, decimal> getDecimalNumberMethod = SchemaFactory.GenerateGetter<Car, decimal>(decimalNumberInfo);
-            Func<Car, double> getDoubleNumberMethod = SchemaFactory.GenerateGetter<Car, double>(doubleNumberInfo);
+            Func<Car, decimal?> getDecimalNumberMethod = SchemaFactory.GenerateGetter<Car, decimal?>(decimalNumberInfo);
+            Func<Car, double?> getDoubleNumberMethod = SchemaFactory.GenerateGetter<Car, double?>(doubleNumberInfo);
             Func<Car, DateTime?> getDateTimeNumberMethod = SchemaFactory.GenerateGetter<Car, DateTime?>(dateTimeDateInfo);
             Func<Car, string?> getStringNumberMethod = SchemaFactory.GenerateGetter<Car, string?>(stringNameInfo);
             Func<Car, Person?> getPersonObjectInCarPropertyInfo = SchemaFactory.GenerateGetter<Car, Person?>(personObjectInCarPropertyInfo);
@@ -337,8 +337,8 @@ namespace Barchart.BinarySerializer.Tests
                 return;
             }
 
-            Func<Car, decimal> getDecimalNumberMethod2 = SchemaFactory.GenerateGetter<Car, decimal>(decimalNumberInfo2);
-            Func<Car, double> getDoubleNumberMethod2 = SchemaFactory.GenerateGetter<Car, double>(doubleNumberInfo2);
+            Func<Car, decimal?> getDecimalNumberMethod2 = SchemaFactory.GenerateGetter<Car, decimal?>(decimalNumberInfo2);
+            Func<Car, double?> getDoubleNumberMethod2 = SchemaFactory.GenerateGetter<Car, double?>(doubleNumberInfo2);
             Func<Car, DateTime?> getDateTimeNumberMethod2 = SchemaFactory.GenerateGetter<Car, DateTime?>(dateTimeDateInfo2);
             Func<Car, string?> getStringNumberMethod2 = SchemaFactory.GenerateGetter<Car, string?>(stringNameInfo2);
             Func<Car, Person?> getPersonObjectInCarPropertyInfo2 = SchemaFactory.GenerateGetter<Car, Person?>(personObjectInCarPropertyInfo2);
@@ -348,7 +348,7 @@ namespace Barchart.BinarySerializer.Tests
             for (long i = 0; i < iterations; i++)
             {
                 _ = getDecimalNumberMethod(car1)! == getDecimalNumberMethod2(car2)! &&
-                (double)getDoubleNumberMethod(car1)! == (double)getDoubleNumberMethod2(car2)! &&
+                getDoubleNumberMethod(car1)! == getDoubleNumberMethod2(car2)! &&
                 (DateTime)getDateTimeNumberMethod(car1)! == (DateTime)getDateTimeNumberMethod2(car2)! &&
                 getStringNumberMethod(car1)! == getStringNumberMethod2(car2)! &&
                 getPersonObjectInCarPropertyInfo(car1)!.Equals(getPersonObjectInCarPropertyInfo2(car2));
