@@ -38,7 +38,7 @@ namespace Barchart.BinarySerializer.Tests
                     SByte = 2
                 };
 
-                Car carNew = new Car()
+                Car carNew = new()
                 {
                     DecimalNumber = 1.5m,
                     doubleNumber = 2.5,
