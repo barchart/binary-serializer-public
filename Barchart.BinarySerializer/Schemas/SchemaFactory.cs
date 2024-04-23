@@ -118,13 +118,11 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (IsMemberComplexType(memberType) || IsMemberListOrRepeatedFieldType(memberType))
             {
-                IMemberData<T>? newMemberDataNestedClass = GenerateObjectMemberData<T>(memberType, memberInfo);
-                return newMemberDataNestedClass;
+                return GenerateObjectMemberData<T>(memberType, memberInfo);
             }
             else
             {
-                IMemberData<T>? newMemberData = GenerateMemberData<T>(memberType, memberInfo);
-                return newMemberData;
+                return GenerateMemberData<T>(memberType, memberInfo);
             }
         }
 

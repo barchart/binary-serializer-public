@@ -66,12 +66,10 @@ namespace Barchart.BinarySerializer.Schemas
 
             foreach (IMemberData<T> memberData in _memberDataList)
             {
-                if (!memberData.IsIncluded)
+                if (memberData.IsIncluded)
                 {
-                    continue;
+                    memberData.Encode(schemaObject, dataBuffer);
                 }
-
-                memberData.Encode(schemaObject, dataBuffer);
             }
 
             return dataBuffer.ToBytes();
@@ -112,11 +110,10 @@ namespace Barchart.BinarySerializer.Schemas
 
             foreach (IMemberData<T> memberData in _memberDataList)
             {
-                if (!memberData.IsIncluded)
+                if (memberData.IsIncluded)
                 {
-                    continue;
+                    memberData.EncodeCompare(newObject, oldObject, dataBuffer);
                 }
-                memberData.EncodeCompare(newObject, oldObject, dataBuffer);
             }
 
             return dataBuffer.ToBytes();
@@ -138,12 +135,10 @@ namespace Barchart.BinarySerializer.Schemas
 
             foreach (IMemberData<T> memberData in _memberDataList)
             {
-                if (!memberData.IsIncluded)
+                if (memberData.IsIncluded)
                 {
-                    continue;
+                    memberData.Decode(existing, dataBuffer);
                 }
-
-                memberData.Decode(existing, dataBuffer);     
             }
 
             return existing;
@@ -165,12 +160,10 @@ namespace Barchart.BinarySerializer.Schemas
         {
             foreach (IMemberData<T> memberData in _memberDataList)
             {
-                if (!memberData.IsIncluded)
+                if (memberData.IsIncluded)
                 {
-                    continue;
+                    memberData.Decode(existing, dataBuffer);
                 }
-
-                memberData.Decode(existing, dataBuffer);
             }
 
             return existing;
