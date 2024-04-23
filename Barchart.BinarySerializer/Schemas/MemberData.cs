@@ -81,7 +81,7 @@ namespace Barchart.BinarySerializer.Schemas
             V oldValue = GetDelegate(firstObject);
             V newValue = GetDelegate(secondObject);
 
-            if(!Equals(oldValue,newValue) && SetDelegate != null) SetDelegate(firstObject, newValue);
+            if(newValue != null && !Equals(oldValue,newValue) && SetDelegate != null) SetDelegate(firstObject, newValue);
         }
 
         public int GetLengthInBits(T schemaObject)
