@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Schemas
+﻿using System.Reflection;
+
+namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
     /// Represents a schema for serializing and deserializing objects of type <typeparamref name="T"/>.
@@ -228,6 +230,30 @@
             }
 
             return lengthInBits;
+        }
+
+        /// <summary>
+        /// Compares two objects of type T by iterating through the list of member data.
+        /// </summary>
+        /// <param name="firstObject">The first object to compare.</param>
+        /// <param name="secondObject">The second object to compare.</param>
+        /// <returns>True if all member data of the two objects are equal; otherwise, false.</returns>
+        public bool CompareObjects(T firstObject, T secondObject)
+        {
+            foreach (IMemberData<T> memberData in _memberDataList)
+            {
+                if (memberData.CompareObjects(firstObject, secondObject) == false) return false;
+            }
+
+            return true;
+        }
+
+        public void CompareAndUpdateObject<TClass>(T objectToUpdate, T newObject)
+        {
+            foreach (IMemberData<T> memberData in _memberDataList)
+            {
+                memberData.CompareAndUpdateObject(objectToUpdate, newObject);
+            }
         }
 
         #region ISchema implementation
