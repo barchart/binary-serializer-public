@@ -4,55 +4,55 @@ using Barchart.BinarySerializer.Utility;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Represents a binary serializer for objects of type <typeparamref name="T"/> using a specified schema.
+    /// Represents a binary serializer for objects of type <typeparamref name="TContainer"/> using a specified schema.
     /// </summary>
-    /// <typeparam name="T">The type of objects to be serialized.</typeparam>
-    public class ObjectBinarySerializer<T> : IBinaryTypeObjectSerializer<T> where T : new()
+    /// <typeparam name="TContainer">The type of objects to be serialized.</typeparam>
+    public class ObjectBinarySerializer<TContainer> : IBinaryTypeObjectSerializer<TContainer> where TContainer : new()
     {
-        public Schema<T> Schema { get; set; }
+        public Schema<TContainer> Schema { get; set; }
 
-        public ObjectBinarySerializer(Schema<T> schema)
+        public ObjectBinarySerializer(Schema<TContainer> schema)
         {
             Schema = schema;
         }
 
-        public HeaderWithValue<T> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer)
         {
             Header header = BufferHelper.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new HeaderWithValue<T>(header, default);
+                return new HeaderWithValue<TContainer>(header, default);
             }
 
-            T? deserializedObject = Schema.Deserialize(dataBuffer);
+            TContainer? deserializedObject = Schema.Deserialize(dataBuffer);
 
-            return new HeaderWithValue<T>
+            return new HeaderWithValue<TContainer>
             {
                 Header = header,
                 Value = deserializedObject
             };
         }
 
-        public HeaderWithValue<T> Decode(DataBuffer dataBuffer, T existing)
+        public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer, TContainer existing)
         {
             Header header = BufferHelper.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new HeaderWithValue<T>(header, default);
+                return new HeaderWithValue<TContainer>(header, default);
             }
 
-            T? deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
+            TContainer? deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
 
-            return new HeaderWithValue<T>
+            return new HeaderWithValue<TContainer>
             {
                 Header = header,
                 Value = deserializedObject
             };
         }
 
-        public void Encode(DataBuffer dataBuffer, T? value)
+        public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
             BufferHelper.WriteHeader(dataBuffer, header);
@@ -63,7 +63,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public void Encode(DataBuffer dataBuffer, T? oldObject, T? newObject)
+        public void Encode(DataBuffer dataBuffer, TContainer? oldObject, TContainer? newObject)
         {
             Header header = new() { IsMissing = false, IsNull = newObject == null };
             BufferHelper.WriteHeader(dataBuffer, header);
@@ -71,17 +71,17 @@ namespace Barchart.BinarySerializer.Types
             Schema.Serialize(oldObject!, newObject!, dataBuffer);
         }
 
-        public int GetLengthInBytes(T value)
+        public int GetLengthInBytes(TContainer value)
         {
             return Schema.GetLengthInBytes(value);
         }
 
-        public int GetLengthInBits(T? value)
+        public int GetLengthInBits(TContainer? value)
         {
             return ((ISchema)Schema).GetLengthInBits(value);
         }
 
-        public int GetLengthInBits(T? oldValue, T? newValue)
+        public int GetLengthInBits(TContainer? oldValue, TContainer? newValue)
         {
             return ((ISchema)Schema).GetLengthInBits(oldValue, newValue);
         }

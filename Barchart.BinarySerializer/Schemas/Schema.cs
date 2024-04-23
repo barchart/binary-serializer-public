@@ -3,10 +3,10 @@
 namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    /// Represents a schema for serializing and deserializing objects of type <typeparamref name="T"/>.
+    /// Represents a schema for serializing and deserializing objects of type <typeparamref name="TContainer"/>.
     /// </summary>
-    /// <typeparam name="T">The type of objects serialized and deserialized by this schema.</typeparam>
-    public class Schema<T> : ISchema where T : new()
+    /// <typeparam name="TContainer">The type of objects serialized and deserialized by this schema.</typeparam>
+    public class Schema<TContainer> : ISchema where TContainer : new()
     {
         private const int BufferSize = 256000000;
         
@@ -26,9 +26,9 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
-        private readonly IList<IMemberData<T>> _memberDataList;
+        private readonly IList<IMemberData<TContainer>> _memberDataList;
 
-        public Schema(List<IMemberData<T>> memberDataList)
+        public Schema(List<IMemberData<TContainer>> memberDataList)
         {
             _memberDataList = memberDataList;
         }
@@ -38,7 +38,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="schemaObject">Object or structure to be serialized.</param>
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
-        public byte[] Serialize(T schemaObject)
+        public byte[] Serialize(TContainer schemaObject)
         {
             return Serialize(schemaObject, Buffer);
         }
@@ -49,7 +49,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="schemaObject">Object or structure to be serialized.</param>
         /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization.</param>
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
-        public byte[] Serialize(T schemaObject, byte[] buffer)
+        public byte[] Serialize(TContainer schemaObject, byte[] buffer)
         {
             DataBuffer dataBuffer = new(buffer);
             dataBuffer.ResetByte();
@@ -57,14 +57,14 @@ namespace Barchart.BinarySerializer.Schemas
             return Serialize(schemaObject, dataBuffer);
         }
 
-        internal byte[] Serialize(T schemaObject, DataBuffer dataBuffer) {
+        internal byte[] Serialize(TContainer schemaObject, DataBuffer dataBuffer) {
 
             if (schemaObject == null)
             {
                 throw new ArgumentNullException(nameof(schemaObject), "SchemaObject object cannot be null.");
             }
 
-            foreach (IMemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 if (memberData.IsIncluded)
                 {
@@ -81,7 +81,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="oldObject">Old object of generic type.</param>
         /// <param name="newObject">New object of generic type.</param>
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
-        public byte[] Serialize(T oldObject, T newObject)
+        public byte[] Serialize(TContainer oldObject, TContainer newObject)
         {
             return Serialize(oldObject, newObject, Buffer);
         }
@@ -93,7 +93,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="newObject">New object of generic type.</param>
         /// <param name="buffer">Buffer that will be populated with array of bytes representing result of the serialization.</param>
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
-        public byte[] Serialize(T oldObject, T newObject, byte[] buffer)
+        public byte[] Serialize(TContainer oldObject, TContainer newObject, byte[] buffer)
         {
             DataBuffer dataBuffer = new(buffer);
             dataBuffer.ResetByte();
@@ -101,14 +101,14 @@ namespace Barchart.BinarySerializer.Schemas
             return Serialize(oldObject, newObject, dataBuffer);
         }
 
-        internal byte[] Serialize(T oldObject, T newObject, DataBuffer dataBuffer)
+        internal byte[] Serialize(TContainer oldObject, TContainer newObject, DataBuffer dataBuffer)
         {
             if (oldObject == null)
             {
                 return Serialize(newObject, dataBuffer);
             }
 
-            foreach (IMemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 if (memberData.IsIncluded)
                 {
@@ -124,16 +124,16 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="buffer">Array oy bytes which will be deserialized.</param>
         /// <returns> Deserialized object written into newly created object of generic type. </returns>
-        public T Deserialize(byte[] buffer)
+        public TContainer Deserialize(byte[] buffer)
         {
             DataBuffer dataBuffer  = new(buffer);
             return Deserialize(dataBuffer);
         }
 
-        internal T Deserialize(DataBuffer dataBuffer) {
-            T existing = new();
+        internal TContainer Deserialize(DataBuffer dataBuffer) {
+            TContainer existing = new();
 
-            foreach (IMemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 if (memberData.IsIncluded)
                 {
@@ -150,15 +150,15 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="buffer">Array oy bytes which will be deserialized.</param>
         /// <param name="existing">Existing generic object.</param>
         /// <returns> Deserialized object written into existing object of generic type. </returns>
-        public T Deserialize(byte[] buffer, T existing)
+        public TContainer Deserialize(byte[] buffer, TContainer existing)
         {
             DataBuffer dataBuffer = new(buffer); 
             return Deserialize(existing, dataBuffer);
         }
 
-        internal T Deserialize(T existing, DataBuffer dataBuffer)
+        internal TContainer Deserialize(TContainer existing, DataBuffer dataBuffer)
         {
-            foreach (IMemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 if (memberData.IsIncluded)
                 {
@@ -174,7 +174,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="schemaObject">The schema object to calculate the length for.</param>
         /// <returns> The total length of the binary representation of the schema object in bytes. </returns>
-        public int GetLengthInBytes(T schemaObject)
+        public int GetLengthInBytes(TContainer schemaObject)
         {
             return (int)Math.Ceiling((double)GetLengthInBits(schemaObject) / 8);
         }
@@ -185,7 +185,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="oldObject">The old schema object.</param>
         /// <param name="newObject">The new schema object.</param>
         /// <returns> The total length of the binary representation of the difference between the provided schema objects in bytes. </returns>
-        public int GetLengthInBytes(T oldObject, T newObject)
+        public int GetLengthInBytes(TContainer oldObject, TContainer newObject)
         {
             return (int)Math.Ceiling((double)GetLengthInBits(oldObject, newObject) / 8);
         }
@@ -195,11 +195,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="schemaObject">The schema object to calculate the length for.</param>
         /// <returns> The total length of the binary representation of the schema object in bits. </returns>
-        public int GetLengthInBits(T schemaObject)
+        public int GetLengthInBits(TContainer schemaObject)
         {
             int lengthInBits = 0;
 
-            foreach (IMemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 lengthInBits += memberData.GetLengthInBits(schemaObject);           
             }
@@ -213,11 +213,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="oldObject">The old schema object to calculate the length for.</param>
         /// <param name="newObject">The new schema object to calculate the length for.</param>
         /// <returns> The total length of the binary representation of the difference between the provided schema objects in bits. </returns>
-        public int GetLengthInBits(T oldObject, T newObject)
+        public int GetLengthInBits(TContainer oldObject, TContainer newObject)
         {
             int lengthInBits = 0;
 
-            foreach (IMemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 lengthInBits += memberData.GetLengthInBits(oldObject, newObject);
             }
@@ -231,9 +231,9 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="firstObject">The first object to compare.</param>
         /// <param name="secondObject">The second object to compare.</param>
         /// <returns>True if all member data of the two objects are equal; otherwise, false.</returns>
-        public bool CompareObjects(T firstObject, T secondObject)
+        public bool CompareObjects(TContainer firstObject, TContainer secondObject)
         {
-            foreach (IMemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 if (memberData.CompareObjects(firstObject, secondObject) == false) return false;
             }
@@ -246,9 +246,9 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="objectToUpdate">The object to update.</param>
         /// <param name="newObject">The object containing the new values.</param>
-        public void CompareAndUpdateObject(T objectToUpdate, T newObject)
+        public void CompareAndUpdateObject(TContainer objectToUpdate, TContainer newObject)
         {
-            foreach (IMemberData<T> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 memberData.CompareAndUpdateObject(objectToUpdate, newObject);
             }
@@ -257,32 +257,32 @@ namespace Barchart.BinarySerializer.Schemas
         #region ISchema implementation
         byte[] ISchema.Serialize(object schemaObject)
         {
-            return Serialize((T)schemaObject);
+            return Serialize((TContainer)schemaObject);
         }
 
         byte[] ISchema.Serialize(object schemaObject, byte[] buffer)
         {
-            return Serialize((T)schemaObject, buffer);
+            return Serialize((TContainer)schemaObject, buffer);
         }
 
         byte[] ISchema.Serialize(object oldObject, object newObject)
         {
-            return Serialize((T)oldObject, (T)newObject);
+            return Serialize((TContainer)oldObject, (TContainer)newObject);
         }
 
         byte[] ISchema.Serialize(object oldObject, object newObject, byte[] buffer)
         {
-            return Serialize((T)oldObject, (T)newObject, buffer);
+            return Serialize((TContainer)oldObject, (TContainer)newObject, buffer);
         }
 
         byte[] ISchema.Serialize(object schemaObject, DataBuffer dataBuffer)
         {
-            return Serialize((T)schemaObject, dataBuffer);
+            return Serialize((TContainer)schemaObject, dataBuffer);
         }
 
         byte[] ISchema.Serialize(object oldObject, object newObject, DataBuffer dataBuffer)
         {
-            return Serialize((T)oldObject, (T)newObject, dataBuffer);
+            return Serialize((TContainer)oldObject, (TContainer)newObject, dataBuffer);
         }
 
         object? ISchema.Deserialize(byte[] buffer)
@@ -292,7 +292,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         object? ISchema.Deserialize(byte[] buffer, object existing)
         {
-            return Deserialize(buffer, (T)existing);
+            return Deserialize(buffer, (TContainer)existing);
         }
 
         object? ISchema.Deserialize(DataBuffer dataBuffer)
@@ -302,7 +302,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         object? ISchema.Deserialize(object existing, DataBuffer dataBuffer)
         {
-            return Deserialize((T)existing, dataBuffer);
+            return Deserialize((TContainer)existing, dataBuffer);
         }
 
         int ISchema.GetLengthInBytes(object? schemaObject)
@@ -311,7 +311,7 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 return 0;
             }
-            return GetLengthInBytes((T)schemaObject);
+            return GetLengthInBytes((TContainer)schemaObject);
         }
 
         int ISchema.GetLengthInBytes(object? oldObject, object? newObject)
@@ -323,15 +323,15 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (oldObject != null && newObject == null)
             {
-                return GetLengthInBits((T)oldObject);
+                return GetLengthInBits((TContainer)oldObject);
             }
 
             if (oldObject == null && newObject != null)
             {
-                return GetLengthInBytes((T)newObject);
+                return GetLengthInBytes((TContainer)newObject);
             }
 
-            return GetLengthInBytes((T)oldObject!, (T)newObject!);
+            return GetLengthInBytes((TContainer)oldObject!, (TContainer)newObject!);
         }
 
         int ISchema.GetLengthInBits(object? schemaObject)
@@ -340,7 +340,7 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 return 0;
             }
-            return GetLengthInBits((T)schemaObject);
+            return GetLengthInBits((TContainer)schemaObject);
         }
 
         int ISchema.GetLengthInBits(object? oldObject, object? newObject)
@@ -352,15 +352,15 @@ namespace Barchart.BinarySerializer.Schemas
 
             if(oldObject != null && newObject == null)
             {
-                return GetLengthInBits((T)oldObject);
+                return GetLengthInBits((TContainer)oldObject);
             }
 
             if (oldObject == null && newObject != null)
             {
-                return GetLengthInBits((T)newObject);
+                return GetLengthInBits((TContainer)newObject);
             }
 
-            return GetLengthInBits((T)oldObject!, (T)newObject!);
+            return GetLengthInBits((TContainer)oldObject!, (TContainer)newObject!);
         }
         #endregion
     }

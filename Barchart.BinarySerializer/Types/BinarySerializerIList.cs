@@ -3,17 +3,17 @@ using Barchart.BinarySerializer.Utility;
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerIList<T, V> : IBinaryTypeObjectSerializer<T?> where T: IList<V>, new()
+    public class BinarySerializerIList<TContainer, TMember> : IBinaryTypeObjectSerializer<TContainer?> where TContainer: IList<TMember>, new()
     {
         public const int NumberOfHeaderBitsNumeric = 2;
-        private readonly IBinaryTypeSerializer<V> _serializer;
+        private readonly IBinaryTypeSerializer<TMember> _serializer;
 
-        public BinarySerializerIList(IBinaryTypeSerializer<V> serializer)
+        public BinarySerializerIList(IBinaryTypeSerializer<TMember> serializer)
         {
             _serializer = serializer;
         }
 
-        public void Encode(DataBuffer dataBuffer, T? value)
+        public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
             BufferHelper.WriteHeader(dataBuffer, header);
@@ -30,7 +30,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public void Encode(DataBuffer dataBuffer, T? oldValue, T? newValue)
+        public void Encode(DataBuffer dataBuffer, TContainer? oldValue, TContainer? newValue)
         {
             Header header = new() { IsMissing = false, IsNull = newValue == null };
             BufferHelper.WriteHeader(dataBuffer, header);
@@ -54,37 +54,37 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public HeaderWithValue<T?> Decode(DataBuffer dataBuffer, T? existing)
+        public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer, TContainer? existing)
         {
             Header header = BufferHelper.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new HeaderWithValue<T?>(header, default);
+                return new HeaderWithValue<TContainer?>(header, default);
             }
 
             int length = BufferHelper.ReadLength(dataBuffer);
-            T list = ReadList(dataBuffer, length, existing);
+            TContainer list = ReadList(dataBuffer, length, existing);
 
-            return new HeaderWithValue<T?>(header, list);
+            return new HeaderWithValue<TContainer?>(header, list);
         }
 
-        public HeaderWithValue<T?> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer)
         {
             Header header = BufferHelper.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new HeaderWithValue<T?>(header, default);
+                return new HeaderWithValue<TContainer?>(header, default);
             }
 
             int length = BufferHelper.ReadLength(dataBuffer);
-            T list = ReadList(dataBuffer, length, default);
+            TContainer list = ReadList(dataBuffer, length, default);
 
-            return new HeaderWithValue<T?>(header, list);
+            return new HeaderWithValue<TContainer?>(header, list);
         }
 
-        public int GetLengthInBits(T? value)
+        public int GetLengthInBits(TContainer? value)
         {
             if (value == null)
             {
@@ -106,9 +106,9 @@ namespace Barchart.BinarySerializer.Types
             return length;
         }
 
-        protected T ReadList(DataBuffer dataBuffer, int length, T? existing)
+        protected TContainer ReadList(DataBuffer dataBuffer, int length, TContainer? existing)
         {
-            T list = new();
+            TContainer list = new();
 
             for (int i = 0; i < length; i++)
             {
@@ -116,21 +116,17 @@ namespace Barchart.BinarySerializer.Types
                 var value = headerWithValue.Value;
                 var header = headerWithValue.Header;
 
-                if (header.IsMissing)
+                if (!header.IsMissing && value != null)
                 {
-                    if (existing != null)
-                    {
-                        list.Add(existing[i]);
-                        continue;
-                    }
+                    list.Add(value);
                 }
-
-                if (value != null) list.Add(value);
+                else if (existing != null)
+                {
+                    list.Add(existing[i]);
+                }
             }
 
             return list;
         }
-
-       
     }
 }

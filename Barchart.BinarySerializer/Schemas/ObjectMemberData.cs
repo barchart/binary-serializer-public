@@ -6,24 +6,24 @@ namespace Barchart.BinarySerializer.Schemas
     /// <summary>
     /// Represents metadata about an object member of a class or structure with encoding/decoding functionality.
     /// </summary>
-    /// <typeparam name="T">The type of the class or structure.</typeparam>
-    /// <typeparam name="V">The type of the member.</typeparam>
-    public class ObjectMemberData<T, V> : MemberData<T, V> where V : new()
+    /// <typeparam name="TContainer">The type of the class or structure.</typeparam>
+    /// <typeparam name="TMember">The type of the member.</typeparam>
+    public class ObjectMemberData<TContainer, TMember> : MemberData<TContainer, TMember> where TMember : new()
     {
         public ObjectMemberData(Type type, string name, bool isIncluded, bool isKeyAttribute, MemberInfo memberInfo,
-            Func<T, V> getDelegate, Action<T, V>? setDelegate, IBinaryTypeObjectSerializer<V> binarySerializer)
+            Func<TContainer, TMember> getDelegate, Action<TContainer, TMember>? setDelegate, IBinaryTypeObjectSerializer<TMember> binarySerializer)
             : base(type, name, isIncluded, isKeyAttribute, memberInfo, getDelegate, setDelegate, binarySerializer) { }
 
-        public override void EncodeCompare(T newObject, T oldObject, DataBuffer buffer)
+        public override void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer buffer)
         {
-            V oldValue = GetDelegate(oldObject);
-            V newValue = GetDelegate(newObject);
+            TMember oldValue = GetDelegate(oldObject);
+            TMember newValue = GetDelegate(newObject);
 
             bool valuesEqual = Equals(oldValue, newValue);
 
             if (!valuesEqual || IsKeyAttribute)
             {
-                ((IBinaryTypeObjectSerializer<V>)BinarySerializer).Encode(buffer, oldValue, newValue);
+                ((IBinaryTypeObjectSerializer<TMember>)BinarySerializer).Encode(buffer, oldValue, newValue);
             }
             else
             {
@@ -31,19 +31,19 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
-        public override void Decode(T existing, DataBuffer buffer)
+        public override void Decode(TContainer existing, DataBuffer buffer)
         {
-            HeaderWithValue<V> headerWithValue;
+            HeaderWithValue<TMember> headerWithValue;
 
-            V currentObject = GetDelegate(existing);
+            TMember currentObject = GetDelegate(existing);
 
             if (currentObject == null)
             {
-                headerWithValue = ((IBinaryTypeObjectSerializer<V>)BinarySerializer).Decode(buffer);
+                headerWithValue = ((IBinaryTypeObjectSerializer<TMember>)BinarySerializer).Decode(buffer);
             }
             else
             {
-                headerWithValue = ((IBinaryTypeObjectSerializer<V>)BinarySerializer).Decode(buffer, currentObject);
+                headerWithValue = ((IBinaryTypeObjectSerializer<TMember>)BinarySerializer).Decode(buffer, currentObject);
             }
 
             if (headerWithValue.Header.IsMissing)
@@ -54,7 +54,7 @@ namespace Barchart.BinarySerializer.Schemas
             if(headerWithValue.Value != null && SetDelegate != null) SetDelegate(existing, headerWithValue.Value);
         }
 
-        public override int GetLengthInBits(T oldObject, T newObject)
+        public override int GetLengthInBits(TContainer oldObject, TContainer newObject)
         {
             var oldValue = GetDelegate(oldObject);
             var newValue = GetDelegate(newObject);
@@ -63,7 +63,7 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (!valuesEqual || IsKeyAttribute)
             {
-                return ((IBinaryTypeObjectSerializer<V>)BinarySerializer).GetLengthInBits(newValue);
+                return ((IBinaryTypeObjectSerializer<TMember>)BinarySerializer).GetLengthInBits(newValue);
             }
             else
             {

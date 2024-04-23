@@ -3,21 +3,21 @@ using Barchart.BinarySerializer.Utility;
 
 namespace Barchart.BinarySerializer.Types
 {
-	public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : struct
+	public class BinarySerializerNullable<TContainer> : IBinaryTypeSerializer<TContainer?> where TContainer : struct
 	{
         public const int NumberOfHeaderBitsNumeric = 2;
-        private readonly IBinaryTypeSerializer<T> _serializer;
+        private readonly IBinaryTypeSerializer<TContainer> _serializer;
 
-        public BinarySerializerNullable(IBinaryTypeSerializer<T> serializer)
+        public BinarySerializerNullable(IBinaryTypeSerializer<TContainer> serializer)
         {
             _serializer = serializer;
         }
 
-        public void Encode(DataBuffer dataBuffer, T? value)
+        public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
             if (value != null)
             {
-                _serializer.Encode(dataBuffer, (T)value);
+                _serializer.Encode(dataBuffer, (TContainer)value);
             }
             else
             {
@@ -26,21 +26,21 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public HeaderWithValue<T?> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer)
         {
-            HeaderWithValue<T> headerWithValue = _serializer.Decode(dataBuffer);
+            HeaderWithValue<TContainer> headerWithValue = _serializer.Decode(dataBuffer);
 
             if(headerWithValue.Header.IsNull || headerWithValue.Header.IsMissing) 
             {
-                return new HeaderWithValue<T?>(headerWithValue.Header, null);
+                return new HeaderWithValue<TContainer?>(headerWithValue.Header, null);
             }
 
-            return new HeaderWithValue<T?>(headerWithValue.Header, headerWithValue.Value);
+            return new HeaderWithValue<TContainer?>(headerWithValue.Header, headerWithValue.Value);
         }
 
-        public int GetLengthInBits(T? value)
+        public int GetLengthInBits(TContainer? value)
         {
-            return value == null ? NumberOfHeaderBitsNumeric : _serializer.GetLengthInBits((T)value);
+            return value == null ? NumberOfHeaderBitsNumeric : _serializer.GetLengthInBits((TContainer)value);
         }
     }
 }

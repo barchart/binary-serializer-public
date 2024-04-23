@@ -5,14 +5,14 @@ namespace Barchart.BinarySerializer.Types
     /// <summary>
     /// Represents a base class for binary serializers handling numeric types.
     /// </summary>
-    /// <typeparam name="T">The underlying numeric type.</typeparam>
-    public abstract class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T> where T : struct
+    /// <typeparam name="TContainer">The underlying numeric type.</typeparam>
+    public abstract class BinarySerializerNumeric<TContainer> : IBinaryTypeSerializer<TContainer> where TContainer : struct
     {
         public const int NumberOfHeaderBitsNumeric = 2;
 
         public abstract int Size { get; }
 
-        public void Encode(DataBuffer dataBuffer, T value)
+        public void Encode(DataBuffer dataBuffer, TContainer value)
         {
             Header header = new() { IsMissing = false, IsNull = false };
             WriteHeader(dataBuffer, header);
@@ -21,27 +21,27 @@ namespace Barchart.BinarySerializer.Types
             WriteValueBytes(dataBuffer, valueBytes);
         }
 
-        public HeaderWithValue<T> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer)
         {
             Header header = ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new HeaderWithValue<T>(header, default);
+                return new HeaderWithValue<TContainer>(header, default);
             }
 
             byte[] valueBytes = ReadValueBytes(dataBuffer);
 
-            return new HeaderWithValue<T>(header, DecodeBytes(valueBytes));
+            return new HeaderWithValue<TContainer>(header, DecodeBytes(valueBytes));
         }
 
-        public int GetLengthInBits(T value)
+        public int GetLengthInBits(TContainer value)
         {
             return Size * 8 + NumberOfHeaderBitsNumeric;
         }
 
-        protected abstract byte[] ConvertToByteArray(T value);
-        protected abstract T DecodeBytes(byte[] bytes);
+        protected abstract byte[] ConvertToByteArray(TContainer value);
+        protected abstract TContainer DecodeBytes(byte[] bytes);
 
         private static void WriteHeader(DataBuffer dataBuffer, Header header)
         {

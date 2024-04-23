@@ -3,12 +3,12 @@
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Provides additional methods for encoding and decoding values of type <typeparamref name="T"/> to and from a <see cref="DataBuffer"/>.
+    /// Provides additional methods for encoding and decoding values of type <typeparamref name="TContainer"/> to and from a <see cref="DataBuffer"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the value to be serialized.</typeparam>
-    public interface IBinaryTypeObjectSerializer<T> : IBinaryTypeSerializer<T>
+    /// <typeparam name="TContainer">The type of the value to be serialized.</typeparam>
+    public interface IBinaryTypeObjectSerializer<TContainer> : IBinaryTypeSerializer<TContainer>
     {
-        public void Encode(DataBuffer dataBuffer, T oldValue, T newValue);
-        public HeaderWithValue<T> Decode(DataBuffer dataBuffer, T existing);
+        public void Encode(DataBuffer dataBuffer, TContainer oldValue, TContainer newValue);
+        public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer, TContainer existing);
     }
 }

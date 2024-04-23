@@ -2,7 +2,7 @@
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerEnum<T> : IBinaryTypeSerializer<T> where T : Enum
+    public class BinarySerializerEnum<TContainer> : IBinaryTypeSerializer<TContainer> where TContainer : Enum
     {
         private readonly BinarySerializerInt32 _serializer;
 
@@ -11,7 +11,7 @@ namespace Barchart.BinarySerializer.Types
             _serializer = serializer;
         }
 
-        public void Encode(DataBuffer dataBuffer, T? value)
+        public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
             int? val = value != null? Convert.ToInt32(value) : null;
 
@@ -21,15 +21,15 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        public HeaderWithValue<T> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer)
         {
             HeaderWithValue<int> headerWithValue = _serializer.Decode(dataBuffer);
             int value = headerWithValue.Value;
 
-            return new HeaderWithValue<T>(headerWithValue.Header, (T?)Enum.Parse(typeof(T), value.ToString(), true));
+            return new HeaderWithValue<TContainer>(headerWithValue.Header, (TContainer?)Enum.Parse(typeof(TContainer), value.ToString(), true));
         }
 
-        public int GetLengthInBits(T? value)
+        public int GetLengthInBits(TContainer? value)
         {
             int? val = value != null ? Convert.ToInt32(value) : null;
 

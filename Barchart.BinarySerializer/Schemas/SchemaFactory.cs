@@ -76,34 +76,34 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Retrieves the schema for the specified type <typeparamref name="T"/>.
+        /// Retrieves the schema for the specified type <typeparamref name="TContainer"/>.
         /// </summary>
-        /// <typeparam name="T">The type of object for which the schema is generated.</typeparam>
+        /// <typeparam name="TContainer">The type of object for which the schema is generated.</typeparam>
         /// <returns>The schema for the specified type.</returns>
-        public static Schema<T> GetSchema<T>() where T : new()
+        public static Schema<TContainer> GetSchema<TContainer>() where TContainer : new()
         {
-            Type type = typeof(T);
+            Type type = typeof(TContainer);
             MemberInfo[] members = GetAllMembersForType(type);
-            List<IMemberData<T>> memberDataList = new();
+            List<IMemberData<TContainer>> memberDataList = new();
 
             foreach (MemberInfo memberInfo in members)
             {
-                IMemberData<T>? memberData = ProcessMemberInfo<T>(memberInfo);
+                IMemberData<TContainer>? memberData = ProcessMemberInfo<TContainer>(memberInfo);
                 if(memberData != null) memberDataList.Add(memberData);
             }
 
-            Schema<T> schema = new(memberDataList);
+            Schema<TContainer> schema = new(memberDataList);
 
             return schema;
         }
 
         /// <summary>
-        /// Processes the provided member information to generate member data for the specified type <typeparamref name="T"/>.
+        /// Processes the provided member information to generate member data for the specified type <typeparamref name="TContainer"/>.
         /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="TContainer">The type of object.</typeparam>
         /// <param name="memberInfo">The member information to process.</param>
-        /// <returns>The generated member data for the specified type <typeparamref name="T"/> if successful; otherwise, <see langword="null"/>.</returns>
-        public static IMemberData<T>? ProcessMemberInfo<T>(MemberInfo memberInfo) where T : new()
+        /// <returns>The generated member data for the specified type <typeparamref name="TContainer"/> if successful; otherwise, <see langword="null"/>.</returns>
+        public static IMemberData<TContainer>? ProcessMemberInfo<TContainer>(MemberInfo memberInfo) where TContainer : new()
         {
             Type memberType;
 
@@ -118,11 +118,11 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (IsMemberComplexType(memberType) || IsMemberListOrRepeatedFieldType(memberType))
             {
-                return GenerateObjectMemberData<T>(memberType, memberInfo);
+                return GenerateObjectMemberData<TContainer>(memberType, memberInfo);
             }
             else
             {
-                return GenerateMemberData<T>(memberType, memberInfo);
+                return GenerateMemberData<TContainer>(memberType, memberInfo);
             }
         }
 
@@ -201,57 +201,57 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Gets a serializer for the specified type <typeparamref name="V"/>.
+        /// Gets a serializer for the specified type <typeparamref name="TMember"/>.
         /// </summary>
-        /// <typeparam name="V">The type for which to get the serializer.</typeparam>
-        /// <returns>A serializer for the specified type <typeparamref name="V"/> if available; otherwise, <c>null</c>.</returns>
-        public static IBinaryTypeSerializer<V>? GetSerializer<V>()
+        /// <typeparam name="TMember">The type for which to get the serializer.</typeparam>
+        /// <returns>A serializer for the specified type <typeparamref name="TMember"/> if available; otherwise, <c>null</c>.</returns>
+        public static IBinaryTypeSerializer<TMember>? GetSerializer<TMember>()
         {
-            if (IsMemberComplexType(typeof(V)))
+            if (IsMemberComplexType(typeof(TMember)))
             {
-                var genericArgs = new Type[] { typeof(V) };
+                var genericArgs = new Type[] { typeof(TMember) };
                 var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetObjectSerializer))!.MakeGenericMethod(genericArgs);
                 var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
-                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
                 var func = lambdaExpr.Compile();
                 var result = func();
 
                 return result;
             }
-            else if (IsMemberListOrRepeatedFieldType(typeof(V)))
+            else if (IsMemberListOrRepeatedFieldType(typeof(TMember)))
             {
-                Type elementsType = typeof(V).GetGenericArguments()[0];
+                Type elementsType = typeof(TMember).GetGenericArguments()[0];
 
-                var genericArgs = new Type[] { elementsType, typeof(V)};
+                var genericArgs = new Type[] { elementsType, typeof(TMember)};
                 var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListSerializer))!.MakeGenericMethod(genericArgs);
                 var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
-                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
                 var func = lambdaExpr.Compile();
                 var result = func();
 
                 return result;
             }
-            else if (IsMemberEnumType(typeof(V)))
+            else if (IsMemberEnumType(typeof(TMember)))
             {
-                var genericArgs = new Type[] { typeof(V) };
+                var genericArgs = new Type[] { typeof(TMember) };
                 var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetEnumSerializer))!.MakeGenericMethod(genericArgs);
                 var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
-                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
                 var func = lambdaExpr.Compile();
                 var result = func();
 
                 return result;
             }
-            else if (IsNullableNumericType(typeof(V)))
+            else if (IsNullableNumericType(typeof(TMember)))
             {
-                Type? underlyingType = Nullable.GetUnderlyingType(typeof(V));
+                Type? underlyingType = Nullable.GetUnderlyingType(typeof(TMember));
 
                 if (underlyingType == null) return null;
 
                 var genericArgs = new Type[] { underlyingType };
                 var generateNullableSerializer = typeof(SchemaFactory).GetMethod(nameof(GetNullableSerializer))!.MakeGenericMethod(genericArgs);
                 var generateSerializerCallExpr = Expression.Call(null, generateNullableSerializer);
-                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<V>?>>(generateSerializerCallExpr);
+                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
                 var func = lambdaExpr.Compile();
                 var result = func();
 
@@ -259,9 +259,9 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                if (allSerializers.TryGetValue(typeof(V), out object? serializer))
+                if (allSerializers.TryGetValue(typeof(TMember), out object? serializer))
                 {
-                    return (IBinaryTypeSerializer<V>?)serializer;
+                    return (IBinaryTypeSerializer<TMember>?)serializer;
                 }
             }
 
@@ -271,11 +271,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         /// Generates member data for the specified member.
         /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
-        /// <typeparam name="V">The type of the member.</typeparam>
+        /// <typeparam name="TContainer">The type of object.</typeparam>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The member data if successful; otherwise, <see langword="null"/>.</returns>
-        public static IMemberData<T>? GenerateData<T, V> (MemberInfo memberInfo)
+        public static IMemberData<TContainer>? GenerateData<TContainer, TMember> (MemberInfo memberInfo)
         {
             bool include = GetIncludeAttributeValue(memberInfo);
 
@@ -284,21 +284,21 @@ namespace Barchart.BinarySerializer.Schemas
                 return null;
             }
 
-            IBinaryTypeSerializer<V>? serializer = GetSerializer<V>();
+            IBinaryTypeSerializer<TMember>? serializer = GetSerializer<TMember>();
 
             if (serializer == null)
             {
                 return null;
             }
 
-            MemberData<T, V> newMemberData = new(
-                typeof(V),
+            MemberData<TContainer, TMember> newMemberData = new(
+                typeof(TMember),
                 memberInfo.Name,
                 include,
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
-                GenerateGetter<T, V>(memberInfo),
-                GenerateSetter<T, V>(memberInfo),
+                GenerateGetter<TContainer, TMember>(memberInfo),
+                GenerateSetter<TContainer, TMember>(memberInfo),
                 serializer
             );
 
@@ -308,11 +308,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         /// Generates object member data for the specified member.
         /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
-        /// <typeparam name="V">The type of the object member.</typeparam>
+        /// <typeparam name="TContainer">The type of object.</typeparam>
+        /// <typeparam name="TMember">The type of the object member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The object member data if successful; otherwise, <see langword="null"/>.</returns>
-        public static IMemberData<T>? GenerateObjectData<T, V>(MemberInfo memberInfo) where V : new()
+        public static IMemberData<TContainer>? GenerateObjectData<TContainer, TMember>(MemberInfo memberInfo) where TMember : new()
         {
             bool include = GetIncludeAttributeValue(memberInfo);
 
@@ -321,22 +321,22 @@ namespace Barchart.BinarySerializer.Schemas
                 return null;
             }
             
-            IBinaryTypeSerializer<V>? serializer = GetSerializer<V>();
+            IBinaryTypeSerializer<TMember>? serializer = GetSerializer<TMember>();
 
             if(serializer == null)
             {
                 return null;
             }
 
-            ObjectMemberData<T, V> newMemberData = new(
-                typeof(V),
+            ObjectMemberData<TContainer, TMember> newMemberData = new(
+                typeof(TMember),
                 memberInfo.Name,
                 include,
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
-                GenerateGetter<T, V>(memberInfo),
-                GenerateSetter<T, V>(memberInfo),
-                (IBinaryTypeObjectSerializer<V>)serializer
+                GenerateGetter<TContainer, TMember>(memberInfo),
+                GenerateSetter<TContainer, TMember>(memberInfo),
+                (IBinaryTypeObjectSerializer<TMember>)serializer
             );
 
             return newMemberData;
@@ -345,17 +345,17 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         /// Generates member data interface for the specified member type and information.
         /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="TContainer">The type of object.</typeparam>
         /// <param name="memberType">The type of the member.</param>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The member data interface for the specified member.</returns>
-        public static IMemberData<T>? GenerateMemberData<T>(Type memberType, MemberInfo memberInfo)
+        public static IMemberData<TContainer>? GenerateMemberData<TContainer>(Type memberType, MemberInfo memberInfo)
         {
             var memberInfoExpr = Expression.Constant(memberInfo);
-            var genericArgs = new Type[] { typeof(T), memberType };
+            var genericArgs = new Type[] { typeof(TContainer), memberType };
             var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateData))!.MakeGenericMethod(genericArgs);
             var generateDataCallExpr = Expression.Call(null, generateDataMethod, memberInfoExpr);
-            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>?>>(generateDataCallExpr);
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<TContainer>?>>(generateDataCallExpr);
             var func = lambdaExpr.Compile();
             var memberData = func();
 
@@ -365,17 +365,17 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         /// Generates object member data interface for the specified member type and information.
         /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
+        /// <typeparam name="TContainer">The type of object.</typeparam>
         /// <param name="memberType">The type of the member.</param>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The object member data interface for the specified member.</returns>
-        public static IMemberData<T>? GenerateObjectMemberData<T>(Type memberType, MemberInfo memberInfo)
+        public static IMemberData<TContainer>? GenerateObjectMemberData<TContainer>(Type memberType, MemberInfo memberInfo)
         {
             var memberInfoExpr = Expression.Constant(memberInfo);
-            var genericArgs = new Type[] { typeof(T), memberType };
+            var genericArgs = new Type[] { typeof(TContainer), memberType };
             var generateDataMethod = typeof(SchemaFactory).GetMethod(nameof(GenerateObjectData))!.MakeGenericMethod(genericArgs);
             var generateDataCallExpr = Expression.Call(null, generateDataMethod, memberInfoExpr);
-            var lambdaExpr = Expression.Lambda<Func<IMemberData<T>?>>(generateDataCallExpr);
+            var lambdaExpr = Expression.Lambda<Func<IMemberData<TContainer>?>>(generateDataCallExpr);
             var func = lambdaExpr.Compile();
             var memberData = func();
 
@@ -385,38 +385,38 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         /// Generates a setter function for the specified member.
         /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
-        /// <typeparam name="V">The type of the member.</typeparam>
+        /// <typeparam name="TContainer">The type of object.</typeparam>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The setter function for the specified member.</returns>
-        public static Action<T, V>? GenerateSetter<T, V>(MemberInfo memberInfo)
+        public static Action<TContainer, TMember>? GenerateSetter<TContainer, TMember>(MemberInfo memberInfo)
         {
             if (memberInfo is PropertyInfo propertyInfo && propertyInfo.CanWrite == false)
             {
                 return null;
             }
 
-            var instance = Expression.Parameter(typeof(T), "instance");
-            var value = Expression.Parameter(typeof(V), "value");
+            var instance = Expression.Parameter(typeof(TContainer), "instance");
+            var value = Expression.Parameter(typeof(TMember), "value");
             var member = Expression.MakeMemberAccess(instance, memberInfo);
             var assign = Expression.Assign(member, value);
 
-            return Expression.Lambda<Action<T, V>>(assign, instance, value).Compile();
+            return Expression.Lambda<Action<TContainer, TMember>>(assign, instance, value).Compile();
         }
 
         /// <summary>
         /// Generates a getter function for the specified member.
         /// </summary>
-        /// <typeparam name="T">The type of object.</typeparam>
-        /// <typeparam name="V">The type of the member.</typeparam>
+        /// <typeparam name="TContainer">The type of object.</typeparam>
+        /// <typeparam name="TMember">The type of the member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The getter function for the specified member.</returns>
-        public static Func<T, V> GenerateGetter<T, V>(MemberInfo memberInfo)
+        public static Func<TContainer, TMember> GenerateGetter<TContainer, TMember>(MemberInfo memberInfo)
         {
-            var instance = Expression.Parameter(typeof(T), "instance");
+            var instance = Expression.Parameter(typeof(TContainer), "instance");
             var member = Expression.MakeMemberAccess(instance, memberInfo);
 
-            return Expression.Lambda<Func<T, V>>(member, instance).Compile();
+            return Expression.Lambda<Func<TContainer, TMember>>(member, instance).Compile();
         }
 
         /// <summary>
