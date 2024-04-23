@@ -248,7 +248,12 @@ namespace Barchart.BinarySerializer.Schemas
             return true;
         }
 
-        public void CompareAndUpdateObject<TClass>(T objectToUpdate, T newObject)
+        /// <summary>
+        /// Compares and updates the properties of an object of type T with corresponding properties of another object.
+        /// </summary>
+        /// <param name="objectToUpdate">The object to update.</param>
+        /// <param name="newObject">The object containing the new values.</param>
+        public void CompareAndUpdateObject(T objectToUpdate, T newObject)
         {
             foreach (IMemberData<T> memberData in _memberDataList)
             {
