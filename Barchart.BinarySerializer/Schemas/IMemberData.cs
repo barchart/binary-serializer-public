@@ -16,8 +16,10 @@ namespace Barchart.BinarySerializer.Schemas
 
         void Encode(T value, DataBuffer buffer);
         void EncodeCompare(T newValue, T oldValue, DataBuffer buffer);
-
         void Decode(T value, DataBuffer buffer);
+
+        public bool CompareObjects(T firstObject, T secondObject);
+        public void CompareAndUpdateObject(T firstObject, T secondObject);
 
         public int GetLengthInBits(T schemaObject);
         public int GetLengthInBits(T oldObject, T newObject);

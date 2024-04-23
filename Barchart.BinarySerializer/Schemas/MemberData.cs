@@ -68,6 +68,22 @@ namespace Barchart.BinarySerializer.Schemas
             if(headerWithValue.Value != null && SetDelegate != null) SetDelegate(existing, headerWithValue.Value);
         }
 
+        public bool CompareObjects(T firstObject, T secondObject)
+        {
+            V oldValue = GetDelegate(firstObject);
+            V newValue = GetDelegate(secondObject);
+
+            return Equals(oldValue, newValue);
+        }
+
+        public void CompareAndUpdateObject(T firstObject, T secondObject)
+        {
+            V oldValue = GetDelegate(firstObject);
+            V newValue = GetDelegate(secondObject);
+
+            if(!Equals(oldValue,newValue) && SetDelegate != null) SetDelegate(firstObject, newValue);
+        }
+
         public int GetLengthInBits(T schemaObject)
         {
             var value = GetDelegate(schemaObject);
