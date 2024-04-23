@@ -18,11 +18,11 @@ namespace Barchart.BinarySerializer.Schemas
         public bool IsKeyAttribute { get; set; }
         public MemberInfo MemberInfo { get; set; }
         public Func<T, V> GetDelegate { get; set; }
-        public Action<T, V> SetDelegate { get; set; }
+        public Action<T, V>? SetDelegate { get; set; }
         public IBinaryTypeSerializer<V> BinarySerializer { get; set; }
 
         public MemberData(Type type, string name, bool isIncluded, bool isKeyAttribute, MemberInfo memberInfo,
-            Func<T, V> getDelegate, Action<T, V> setDelegate, IBinaryTypeSerializer<V> binarySerializer)
+            Func<T, V> getDelegate, Action<T, V>? setDelegate, IBinaryTypeSerializer<V> binarySerializer)
         {
             Type = type;
             Name = name;
@@ -65,7 +65,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return;
             }
 
-            if (headerWithValue.Value != null) SetDelegate(existing, headerWithValue.Value);
+            if (headerWithValue.Value != null && SetDelegate != null) SetDelegate(existing, headerWithValue.Value);
         }
 
         public bool CompareObjects(T firstObject, T secondObject)
@@ -81,7 +81,7 @@ namespace Barchart.BinarySerializer.Schemas
             V oldValue = GetDelegate(firstObject);
             V newValue = GetDelegate(secondObject);
 
-            if(!Equals(oldValue,newValue)) SetDelegate(firstObject, newValue);
+            if(!Equals(oldValue,newValue) && SetDelegate != null) SetDelegate(firstObject, newValue);
         }
 
         public int GetLengthInBits(T schemaObject)

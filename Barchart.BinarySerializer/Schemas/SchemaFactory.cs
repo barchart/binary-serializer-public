@@ -393,6 +393,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>The setter function for the specified member.</returns>
         public static Action<T, V>? GenerateSetter<T, V>(MemberInfo memberInfo)
         {
+            if (memberInfo is PropertyInfo propertyInfo && propertyInfo.CanWrite == false)
+            {
+                return null;
+            }
+
             var instance = Expression.Parameter(typeof(T), "instance");
             var value = Expression.Parameter(typeof(V), "value");
             var member = Expression.MakeMemberAccess(instance, memberInfo);
