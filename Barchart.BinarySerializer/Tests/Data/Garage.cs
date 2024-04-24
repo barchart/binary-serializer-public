@@ -4,22 +4,22 @@ namespace Barchart.BinarySerializer.Tests
 {
     class Garage
     {
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public Car? CarObject { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public Person? PersonObject { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public double? doubleNumberGarage;
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public decimal? DecimalNumberGarage { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public string? StringNameGarage { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public DateTime? DateTimeDateGarage { get; set; }
 
         public override bool Equals(object? obj)

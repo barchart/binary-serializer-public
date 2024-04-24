@@ -4,22 +4,22 @@ namespace Barchart.BinarySerializer.Tests
 {
     class GarageIEquatable : IEquatable<GarageIEquatable>
     {
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public CarIEquatable? CarObject { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public PersonIEquatable? PersonObject { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public double doubleNumberGarage = 0;
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public decimal DecimalNumberGarage { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public string? StringNameGarage { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public DateTime? DateTimeDateGarage { get; set; }
 
         public bool Equals(GarageIEquatable? other)

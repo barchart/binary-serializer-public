@@ -4,25 +4,25 @@ namespace Barchart.BinarySerializer.Tests
 {
     class Car
     {
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public double? doubleNumber;
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public decimal? DecimalNumber { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public string? StringName { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public DateTime? DateTimeDate { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public sbyte? SByte { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public byte? Byte { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public Person? PersonObjectInCar { get; set; }
 
         public override bool Equals(object? obj)

@@ -4,10 +4,10 @@ namespace Barchart.BinarySerializer.Tests
 {
     class Hotel
     {
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public List<int>? RoomNumbers { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public string? Data { get; set; }
 
         public override bool Equals(object? obj)

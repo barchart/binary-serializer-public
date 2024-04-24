@@ -12,7 +12,6 @@ namespace Barchart.BinarySerializer.Schemas
     {
         private static readonly object _lock = new();
         private static readonly IDictionary<Type, object> allSerializers = new Dictionary<Type, object>();
-        public static bool DefaultIncludeValue { get; set; } = true;
 
         static SchemaFactory()
         {
@@ -280,13 +279,6 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>The member data if successful; otherwise, <see langword="null"/>.</returns>
         public static IMemberData<TContainer>? GenerateData<TContainer, TMember> (MemberInfo memberInfo)
         {
-            bool include = GetIncludeAttributeValue(memberInfo);
-
-            if (!include)
-            {
-                return null;
-            }
-
             IBinaryTypeSerializer<TMember>? serializer = GetSerializer<TMember>();
 
             if (serializer == null)
@@ -297,7 +289,6 @@ namespace Barchart.BinarySerializer.Schemas
             MemberData<TContainer, TMember> newMemberData = new(
                 typeof(TMember),
                 memberInfo.Name,
-                include,
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
                 GenerateGetter<TContainer, TMember>(memberInfo),
@@ -317,13 +308,6 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>The object member data if successful; otherwise, <see langword="null"/>.</returns>
         public static IMemberData<TContainer>? GenerateObjectData<TContainer, TMember>(MemberInfo memberInfo) where TMember : new()
         {
-            bool include = GetIncludeAttributeValue(memberInfo);
-
-            if (!include)
-            {
-                return null;
-            }
-            
             IBinaryTypeSerializer<TMember>? serializer = GetSerializer<TMember>();
 
             if(serializer == null)
@@ -334,7 +318,6 @@ namespace Barchart.BinarySerializer.Schemas
             ObjectMemberData<TContainer, TMember> newMemberData = new(
                 typeof(TMember),
                 memberInfo.Name,
-                include,
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
                 GenerateGetter<TContainer, TMember>(memberInfo),
@@ -463,12 +446,6 @@ namespace Barchart.BinarySerializer.Schemas
         {
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
             return type.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, null, null);
-        }
-
-        private static bool GetIncludeAttributeValue(MemberInfo memberInfo)
-        {
-            var attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
-            return attribute?.Include ?? DefaultIncludeValue;
         }
 
         private static bool GetKeyAttributeValue(MemberInfo memberInfo)

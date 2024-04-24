@@ -14,7 +14,6 @@ namespace Barchart.BinarySerializer.Schemas
 
         public Type Type { get; }
         public string Name { get; }
-        public bool IsIncluded { get; }
         public bool IsKeyAttribute { get; }
         public MemberInfo MemberInfo { get; }
 
@@ -22,12 +21,11 @@ namespace Barchart.BinarySerializer.Schemas
         public Action<TContainer, TMember>? SetDelegate { get; }
         public IBinaryTypeSerializer<TMember> BinarySerializer { get; }
 
-        public MemberData(Type type, string name, bool isIncluded, bool isKeyAttribute, MemberInfo memberInfo,
+        public MemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo,
             Func<TContainer, TMember> getDelegate, Action<TContainer, TMember>? setDelegate, IBinaryTypeSerializer<TMember> binarySerializer)
         {
             Type = type;
             Name = name;
-            IsIncluded = isIncluded;
             IsKeyAttribute = isKeyAttribute;
             MemberInfo = memberInfo;
             GetDelegate = getDelegate;

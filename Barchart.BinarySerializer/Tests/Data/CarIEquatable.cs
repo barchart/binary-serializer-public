@@ -4,25 +4,25 @@ namespace Barchart.BinarySerializer.Tests
 {
     class CarIEquatable : IEquatable<CarIEquatable>
     {
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public double doubleNumber;
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public decimal DecimalNumber { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public string? StringName { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public DateTime? DateTimeDate { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public sbyte? SByte { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public byte? Byte { get; set; }
 
-        [BinarySerialize(include: true, key: false)]
+        [BinarySerialize(key: false)]
         public PersonIEquatable? PersonObjectInCar { get; set; }
 
         public bool Equals(CarIEquatable? other)
