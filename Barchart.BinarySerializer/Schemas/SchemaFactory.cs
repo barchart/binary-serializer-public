@@ -104,13 +104,19 @@ namespace Barchart.BinarySerializer.Schemas
         {
             Type memberType;
 
-            if (memberInfo is FieldInfo)
+            if (memberInfo is FieldInfo fieldInfo)
             {
-                memberType = ((FieldInfo)memberInfo).FieldType;
+                memberType = fieldInfo.FieldType;
+                if (fieldInfo.IsInitOnly) return null;
+            }
+            else if (memberInfo is PropertyInfo propertyInfo)
+            {
+                memberType = propertyInfo.PropertyType;
+                if (!propertyInfo.CanWrite) return null;
             }
             else
             {
-                memberType = ((PropertyInfo)memberInfo).PropertyType;
+                return null;
             }
 
             if (IsMemberComplexType(memberType) || IsMemberListType(memberType))
@@ -388,11 +394,6 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>The setter function for the specified member.</returns>
         public static Action<TContainer, TMember>? GenerateSetter<TContainer, TMember>(MemberInfo memberInfo)
         {
-            if (memberInfo is PropertyInfo propertyInfo && propertyInfo.CanWrite == false)
-            {
-                return null;
-            }
-
             var instance = Expression.Parameter(typeof(TContainer), "instance");
             var value = Expression.Parameter(typeof(TMember), "value");
             var member = Expression.MakeMemberAccess(instance, memberInfo);
