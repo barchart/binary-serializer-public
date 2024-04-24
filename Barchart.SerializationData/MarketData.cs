@@ -1,6 +1,4 @@
 ﻿using Barchart.BinarySerializer.Schemas;
-using Google.Protobuf;
-using Google.Protobuf.Collections;
 using Org.Openfeed;
 using static Org.Openfeed.InstrumentDefinition.Types;
 
@@ -63,7 +61,7 @@ public class InstrumentDefinition
     public InstrumentType? InstrumentType { get; set; }
 
     [BinarySerialize(key: false)]
-    public RepeatedField<BookType>? SupportBookTypes { get; set; }
+    public List<BookType>? SupportBookTypes { get; set; }
 
     [BinarySerialize(key: false)]
     public int? BookDepth { get; set; }
@@ -141,10 +139,10 @@ public class InstrumentDefinition
     public long? TransactionTime { get; set; }
 
     [BinarySerialize(key: false)]
-    public ByteString? AuxiliaryData { get; set; }
+    public string? AuxiliaryData { get; set; }
 
     [BinarySerialize(key: false)]
-    public RepeatedField<Symbol>? Symbols { get; set; }
+    public List<Symbol>? Symbols { get; set; }
 
     [BinarySerialize(key: false)]
     public long? OptionStrike { get; set; }
@@ -162,7 +160,7 @@ public class InstrumentDefinition
     public string? SpreadCode { get; set; }
 
     [BinarySerialize(key: false)]
-    public RepeatedField<SpreadLeg>? SpreadLeg { get; set; }
+    public List<SpreadLeg>? SpreadLeg { get; set; }
 
     [BinarySerialize(key: false)]
     public bool? UserDefinedSpread { get; set; }
@@ -270,10 +268,10 @@ public class MarketSnapshot
     public IndexValue? Index { get; set; }
 
     [BinarySerialize(key: false)]
-    public RepeatedField<AddPriceLevel>? PriceLevels { get; set; }
+    public List<AddPriceLevel>? PriceLevels { get; set; }
 
     [BinarySerialize(key: false)]
-    public RepeatedField<AddOrder>? Orders { get; set; }
+    public List<AddOrder>? Orders { get; set; }
 
     [BinarySerialize(key: false)]
     public News? News { get; set; }
@@ -372,7 +370,7 @@ public class MarketUpdate
     public long? SourceSequence { get; set; }
 
     [BinarySerialize(key: false)]
-    public ByteString? OriginatorId { get; set; }
+    public string? OriginatorId { get; set; }
 
     [BinarySerialize(key: false)]
     public int? PriceDenominator { get; set; }
