@@ -13,6 +13,8 @@ namespace Barchart.BinarySerializer.Schemas
         private static readonly object _lock = new();
         private static readonly IDictionary<Type, object> allSerializers = new Dictionary<Type, object>();
 
+        public static bool DefaultIncludeValue { get; set; } = false;
+
         static SchemaFactory()
         {
             InitializeSerializers();
@@ -84,8 +86,13 @@ namespace Barchart.BinarySerializer.Schemas
 
             foreach (MemberInfo memberInfo in members)
             {
-                IMemberData<TContainer>? memberData = ProcessMemberInfo<TContainer>(memberInfo);
-                if(memberData != null) memberDataList.Add(memberData);
+                bool isMemberIncluded = GetIncludeAttributeValue(memberInfo);
+
+                if (isMemberIncluded)
+                {
+                    IMemberData<TContainer>? memberData = ProcessMemberInfo<TContainer>(memberInfo);
+                    if (memberData != null) memberDataList.Add(memberData);
+                }
             }
 
             Schema<TContainer> schema = new(memberDataList);
@@ -402,7 +409,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         /// <summary>
         /// Determines whether the specified type is a complex type, i.e., not a value type, 
-        /// string, ByteString, Enum or List/RepeatedField.
+        /// string, ByteString, Enum or List.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a complex type; otherwise, false.</returns>
@@ -452,6 +459,12 @@ namespace Barchart.BinarySerializer.Schemas
         {
             var attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
             return attribute?.Key ?? false;
+        }
+
+        private static bool GetIncludeAttributeValue(MemberInfo memberInfo)
+        {
+            Attribute? attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
+            return attribute != null || DefaultIncludeValue;
         }
     }
 }
