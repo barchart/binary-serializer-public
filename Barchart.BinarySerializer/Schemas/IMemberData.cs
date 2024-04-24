@@ -24,4 +24,3 @@ namespace Barchart.BinarySerializer.Schemas
         public int GetLengthInBits(TContainer oldObject, TContainer newObject);
     }
 }
-

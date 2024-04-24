@@ -290,7 +290,7 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void ListAndByteStringDifferenceSerializationTest()
+        public void ListAndStringDifferenceSerializationTest()
         {
             try
             {

@@ -1,5 +1,4 @@
 ﻿using Barchart.BinarySerializer.Types;
-using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -409,7 +408,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         /// <summary>
         /// Determines whether the specified type is a complex type, i.e., not a value type, 
-        /// string, ByteString, Enum or List.
+        /// string, Enum or List.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a complex type; otherwise, false.</returns>
@@ -419,13 +418,13 @@ namespace Barchart.BinarySerializer.Schemas
             var isValueType = type.IsValueType;
             var isStringType = type == typeof(string);
             var isEnumType = underLyingType == null ? type.IsEnum : underLyingType.IsEnum;
-            var isListOrRepeatedFieldGenericType = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
+            var isListOrGenericType = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
 
-            return !isValueType && !isEnumType && !isStringType && !isListOrRepeatedFieldGenericType;
+            return !isValueType && !isEnumType && !isStringType && !isListOrGenericType;
         }
 
         /// <summary>
-        /// Determines whether the specified type is a List or RepeatedField type, 
+        /// Determines whether the specified type is a List type, 
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a list type; otherwise, false./returns>

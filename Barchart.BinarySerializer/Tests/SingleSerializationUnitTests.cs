@@ -171,8 +171,13 @@ namespace Barchart.BinarySerializer.Tests
 
         class TestClass
         {
+            [BinarySerialize(key: false)]
             public TestEnum? enumField;
+
+            [BinarySerialize(key: false)]
             public TestEnum? enumField2;
+
+            [BinarySerialize(key: false)]
             public List<int> list = new() { 2 , 3 };
         }
 
@@ -184,7 +189,7 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void EnumAndRepeatedFieldSerializationTest()
+        public void EnumAndListSerializationTest()
         {
             try
             {
@@ -217,7 +222,7 @@ namespace Barchart.BinarySerializer.Tests
         }
 
         [Fact]
-        public void ListAndByteStringSerializationTest()
+        public void ListAndStringSerializationTest()
         {
             try
             {
