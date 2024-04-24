@@ -3,13 +3,13 @@
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Provides methods for encoding and decoding values of type <typeparamref name="TContainer"/> to and from a <see cref="DataBuffer"/>.
+    /// Provides methods for encoding and decoding values of type <typeparamref name="TMember"/> to and from a <see cref="DataBuffer"/>.
     /// </summary>
-    /// <typeparam name="TContainer">The type of the value to be serialized.</typeparam>
-    public interface IBinaryTypeSerializer<TContainer>
+    /// <typeparam name="TMember">The type of the value to be serialized.</typeparam>
+    public interface IBinaryTypeSerializer<TMember>
     {
-        public void Encode(DataBuffer dataBuffer, TContainer value);
-        public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer);
-        public int GetLengthInBits(TContainer value);
+        public void Encode(DataBuffer dataBuffer, TMember value);
+        public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer);
+        public int GetLengthInBits(TMember value);
     }
 }

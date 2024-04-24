@@ -1,16 +1,16 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Stores header byte in a specified format based on missing/null bits and string length bits and the value of type <typeparamref name="TContainer"/>.
+    /// Stores header byte in a specified format based on missing/null bits and string length bits and the value of type <typeparamref name="TMember"/>.
     /// </summary>
-    /// <typeparam name="TContainer">The type of the value stored alongside the header.</typeparam>
-    public struct HeaderWithValue<TContainer>
+    /// <typeparam name="TMember">The type of the value stored alongside the header.</typeparam>
+    public struct HeaderWithValue<TMember>
     {
         public Header Header { get; set; }
 
-        public TContainer? Value { get; set; }
+        public TMember? Value { get; set; }
 
-        public HeaderWithValue(Header header, TContainer? value)
+        public HeaderWithValue(Header header, TMember? value)
         {
             Header = header;
             Value = value;
