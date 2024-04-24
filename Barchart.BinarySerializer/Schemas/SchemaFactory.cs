@@ -310,7 +310,7 @@ namespace Barchart.BinarySerializer.Schemas
         {
             IBinaryTypeSerializer<TMember>? serializer = GetSerializer<TMember>();
 
-            if(serializer == null)
+            if (serializer == null)
             {
                 return null;
             }
