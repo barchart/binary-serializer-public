@@ -34,7 +34,7 @@ app.Map("/ws", async context => {
 
             MarketData newMarketData = new()
             {
-                SubscriptionResponse = new Barchart.SerializationData.SubscriptionResponse
+                SubscriptionResponse = new SubscriptionResponse
                 {
                     Symbol = symbols[random.Next(symbols.Length)],
                     CorrelationId = random.Next(),
@@ -45,7 +45,7 @@ app.Map("/ws", async context => {
                     Unsubscribe = random.Next(0, 2) == 0 ? false : true,
                     SnapshotIntervalSeconds = random.Next(1, 3600)
                 },
-                InstrumentDefinition = new Barchart.SerializationData.InstrumentDefinition
+                InstrumentDefinition = new InstrumentDefinition
                 {
                     MarketId = random.Next(),
                     BookDepth = random.Next(),
@@ -53,14 +53,14 @@ app.Map("/ws", async context => {
                     Symbol = symbols[random.Next(symbols.Length)],
                     Description = descriptions[random.Next(descriptions.Length)]
                 },
-                MarketSnapshot = new Barchart.SerializationData.MarketSnapshot
+                MarketSnapshot = new MarketSnapshot
                 {
                     MarketId = random.Next(),
                     TransactionTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                     MarketSequence = random.Next(),
                     TradeDate = random.Next(20240101, 20250101)
                 },
-                MarketUpdate = new Barchart.SerializationData.MarketUpdate
+                MarketUpdate = new MarketUpdate
                 {
                     MarketId = random.Next(),
                     Symbol = symbols[random.Next(symbols.Length)],
@@ -102,7 +102,7 @@ await app.RunAsync();
 
 void CopyMarketData(MarketData source, MarketData target)
 {
-    target.SubscriptionResponse = new Barchart.SerializationData.SubscriptionResponse
+    target.SubscriptionResponse = new SubscriptionResponse
     {
         Symbol = source.SubscriptionResponse?.Symbol,
         CorrelationId = source.SubscriptionResponse?.CorrelationId,
@@ -114,7 +114,7 @@ void CopyMarketData(MarketData source, MarketData target)
         SnapshotIntervalSeconds = source.SubscriptionResponse?.SnapshotIntervalSeconds
     };
 
-    target.InstrumentDefinition = new Barchart.SerializationData.InstrumentDefinition
+    target.InstrumentDefinition = new InstrumentDefinition
     {
         MarketId = source.InstrumentDefinition?.MarketId,
         BookDepth = source.InstrumentDefinition?.BookDepth,
@@ -123,7 +123,7 @@ void CopyMarketData(MarketData source, MarketData target)
         Description = source.InstrumentDefinition?.Description
     };
 
-    target.MarketSnapshot = new Barchart.SerializationData.MarketSnapshot
+    target.MarketSnapshot = new MarketSnapshot
     {
         MarketId = source.MarketSnapshot?.MarketId,
         TransactionTime = source.MarketSnapshot?.TransactionTime,
@@ -131,7 +131,7 @@ void CopyMarketData(MarketData source, MarketData target)
         TradeDate = source.MarketSnapshot?.TradeDate
     };
 
-    target.MarketUpdate = new Barchart.SerializationData.MarketUpdate
+    target.MarketUpdate = new MarketUpdate
     {
         MarketId = source.MarketUpdate?.MarketId,
         Symbol = source.MarketUpdate?.Symbol,
