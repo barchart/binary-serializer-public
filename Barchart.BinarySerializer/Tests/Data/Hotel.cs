@@ -1,5 +1,4 @@
 ﻿using Barchart.BinarySerializer.Schemas;
-using Google.Protobuf;
 
 namespace Barchart.BinarySerializer.Tests
 {
@@ -9,7 +8,7 @@ namespace Barchart.BinarySerializer.Tests
         public List<int>? RoomNumbers { get; set; }
 
         [BinarySerialize(include: true, key: false)]
-        public ByteString? Data { get; set; }
+        public string? Data { get; set; }
 
         public override bool Equals(object? obj)
         {

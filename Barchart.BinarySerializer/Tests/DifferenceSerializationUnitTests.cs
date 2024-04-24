@@ -1,6 +1,5 @@
 ﻿using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Utility;
-using Google.Protobuf;
 using System.Diagnostics;
 using Xunit;
 using Xunit.Abstractions;
@@ -300,13 +299,13 @@ namespace Barchart.BinarySerializer.Tests
                 Hotel hotel1 = new()
                 {
                     RoomNumbers = new List<int> { 101, 105, 103 },
-                    Data = ByteString.CopyFromUtf8("104")
+                    Data = "104"
                 };
 
                 Hotel hotel2 = new()
                 {
                     RoomNumbers = new List<int> { 101, 102, 103 },
-                    Data = ByteString.CopyFromUtf8("105")
+                    Data = "105"
                 };
 
                 Schema<Hotel> hotelSchema = SchemaFactory.GetSchema<Hotel>();

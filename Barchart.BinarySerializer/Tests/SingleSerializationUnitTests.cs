@@ -1,9 +1,6 @@
 ﻿using System.Diagnostics;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Utility;
-using Google.Protobuf;
-using Google.Protobuf.Collections;
-using Org.Openfeed;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -176,7 +173,7 @@ namespace Barchart.BinarySerializer.Tests
         {
             public TestEnum? enumField;
             public TestEnum? enumField2;
-            public RepeatedField<int> repeatedField = new() { 2 , 3 };
+            public List<int> list = new() { 2 , 3 };
         }
 
         enum TestEnum
@@ -209,7 +206,7 @@ namespace Barchart.BinarySerializer.Tests
                 _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
                 Assert.Equal(testClass.enumField, deserializedTestClass.enumField);
-                Assert.Equal(testClass.repeatedField, deserializedTestClass.repeatedField);
+                Assert.Equal(testClass.list, deserializedTestClass.list);
 
             }
             catch (Exception ex)
@@ -229,7 +226,7 @@ namespace Barchart.BinarySerializer.Tests
                 Hotel hotel = new()
                 {
                     RoomNumbers = new List<int> { 101, 102, 103 },
-                    Data = ByteString.CopyFromUtf8("104")
+                    Data = "104"
                 };
 
                 Schema<Hotel> hotelSchema = SchemaFactory.GetSchema<Hotel>();
@@ -242,81 +239,6 @@ namespace Barchart.BinarySerializer.Tests
                 _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
                 Assert.Equal(hotel, deserializedHotel);
-            }
-            catch (Exception ex)
-            {
-                LoggerWrapper.LogError(ex.Message);
-                throw;
-            }
-        }
-
-        [Fact]
-        public void MarketSnapshotTest()
-        {
-            try
-            {
-                Stopwatch stopwatch = new();
-
-                MarketSnapshot marketSnapshot = new()
-                {
-                    MarketId = 5389879102616877808,
-                    TransactionTime = 1713192945516374835,
-                    MarketSequence = 1754155,
-                    TradeDate = 20240415,
-                    TotalChunks = 1,
-                    CurrentChunk = 1,
-                    Symbol = "AAPL",
-                    PriceDenominator = 0,
-                    Service = Service.Delayed,
-                    InstrumentStatus = new InstrumentStatus
-                    {
-                        TradingStatus = InstrumentTradingStatus.Open,
-                        TradeDate = 20240415
-                    },
-                    Bbo = new BestBidOffer
-                    {
-                        BidPrice = 1749400,
-                        BidQuantity = 2,
-                        BidOriginator = ByteString.CopyFromUtf8("UA == "),
-                        OfferPrice = 1749500,
-                        OfferQuantity = 3,
-                        OfferOriginator = ByteString.CopyFromUtf8("UQ=="),
-                        QuoteCondition = ByteString.CopyFromUtf8("Ug==")
-                    }
-                };
-
-                Schema<MarketSnapshot> marketSnapshotSchema = SchemaFactory.GetSchema<MarketSnapshot>();
-
-                stopwatch.Start();
-
-                byte[] serializedData = marketSnapshotSchema.Serialize(marketSnapshot);
-                MarketSnapshot deserializedMarketSnapshot = marketSnapshotSchema.Deserialize(serializedData);
-
-                stopwatch.Stop();
-                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
-
-                Assert.Equal(marketSnapshot.MarketId, deserializedMarketSnapshot.MarketId);
-                Assert.Equal(marketSnapshot.TransactionTime, deserializedMarketSnapshot.TransactionTime);
-                Assert.Equal(marketSnapshot.MarketSequence, deserializedMarketSnapshot.MarketSequence);
-                Assert.Equal(marketSnapshot.TradeDate, deserializedMarketSnapshot.TradeDate);
-                Assert.Equal(marketSnapshot.TotalChunks, deserializedMarketSnapshot.TotalChunks);
-                Assert.Equal(marketSnapshot.CurrentChunk, deserializedMarketSnapshot.CurrentChunk);
-                Assert.Equal(marketSnapshot.Symbol, deserializedMarketSnapshot.Symbol);
-                Assert.Equal(marketSnapshot.PriceDenominator, deserializedMarketSnapshot.PriceDenominator);
-                Assert.Equal(marketSnapshot.Service, deserializedMarketSnapshot.Service);
-
-                Assert.NotNull(deserializedMarketSnapshot.InstrumentStatus);
-                Assert.Equal(marketSnapshot.InstrumentStatus.TradingStatus, deserializedMarketSnapshot.InstrumentStatus.TradingStatus);
-                Assert.Equal(marketSnapshot.InstrumentStatus.TradeDate, deserializedMarketSnapshot.InstrumentStatus.TradeDate);
-
-                Assert.NotNull(deserializedMarketSnapshot.Bbo);
-                Assert.Equal(marketSnapshot.Bbo.BidPrice, deserializedMarketSnapshot.Bbo.BidPrice);
-                Assert.Equal(marketSnapshot.Bbo.BidQuantity, deserializedMarketSnapshot.Bbo.BidQuantity);
-                Assert.Equal(marketSnapshot.Bbo.BidOriginator, deserializedMarketSnapshot.Bbo.BidOriginator);
-                Assert.Equal(marketSnapshot.Bbo.OfferPrice, deserializedMarketSnapshot.Bbo.OfferPrice);
-                Assert.Equal(marketSnapshot.Bbo.OfferQuantity, deserializedMarketSnapshot.Bbo.OfferQuantity);
-                Assert.Equal(marketSnapshot.Bbo.OfferOriginator, deserializedMarketSnapshot.Bbo.OfferOriginator);
-                Assert.Equal(marketSnapshot.Bbo.QuoteCondition, deserializedMarketSnapshot.Bbo.QuoteCondition);
             }
             catch (Exception ex)
             {

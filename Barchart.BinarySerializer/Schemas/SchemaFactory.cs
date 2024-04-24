@@ -1,6 +1,5 @@
 ﻿using Barchart.BinarySerializer.Types;
-using Google.Protobuf;
-using Google.Protobuf.Collections;
+using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -38,7 +37,6 @@ namespace Barchart.BinarySerializer.Schemas
             BinarySerializerDecimal decimalSerializer = new();
             BinarySerializerDateTime dateTimeSerializer = new();
             BinarySerializerDateOnly dateOnlySerializer = new();
-            BinarySerializerByteString byteStringSerializer = new();
 
             allSerializers.Add(typeof(string), stringSerializer);
             allSerializers.Add(typeof(int), intSerializer);
@@ -56,7 +54,6 @@ namespace Barchart.BinarySerializer.Schemas
             allSerializers.Add(typeof(decimal), decimalSerializer);
             allSerializers.Add(typeof(DateTime), dateTimeSerializer);
             allSerializers.Add(typeof(DateOnly), dateOnlySerializer);
-            allSerializers.Add(typeof(ByteString), byteStringSerializer);
 
             allSerializers.Add(typeof(int?), new BinarySerializerNullable<int>(intSerializer));
             allSerializers.Add(typeof(short?), new BinarySerializerNullable<short>(shortSerializer));
@@ -116,7 +113,7 @@ namespace Barchart.BinarySerializer.Schemas
                 memberType = ((PropertyInfo)memberInfo).PropertyType;
             }
 
-            if (IsMemberComplexType(memberType) || IsMemberListOrRepeatedFieldType(memberType))
+            if (IsMemberComplexType(memberType) || IsMemberListType(memberType))
             {
                 return GenerateObjectMemberData<TContainer>(memberType, memberInfo);
             }
@@ -218,7 +215,7 @@ namespace Barchart.BinarySerializer.Schemas
 
                 return result;
             }
-            else if (IsMemberListOrRepeatedFieldType(typeof(TMember)))
+            else if (IsMemberListType(typeof(TMember)))
             {
                 Type elementsType = typeof(TMember).GetGenericArguments()[0];
 
@@ -430,25 +427,14 @@ namespace Barchart.BinarySerializer.Schemas
             Type? underLyingType = Nullable.GetUnderlyingType(type);
             var isValueType = type.IsValueType;
             var isStringType = type == typeof(string);
-            var isByteStringType = type == typeof(ByteString);
             var isEnumType = underLyingType == null ? type.IsEnum : underLyingType.IsEnum;
-            var isListOrRepeatedFieldGenericType = type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(RepeatedField<>) || type.GetGenericTypeDefinition() == typeof(List<>));
+            var isListOrRepeatedFieldGenericType = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
 
-            return !isValueType && !isEnumType && !isStringType && !isByteStringType && !isListOrRepeatedFieldGenericType;
+            return !isValueType && !isEnumType && !isStringType && !isListOrRepeatedFieldGenericType;
         }
 
         /// <summary>
         /// Determines whether the specified type is a List or RepeatedField type, 
-        /// </summary>
-        /// <param name="type">The type to be checked.</param>
-        /// <returns>True if the type is a list type; otherwise, false./returns>
-        private static bool IsMemberListOrRepeatedFieldType(Type type)
-        {
-            return IsMemberListType(type) || IsMemberRepeatedFieldType(type);
-        }
-
-        /// <summary>
-        /// Determines whether the specified type is a List type, 
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a list type; otherwise, false./returns>
@@ -470,16 +456,6 @@ namespace Barchart.BinarySerializer.Schemas
         private static bool IsNullableNumericType(Type type)
         {
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-        }
-
-        /// <summary>
-        /// Determines whether the specified type is a RepeatedField type, 
-        /// </summary>
-        /// <param name="type">The type to be checked.</param>
-        /// <returns>True if the type is a list type; otherwise, false./returns>
-        private static bool IsMemberRepeatedFieldType(Type type)
-        {
-            return type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(RepeatedField<>));
         }
 
         private static MemberInfo[] GetAllMembersForType(Type type)
