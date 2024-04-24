@@ -16,7 +16,7 @@ public class MarketData
     public MarketSnapshot? MarketSnapshot { get; set; }
 
     [BinarySerialize(key: false)]
-    public MarketUpdate? MarketUpdate{ get; set; }
+    public MarketUpdate? MarketUpdate { get; set; }
 }
 
 public class SubscriptionResponse
