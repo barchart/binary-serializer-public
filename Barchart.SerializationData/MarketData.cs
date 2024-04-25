@@ -238,6 +238,9 @@ public class MarketState
     public int? PriceDenominator { get; set; }
 
     [BinarySerialize(key: false)]
+    public InstrumentStatus? InstrumentStatus { get; set; }
+
+    [BinarySerialize(key: false)]
     public BestBidOffer? BBO { get; set; }
 
     [BinarySerialize(key: false)]
