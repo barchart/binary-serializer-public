@@ -13,10 +13,7 @@ public class MarketData
     public InstrumentDefinition? InstrumentDefinition { get; set; }
 
     [BinarySerialize(key: false)]
-    public MarketSnapshot? MarketSnapshot { get; set; }
-
-    [BinarySerialize(key: false)]
-    public MarketUpdate? MarketUpdate { get; set; }
+    public MarketState? MarketState { get; set; }
 }
 
 public class SubscriptionResponse
@@ -229,25 +226,10 @@ public class InstrumentDefinition
     public long? UnderlyingOpenfeedMarketId { get; set; }
 }
 
-public class MarketSnapshot
+public class MarketState
 {
     [BinarySerialize(key: false)]
-    public long? MarketId { get; set; }
-
-    [BinarySerialize(key: false)]
-    public long? TransactionTime { get; set; }
-
-    [BinarySerialize(key: false)]
-    public long? MarketSequence { get; set; }
-
-    [BinarySerialize(key: false)]
     public int? TradeDate { get; set; }
-
-    [BinarySerialize(key: false)]
-    public int? TotalChunks { get; set; }
-
-    [BinarySerialize(key: false)]
-    public int? CurrentChunk { get; set; }
 
     [BinarySerialize(key: false)]
     public string? Symbol { get; set; }
@@ -256,25 +238,10 @@ public class MarketSnapshot
     public int? PriceDenominator { get; set; }
 
     [BinarySerialize(key: false)]
-    public Service? Service { get; set; }
-
-    [BinarySerialize(key: false)]
-    public InstrumentStatus? InstrumentStatus { get; set; }
-
-    [BinarySerialize(key: false)]
     public BestBidOffer? BBO { get; set; }
 
     [BinarySerialize(key: false)]
     public IndexValue? Index { get; set; }
-
-    [BinarySerialize(key: false)]
-    public List<AddPriceLevel>? PriceLevels { get; set; }
-
-    [BinarySerialize(key: false)]
-    public List<AddOrder>? Orders { get; set; }
-
-    [BinarySerialize(key: false)]
-    public News? News { get; set; }
 
     [BinarySerialize(key: false)]
     public Open? Open { get; set; }
@@ -304,31 +271,10 @@ public class MarketSnapshot
     public Volume? Volume { get; set; }
 
     [BinarySerialize(key: false)]
-    public Settlement? Settlement { get; set; }
-
-    [BinarySerialize(key: false)]
-    public OpenInterest? OpenInterest { get; set; }
-
-    [BinarySerialize(key: false)]
     public Vwap? Vwap { get; set; }
 
     [BinarySerialize(key: false)]
-    public DividendsIncomeDistributions? DividendsIncomeDistributions { get; set; }
-
-    [BinarySerialize(key: false)]
     public NumberOfTrades? NumberOfTrades { get; set; }
-
-    [BinarySerialize(key: false)]
-    public MonetaryValue? MonetaryValue { get; set; }
-
-    [BinarySerialize(key: false)]
-    public CapitalDistributions? CapitalDistributions { get; set; }
-
-    [BinarySerialize(key: false)]
-    public SharesOutstanding? SharesOutstanding { get; set; }
-
-    [BinarySerialize(key: false)]
-    public NetAssetValue? NetAssetValue { get; set; }
 
     [BinarySerialize(key: false)]
     public MarketSession? PreviousSession { get; set; }
@@ -347,136 +293,10 @@ public class MarketSnapshot
 
     [BinarySerialize(key: false)]
     public MarketSession? ZSession { get; set; }
-}
-
-public class MarketUpdate
-{
-    [BinarySerialize(key: false)]
-    public long? MarketId { get; set; }
-
-    [BinarySerialize(key: false)]
-    public string? Symbol { get; set; }
-
-    [BinarySerialize(key: false)]
-    public long? TransactionTime { get; set; }
-
-    [BinarySerialize(key: false)]
-    public long? DistributionTime { get; set; }
-
-    [BinarySerialize(key: false)]
-    public long? MarketSequence { get; set; }
-
-    [BinarySerialize(key: false)]
-    public long? SourceSequence { get; set; }
-
-    [BinarySerialize(key: false)]
-    public string? OriginatorId { get; set; }
-
-    [BinarySerialize(key: false)]
-    public int? PriceDenominator { get; set; }
-
-    [BinarySerialize(key: false)]
-    public Context? Context { get; set; }
 
     [BinarySerialize(key: false)]
     public MarketSession? Session { get; set; }
 
     [BinarySerialize(key: false)]
-    public MarketSession? TSession { get; set; }
-
-    [BinarySerialize(key: false)]
-    public MarketSession? PreviousSession { get; set; }
-
-    [BinarySerialize(key: false)]
-    public bool? Regional { get; set; }
-
-    [BinarySerialize(key: false)]
-    public MarketSession? ZSession { get; set; }
-
-    [BinarySerialize(key: false)]
-    public News? News { get; set; }
-
-    [BinarySerialize(key: false)]
-    public ClearBook? ClearBook { get; set; }
-
-    [BinarySerialize(key: false)]
-    public InstrumentStatus? InstrumentStatus { get; set; }
-
-    [BinarySerialize(key: false)]
-    public BestBidOffer? BBO { get; set; }
-
-    [BinarySerialize(key: false)]
-    public DepthPriceLevel? DepthPriceLevel { get; set; }
-
-    [BinarySerialize(key: false)]
-    public DepthOrder? DepthOrder { get; set; }
-
-    [BinarySerialize(key: false)]
-    public IndexValue? Index { get; set; }
-
-    [BinarySerialize(key: false)]
-    public Trades? Trades { get; set; }
-
-    [BinarySerialize(key: false)]
-    public Open? Open { get; set; }
-
-    [BinarySerialize(key: false)]
-    public High? High { get; set; }
-
-    [BinarySerialize(key: false)]
-    public Low? Low { get; set; }
-
-    [BinarySerialize(key: false)]
-    public Close? Close { get; set; }
-
-    [BinarySerialize(key: false)]
-    public PrevClose? PrevClose { get; set; }
-
-    [BinarySerialize(key: false)]
-    public Last? Last { get; set; }
-
-    [BinarySerialize(key: false)]
-    public YearHigh? YearHigh { get; set; }
-
-    [BinarySerialize(key: false)]
-    public YearLow? YearLow { get; set; }
-
-    [BinarySerialize(key: false)]
-    public Volume? Volume { get; set; }
-
-    [BinarySerialize(key: false)]
-    public Settlement? Settlement { get; set; }
-
-    [BinarySerialize(key: false)]
-    public OpenInterest? OpenInterest { get; set; }
-
-    [BinarySerialize(key: false)]
-    public Vwap? Vwap { get; set; }
-
-    [BinarySerialize(key: false)]
-    public DividendsIncomeDistributions? DividendsIncomeDistributions { get; set; }
-
-    [BinarySerialize(key: false)]
-    public NumberOfTrades? NumberOfTrades { get; set; }
-
-    [BinarySerialize(key: false)]
-    public MonetaryValue? MonetaryValue { get; set; }
-
-    [BinarySerialize(key: false)]
-    public CapitalDistributions? CapitalDistributions { get; set; }
-
-    [BinarySerialize(key: false)]
-    public SharesOutstanding? SharesOutstanding { get; set; }
-
-    [BinarySerialize(key: false)]
-    public NetAssetValue? NetAssetValue { get; set; }
-
-    [BinarySerialize(key: false)]
     public MarketSummary? MarketSummary { get; set; }
-
-    [BinarySerialize(key: false)]
-    public HighRolling? HighRolling { get; set; }
-
-    [BinarySerialize(key: false)]
-    public LowRolling? LowRolling { get; set; }
 }
