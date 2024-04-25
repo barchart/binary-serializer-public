@@ -53,21 +53,10 @@ app.Map("/ws", async context => {
                     Symbol = symbols[random.Next(symbols.Length)],
                     Description = descriptions[random.Next(descriptions.Length)]
                 },
-                MarketSnapshot = new MarketSnapshot
+                MarketState = new MarketState
                 {
-                    MarketId = random.Next(),
-                    TransactionTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    MarketSequence = random.Next(),
-                    TradeDate = random.Next(20240101, 20250101)
-                },
-                MarketUpdate = new MarketUpdate
-                {
-                    MarketId = random.Next(),
-                    Symbol = symbols[random.Next(symbols.Length)],
-                    TransactionTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    DistributionTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    MarketSequence = random.Next(),
-                    SourceSequence = random.Next()
+                    TradeDate = random.Next(20240101, 20250101),
+                    Symbol = symbols[random.Next(symbols.Length)]
                 }
             };
 
@@ -123,21 +112,9 @@ void CopyMarketData(MarketData source, MarketData target)
         Description = source.InstrumentDefinition?.Description
     };
 
-    target.MarketSnapshot = new MarketSnapshot
+    target.MarketState = new MarketState
     {
-        MarketId = source.MarketSnapshot?.MarketId,
-        TransactionTime = source.MarketSnapshot?.TransactionTime,
-        MarketSequence = source.MarketSnapshot?.MarketSequence,
-        TradeDate = source.MarketSnapshot?.TradeDate
-    };
-
-    target.MarketUpdate = new MarketUpdate
-    {
-        MarketId = source.MarketUpdate?.MarketId,
-        Symbol = source.MarketUpdate?.Symbol,
-        TransactionTime = source.MarketUpdate?.TransactionTime,
-        DistributionTime = source.MarketUpdate?.DistributionTime,
-        MarketSequence = source.MarketUpdate?.MarketSequence,
-        SourceSequence = source.MarketUpdate?.SourceSequence
+        TradeDate = source.MarketState?.TradeDate,
+        Symbol = source.MarketState?.Symbol
     };
 }

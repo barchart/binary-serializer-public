@@ -51,21 +51,10 @@ app.Map("/ws", async context => {
                     Symbol = symbols[random.Next(symbols.Length)],
                     Description = descriptions[random.Next(descriptions.Length)]
                 },
-                MarketSnapshot = new MarketSnapshot
+                MarketState = new MarketState
                 {
-                    MarketId = random.Next(),
-                    TransactionTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    MarketSequence = random.Next(),
-                    TradeDate = random.Next(20240101, 20250101)
-                },
-                MarketUpdate = new MarketUpdate
-                {
-                    MarketId = random.Next(),
-                    Symbol = symbols[random.Next(symbols.Length)],
-                    TransactionTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    DistributionTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    MarketSequence = random.Next(),
-                    SourceSequence = random.Next()
+                    TradeDate = random.Next(20240101, 20250101),
+                    Symbol = symbols[random.Next(symbols.Length)]
                 }
             };
 

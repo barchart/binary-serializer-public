@@ -40,26 +40,12 @@
                 <p>Description: @marketData.InstrumentDefinition.Description</p>
             </div>
         }
-        @if (marketData?.MarketSnapshot != null)
+        @if (marketData?.MarketState != null)
         {
             <div>
-                <h5>MarketSnapshot:</h5>
-                <p>MarketId: @marketData.MarketSnapshot.MarketId</p>
-                <p>TransactionTime: @marketData.MarketSnapshot.TransactionTime</p>
-                <p>MarketSequence: @marketData.MarketSnapshot.MarketSequence</p>
-                <p>TradeDate: @marketData.MarketSnapshot.TradeDate</p>
-            </div>
-        }
-        @if (marketData?.MarketUpdate != null)
-        {
-            <div>
-                <h5>MarketUpdate:</h5>
-                <p>MarketId: @marketData.MarketUpdate.MarketId</p>
-                <p>Symbol: @marketData.MarketUpdate.Symbol</p>
-                <p>TransactionTime: @marketData.MarketUpdate.TransactionTime</p>
-                <p>DistributionTime: @marketData.MarketUpdate.DistributionTime</p>
-                <p>MarketSequence: @marketData.MarketUpdate.MarketSequence</p>
-                <p>SourceSequence: @marketData.MarketUpdate.SourceSequence</p>
+                <h5>MarketState:</h5>
+                <p>Symbol: @marketData.MarketState.Symbol</p>
+                <p>TradeDate: @marketData.MarketState.TradeDate</p>
             </div>
         }
     </div>
