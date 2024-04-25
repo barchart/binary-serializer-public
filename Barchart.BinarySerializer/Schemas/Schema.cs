@@ -234,8 +234,13 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="objectToUpdate">The object to update.</param>
         /// <param name="newObject">The object containing the new values.</param>
-        public void CompareAndUpdateObject(TContainer objectToUpdate, TContainer newObject)
+        public void CompareAndUpdateObject(TContainer? objectToUpdate, TContainer? newObject)
         {
+            if (objectToUpdate == null || newObject == null)
+            {
+                return;
+            }
+
             foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 memberData.CompareAndUpdateObject(objectToUpdate, newObject);
