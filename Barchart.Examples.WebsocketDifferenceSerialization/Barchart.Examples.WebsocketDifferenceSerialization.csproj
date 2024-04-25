@@ -7,6 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SerializationData" Version="1.0.33" />
+    <PackageReference Include="SerializationData" Version="1.0.34" />
   </ItemGroup>
 </Project>
