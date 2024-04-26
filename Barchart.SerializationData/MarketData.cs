@@ -66,7 +66,7 @@ public class InstrumentDefinition
     [BinarySerialize(key: false)]
     public string? VendorId { get; set; }
 
-    [BinarySerialize(key: false)]
+    [BinarySerialize(key: true)]
     public string? Symbol { get; set; }
 
     [BinarySerialize(key: false)]
@@ -231,7 +231,7 @@ public class MarketState
     [BinarySerialize(key: false)]
     public int? TradeDate { get; set; }
 
-    [BinarySerialize(key: false)]
+    [BinarySerialize(key: true)]
     public string? Symbol { get; set; }
 
     [BinarySerialize(key: false)]
