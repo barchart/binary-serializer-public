@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Barchart.BinarySerializer.Schemas
+﻿namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
     /// Represents a schema for serializing and deserializing objects of type <typeparamref name="TContainer"/>.
@@ -8,7 +6,7 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="TContainer">The type of objects serialized and deserialized by this schema.</typeparam>
     public class Schema<TContainer> : ISchema where TContainer : new()
     {
-        private const int BufferSize = 256000000;
+        private const int BufferSize = 1000000;
         
         [ThreadStatic]
         private static byte[]? _buffer;
