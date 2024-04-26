@@ -3,9 +3,13 @@ using Barchart.BinarySerializer.Utility;
 
 namespace Barchart.BinarySerializer.Types
 {
-	public class BinarySerializerNullable<TMember> : IBinaryTypeSerializer<TMember?> where TMember : struct
+    /// <summary>
+    /// Provides binary serialization functionality for nullable value types.
+    /// This class implements the IBinaryTypeSerializer interface for nullable value types.
+    /// </summary>
+    /// <typeparam name="TMember">The underlying value type of the nullable type.</typeparam>
+    public class BinarySerializerNullable<TMember> : IBinaryTypeSerializer<TMember?> where TMember : struct
 	{
-        public const int NumberOfHeaderBitsNumeric = 2;
         private readonly IBinaryTypeSerializer<TMember> _serializer;
 
         public BinarySerializerNullable(IBinaryTypeSerializer<TMember> serializer)
@@ -22,7 +26,7 @@ namespace Barchart.BinarySerializer.Types
             else
             {
                 Header header = new() { IsMissing = false, IsNull = true };
-                BufferHelper.WriteHeader(dataBuffer , header);
+                Utility.UtilityKit.WriteHeader(dataBuffer, header);
             }
         }
 
@@ -30,7 +34,7 @@ namespace Barchart.BinarySerializer.Types
         {
             HeaderWithValue<TMember> headerWithValue = _serializer.Decode(dataBuffer);
 
-            if(headerWithValue.Header.IsNull || headerWithValue.Header.IsMissing) 
+            if (headerWithValue.Header.IsNull || headerWithValue.Header.IsMissing) 
             {
                 return new HeaderWithValue<TMember?>(headerWithValue.Header, null);
             }
@@ -40,7 +44,7 @@ namespace Barchart.BinarySerializer.Types
 
         public int GetLengthInBits(TMember? value)
         {
-            return value == null ? NumberOfHeaderBitsNumeric : _serializer.GetLengthInBits((TMember)value);
+            return value == null ? Utility.UtilityKit.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((TMember)value);
         }
     }
 }

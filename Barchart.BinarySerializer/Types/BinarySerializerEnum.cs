@@ -2,6 +2,11 @@
 
 namespace Barchart.BinarySerializer.Types
 {
+    /// <summary>
+    /// Provides binary serialization functionality for enum types.
+    /// This class implements the IBinaryTypeSerializer interface for enum types.
+    /// </summary>
+    /// <typeparam name="TMember">The enum type to be serialized.</typeparam>
     public class BinarySerializerEnum<TMember> : IBinaryTypeSerializer<TMember> where TMember : Enum
     {
         private readonly BinarySerializerInt32 _serializer;

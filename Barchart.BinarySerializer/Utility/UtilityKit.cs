@@ -3,8 +3,11 @@ using Barchart.BinarySerializer.Types;
 
 namespace Barchart.BinarySerializer.Utility
 {
-	public static class BufferHelper
+	public static class UtilityKit
 	{
+        public static readonly int NumberOfHeaderBitsNonString = 2;
+        public static readonly int NumberOfHeaderBitsString = 8;
+
         public static void EncodeMissingFlag(DataBuffer dataBuffer)
         {
             dataBuffer.WriteBit(1);
@@ -53,6 +56,29 @@ namespace Barchart.BinarySerializer.Utility
                 dataBuffer.WriteByte(lengthBytes[i]);
             }
         }
+
+        public static void WriteValueBytes(DataBuffer dataBuffer, byte[] valueBytes)
+        {
+            for (int i = valueBytes.Length - 1; i >= 0; i--)
+            {
+                dataBuffer.WriteByte(valueBytes[i]);
+            }
+        }
+
+        public static byte[] ReadValueBytes(DataBuffer dataBuffer, int size)
+        {
+            byte[] valueBytes = new byte[size];
+            for (int i = size - 1; i >= 0; i--)
+            {
+                valueBytes[i] = dataBuffer.ReadByte();
+            }
+
+            return valueBytes;
+        }
+
+        public static bool IsHeaderMissingOrNull(Header header)
+        {
+            return header.IsMissing || header.IsNull;
+        }
     }
 }
-

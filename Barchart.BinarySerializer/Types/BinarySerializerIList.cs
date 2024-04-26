@@ -3,9 +3,14 @@ using Barchart.BinarySerializer.Utility;
 
 namespace Barchart.BinarySerializer.Types
 {
+    /// <summary>
+    /// Provides binary serialization functionality for objects implementing the IList interface.
+    /// This class implements the IBinaryTypeObjectSerializer interface for IList types.
+    /// </summary>
+    /// <typeparam name="TContainer">The type of the container implementing the IList interface.</typeparam>
+    /// <typeparam name="TMember">The type of elements contained in the IList.</typeparam>
     public class BinarySerializerIList<TContainer, TMember> : IBinaryTypeObjectSerializer<TContainer?> where TContainer: IList<TMember>, new()
     {
-        public const int NumberOfHeaderBitsNumeric = 2;
         private readonly IBinaryTypeSerializer<TMember> _serializer;
 
         public BinarySerializerIList(IBinaryTypeSerializer<TMember> serializer)
@@ -16,12 +21,12 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
-            BufferHelper.WriteHeader(dataBuffer, header);
+            UtilityKit.WriteHeader(dataBuffer, header);
 
             if (value != null)
             {
                 int length = value.Count;
-                BufferHelper.WriteLength(dataBuffer, length);
+                UtilityKit.WriteLength(dataBuffer, length);
 
                 foreach (var item in value)
                 {
@@ -33,18 +38,18 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, TContainer? oldValue, TContainer? newValue)
         {
             Header header = new() { IsMissing = false, IsNull = newValue == null };
-            BufferHelper.WriteHeader(dataBuffer, header);
+            UtilityKit.WriteHeader(dataBuffer, header);
 
             if (newValue != null)
             {
                 int length = newValue.Count;
-                BufferHelper.WriteLength(dataBuffer, length);
+                UtilityKit.WriteLength(dataBuffer, length);
 
                 for (int i = 0; i < newValue.Count; i++)
                 {
                     if (oldValue != null && i < oldValue.Count && Equals(oldValue[i], newValue[i]))
                     {
-                        BufferHelper.EncodeMissingFlag(dataBuffer);
+                        UtilityKit.EncodeMissingFlag(dataBuffer);
                     }
                     else
                     {
@@ -56,14 +61,14 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer, TContainer? existing)
         {
-            Header header = BufferHelper.ReadHeader(dataBuffer);
+            Header header = UtilityKit.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
                 return new HeaderWithValue<TContainer?>(header, default);
             }
 
-            int length = BufferHelper.ReadLength(dataBuffer);
+            int length = UtilityKit.ReadLength(dataBuffer);
             TContainer list = ReadList(dataBuffer, length, existing);
 
             return new HeaderWithValue<TContainer?>(header, list);
@@ -71,14 +76,14 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer)
         {
-            Header header = BufferHelper.ReadHeader(dataBuffer);
+            Header header = UtilityKit.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
                 return new HeaderWithValue<TContainer?>(header, default);
             }
 
-            int length = BufferHelper.ReadLength(dataBuffer);
+            int length = UtilityKit.ReadLength(dataBuffer);
             TContainer list = ReadList(dataBuffer, length, default);
 
             return new HeaderWithValue<TContainer?>(header, list);
@@ -88,14 +93,14 @@ namespace Barchart.BinarySerializer.Types
         {
             if (value == null)
             {
-                return NumberOfHeaderBitsNumeric;
+                return UtilityKit.NumberOfHeaderBitsNonString;
             }
 
-            int length = NumberOfHeaderBitsNumeric;
+            int length = UtilityKit.NumberOfHeaderBitsNonString;
 
             foreach (var item in value)
             {
-                length += NumberOfHeaderBitsNumeric;
+                length += UtilityKit.NumberOfHeaderBitsNonString;
 
                 if (item != null)
                 {

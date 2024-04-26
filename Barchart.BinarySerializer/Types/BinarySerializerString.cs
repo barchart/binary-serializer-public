@@ -1,4 +1,5 @@
 ﻿using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Utility;
 using System.Text;
 
 namespace Barchart.BinarySerializer.Types
@@ -8,9 +9,6 @@ namespace Barchart.BinarySerializer.Types
     /// </summary>
     public class BinarySerializerString : IBinaryTypeSerializer<string?>
     {
-        public const int NumberOfHeaderBitsNullString = 2;
-        public const int NumberOfHeaderBitsString = 8;
-
         public void Encode(DataBuffer dataBuffer, string? value)
         {
             Header header = new()
@@ -19,39 +17,31 @@ namespace Barchart.BinarySerializer.Types
                 IsNull = value == null
             };
 
-            WriteHeader(dataBuffer, header);
+            UtilityKit.WriteHeader(dataBuffer, header);
 
             if (value != null)
             {
                 byte[] valueBytes = Encoding.UTF8.GetBytes(value);
 
-                WriteStringLength(dataBuffer, valueBytes.Length);
-
-                for (int i = valueBytes.Length - 1; i >= 0; i--)
-                {
-                    dataBuffer.WriteByte(valueBytes[i]);
-                }
+                UtilityKit.WriteLength(dataBuffer, valueBytes.Length);
+                UtilityKit.WriteValueBytes(dataBuffer, valueBytes);
             }
         }
 
         public HeaderWithValue<string?> Decode(DataBuffer dataBuffer)
         {
-            Header header = ReadHeader(dataBuffer);
+            Header header = UtilityKit.ReadHeader(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
                 return new HeaderWithValue<string?>(header, default);
             }
 
-            int size = ReadStringLength(dataBuffer);
-            byte[]? valueBytes = new byte[size];
+            int size = UtilityKit.ReadLength(dataBuffer);
 
-            for (int i = size - 1; i >= 0; i--)
-            {
-                valueBytes[i] = dataBuffer.ReadByte();
-            }
-
+            byte[] valueBytes = UtilityKit.ReadValueBytes(dataBuffer, size);
             string decodedString = Encoding.UTF8.GetString(valueBytes);
+
             return new HeaderWithValue<string?>(header, decodedString);
         }
 
@@ -59,50 +49,11 @@ namespace Barchart.BinarySerializer.Types
         {
             if (value == null)
             {
-                return NumberOfHeaderBitsNullString;
+                return UtilityKit.NumberOfHeaderBitsNonString;
             }
 
             int valueLength = Encoding.UTF8.GetByteCount(value);
-            return valueLength * 8 + NumberOfHeaderBitsString;
-        }
-
-        private static void WriteHeader(DataBuffer dataBuffer, Header header)
-        {
-            dataBuffer.WriteBit((byte)(header.IsMissing ? 1 : 0));
-            dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
-        }
-
-        private static Header ReadHeader(DataBuffer dataBuffer)
-        {
-            Header header = new() { IsMissing = dataBuffer.ReadBit() == 1 };
-
-            if (!header.IsMissing)
-            {
-                header.IsNull = dataBuffer.ReadBit() == 1;
-            }
-
-            return header;
-        }
-
-        private static void WriteStringLength(DataBuffer dataBuffer, int length)
-        {
-            for (int i = 5; i >= 0; i--)
-            {
-                dataBuffer.WriteBit((byte)((length >> i) & 1));
-            }
-        }
-
-        private static int ReadStringLength(DataBuffer dataBuffer)
-        {
-            int size = 0;
-
-            for (int i = 5; i >= 0; i--)
-            {
-                byte bit = dataBuffer.ReadBit();
-                size |= (bit << i);
-            }
-
-            return size;
+            return valueLength * 8 + UtilityKit.NumberOfHeaderBitsString;
         }
     }
 }
