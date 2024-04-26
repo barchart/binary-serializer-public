@@ -14,29 +14,29 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, TMember value)
         {
             Header header = new() { IsMissing = false, IsNull = false };
-            Utility.UtilityKit.WriteHeader(dataBuffer, header);
+            UtilityKit.WriteHeader(dataBuffer, header);
 
             byte[] valueBytes = ConvertToByteArray(value);
-            Utility.UtilityKit.WriteValueBytes(dataBuffer, valueBytes);
+            UtilityKit.WriteValueBytes(dataBuffer, valueBytes);
         }
 
         public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer)
         {
-            Header header = Utility.UtilityKit.ReadHeader(dataBuffer);
+            Header header = UtilityKit.ReadHeader(dataBuffer);
 
-            if (header.IsMissing || header.IsNull)
+            if (UtilityKit.IsHeaderMissingOrNull(header))
             {
                 return new HeaderWithValue<TMember>(header, default);
             }
 
-            byte[] valueBytes = Utility.UtilityKit.ReadValueBytes(dataBuffer, Size);
+            byte[] valueBytes = UtilityKit.ReadValueBytes(dataBuffer, Size);
 
             return new HeaderWithValue<TMember>(header, DecodeBytes(valueBytes));
         }
 
         public int GetLengthInBits(TMember value)
         {
-            return Size * 8 + Utility.UtilityKit.NumberOfHeaderBitsNonString;
+            return Size * 8 + UtilityKit.NumberOfHeaderBitsNonString;
         }
 
         protected abstract byte[] ConvertToByteArray(TMember value);

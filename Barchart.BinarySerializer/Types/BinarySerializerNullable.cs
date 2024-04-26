@@ -26,7 +26,7 @@ namespace Barchart.BinarySerializer.Types
             else
             {
                 Header header = new() { IsMissing = false, IsNull = true };
-                Utility.UtilityKit.WriteHeader(dataBuffer, header);
+                UtilityKit.WriteHeader(dataBuffer, header);
             }
         }
 
@@ -44,7 +44,7 @@ namespace Barchart.BinarySerializer.Types
 
         public int GetLengthInBits(TMember? value)
         {
-            return value == null ? Utility.UtilityKit.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((TMember)value);
+            return value == null ? UtilityKit.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((TMember)value);
         }
     }
 }

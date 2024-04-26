@@ -18,9 +18,9 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer)
         {
-            Header header = Utility.UtilityKit.ReadHeader(dataBuffer);
+            Header header = UtilityKit.ReadHeader(dataBuffer);
 
-            if (header.IsMissing || header.IsNull)
+            if (UtilityKit.IsHeaderMissingOrNull(header))
             {
                 return new HeaderWithValue<TContainer>(header, default);
             }
@@ -32,9 +32,9 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer, TContainer existing)
         {
-            Header header = Utility.UtilityKit.ReadHeader(dataBuffer);
+            Header header = UtilityKit.ReadHeader(dataBuffer);
 
-            if (header.IsMissing || header.IsNull)
+            if (UtilityKit.IsHeaderMissingOrNull(header))
             {
                 return new HeaderWithValue<TContainer>(header, default);
             }
@@ -47,7 +47,7 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
-            Utility.UtilityKit.WriteHeader(dataBuffer, header);
+            UtilityKit.WriteHeader(dataBuffer, header);
 
             if (value != null)
             {
@@ -58,7 +58,7 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, TContainer? oldObject, TContainer? newObject)
         {
             Header header = new() { IsMissing = false, IsNull = newObject == null };
-            Utility.UtilityKit.WriteHeader(dataBuffer, header);
+            UtilityKit.WriteHeader(dataBuffer, header);
 
             if (newObject != null)
             {

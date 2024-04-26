@@ -32,7 +32,7 @@ namespace Barchart.BinarySerializer.Types
         {
             Header header = UtilityKit.ReadHeader(dataBuffer);
 
-            if (header.IsMissing || header.IsNull)
+            if (UtilityKit.IsHeaderMissingOrNull(header))
             {
                 return new HeaderWithValue<string?>(header, default);
             }
