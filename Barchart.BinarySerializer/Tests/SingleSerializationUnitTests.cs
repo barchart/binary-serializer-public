@@ -148,7 +148,7 @@ namespace Barchart.BinarySerializer.Tests
 
             Garage garage = new()
             {
-                CarObject = car,
+                CarObject = null,
                 PersonObject = person,
                 StringNameGarage = "Garage",
                 DecimalNumberGarage = 12.5m,

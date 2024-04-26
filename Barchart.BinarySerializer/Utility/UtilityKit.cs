@@ -5,6 +5,7 @@ namespace Barchart.BinarySerializer.Utility
 {
 	public static class UtilityKit
 	{
+        public static readonly int NumberOfBitsIsMissing = 1;
         public static readonly int NumberOfHeaderBitsNonString = 2;
         public static readonly int NumberOfHeaderBitsString = 8;
 

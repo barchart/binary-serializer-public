@@ -18,11 +18,11 @@ namespace Barchart.BinarySerializer.Types
 
         public void Encode(DataBuffer dataBuffer, TMember? value)
         {
-            int? val = value != null? Convert.ToInt32(value) : null;
+            int? integerValue = value != null? Convert.ToInt32(value) : null;
 
-            if (val != null)
+            if (integerValue != null)
             {
-                _serializer.Encode(dataBuffer, (int)val);
+                _serializer.Encode(dataBuffer, (int)integerValue);
             }
         }
 
@@ -36,11 +36,11 @@ namespace Barchart.BinarySerializer.Types
 
         public int GetLengthInBits(TMember? value)
         {
-            int? val = value != null ? Convert.ToInt32(value) : null;
+            int? integerValue = value != null ? Convert.ToInt32(value) : null;
 
-            if (val != null)
+            if (integerValue != null)
             {
-                return _serializer.GetLengthInBits((int)val);
+                return _serializer.GetLengthInBits((int)integerValue);
 
             }
             return 0;

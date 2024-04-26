@@ -1,4 +1,6 @@
 ﻿using Barchart.BinarySerializer.Types;
+using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -217,54 +219,28 @@ namespace Barchart.BinarySerializer.Schemas
         {
             if (IsMemberComplexType(typeof(TMember)))
             {
-                var genericArgs = new Type[] { typeof(TMember) };
-                var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetObjectSerializer))!.MakeGenericMethod(genericArgs);
-                var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
-                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
-                var func = lambdaExpr.Compile();
-                var result = func();
-
-                return result;
+                return GenerateSerializer<TMember>(nameof(GetObjectSerializer), null);
             }
+
             else if (IsMemberListType(typeof(TMember)))
             {
                 Type elementsType = typeof(TMember).GetGenericArguments()[0];
-
-                var genericArgs = new Type[] { elementsType, typeof(TMember)};
-                var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetListSerializer))!.MakeGenericMethod(genericArgs);
-                var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
-                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
-                var func = lambdaExpr.Compile();
-                var result = func();
-
-                return result;
+                return GenerateSerializer<TMember>(nameof(GetListSerializer), elementsType);
             }
+
             else if (IsMemberEnumType(typeof(TMember)))
             {
-                var genericArgs = new Type[] { typeof(TMember) };
-                var generateSerializerForListElements = typeof(SchemaFactory).GetMethod(nameof(GetEnumSerializer))!.MakeGenericMethod(genericArgs);
-                var generateSerializerCallExpr = Expression.Call(null, generateSerializerForListElements);
-                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
-                var func = lambdaExpr.Compile();
-                var result = func();
-
-                return result;
+                return GenerateSerializer<TMember>(nameof(GetEnumSerializer), null);
             }
+
             else if (IsNullableNumericType(typeof(TMember)))
             {
                 Type? underlyingType = Nullable.GetUnderlyingType(typeof(TMember));
-
                 if (underlyingType == null) return null;
 
-                var genericArgs = new Type[] { underlyingType };
-                var generateNullableSerializer = typeof(SchemaFactory).GetMethod(nameof(GetNullableSerializer))!.MakeGenericMethod(genericArgs);
-                var generateSerializerCallExpr = Expression.Call(null, generateNullableSerializer);
-                var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
-                var func = lambdaExpr.Compile();
-                var result = func();
-
-                return result;
+                return GenerateSerializer<TMember>(nameof(GetNullableSerializer), underlyingType);
             }
+
             else
             {
                 if (allSerializers.TryGetValue(typeof(TMember), out object? serializer))
@@ -274,6 +250,27 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             return null;
+        }
+
+        private static IBinaryTypeSerializer<TMember>? GenerateSerializer<TMember>(string methodName, Type? type)
+        {
+            Type[]? genericArgs = null;
+
+            genericArgs = methodName switch
+            {
+                nameof(GetObjectSerializer) or nameof(GetEnumSerializer) => new[] { typeof(TMember) },
+                nameof(GetListSerializer) => new[] { type!, typeof(TMember) },
+                nameof(GetNullableSerializer) => new[] { type! },
+                _ => Array.Empty<Type>(),
+            };
+            var generateSerializerMethod = typeof(SchemaFactory).GetMethod(methodName)?.MakeGenericMethod(genericArgs);
+            if (generateSerializerMethod == null) return null;
+            var generateSerializerCallExpr = Expression.Call(null, generateSerializerMethod);
+            var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
+            var func = lambdaExpr.Compile();
+            var result = func();
+
+            return result;
         }
 
         /// <summary>

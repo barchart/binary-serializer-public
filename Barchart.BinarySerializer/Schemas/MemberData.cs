@@ -1,5 +1,6 @@
 ﻿using Barchart.BinarySerializer.Types;
 using System.Reflection;
+using Barchart.BinarySerializer.Utility;
 
 namespace Barchart.BinarySerializer.Schemas
 {
@@ -10,8 +11,6 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="TMember">The type of the member.</typeparam>
     public class MemberData<TContainer, TMember> : IMemberData<TContainer>
     {
-        protected const int NumberOfBitsIsMissing = 1;
-
         public Type Type { get; }
         public string Name { get; }
         public bool IsKeyAttribute { get; }
@@ -39,8 +38,8 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         public virtual void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer buffer) {
-            TMember? oldValue = oldObject == null ? default : GetDelegate(oldObject);
-            TMember? newValue = newObject == null ? default : GetDelegate(newObject);
+            TMember oldValue = GetDelegate(oldObject);
+            TMember newValue = GetDelegate(newObject);
 
             bool valuesEqual = Equals(oldValue, newValue);
 
@@ -50,7 +49,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                EncodeMissingFlag(buffer);
+                UtilityKit.EncodeMissingFlag(buffer);
             }
         }
 
@@ -102,13 +101,8 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                return NumberOfBitsIsMissing;
+                return UtilityKit.NumberOfBitsIsMissing;
             }
-        }
-
-        protected void EncodeMissingFlag(DataBuffer dataBuffer)
-        {
-            dataBuffer.WriteBit(1);
         }
     }
 }

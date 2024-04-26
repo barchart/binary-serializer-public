@@ -1,5 +1,6 @@
 ﻿using Barchart.BinarySerializer.Types;
 using System.Reflection;
+using Barchart.BinarySerializer.Utility;
 
 namespace Barchart.BinarySerializer.Schemas
 {
@@ -27,7 +28,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                EncodeMissingFlag(buffer);
+                UtilityKit.EncodeMissingFlag(buffer);
             }
         }
 
@@ -67,7 +68,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                return NumberOfBitsIsMissing;
+                return UtilityKit.NumberOfBitsIsMissing;
             }
         }
     }
