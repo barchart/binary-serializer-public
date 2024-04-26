@@ -11,7 +11,7 @@ namespace Barchart.BinarySerializer.Schemas
     public class ObjectMemberData<TContainer, TMember> : MemberData<TContainer, TMember> where TMember : new()
     {
         public ObjectMemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo,
-            Func<TContainer, TMember> getDelegate, Action<TContainer, TMember>? setDelegate, IBinaryTypeObjectSerializer<TMember> binarySerializer)
+            Func<TContainer, TMember> getDelegate, Action<TContainer, TMember?>? setDelegate, IBinaryTypeObjectSerializer<TMember> binarySerializer)
             : base(type, name, isKeyAttribute, memberInfo, getDelegate, setDelegate, binarySerializer) { }
 
         public override void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer buffer)
@@ -51,7 +51,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return;
             }
 
-            if(headerWithValue.Value != null && SetDelegate != null) SetDelegate(existing, headerWithValue.Value);
+            SetDelegate?.Invoke(existing, headerWithValue.Value);
         }
 
         public override int GetLengthInBits(TContainer oldObject, TContainer newObject)

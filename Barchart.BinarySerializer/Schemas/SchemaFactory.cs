@@ -298,7 +298,7 @@ namespace Barchart.BinarySerializer.Schemas
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
                 GenerateGetter<TContainer, TMember>(memberInfo),
-                GenerateSetter<TContainer, TMember>(memberInfo),
+                GenerateSetter<TContainer, TMember?>(memberInfo),
                 serializer
             );
 
@@ -327,7 +327,7 @@ namespace Barchart.BinarySerializer.Schemas
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
                 GenerateGetter<TContainer, TMember>(memberInfo),
-                GenerateSetter<TContainer, TMember>(memberInfo),
+                GenerateSetter<TContainer, TMember?>(memberInfo),
                 (IBinaryTypeObjectSerializer<TMember>)serializer
             );
 

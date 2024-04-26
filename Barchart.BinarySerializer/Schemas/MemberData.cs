@@ -18,11 +18,11 @@ namespace Barchart.BinarySerializer.Schemas
         public MemberInfo MemberInfo { get; }
 
         public Func<TContainer, TMember> GetDelegate { get; }
-        public Action<TContainer, TMember>? SetDelegate { get; }
+        public Action<TContainer, TMember?>? SetDelegate { get; }
         public IBinaryTypeSerializer<TMember> BinarySerializer { get; }
 
         public MemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo,
-            Func<TContainer, TMember> getDelegate, Action<TContainer, TMember>? setDelegate, IBinaryTypeSerializer<TMember> binarySerializer)
+            Func<TContainer, TMember> getDelegate, Action<TContainer, TMember?>? setDelegate, IBinaryTypeSerializer<TMember> binarySerializer)
         {
             Type = type;
             Name = name;
@@ -39,8 +39,8 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         public virtual void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer buffer) {
-            TMember oldValue = GetDelegate(oldObject);
-            TMember newValue = GetDelegate(newObject);
+            TMember? oldValue = oldObject == null ? default : GetDelegate(oldObject);
+            TMember? newValue = newObject == null ? default : GetDelegate(newObject);
 
             bool valuesEqual = Equals(oldValue, newValue);
 
@@ -64,7 +64,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return;
             }
 
-            if (headerWithValue.Value != null && SetDelegate != null) SetDelegate(existing, headerWithValue.Value);
+            SetDelegate?.Invoke(existing, headerWithValue.Value);
         }
 
         public bool CompareObjects(TContainer firstObject, TContainer secondObject)

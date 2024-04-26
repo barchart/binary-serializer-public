@@ -102,7 +102,7 @@
             {
                 return Serialize(newObject, dataBuffer);
             }
-
+           
             foreach (IMemberData<TContainer> memberData in _memberDataList)
             {
                 memberData.EncodeCompare(newObject, oldObject, dataBuffer);
