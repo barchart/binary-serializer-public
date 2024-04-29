@@ -73,4 +73,3 @@ namespace Barchart.BinarySerializer.Schemas
         }
     }
 }
-
