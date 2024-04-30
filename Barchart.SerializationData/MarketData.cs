@@ -1,6 +1,8 @@
 ﻿using Barchart.BinarySerializer.Schemas;
 using Org.Openfeed;
 using static Org.Openfeed.InstrumentDefinition.Types;
+using static Org.Openfeed.MarketSummary.Types;
+using static Org.Openfeed.VolumeAtPrice.Types;
 
 namespace Barchart.SerializationData;
 
@@ -302,4 +304,139 @@ public class MarketState
 
     [BinarySerialize(key: false)]
     public MarketSummary? MarketSummary { get; set; }
+}
+
+public class BestBidOffer {
+    [BinarySerialize(key: false)]
+    public long? TransactionTime { get; set; }
+
+    [BinarySerialize(key: false)]
+    public long? BidPrice { get; set; }
+
+    [BinarySerialize(key: false)]
+    public long? BidQuantity { get; set; }
+
+    [BinarySerialize(key: false)]
+    public int? BidOrderCount { get; set; }
+
+    [BinarySerialize(key: false)]
+    public string? BidOriginator { get; set; }
+
+    [BinarySerialize(key: false)]
+    public string? BidQuoteCondition { get; set; }
+
+    [BinarySerialize(key: false)]
+    public long? OfferPrice { get; set; }
+
+    [BinarySerialize(key: false)]
+    public long? OfferQuantity { get; set; }
+
+    [BinarySerialize(key: false)]
+    public int? OfferOrderCount { get; set; }
+
+    [BinarySerialize(key: false)]
+    public string? OfferOriginator { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public string? OfferQuoteCondition { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public string? QuoteCondition { get; set; }
+
+    [BinarySerialize(key: false)]
+    public bool? Regional { get; set; }
+
+    [BinarySerialize(key: false)]
+    public bool? Transient { get; set; }
+}
+
+public class VolumeAtPrice {
+    [BinarySerialize(key: false)]
+    public long? MarketId { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public string? Symbol { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public long? TransactionTime { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public long? LastPrice { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public long? LastQuantity { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public long? LastCumulativeVolume { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public int? TradeDate { get; set; } 
+    
+    [BinarySerialize(key: false)]
+    public List<PriceLevelVolume>? PriceVolumes { get; set; }
+}
+
+public class MarketSummary {
+    [BinarySerialize(key: false)]
+    public long? TransactionTime { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public int? TradingDate { get; set; } 
+    
+    [BinarySerialize(key: false)]
+    public bool? StartOfDay { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public bool? EndOfDay { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public ClearSet? Clear { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public InstrumentStatus? InstrumentStatus { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public BestBidOffer? Bbo { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public Open? Open { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public High? High { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public Low? Low { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public Close? Close { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public PrevClose? PrevClose { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public Last? Last { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public Volume? Volume { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public Settlement? Settlement { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public OpenInterest? OpenInterest { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public Vwap? Vwap { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public string? Session { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public SummaryType? SummaryType { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public Volume? PrevVolume { get; set; }
+    
+    [BinarySerialize(key: false)]
+    public bool? Transient { get; set; }
 }
