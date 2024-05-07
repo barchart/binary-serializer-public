@@ -81,7 +81,7 @@ namespace Barchart.BinarySerializer.Schemas
         {
             Type type = typeof(TContainer);
             MemberInfo[] members = GetAllMembersForType(type);
-            List<IMemberData<TContainer>> memberDataList = new();
+            List<IMemberData<TContainer>> memberDataContainer = new();
 
             foreach (MemberInfo memberInfo in members)
             {
@@ -90,11 +90,11 @@ namespace Barchart.BinarySerializer.Schemas
                 if (isMemberIncluded)
                 {
                     IMemberData<TContainer>? memberData = ProcessMemberInfo<TContainer>(memberInfo);
-                    if (memberData != null) memberDataList.Add(memberData);
+                    if (memberData != null) memberDataContainer.Add(memberData);
                 }
             }
 
-            Schema<TContainer> schema = new(memberDataList);
+            Schema<TContainer> schema = new(memberDataContainer);
 
             return schema;
         }

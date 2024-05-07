@@ -24,11 +24,11 @@
             }
         }
 
-        private readonly IList<IMemberData<TContainer>> _memberDataList;
+        private readonly IList<IMemberData<TContainer>> _memberDataContainer;
 
-        public Schema(List<IMemberData<TContainer>> memberDataList)
+        public Schema(List<IMemberData<TContainer>> memberDataContainer)
         {
-            _memberDataList = memberDataList;
+            _memberDataContainer = memberDataContainer;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@
                 throw new ArgumentNullException(nameof(schemaObject), "SchemaObject object cannot be null.");
             }
 
-            foreach (IMemberData<TContainer> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
                 memberData.Encode(schemaObject, dataBuffer);
             }
@@ -103,7 +103,7 @@
                 return Serialize(newObject, dataBuffer);
             }
            
-            foreach (IMemberData<TContainer> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
                 memberData.EncodeCompare(newObject, oldObject, dataBuffer);
             }
@@ -125,7 +125,7 @@
         internal TContainer Deserialize(DataBuffer dataBuffer) {
             TContainer existing = new();
 
-            foreach (IMemberData<TContainer> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
                 memberData.Decode(existing, dataBuffer);
             }
@@ -147,7 +147,7 @@
 
         internal TContainer Deserialize(TContainer existing, DataBuffer dataBuffer)
         {
-            foreach (IMemberData<TContainer> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
                 memberData.Decode(existing, dataBuffer);
             }
@@ -185,7 +185,7 @@
         {
             int lengthInBits = 0;
 
-            foreach (IMemberData<TContainer> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
                 lengthInBits += memberData.GetLengthInBits(schemaObject);           
             }
@@ -203,7 +203,7 @@
         {
             int lengthInBits = 0;
 
-            foreach (IMemberData<TContainer> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
                 lengthInBits += memberData.GetLengthInBits(oldObject, newObject);
             }
@@ -219,7 +219,7 @@
         /// <returns>True if all member data of the two objects are equal; otherwise, false.</returns>
         public bool CompareObjects(TContainer firstObject, TContainer secondObject)
         {
-            foreach (IMemberData<TContainer> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
                 if (memberData.CompareObjects(firstObject, secondObject) == false) return false;
             }
@@ -239,7 +239,7 @@
                 return;
             }
 
-            foreach (IMemberData<TContainer> memberData in _memberDataList)
+            foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
                 memberData.CompareAndUpdateObject(objectToUpdate, newObject);
             }
