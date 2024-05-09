@@ -12,7 +12,7 @@ namespace Barchart.BinarySerializer.Schemas
         private static readonly object _lock = new();
         private static readonly IDictionary<Type, object> allSerializers = new Dictionary<Type, object>();
 
-        public static bool DefaultIncludeValue { get; set; } = false;
+        public static bool DefaultIncludeValue { get; set; } = true;
 
         static SchemaFactory()
         {
