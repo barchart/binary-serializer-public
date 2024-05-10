@@ -63,7 +63,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return;
             }
 
-            SetDelegate?.Invoke(existing, headerWithValue.Value);
+            if (headerWithValue.Value != null) SetDelegate?.Invoke(existing, headerWithValue.Value);
         }
 
         public bool CompareObjects(TContainer firstObject, TContainer secondObject)

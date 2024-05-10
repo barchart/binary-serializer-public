@@ -52,7 +52,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return;
             }
 
-            SetDelegate?.Invoke(existing, headerWithValue.Value);
+            if (headerWithValue.Value != null) SetDelegate?.Invoke(existing, headerWithValue.Value);
         }
 
         public override int GetLengthInBits(TContainer oldObject, TContainer newObject)
