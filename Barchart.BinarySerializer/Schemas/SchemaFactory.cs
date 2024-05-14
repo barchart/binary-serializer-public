@@ -12,8 +12,6 @@ namespace Barchart.BinarySerializer.Schemas
         private static readonly object _lock = new();
         private static readonly IDictionary<Type, object> allSerializers = new Dictionary<Type, object>();
 
-        public static bool DefaultIncludeValue { get; set; } = true;
-
         static SchemaFactory()
         {
             InitializeSerializers();
@@ -457,8 +455,10 @@ namespace Barchart.BinarySerializer.Schemas
 
         private static bool GetIncludeAttributeValue(MemberInfo memberInfo)
         {
-            Attribute? attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
-            return attribute != null || DefaultIncludeValue;
+            BinarySerializeAttribute? attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
+            if (attribute == null) return true;
+
+            return attribute.Include;
         }
     }
 }

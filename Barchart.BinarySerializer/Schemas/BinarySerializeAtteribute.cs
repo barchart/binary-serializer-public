@@ -7,12 +7,15 @@
     public class BinarySerializeAttribute : Attribute
     {
         private readonly bool _key;
+        private readonly bool _include;
 
-        public bool Key { get { return _key; } }
+        public bool Key => _key;
+        public bool Include => _include;
 
-        public BinarySerializeAttribute(bool key = false)
+        public BinarySerializeAttribute(bool key = false, bool include = true)
         {
             _key = key;
+            _include = include;
         }
     }
 }
