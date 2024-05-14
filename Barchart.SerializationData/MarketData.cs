@@ -304,6 +304,9 @@ public class MarketState
 
     [BinarySerialize(key: false)]
     public MarketSummary? MarketSummary { get; set; }
+
+    [BinarySerialize(key: false, include: false)]
+    public long? TransactionTime { get; set; }
 }
 
 public class BestBidOffer {
