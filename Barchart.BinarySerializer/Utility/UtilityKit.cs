@@ -62,7 +62,7 @@ namespace Barchart.BinarySerializer.Utility
         {
             byte[] lengthBytes = new byte[sizeof(int)];
 
-            for (int i = lengthBytes.Length - 1; i >= 0; i--)
+            for (int i = 0; i < lengthBytes.Length; i++)
             {
                 lengthBytes[i] = dataBuffer.ReadByte();
             }
@@ -79,7 +79,7 @@ namespace Barchart.BinarySerializer.Utility
         {
             byte[] lengthBytes = BitConverter.GetBytes(length);
 
-            for (int i = lengthBytes.Length - 1; i >= 0; i--)
+            for (int i = 0; i < lengthBytes.Length; i++)
             {
                 dataBuffer.WriteByte(lengthBytes[i]);
             }
@@ -92,7 +92,7 @@ namespace Barchart.BinarySerializer.Utility
         /// <param name="valueBytes">The array of bytes to write.</param>
         public static void WriteValueBytes(DataBuffer dataBuffer, byte[] valueBytes)
         {
-            for (int i = valueBytes.Length - 1; i >= 0; i--)
+            for (int i = 0; i < valueBytes.Length; i++)
             {
                 dataBuffer.WriteByte(valueBytes[i]);
             }
@@ -107,7 +107,7 @@ namespace Barchart.BinarySerializer.Utility
         public static byte[] ReadValueBytes(DataBuffer dataBuffer, int size)
         {
             byte[] valueBytes = new byte[size];
-            for (int i = size - 1; i >= 0; i--)
+            for (int i = 0; i < size; i++)
             {
                 valueBytes[i] = dataBuffer.ReadByte();
             }
