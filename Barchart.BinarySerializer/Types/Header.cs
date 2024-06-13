@@ -15,7 +15,7 @@ namespace Barchart.BinarySerializer.Types
     /// </summary>
     public readonly struct Header
     {
-        #region Fields
+        #region Properties
         
         public bool IsMissing { get; init; }
         public bool IsNull { get; init; }
