@@ -7,9 +7,9 @@
     ///     6 (Null bit)
     ///     5-0 (bits for string length 0 max string length is 2^6 - 63)
     /// </summary>
-    public struct Header
+    public readonly struct Header
     {
-        public bool IsMissing { get; set; }
-        public bool IsNull { get; set; }
+        public bool IsMissing { get; init; }
+        public bool IsNull { get; init;  }
     }
 }
