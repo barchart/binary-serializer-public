@@ -3,27 +3,28 @@
 namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    /// A data type that helps to use a buffer efficiently with the possibility to read or write bytes and bits.
+    ///     A wrapper around a byte array with convenience reading and writing to the buffer.
     /// </summary>
     public class DataBuffer
     {
         private readonly byte[] _buffer;
+        
         private int _offset;
         private int _offsetInLastByte;
 
         /// <summary>
-        /// Initializes a new instance of the DataBuffer class with the specified buffer.
+        ///     Instantiates the class using an external buffer.
         /// </summary>
-        /// <param name="buffer">The byte array to be used as the buffer.</param>
         public DataBuffer(byte[] buffer)
         {
             _buffer = buffer;
+            
             _offset = 0;
             _offsetInLastByte = 0;
         }
 
         /// <summary>
-        /// Resets the current byte in the buffer to zero.
+        ///     Resets the current byte index to zero.
         /// </summary>
         public void ResetByte()
         {
@@ -31,7 +32,8 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Converts the buffer to a byte array up to the current offset.
+        ///     Generates a copy of the buffer, as a byte array, from from the
+        ///     start of the array to the current position.
         /// </summary>
         /// <returns>A byte array containing the data up to the current offset.</returns>
         public byte[] ToBytes()
@@ -40,9 +42,8 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Writes a single bit to the buffer.
+        ///     Writes a single bit to the buffer.
         /// </summary>
-        /// <param name="bit">The bit to write (0 or 1).</param>
         /// <exception cref="Exception">Thrown if the buffer is full.</exception>
         public void WriteBit(byte bit)
         {
@@ -63,9 +64,8 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Reads a single bit from the buffer.
+        ///     Reads a single bit from the buffer.
         /// </summary>
-        /// <returns>The bit read (0 or 1).</returns>
         public byte ReadBit()
         {
             try
@@ -87,9 +87,8 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Writes a byte to the buffer.
+        ///     Writes a byte to the buffer.
         /// </summary>
-        /// <param name="valueByte">The byte to write.</param>
         public void WriteByte(byte valueByte)
         {
             for (int j = 7; j >= 0; j--)
@@ -99,9 +98,8 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Reads a byte from the buffer.
+        ///     Reads a byte from the buffer.
         /// </summary>
-        /// <returns>The byte read from the buffer.</returns>
         public byte ReadByte()
         {
             byte byteToAdd = 0;
