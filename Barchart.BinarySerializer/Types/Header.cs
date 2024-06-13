@@ -18,7 +18,7 @@ namespace Barchart.BinarySerializer.Types
         #region Fields
         
         public bool IsMissing { get; init; }
-        public bool IsNull { get; init;  }
+        public bool IsNull { get; init; }
         
         #endregion
         
