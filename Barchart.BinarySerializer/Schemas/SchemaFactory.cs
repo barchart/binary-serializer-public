@@ -1,5 +1,6 @@
 ﻿#region  Using Statements
 
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -250,16 +251,20 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 return GenerateSerializer<TMember>(nameof(GetObjectSerializer), null);
             }
-            else if (IsMemberListType(typeof(TMember)))
+            
+            if (IsMemberListType(typeof(TMember)))
             {
                 Type elementsType = typeof(TMember).GetGenericArguments()[0];
+                
                 return GenerateSerializer<TMember>(nameof(GetListSerializer), elementsType);
             }
-            else if (IsMemberEnumType(typeof(TMember)))
+            
+            if (IsMemberEnumType(typeof(TMember)))
             {
                 return GenerateSerializer<TMember>(nameof(GetEnumSerializer), null);
             }
-            else if (IsNullableNumericType(typeof(TMember)))
+            
+            if (IsNullableNumericType(typeof(TMember)))
             {
                 Type? underlyingType = Nullable.GetUnderlyingType(typeof(TMember));
                 
@@ -270,14 +275,12 @@ namespace Barchart.BinarySerializer.Schemas
 
                 return GenerateSerializer<TMember>(nameof(GetNullableSerializer), underlyingType);
             }
-            else
-            {
-                if (_serializers.TryGetValue(typeof(TMember), out object? serializer))
-                {
-                    return (IBinaryTypeSerializer<TMember>?)serializer;
-                }
-            }
 
+            if (_serializers.TryGetValue(typeof(TMember), out object? serializer))
+            {
+                return (IBinaryTypeSerializer<TMember>?)serializer;
+            }
+            
             return null;
         }
 
