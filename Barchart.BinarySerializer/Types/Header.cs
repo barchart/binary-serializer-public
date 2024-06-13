@@ -1,4 +1,10 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Schemas;
+
+#endregion
+
+namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
     ///     Representing additional byte for a header for every property/field.
@@ -13,6 +19,24 @@
         
         public bool IsMissing { get; init; }
         public bool IsNull { get; init;  }
+        
+        #endregion
+        
+        #region Methods
+
+        /// <summary>
+        ///     Writes instance data to a buffer.
+        /// </summary>
+        /// <param name="dataBuffer">The DataBuffer to write to.</param>
+        public void WriteToBuffer(DataBuffer dataBuffer)
+        {
+            dataBuffer.WriteBit((byte)(IsMissing ? 1 : 0));
+
+            if (!IsMissing)
+            {
+                dataBuffer.WriteBit((byte)(IsNull ? 1 : 0));
+            }
+        }
         
         #endregion
     }
