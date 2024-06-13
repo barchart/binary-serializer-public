@@ -163,6 +163,7 @@ namespace Barchart.BinarySerializer.Schemas
         public static ObjectBinarySerializer<TMember> GetObjectSerializer<TMember>() where TMember : new()
         {
             Schema<TMember> schema = GetSchema<TMember>();
+            
             return new ObjectBinarySerializer<TMember>(schema);
         }
 
@@ -501,7 +502,7 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 return true;
             }
-
+            
             return attribute.Include;
         }
         
