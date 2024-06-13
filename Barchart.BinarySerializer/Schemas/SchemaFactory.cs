@@ -9,10 +9,12 @@ namespace Barchart.BinarySerializer.Schemas
     /// </summary>
     public static class SchemaFactory
     {
-        private static readonly IDictionary<Type, object> _serializers = new Dictionary<Type, object>();
+        private static readonly IDictionary<Type, object> _serializers;
 
         static SchemaFactory()
         {
+            _serializers = new Dictionary<Type, object>();
+            
             BinarySerializerString stringSerializer = new();
             BinarySerializerInt32 intSerializer = new();
             BinarySerializerInt16 shortSerializer = new();
