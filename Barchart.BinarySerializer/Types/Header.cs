@@ -11,25 +11,5 @@
     {
         public bool IsMissing { get; set; }
         public bool IsNull { get; set; }
-
-        private byte? _stringLength;
-
-        public byte? StringLength
-        {
-            get
-            {
-                return _stringLength;
-            }
-
-            set
-            {
-                if (value.HasValue && value > 63)
-                {
-                    throw new Exception("Length needs to be under 64");
-                }
-
-                _stringLength = value;
-            }
-        }
     }
 }
