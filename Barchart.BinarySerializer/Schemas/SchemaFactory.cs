@@ -9,7 +9,6 @@ namespace Barchart.BinarySerializer.Schemas
     /// </summary>
     public static class SchemaFactory
     {
-        private static readonly object _lock = new();
         private static readonly IDictionary<Type, object> _serializers = new Dictionary<Type, object>();
 
         static SchemaFactory()
@@ -190,7 +189,7 @@ namespace Barchart.BinarySerializer.Schemas
 
             BinarySerializerNullable<TMember> nullableSerializer = new(newSerializer);
 
-            lock (_lock)
+            lock (_serializers)
             {
                 if (!_serializers.ContainsKey(typeof(TMember?)))
                 {
