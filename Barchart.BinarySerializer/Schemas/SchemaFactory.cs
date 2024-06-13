@@ -261,7 +261,11 @@ namespace Barchart.BinarySerializer.Schemas
             else if (IsNullableNumericType(typeof(TMember)))
             {
                 Type? underlyingType = Nullable.GetUnderlyingType(typeof(TMember));
-                if (underlyingType == null) return null;
+                
+                if (underlyingType == null)
+                {
+                    return null;
+                }
 
                 return GenerateSerializer<TMember>(nameof(GetNullableSerializer), underlyingType);
             }
@@ -287,6 +291,7 @@ namespace Barchart.BinarySerializer.Schemas
                 nameof(GetNullableSerializer) => new[] { type! },
                 _ => Array.Empty<Type>(),
             };
+            
             var generateSerializerMethod = typeof(SchemaFactory).GetMethod(methodName)?.MakeGenericMethod(genericArgs);
 
             if (generateSerializerMethod == null)
@@ -477,12 +482,14 @@ namespace Barchart.BinarySerializer.Schemas
         private static MemberInfo[] GetAllMembersForType(Type type)
         {
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+            
             return type.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, null, null);
         }
 
         private static bool GetKeyAttributeValue(MemberInfo memberInfo)
         {
             var attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
+            
             return attribute?.Key ?? false;
         }
 
