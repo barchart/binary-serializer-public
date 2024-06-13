@@ -251,5 +251,63 @@ namespace Barchart.BinarySerializer.Tests
                 throw;
             }
         }
+
+
+        class ExampleClass1 {
+            public bool property1;
+            public TestEnum property2;
+            public float? property3;
+            public List<ExampleClass2>? example;
+        }
+
+        class ExampleClass2 {
+            public bool property1;
+            public float? property3;
+        }
+
+        [Fact]
+        public void ListOfObjectsTest()
+        {
+            try
+            {
+                Stopwatch stopwatch = new();
+
+                ExampleClass1 example = new ExampleClass1
+                    {
+                        property1 = true,
+                        property2 = TestEnum.Option2,
+                        property3 = 3.52f,
+                        example = new List<ExampleClass2>
+                        {
+                            new ExampleClass2
+                            {
+                                property1 = true,
+                                property3 = 2.11f
+                            },
+                            new ExampleClass2
+                            {
+                                property1 = false,
+                                property3 = 5.11f
+                            }
+                        }
+                    };
+
+                Schema<ExampleClass1> exampleSchema = SchemaFactory.GetSchema<ExampleClass1>();
+                stopwatch.Start();
+
+                byte[] serializedData = exampleSchema.Serialize(example);
+                ExampleClass1 deserializedExample = exampleSchema.Deserialize(serializedData);
+
+                stopwatch.Stop();
+                _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
+
+                Assert.Equal(example, deserializedExample);
+            }
+            catch (Exception ex)
+            {
+                LoggerWrapper.LogError(ex.Message);
+                throw;
+            }
+        }
     }
 }
