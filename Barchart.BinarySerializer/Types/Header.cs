@@ -9,7 +9,11 @@
     /// </summary>
     public readonly struct Header
     {
+        #region Fields
+        
         public bool IsMissing { get; init; }
         public bool IsNull { get; init;  }
+        
+        #endregion
     }
 }
