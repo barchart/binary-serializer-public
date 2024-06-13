@@ -14,11 +14,6 @@ namespace Barchart.BinarySerializer.Schemas
 
         static SchemaFactory()
         {
-            InitializeSerializers();
-        }
-
-        private static void InitializeSerializers()
-        {
             BinarySerializerString stringSerializer = new();
             BinarySerializerInt32 intSerializer = new();
             BinarySerializerInt16 shortSerializer = new();
