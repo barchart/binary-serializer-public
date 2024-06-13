@@ -10,7 +10,7 @@ namespace Barchart.BinarySerializer.Schemas
     public static class SchemaFactory
     {
         private static readonly object _lock = new();
-        private static readonly IDictionary<Type, object> allSerializers = new Dictionary<Type, object>();
+        private static readonly IDictionary<Type, object> _serializers = new Dictionary<Type, object>();
 
         static SchemaFactory()
         {
@@ -31,38 +31,38 @@ namespace Barchart.BinarySerializer.Schemas
             BinarySerializerDateTime dateTimeSerializer = new();
             BinarySerializerDateOnly dateOnlySerializer = new();
 
-            allSerializers.Add(typeof(string), stringSerializer);
-            allSerializers.Add(typeof(int), intSerializer);
-            allSerializers.Add(typeof(short), shortSerializer);
-            allSerializers.Add(typeof(char), charSerializer);
-            allSerializers.Add(typeof(sbyte), sbyteSerializer);
-            allSerializers.Add(typeof(byte), byteSerializer);
-            allSerializers.Add(typeof(bool), boolSerializer);
-            allSerializers.Add(typeof(long), longSerializer);
-            allSerializers.Add(typeof(ushort), ushortSerializer);
-            allSerializers.Add(typeof(uint), uintSerializer);
-            allSerializers.Add(typeof(ulong), ulongSerializer);
-            allSerializers.Add(typeof(float), floatSerializer);
-            allSerializers.Add(typeof(double), doubleSerializer);
-            allSerializers.Add(typeof(decimal), decimalSerializer);
-            allSerializers.Add(typeof(DateTime), dateTimeSerializer);
-            allSerializers.Add(typeof(DateOnly), dateOnlySerializer);
+            _serializers.Add(typeof(string), stringSerializer);
+            _serializers.Add(typeof(int), intSerializer);
+            _serializers.Add(typeof(short), shortSerializer);
+            _serializers.Add(typeof(char), charSerializer);
+            _serializers.Add(typeof(sbyte), sbyteSerializer);
+            _serializers.Add(typeof(byte), byteSerializer);
+            _serializers.Add(typeof(bool), boolSerializer);
+            _serializers.Add(typeof(long), longSerializer);
+            _serializers.Add(typeof(ushort), ushortSerializer);
+            _serializers.Add(typeof(uint), uintSerializer);
+            _serializers.Add(typeof(ulong), ulongSerializer);
+            _serializers.Add(typeof(float), floatSerializer);
+            _serializers.Add(typeof(double), doubleSerializer);
+            _serializers.Add(typeof(decimal), decimalSerializer);
+            _serializers.Add(typeof(DateTime), dateTimeSerializer);
+            _serializers.Add(typeof(DateOnly), dateOnlySerializer);
 
-            allSerializers.Add(typeof(int?), new BinarySerializerNullable<int>(intSerializer));
-            allSerializers.Add(typeof(short?), new BinarySerializerNullable<short>(shortSerializer));
-            allSerializers.Add(typeof(char?), new BinarySerializerNullable<char>(charSerializer));
-            allSerializers.Add(typeof(sbyte?), new BinarySerializerNullable<sbyte>(sbyteSerializer));
-            allSerializers.Add(typeof(byte?), new BinarySerializerNullable<byte>(byteSerializer));
-            allSerializers.Add(typeof(bool?), new BinarySerializerNullable<bool>(boolSerializer));
-            allSerializers.Add(typeof(long?), new BinarySerializerNullable<long>(longSerializer));
-            allSerializers.Add(typeof(ushort?), new BinarySerializerNullable<ushort>(ushortSerializer));
-            allSerializers.Add(typeof(uint?), new BinarySerializerNullable<uint>(uintSerializer));
-            allSerializers.Add(typeof(ulong?), new BinarySerializerNullable<ulong>(ulongSerializer));
-            allSerializers.Add(typeof(float?), new BinarySerializerNullable<float>(floatSerializer));
-            allSerializers.Add(typeof(double?), new BinarySerializerNullable<double>(doubleSerializer));
-            allSerializers.Add(typeof(decimal?), new BinarySerializerNullable<decimal>(decimalSerializer));
-            allSerializers.Add(typeof(DateTime?), new BinarySerializerNullable<DateTime>(dateTimeSerializer));
-            allSerializers.Add(typeof(DateOnly?), new BinarySerializerNullable<DateOnly>(dateOnlySerializer));
+            _serializers.Add(typeof(int?), new BinarySerializerNullable<int>(intSerializer));
+            _serializers.Add(typeof(short?), new BinarySerializerNullable<short>(shortSerializer));
+            _serializers.Add(typeof(char?), new BinarySerializerNullable<char>(charSerializer));
+            _serializers.Add(typeof(sbyte?), new BinarySerializerNullable<sbyte>(sbyteSerializer));
+            _serializers.Add(typeof(byte?), new BinarySerializerNullable<byte>(byteSerializer));
+            _serializers.Add(typeof(bool?), new BinarySerializerNullable<bool>(boolSerializer));
+            _serializers.Add(typeof(long?), new BinarySerializerNullable<long>(longSerializer));
+            _serializers.Add(typeof(ushort?), new BinarySerializerNullable<ushort>(ushortSerializer));
+            _serializers.Add(typeof(uint?), new BinarySerializerNullable<uint>(uintSerializer));
+            _serializers.Add(typeof(ulong?), new BinarySerializerNullable<ulong>(ulongSerializer));
+            _serializers.Add(typeof(float?), new BinarySerializerNullable<float>(floatSerializer));
+            _serializers.Add(typeof(double?), new BinarySerializerNullable<double>(doubleSerializer));
+            _serializers.Add(typeof(decimal?), new BinarySerializerNullable<decimal>(decimalSerializer));
+            _serializers.Add(typeof(DateTime?), new BinarySerializerNullable<DateTime>(dateTimeSerializer));
+            _serializers.Add(typeof(DateOnly?), new BinarySerializerNullable<DateOnly>(dateOnlySerializer));
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// A serializer for the specified nullable value type <typeparamref name="TMember"/> if successful; otherwise, <see langword="null"/>.
         /// </returns>
         /// <remarks>
-        /// The method first attempts to retrieve a serializer for the nullable type <typeparamref name="TMember"/> from the <paramref name="allSerializers"/> dictionary.
+        /// The method first attempts to retrieve a serializer for the nullable type <typeparamref name="TMember"/> from the <paramref name="_serializers"/> dictionary.
         /// If a serializer is found, it is cast to the appropriate type and returned.
         /// If a serializer is not found, the method retrieves a serializer for the underlying non-nullable type <typeparamref name="TMember"/>.
         /// If the retrieval is successful, the method constructs and returns a new serializer for the nullable type <typeparamref name="TMember"/>.
@@ -180,7 +180,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// </remarks>
         public static BinarySerializerNullable<TMember>? GetNullableSerializer<TMember>() where TMember : struct
         {
-            if (allSerializers.TryGetValue(typeof(TMember?), out object? serializer))
+            if (_serializers.TryGetValue(typeof(TMember?), out object? serializer))
             {
                 return (BinarySerializerNullable<TMember>)serializer;
             }
@@ -192,9 +192,9 @@ namespace Barchart.BinarySerializer.Schemas
 
             lock (_lock)
             {
-                if (!allSerializers.ContainsKey(typeof(TMember?)))
+                if (!_serializers.ContainsKey(typeof(TMember?)))
                 {
-                    allSerializers.Add(typeof(TMember?), nullableSerializer);
+                    _serializers.Add(typeof(TMember?), nullableSerializer);
                 }
             }
 
@@ -234,7 +234,7 @@ namespace Barchart.BinarySerializer.Schemas
 
             else
             {
-                if (allSerializers.TryGetValue(typeof(TMember), out object? serializer))
+                if (_serializers.TryGetValue(typeof(TMember), out object? serializer))
                 {
                     return (IBinaryTypeSerializer<TMember>?)serializer;
                 }
