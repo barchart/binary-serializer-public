@@ -438,7 +438,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// Determines whether the specified type is a List type, 
         /// </summary>
         /// <param name="type">The type to be checked.</param>
-        /// <returns>True if the type is a list type; otherwise, false./returns>
+        /// <returns>True if the type is a list type; otherwise, false.</returns>
         private static bool IsMemberListType(Type type)
         {
             return type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(List<>));
@@ -448,7 +448,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// Determines whether the specified type is a Enum type, 
         /// </summary>
         /// <param name="type">The type to be checked.</param>
-        /// <returns>True if the type is a list type; otherwise, false./returns>
+        /// <returns>True if the type is a list type; otherwise, false.</returns>
         private static bool IsMemberEnumType(Type type)
         {
             return type.IsEnum;
