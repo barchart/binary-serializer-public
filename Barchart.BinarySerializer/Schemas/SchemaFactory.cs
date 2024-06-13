@@ -1,6 +1,11 @@
-﻿using Barchart.BinarySerializer.Types;
+﻿#region  Using Statements
+
 using System.Linq.Expressions;
 using System.Reflection;
+
+using Barchart.BinarySerializer.Types;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Schemas
 {
