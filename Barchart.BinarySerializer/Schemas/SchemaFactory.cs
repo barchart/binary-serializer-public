@@ -84,7 +84,11 @@ namespace Barchart.BinarySerializer.Schemas
                 if (isMemberIncluded)
                 {
                     IMemberData<TContainer>? memberData = ProcessMemberInfo<TContainer>(memberInfo);
-                    if (memberData != null) memberDataContainer.Add(memberData);
+                    
+                    if (memberData != null)
+                    {
+                        memberDataContainer.Add(memberData);
+                    }
                 }
             }
 
@@ -106,12 +110,20 @@ namespace Barchart.BinarySerializer.Schemas
             if (memberInfo is FieldInfo fieldInfo)
             {
                 memberType = fieldInfo.FieldType;
-                if (fieldInfo.IsInitOnly) return null;
+                
+                if (fieldInfo.IsInitOnly)
+                {
+                    return null;
+                }
             }
             else if (memberInfo is PropertyInfo propertyInfo)
             {
                 memberType = propertyInfo.PropertyType;
-                if (!propertyInfo.CanWrite) return null;
+
+                if (!propertyInfo.CanWrite)
+                {
+                    return null;
+                }
             }
             else
             {
@@ -148,7 +160,12 @@ namespace Barchart.BinarySerializer.Schemas
         public static BinarySerializerIList<TList, TMember>? GetListSerializer<TMember, TList>() where TList : IList<TMember>, new()
         {
             IBinaryTypeSerializer<TMember>? serializer = GetSerializer<TMember>();
-            if (serializer == null) return null;
+            
+            if (serializer == null)
+            {
+                return null;
+            }
+            
             return new BinarySerializerIList<TList, TMember>(serializer);
         }
 
@@ -187,7 +204,11 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             IBinaryTypeSerializer<TMember>? newSerializer = GetSerializer<TMember>();
-            if (newSerializer == null) return null;
+            
+            if (newSerializer == null)
+            {
+                return null;
+            }
 
             BinarySerializerNullable<TMember> nullableSerializer = new(newSerializer);
 
@@ -213,18 +234,15 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 return GenerateSerializer<TMember>(nameof(GetObjectSerializer), null);
             }
-
             else if (IsMemberListType(typeof(TMember)))
             {
                 Type elementsType = typeof(TMember).GetGenericArguments()[0];
                 return GenerateSerializer<TMember>(nameof(GetListSerializer), elementsType);
             }
-
             else if (IsMemberEnumType(typeof(TMember)))
             {
                 return GenerateSerializer<TMember>(nameof(GetEnumSerializer), null);
             }
-
             else if (IsNullableNumericType(typeof(TMember)))
             {
                 Type? underlyingType = Nullable.GetUnderlyingType(typeof(TMember));
@@ -232,7 +250,6 @@ namespace Barchart.BinarySerializer.Schemas
 
                 return GenerateSerializer<TMember>(nameof(GetNullableSerializer), underlyingType);
             }
-
             else
             {
                 if (_serializers.TryGetValue(typeof(TMember), out object? serializer))
@@ -256,7 +273,12 @@ namespace Barchart.BinarySerializer.Schemas
                 _ => Array.Empty<Type>(),
             };
             var generateSerializerMethod = typeof(SchemaFactory).GetMethod(methodName)?.MakeGenericMethod(genericArgs);
-            if (generateSerializerMethod == null) return null;
+
+            if (generateSerializerMethod == null)
+            {
+                return null;
+            }
+            
             var generateSerializerCallExpr = Expression.Call(null, generateSerializerMethod);
             var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
             var func = lambdaExpr.Compile();
@@ -452,7 +474,11 @@ namespace Barchart.BinarySerializer.Schemas
         private static bool GetIncludeAttributeValue(MemberInfo memberInfo)
         {
             BinarySerializeAttribute? attribute = (BinarySerializeAttribute?)Attribute.GetCustomAttribute(memberInfo, typeof(BinarySerializeAttribute));
-            if (attribute == null) return true;
+            
+            if (attribute == null)
+            {
+                return true;
+            }
 
             return attribute.Include;
         }
