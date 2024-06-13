@@ -14,7 +14,8 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, TMember value)
         {
             Header header = new() { IsMissing = false, IsNull = false };
-            UtilityKit.WriteHeader(dataBuffer, header);
+            
+            header.WriteToBuffer(dataBuffer);
 
             byte[] valueBytes = ConvertToByteArray(value);
             UtilityKit.WriteValueBytes(dataBuffer, valueBytes);

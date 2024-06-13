@@ -35,21 +35,6 @@ namespace Barchart.BinarySerializer.Utility
         }
 
         /// <summary>
-        /// Writes a header to the provided DataBuffer.
-        /// </summary>
-        /// <param name="dataBuffer">The DataBuffer to write to.</param>
-        /// <param name="header">The Header to write.</param>
-        public static void WriteHeader(DataBuffer dataBuffer, Header header)
-        {
-            dataBuffer.WriteBit((byte)(header.IsMissing ? 1 : 0));
-
-            if (!header.IsMissing)
-            {
-                dataBuffer.WriteBit((byte)(header.IsNull ? 1 : 0));
-            }
-        }
-
-        /// <summary>
         /// Reads the length of a value from the provided DataBuffer.
         /// </summary>
         /// <param name="dataBuffer">The DataBuffer to read from.</param>

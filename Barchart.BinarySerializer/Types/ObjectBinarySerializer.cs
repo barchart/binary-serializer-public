@@ -47,7 +47,8 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
-            UtilityKit.WriteHeader(dataBuffer, header);
+            
+            header.WriteToBuffer(dataBuffer);
 
             if (value != null)
             {
@@ -58,7 +59,8 @@ namespace Barchart.BinarySerializer.Types
         public void Encode(DataBuffer dataBuffer, TContainer? oldObject, TContainer? newObject)
         {
             Header header = new() { IsMissing = false, IsNull = newObject == null };
-            UtilityKit.WriteHeader(dataBuffer, header);
+            
+            header.WriteToBuffer(dataBuffer);
 
             if (newObject != null)
             {

@@ -26,7 +26,8 @@ namespace Barchart.BinarySerializer.Types
             else
             {
                 Header header = new() { IsMissing = false, IsNull = true };
-                UtilityKit.WriteHeader(dataBuffer, header);
+                
+                header.WriteToBuffer(dataBuffer);
             }
         }
 
