@@ -9,8 +9,14 @@ namespace Barchart.BinarySerializer.Schemas
     /// </summary>
     public static class SchemaFactory
     {
+        #region Fields
+        
         private static readonly IDictionary<Type, object> _serializers;
-
+        
+        #endregion
+        
+        #region Constructor(s)
+        
         static SchemaFactory()
         {
             _serializers = new Dictionary<Type, object>();
@@ -65,7 +71,11 @@ namespace Barchart.BinarySerializer.Schemas
             _serializers.Add(typeof(DateTime?), new BinarySerializerNullable<DateTime>(dateTimeSerializer));
             _serializers.Add(typeof(DateOnly?), new BinarySerializerNullable<DateOnly>(dateOnlySerializer));
         }
+        
+        #endregion
 
+        #region Methods
+        
         /// <summary>
         /// Retrieves the schema for the specified type <typeparamref name="TContainer"/>.
         /// </summary>
@@ -482,5 +492,7 @@ namespace Barchart.BinarySerializer.Schemas
 
             return attribute.Include;
         }
+        
+        #endregion
     }
 }
