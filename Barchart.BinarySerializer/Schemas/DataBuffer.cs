@@ -1,4 +1,8 @@
-﻿using Barchart.BinarySerializer.Utility;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Utility;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Schemas
 {
@@ -7,10 +11,16 @@ namespace Barchart.BinarySerializer.Schemas
     /// </summary>
     public class DataBuffer
     {
+        #region Fields
+
         private readonly byte[] _buffer;
         
         private int _offset;
         private int _offsetInLastByte;
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     Instantiates the class using an external buffer.
@@ -118,5 +128,7 @@ namespace Barchart.BinarySerializer.Schemas
 
             return byteToAdd;
         }
+
+        #endregion
     }
 }
