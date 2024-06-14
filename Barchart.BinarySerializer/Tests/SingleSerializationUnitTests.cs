@@ -169,25 +169,6 @@ namespace Barchart.BinarySerializer.Tests
             Assert.Equal(garage, deserializedGarage);
         }
 
-        class TestClass
-        {
-            [BinarySerialize(key: false)]
-            public TestEnum? enumField;
-
-            [BinarySerialize(key: false)]
-            public TestEnum? enumField2;
-
-            [BinarySerialize(key: false)]
-            public List<int> list = new() { 2 , 3 };
-        }
-
-        enum TestEnum
-        {
-            Option1,
-            Option2,
-            Option3
-        }
-
         [Fact]
         public void EnumAndListSerializationTest()
         {
@@ -195,23 +176,23 @@ namespace Barchart.BinarySerializer.Tests
             {
                 Stopwatch stopwatch = new();
 
-                TestClass testClass = new()
+                ListSpecs ListSpecs = new()
                 {
-                    enumField = TestEnum.Option1,
-                    enumField2 = TestEnum.Option3
+                    enumField = SerializationOptions.Option1,
+                    enumField2 = SerializationOptions.Option3
                 };
 
-                Schema<TestClass> testClassSchema = SchemaFactory.GetSchema<TestClass>();
+                Schema<ListSpecs> ListSpecsSchema = SchemaFactory.GetSchema<ListSpecs>();
                 stopwatch.Start();
 
-                byte[] serializedData = testClassSchema.Serialize(testClass);
-                TestClass deserializedTestClass = testClassSchema.Deserialize(serializedData);
+                byte[] serializedData = ListSpecsSchema.Serialize(ListSpecs);
+                ListSpecs deserializedListSpecs = ListSpecsSchema.Deserialize(serializedData);
 
                 stopwatch.Stop();
                 _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
 
-                Assert.Equal(testClass.enumField, deserializedTestClass.enumField);
-                Assert.Equal(testClass.list, deserializedTestClass.list);
+                Assert.Equal(ListSpecs.enumField, deserializedListSpecs.enumField);
+                Assert.Equal(ListSpecs.list, deserializedListSpecs.list);
 
             }
             catch (Exception ex)
@@ -252,18 +233,7 @@ namespace Barchart.BinarySerializer.Tests
             }
         }
 
-
-        class ExampleClass1 {
-            public bool property1;
-            public TestEnum property2;
-            public float? property3;
-            public List<ExampleClass2>? example;
-        }
-
-        class ExampleClass2 {
-            public bool property1;
-            public float? property3;
-        }
+      
 
         [Fact]
         public void ListOfObjectsTest()
@@ -272,19 +242,19 @@ namespace Barchart.BinarySerializer.Tests
             {
                 Stopwatch stopwatch = new();
 
-                ExampleClass1 example = new ExampleClass1
+                ListOfObjectsSpecs1 example = new ListOfObjectsSpecs1
                     {
                         property1 = true,
-                        property2 = TestEnum.Option2,
+                        property2 = SerializationOptions.Option2,
                         property3 = 3.52f,
-                        example = new List<ExampleClass2>
+                        example = new List<ListOfObjectsSpecs2>
                         {
-                            new ExampleClass2
+                            new ListOfObjectsSpecs2
                             {
                                 property1 = true,
                                 property3 = 2.11f
                             },
-                            new ExampleClass2
+                            new ListOfObjectsSpecs2
                             {
                                 property1 = false,
                                 property3 = 5.11f
@@ -292,11 +262,11 @@ namespace Barchart.BinarySerializer.Tests
                         }
                     };
 
-                Schema<ExampleClass1> exampleSchema = SchemaFactory.GetSchema<ExampleClass1>();
+                Schema<ListOfObjectsSpecs1> exampleSchema = SchemaFactory.GetSchema<ListOfObjectsSpecs1>();
                 stopwatch.Start();
 
                 byte[] serializedData = exampleSchema.Serialize(example);
-                ExampleClass1 deserializedExample = exampleSchema.Deserialize(serializedData);
+                ListOfObjectsSpecs1 deserializedExample = exampleSchema.Deserialize(serializedData);
 
                 stopwatch.Stop();
                 _output.WriteLine($"Time elapsed: {stopwatch.ElapsedTicks} ticks");
