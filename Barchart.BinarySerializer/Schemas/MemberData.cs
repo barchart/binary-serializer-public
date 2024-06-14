@@ -9,7 +9,7 @@ using Barchart.BinarySerializer.Utility;
 namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    /// Represents metadata about a member of a class or structure with encoding/decoding functionality.
+    ///     Represents metadata about a member of a class or structure with encoding/decoding functionality.
     /// </summary>
     /// <typeparam name="TContainer">The type of the class or structure.</typeparam>
     /// <typeparam name="TMember">The type of the member.</typeparam>
