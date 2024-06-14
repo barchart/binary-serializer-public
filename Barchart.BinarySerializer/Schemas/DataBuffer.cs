@@ -44,14 +44,20 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         ///     Writes a single bit to the buffer.
         /// </summary>
+        /// <param name="bit">Boolean value representing the bit to write (true for 1, false for 0).</param>
         /// <exception cref="Exception">Thrown if the buffer is full.</exception>
-        public void WriteBit(byte bit)
+        public void WriteBit(bool bit)
         {
-            _buffer[_offset] |= (byte)(bit << (7 - _offsetInLastByte));
-            _offsetInLastByte = (_offsetInLastByte + 1) % 8;
+            byte valueToWrite = (byte)(bit ? 1 : 0);
+            int bitPosition = 7 - _offsetInLastByte;
 
-            if (_offsetInLastByte == 0)
+            _buffer[_offset] |= (byte)(valueToWrite << bitPosition);
+
+            _offsetInLastByte++;
+
+            if (_offsetInLastByte == 8)
             {
+                _offsetInLastByte = 0;
                 _offset++;
 
                 if (_offset >= _buffer.Length)
@@ -93,7 +99,7 @@ namespace Barchart.BinarySerializer.Schemas
         {
             for (int j = 7; j >= 0; j--)
             {
-                WriteBit((byte)((valueByte >> j) & 1));
+                WriteBit(((valueByte >> j) & 1) == 1);
             }
         }
 

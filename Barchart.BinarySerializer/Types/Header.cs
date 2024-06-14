@@ -30,11 +30,11 @@ namespace Barchart.BinarySerializer.Types
         /// <param name="dataBuffer">The DataBuffer to write to.</param>
         public void WriteToBuffer(DataBuffer dataBuffer)
         {
-            dataBuffer.WriteBit((byte)(IsMissing ? 1 : 0));
+            dataBuffer.WriteBit(IsMissing);
 
             if (!IsMissing)
             {
-                dataBuffer.WriteBit((byte)(IsNull ? 1 : 0));
+                dataBuffer.WriteBit(IsNull);
             }
         }
         

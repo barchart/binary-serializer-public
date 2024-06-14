@@ -18,7 +18,7 @@ namespace Barchart.BinarySerializer.Utility
         /// <param name="dataBuffer">The DataBuffer to write to.</param>
         public static void EncodeMissingFlag(DataBuffer dataBuffer)
         {
-            dataBuffer.WriteBit(1);
+            dataBuffer.WriteBit(true);
         }
 
         /// <summary>
