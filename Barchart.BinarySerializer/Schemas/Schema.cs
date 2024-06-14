@@ -11,6 +11,8 @@
         
         [ThreadStatic]
         private static byte[]? _buffer;
+        
+        private readonly IList<IMemberData<TContainer>> _memberDataContainer;
 
         #endregion
 
@@ -28,11 +30,9 @@
             }
         }
 
-        private readonly IList<IMemberData<TContainer>> _memberDataContainer;
-
         #endregion
 
-        #region  Constructor(s)
+        #region Constructor(s)
 
         public Schema(List<IMemberData<TContainer>> memberDataContainer)
         {
