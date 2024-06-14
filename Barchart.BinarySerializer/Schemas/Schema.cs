@@ -12,6 +12,9 @@
         [ThreadStatic]
         private static byte[]? _buffer;
 
+        #endregion
+
+        #region Properties
         private static byte[] Buffer
         {
             get
