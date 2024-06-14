@@ -15,9 +15,15 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="TMember">The type of the member.</typeparam>
     public class ObjectMemberData<TContainer, TMember> : MemberData<TContainer, TMember> where TMember : new()
     {
+        #region Constructor(s)
+
         public ObjectMemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo,
             Func<TContainer, TMember> getDelegate, Action<TContainer, TMember?>? setDelegate, IBinaryTypeObjectSerializer<TMember> binarySerializer)
             : base(type, name, isKeyAttribute, memberInfo, getDelegate, setDelegate, binarySerializer) { }
+
+        #endregion
+
+        #region Methods
 
         public override void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer buffer)
         {
@@ -75,5 +81,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return UtilityKit.NumberOfBitsIsMissing;
             }
         }
+
+        #endregion
     }
 }

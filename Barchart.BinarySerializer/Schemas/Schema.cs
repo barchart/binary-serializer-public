@@ -6,6 +6,7 @@
     /// <typeparam name="TContainer">The type of objects serialized and deserialized by this schema.</typeparam>
     public class Schema<TContainer> : ISchema where TContainer : new()
     {
+        #region Fields
         private const int BufferSize = 1000000;
         
         [ThreadStatic]
@@ -26,11 +27,18 @@
 
         private readonly IList<IMemberData<TContainer>> _memberDataContainer;
 
+        #endregion
+
+        #region  Constructor(s)
+
         public Schema(List<IMemberData<TContainer>> memberDataContainer)
         {
             _memberDataContainer = memberDataContainer;
         }
 
+        #endregion
+
+        #region Methods
         /// <summary>
         ///     Serialize an object of generic type.
         /// </summary>
@@ -245,7 +253,6 @@
             }
         }
 
-        #region ISchema implementation
         byte[] ISchema.Serialize(object schemaObject)
         {
             return Serialize((TContainer)schemaObject);
@@ -353,6 +360,7 @@
 
             return GetLengthInBits((TContainer)oldObject!, (TContainer)newObject!);
         }
+
         #endregion
     }
 }

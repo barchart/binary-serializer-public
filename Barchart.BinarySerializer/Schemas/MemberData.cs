@@ -15,6 +15,7 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="TMember">The type of the member.</typeparam>
     public class MemberData<TContainer, TMember> : IMemberData<TContainer>
     {
+        #region Properties
         public Type Type { get; }
         public string Name { get; }
         public bool IsKeyAttribute { get; }
@@ -24,6 +25,9 @@ namespace Barchart.BinarySerializer.Schemas
         public Action<TContainer, TMember?>? SetDelegate { get; }
         public IBinaryTypeSerializer<TMember> BinarySerializer { get; }
 
+        #endregion
+
+        #region Constructor(s)
         public MemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo,
             Func<TContainer, TMember> getDelegate, Action<TContainer, TMember?>? setDelegate, IBinaryTypeSerializer<TMember> binarySerializer)
         {
@@ -36,6 +40,9 @@ namespace Barchart.BinarySerializer.Schemas
             BinarySerializer = binarySerializer;
         }
 
+        #endregion
+
+        #region Methods
         public void Encode(TContainer value, DataBuffer buffer) {
             TMember member = GetDelegate(value);
             BinarySerializer.Encode(buffer, member);
@@ -108,5 +115,7 @@ namespace Barchart.BinarySerializer.Schemas
                 return UtilityKit.NumberOfBitsIsMissing;
             }
         }
+        
+        #endregion
     }
 }
