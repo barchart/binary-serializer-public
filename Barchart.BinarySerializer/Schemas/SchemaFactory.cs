@@ -10,7 +10,7 @@ using Barchart.BinarySerializer.Types;
 namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    /// Factory class for generating schemas for binary serialization.
+    ///     Factory class for generating schemas for binary serialization.
     /// </summary>
     public static class SchemaFactory
     {
@@ -82,7 +82,7 @@ namespace Barchart.BinarySerializer.Schemas
         #region Methods
         
         /// <summary>
-        /// Retrieves the schema for the specified type <typeparamref name="TContainer"/>.
+        ///     Retrieves the schema for the specified type <typeparamref name="TContainer"/>.
         /// </summary>
         /// <typeparam name="TContainer">The type of object for which the schema is generated.</typeparam>
         /// <returns>The schema for the specified type.</returns>
@@ -156,7 +156,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Gets a serializer for a Complex type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for a Complex type <typeparamref name="TMember"/>.
         /// </summary>
         /// <typeparam name="TMember">The type of elements in the list.</typeparam>
         /// <returns>A serializer for a list of elements of type <typeparamref name="TMember"/>.</returns>
@@ -168,7 +168,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Gets a serializer for a list type <typeparamref name="TList"/> containing elements of type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for a list type <typeparamref name="TList"/> containing elements of type <typeparamref name="TMember"/>.
         /// </summary>
         /// <typeparam name="TMember">The type of elements in the list.</typeparam>
         /// <typeparam name="TList">The type of list for which to get the serializer.</typeparam>
@@ -186,12 +186,12 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Gets a serializer for an enum type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for an enum type <typeparamref name="TMember"/>.
         /// </summary>
         /// <typeparam name="TMember">The enum type for which to get the serializer.</typeparam>
         /// <returns>A serializer for the specified enum type <typeparamref name="TMember"/> if successful; otherwise, <see langword="null"/>.</returns>
         /// <remarks>
-        /// The method assumes that the underlying storage type for the enum is `int`, and retrieves a serializer for `int` type to serialize the enum values.
+        ///     The method assumes that the underlying storage type for the enum is `int`, and retrieves a serializer for `int` type to serialize the enum values.
         /// </remarks>
         public static BinarySerializerEnum<TMember> GetEnumSerializer<TMember>() where TMember : struct, Enum
         {
@@ -199,18 +199,18 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Gets a serializer for a nullable value type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for a nullable value type <typeparamref name="TMember"/>.
         /// </summary>
         /// <typeparam name="TMember">The nullable value type for which to get the serializer.</typeparam>
         /// <returns>
-        /// A serializer for the specified nullable value type <typeparamref name="TMember"/> if successful; otherwise, <see langword="null"/>.
+        ///     A serializer for the specified nullable value type <typeparamref name="TMember"/> if successful; otherwise, <see langword="null"/>.
         /// </returns>
         /// <remarks>
-        /// The method first attempts to retrieve a serializer for the nullable type <typeparamref name="TMember"/> from the <paramref name="_serializers"/> dictionary.
-        /// If a serializer is found, it is cast to the appropriate type and returned.
-        /// If a serializer is not found, the method retrieves a serializer for the underlying non-nullable type <typeparamref name="TMember"/>.
-        /// If the retrieval is successful, the method constructs and returns a new serializer for the nullable type <typeparamref name="TMember"/>.
-        /// If the retrieval fails, the method returns <see langword="null"/>.
+        ///     The method first attempts to retrieve a serializer for the nullable type <typeparamref name="TMember"/> from the <paramref name="_serializers"/> dictionary.
+        ///     If a serializer is found, it is cast to the appropriate type and returned.
+        ///     If a serializer is not found, the method retrieves a serializer for the underlying non-nullable type <typeparamref name="TMember"/>.
+        ///     If the retrieval is successful, the method constructs and returns a new serializer for the nullable type <typeparamref name="TMember"/>.
+        ///     If the retrieval fails, the method returns <see langword="null"/>.
         /// </remarks>
         public static BinarySerializerNullable<TMember>? GetNullableSerializer<TMember>() where TMember : struct
         {
@@ -240,7 +240,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Gets a serializer for the specified type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for the specified type <typeparamref name="TMember"/>.
         /// </summary>
         /// <typeparam name="TMember">The type for which to get the serializer.</typeparam>
         /// <returns>A serializer for the specified type <typeparamref name="TMember"/> if available; otherwise, <c>null</c>.</returns>
@@ -283,35 +283,8 @@ namespace Barchart.BinarySerializer.Schemas
             return null;
         }
 
-        private static IBinaryTypeSerializer<TMember>? GenerateSerializer<TMember>(string methodName, Type? type)
-        {
-            Type[]? genericArgs = null;
-
-            genericArgs = methodName switch
-            {
-                nameof(GetObjectSerializer) or nameof(GetEnumSerializer) => new[] { typeof(TMember) },
-                nameof(GetListSerializer) => new[] { type!, typeof(TMember) },
-                nameof(GetNullableSerializer) => new[] { type! },
-                _ => Array.Empty<Type>(),
-            };
-            
-            var generateSerializerMethod = typeof(SchemaFactory).GetMethod(methodName)?.MakeGenericMethod(genericArgs);
-
-            if (generateSerializerMethod == null)
-            {
-                return null;
-            }
-            
-            var generateSerializerCallExpr = Expression.Call(null, generateSerializerMethod);
-            var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
-            var func = lambdaExpr.Compile();
-            var result = func();
-
-            return result;
-        }
-
         /// <summary>
-        /// Generates member data for the specified member.
+        ///     Generates member data for the specified member.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
         /// <typeparam name="TMember">The type of the member.</typeparam>
@@ -340,7 +313,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Generates object member data for the specified member.
+        ///     Generates object member data for the specified member.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
         /// <typeparam name="TMember">The type of the object member.</typeparam>
@@ -369,7 +342,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Generates member data interface for the specified member type and information.
+        ///     Generates member data interface for the specified member type and information.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
         /// <param name="memberType">The type of the member.</param>
@@ -389,7 +362,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Generates object member data interface for the specified member type and information.
+        ///     Generates object member data interface for the specified member type and information.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
         /// <param name="memberType">The type of the member.</param>
@@ -409,7 +382,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Generates a setter function for the specified member.
+        ///     Generates a setter function for the specified member.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
         /// <typeparam name="TMember">The type of the member.</typeparam>
@@ -426,7 +399,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Generates a getter function for the specified member.
+        ///     Generates a getter function for the specified member.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
         /// <typeparam name="TMember">The type of the member.</typeparam>
@@ -458,7 +431,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Determines whether the specified type is a List type, 
+        ///     Determines whether the specified type is a List type, 
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a list type; otherwise, false.</returns>
@@ -468,13 +441,40 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Determines whether the specified type is a Enum type, 
+        ///     Determines whether the specified type is a Enum type, 
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <returns>True if the type is a list type; otherwise, false.</returns>
         private static bool IsMemberEnumType(Type type)
         {
             return type.IsEnum;
+        }
+
+        private static IBinaryTypeSerializer<TMember>? GenerateSerializer<TMember>(string methodName, Type? type)
+        {
+            Type[]? genericArgs = null;
+
+            genericArgs = methodName switch
+            {
+                nameof(GetObjectSerializer) or nameof(GetEnumSerializer) => new[] { typeof(TMember) },
+                nameof(GetListSerializer) => new[] { type!, typeof(TMember) },
+                nameof(GetNullableSerializer) => new[] { type! },
+                _ => Array.Empty<Type>(),
+            };
+            
+            var generateSerializerMethod = typeof(SchemaFactory).GetMethod(methodName)?.MakeGenericMethod(genericArgs);
+
+            if (generateSerializerMethod == null)
+            {
+                return null;
+            }
+            
+            var generateSerializerCallExpr = Expression.Call(null, generateSerializerMethod);
+            var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
+            var func = lambdaExpr.Compile();
+            var result = func();
+
+            return result;
         }
 
         private static bool IsNullableNumericType(Type type)
