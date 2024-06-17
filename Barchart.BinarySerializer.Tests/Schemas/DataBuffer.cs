@@ -22,7 +22,7 @@ public class DataBufferTests
     #region Test Methods (WriteBit)
     
     [Fact]
-    public void WriteBit_WriteTrue_ModifiesBuffer()
+    public void WriteBit_True_ModifiesBuffer()
     {
         var byteArray = new byte[1];
         var dataBuffer = new DataBuffer(byteArray);
@@ -33,7 +33,7 @@ public class DataBufferTests
     }
     
     [Fact]
-    public void WriteBit_WriteFalse_ModifiesBuffer()
+    public void WriteBit_False_ModifiesBuffer()
     {
         var byteArray = new byte[1];
         var dataBuffer = new DataBuffer(byteArray);
@@ -51,7 +51,7 @@ public class DataBufferTests
     [InlineData(new[] { false, false, true, false })]
     [InlineData(new[] { true, false, true, false, true, false, true, false })]
     [InlineData(new[] { false, true, false, true, false, true, false, true })]
-    public void WriteBit_WriteMultiple_ModifiesBuffer(bool[] bits)
+    public void WriteBit_Multiple_ModifiesBuffer(bool[] bits)
     {
         var byteArray = new byte[1];
         var dataBuffer = new DataBuffer(byteArray);
