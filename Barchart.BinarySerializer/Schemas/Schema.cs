@@ -7,6 +7,7 @@
     public class Schema<TContainer> : ISchema where TContainer : new()
     {
         #region Fields
+
         private const int BufferSize = 1000000;
         
         [ThreadStatic]
@@ -17,6 +18,7 @@
         #endregion
 
         #region Properties
+
         private static byte[] Buffer
         {
             get
@@ -42,6 +44,7 @@
         #endregion
 
         #region Methods
+        
         /// <summary>
         ///     Serialize an object of generic type.
         /// </summary>

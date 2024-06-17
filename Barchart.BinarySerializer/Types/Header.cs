@@ -39,6 +39,19 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <summary>
+        /// Reads a header from the provided DataBuffer.
+        /// </summary>
+        /// <param name="dataBuffer">The DataBuffer to read from.</param>
+        /// <returns>The read Header.</returns>
+        public static Header ReadFromBuffer(DataBuffer dataBuffer)
+        {
+            bool headerIsMissing = dataBuffer.ReadBit() == 1;
+            bool headerIsNull = !headerIsMissing && dataBuffer.ReadBit() == 1;
+            
+            return new() { IsMissing = headerIsMissing, IsNull = headerIsNull };
+        }
+
+        /// <summary>
         /// Checks if the header indicates that the value is missing or null.
         /// </summary>
         /// <returns>True if the value is missing or null, otherwise false.</returns>

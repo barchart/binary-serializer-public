@@ -1,7 +1,6 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.Utility;
 
 #endregion
 
@@ -59,7 +58,7 @@ namespace Barchart.BinarySerializer.Types
 
         public int GetLengthInBits(TMember? value)
         {
-            return value == null ? UtilityKit.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((TMember)value);
+            return value == null ? DataBuffer.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((TMember)value);
         }
 
         #endregion

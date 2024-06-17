@@ -1,4 +1,4 @@
-﻿using Barchart.BinarySerializer.Utility;
+﻿using Barchart.BinarySerializer.Logging;
 
 namespace Barchart.BinarySerializer
 {  

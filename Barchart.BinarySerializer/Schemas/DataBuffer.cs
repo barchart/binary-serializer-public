@@ -1,6 +1,6 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.Utility;
+using Barchart.BinarySerializer.Logging;
 
 #endregion
 
@@ -12,7 +12,10 @@ namespace Barchart.BinarySerializer.Schemas
     public class DataBuffer
     {
         #region Fields
-
+        
+        public static readonly int NumberOfBitsIsMissing = 1;
+        public static readonly int NumberOfHeaderBitsNonString = 2;
+        public static readonly int NumberOfHeaderBitsString = 8;
         private readonly byte[] _buffer;
         private int _offset;
         private int _offsetInLastByte;
@@ -127,6 +130,72 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             return byteToAdd;
+        }
+
+        /// <summary>
+        /// Encodes the missing flag into the provided DataBuffer.
+        /// </summary>
+        public void EncodeMissingFlag()
+        {
+            WriteBit(true);
+        }
+
+        /// <summary>
+        /// Reads the length of a value from the provided DataBuffer.
+        /// </summary>
+        /// <returns>The length of the value.</returns>
+        public int ReadLength()
+        {
+            byte[] lengthBytes = new byte[sizeof(int)];
+
+            for (int i = 0; i < lengthBytes.Length; i++)
+            {
+                lengthBytes[i] = ReadByte();
+            }
+
+            return BitConverter.ToInt32(lengthBytes, 0);
+        }
+
+        /// <summary>
+        /// Writes the length of a value to the provided DataBuffer.
+        /// </summary>
+        /// <param name="length">The length of the value.</param>
+        public void WriteLength(int length)
+        {
+            byte[] lengthBytes = BitConverter.GetBytes(length);
+
+            for (int i = 0; i < lengthBytes.Length; i++)
+            {
+                WriteByte(lengthBytes[i]);
+            }
+        }
+
+        /// <summary>
+        /// Writes an array of bytes to the provided DataBuffer.
+        /// </summary>
+        /// <param name="valueBytes">The array of bytes to write.</param>
+        public void WriteValueBytes(byte[] valueBytes)
+        {
+            for (int i = 0; i < valueBytes.Length; i++)
+            {
+                WriteByte(valueBytes[i]);
+            }
+        }
+
+        /// <summary>
+        /// Reads an array of bytes from the provided DataBuffer.
+        /// </summary>
+        /// <param name="size">The number of bytes to read.</param>
+        /// <returns>The read array of bytes.</returns>
+        public byte[] ReadValueBytes(int size)
+        {
+            byte[] valueBytes = new byte[size];
+            for (int i = 0; i < size; i++)
+            {
+                valueBytes[i] = ReadByte();
+            }
+
+            return valueBytes;
         }
 
         #endregion

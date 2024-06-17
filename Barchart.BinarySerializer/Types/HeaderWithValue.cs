@@ -6,14 +6,22 @@
     /// <typeparam name="TMember">The type of the value stored alongside the header.</typeparam>
     public readonly struct HeaderWithValue<TMember>
     {
+        #region Properties
+
         public Header Header { get; }
 
         public TMember? Value { get; }
+
+        #endregion
+        
+        #region Constructor(s)
 
         public HeaderWithValue(Header header, TMember? value)
         {
             Header = header;
             Value = value;
         }
+
+        #endregion
     }
 }

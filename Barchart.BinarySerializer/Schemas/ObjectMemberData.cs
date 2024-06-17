@@ -2,7 +2,6 @@
 
 using Barchart.BinarySerializer.Types;
 using System.Reflection;
-using Barchart.BinarySerializer.Utility;
 
 #endregion
 
@@ -38,7 +37,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                UtilityKit.EncodeMissingFlag(buffer);
+                buffer.EncodeMissingFlag();
             }
         }
 
@@ -78,7 +77,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                return UtilityKit.NumberOfBitsIsMissing;
+                return DataBuffer.NumberOfBitsIsMissing;
             }
         }
 

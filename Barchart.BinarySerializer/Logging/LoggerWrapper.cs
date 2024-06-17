@@ -4,7 +4,7 @@ using Serilog;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Utility
+namespace Barchart.BinarySerializer.Logging
 {
     /// <summary>
     /// Provides utility methods for logging using Serilog.

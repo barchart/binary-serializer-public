@@ -1,7 +1,6 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.Utility;
 using System.Text;
 
 #endregion
@@ -25,23 +24,23 @@ namespace Barchart.BinarySerializer.Types
             {
                 byte[] valueBytes = Encoding.UTF8.GetBytes(value);
 
-                UtilityKit.WriteLength(dataBuffer, valueBytes.Length);
-                UtilityKit.WriteValueBytes(dataBuffer, valueBytes);
+                dataBuffer.WriteLength(valueBytes.Length);
+                dataBuffer.WriteValueBytes(valueBytes);
             }
         }
 
         public HeaderWithValue<string?> Decode(DataBuffer dataBuffer)
         {
-            Header header = UtilityKit.ReadHeader(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsValueMissingOrNull())
             {
                 return new HeaderWithValue<string?>(header, default);
             }
 
-            int size = UtilityKit.ReadLength(dataBuffer);
+            int size = dataBuffer.ReadLength();
 
-            byte[] valueBytes = UtilityKit.ReadValueBytes(dataBuffer, size);
+            byte[] valueBytes = dataBuffer.ReadValueBytes(size);
             string decodedString = Encoding.UTF8.GetString(valueBytes);
 
             return new HeaderWithValue<string?>(header, decodedString);
@@ -51,11 +50,11 @@ namespace Barchart.BinarySerializer.Types
         {
             if (value == null)
             {
-                return UtilityKit.NumberOfHeaderBitsNonString;
+                return DataBuffer.NumberOfHeaderBitsNonString;
             }
 
             int valueLength = Encoding.UTF8.GetByteCount(value);
-            return valueLength * 8 + UtilityKit.NumberOfHeaderBitsString;
+            return valueLength * 8 + DataBuffer.NumberOfHeaderBitsString;
         }
 
         #endregion

@@ -1,7 +1,6 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.Utility;
 
 #endregion
 
@@ -30,7 +29,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
         public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer)
         {
-            Header header = UtilityKit.ReadHeader(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsValueMissingOrNull())
             {
@@ -44,7 +43,7 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer, TContainer existing)
         {
-            Header header = UtilityKit.ReadHeader(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsValueMissingOrNull())
             {

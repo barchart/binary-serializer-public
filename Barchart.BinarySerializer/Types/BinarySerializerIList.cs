@@ -1,5 +1,8 @@
-﻿using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.Utility;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Schemas;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -11,12 +14,22 @@ namespace Barchart.BinarySerializer.Types
     /// <typeparam name="TMember">The type of elements contained in the IList.</typeparam>
     public class BinarySerializerIList<TContainer, TMember> : IBinaryTypeObjectSerializer<TContainer?> where TContainer: IList<TMember>, new()
     {
+        #region Fields
+
         private readonly IBinaryTypeSerializer<TMember> _serializer;
+
+        #endregion
+
+        #region Constructor(s)
 
         public BinarySerializerIList(IBinaryTypeSerializer<TMember> serializer)
         {
             _serializer = serializer;
         }
+
+        #endregion
+
+        #region Methods
 
         public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
@@ -27,7 +40,7 @@ namespace Barchart.BinarySerializer.Types
             if (value != null)
             {
                 int length = value.Count;
-                UtilityKit.WriteLength(dataBuffer, length);
+                dataBuffer.WriteLength(length);
 
                 foreach (var item in value)
                 {
@@ -45,13 +58,13 @@ namespace Barchart.BinarySerializer.Types
             if (newValue != null)
             {
                 int length = newValue.Count;
-                UtilityKit.WriteLength(dataBuffer, length);
+                dataBuffer.WriteLength(length);
 
                 for (int i = 0; i < newValue.Count; i++)
                 {
                     if (oldValue != null && i < oldValue.Count && Equals(oldValue[i], newValue[i]))
                     {
-                        UtilityKit.EncodeMissingFlag(dataBuffer);
+                        dataBuffer.EncodeMissingFlag();
                     }
                     else
                     {
@@ -63,14 +76,14 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer, TContainer? existing)
         {
-            Header header = UtilityKit.ReadHeader(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsValueMissingOrNull())
             {
                 return new HeaderWithValue<TContainer?>(header, default);
             }
 
-            int length = UtilityKit.ReadLength(dataBuffer);
+            int length = dataBuffer.ReadLength();
             TContainer list = ReadList(dataBuffer, length, existing);
 
             return new HeaderWithValue<TContainer?>(header, list);
@@ -78,14 +91,14 @@ namespace Barchart.BinarySerializer.Types
 
         public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer)
         {
-            Header header = UtilityKit.ReadHeader(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsValueMissingOrNull())
             {
                 return new HeaderWithValue<TContainer?>(header, default);
             }
 
-            int length = UtilityKit.ReadLength(dataBuffer);
+            int length = dataBuffer.ReadLength();
             TContainer list = ReadList(dataBuffer, length, default);
 
             return new HeaderWithValue<TContainer?>(header, list);
@@ -95,14 +108,14 @@ namespace Barchart.BinarySerializer.Types
         {
             if (value == null)
             {
-                return UtilityKit.NumberOfHeaderBitsNonString;
+                return DataBuffer.NumberOfHeaderBitsNonString;
             }
 
-            int length = UtilityKit.NumberOfHeaderBitsNonString;
+            int length = DataBuffer.NumberOfHeaderBitsNonString;
 
             foreach (var item in value)
             {
-                length += UtilityKit.NumberOfHeaderBitsNonString;
+                length += DataBuffer.NumberOfHeaderBitsNonString;
 
                 if (item != null)
                 {
@@ -135,5 +148,7 @@ namespace Barchart.BinarySerializer.Types
 
             return list;
         }
+
+        #endregion
     }
 }

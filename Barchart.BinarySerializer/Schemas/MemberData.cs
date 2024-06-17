@@ -2,7 +2,6 @@
 
 using Barchart.BinarySerializer.Types;
 using System.Reflection;
-using Barchart.BinarySerializer.Utility;
 
 #endregion
 
@@ -16,6 +15,7 @@ namespace Barchart.BinarySerializer.Schemas
     public class MemberData<TContainer, TMember> : IMemberData<TContainer>
     {
         #region Properties
+
         public Type Type { get; }
         public string Name { get; }
         public bool IsKeyAttribute { get; }
@@ -28,6 +28,7 @@ namespace Barchart.BinarySerializer.Schemas
         #endregion
 
         #region Constructor(s)
+
         public MemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo,
             Func<TContainer, TMember> getDelegate, Action<TContainer, TMember?>? setDelegate, IBinaryTypeSerializer<TMember> binarySerializer)
         {
@@ -43,12 +44,13 @@ namespace Barchart.BinarySerializer.Schemas
         #endregion
 
         #region Methods
-        public void Encode(TContainer value, DataBuffer buffer) {
+        
+        public void Encode(TContainer value, DataBuffer dataBuffer) {
             TMember member = GetDelegate(value);
-            BinarySerializer.Encode(buffer, member);
+            BinarySerializer.Encode(dataBuffer, member);
         }
 
-        public virtual void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer buffer) {
+        public virtual void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer dataBuffer) {
             TMember oldValue = GetDelegate(oldObject);
             TMember newValue = GetDelegate(newObject);
 
@@ -56,18 +58,18 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (!valuesEqual || IsKeyAttribute)
             {
-                 BinarySerializer.Encode(buffer, newValue);        
+                 BinarySerializer.Encode(dataBuffer, newValue);        
             }
             else
             {
-                UtilityKit.EncodeMissingFlag(buffer);
+                dataBuffer.EncodeMissingFlag();
             }
         }
 
-        public virtual void Decode(TContainer existing, DataBuffer buffer) {
+        public virtual void Decode(TContainer existing, DataBuffer dataBuffer) {
 
             HeaderWithValue<TMember> headerWithValue;
-            headerWithValue = BinarySerializer.Decode(buffer);
+            headerWithValue = BinarySerializer.Decode(dataBuffer);
            
             if (headerWithValue.Header.IsMissing)
             {
@@ -112,7 +114,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                return UtilityKit.NumberOfBitsIsMissing;
+                return DataBuffer.NumberOfBitsIsMissing;
             }
         }
         

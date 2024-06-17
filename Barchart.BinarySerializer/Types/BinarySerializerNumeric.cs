@@ -2,7 +2,6 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.Utility;
 
 #endregion
 
@@ -28,26 +27,26 @@ namespace Barchart.BinarySerializer.Types
             header.WriteToBuffer(dataBuffer);
 
             byte[] valueBytes = ConvertToByteArray(value);
-            UtilityKit.WriteValueBytes(dataBuffer, valueBytes);
+            dataBuffer.WriteValueBytes(valueBytes);
         }
 
         public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer)
         {
-            Header header = UtilityKit.ReadHeader(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsValueMissingOrNull())
             {
                 return new HeaderWithValue<TMember>(header, default);
             }
 
-            byte[] valueBytes = UtilityKit.ReadValueBytes(dataBuffer, Size);
+            byte[] valueBytes = dataBuffer.ReadValueBytes(Size);
 
             return new HeaderWithValue<TMember>(header, DecodeBytes(valueBytes));
         }
 
         public int GetLengthInBits(TMember value)
         {
-            return Size * 8 + UtilityKit.NumberOfHeaderBitsNonString;
+            return Size * 8 + DataBuffer.NumberOfHeaderBitsNonString;
         }
 
         protected abstract byte[] ConvertToByteArray(TMember value);
