@@ -14,24 +14,24 @@ namespace Barchart.BinarySerializer.Schemas
         #region Fields
 
         private readonly byte[] _buffer;
-        
         private int _offset;
         private int _offsetInLastByte;
 
         #endregion
 
-        #region Methods
-
+        #region Constructor(s)
         /// <summary>
         ///     Instantiates the class using an external buffer.
         /// </summary>
         public DataBuffer(byte[] buffer)
         {
             _buffer = buffer;
-            
             _offset = 0;
             _offsetInLastByte = 0;
         }
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     Resets the current byte index to zero.
