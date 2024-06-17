@@ -89,6 +89,11 @@ namespace Barchart.BinarySerializer.Schemas
         {
             try
             {
+                if (_offset >= _buffer.Length)
+                {
+                    throw new InvalidOperationException("Attempt to read beyond the end of the buffer.");
+                }
+
                 byte bit = (byte)((_buffer[_offset] >> (7 - _offsetInLastByte)) & 1);
                 _offsetInLastByte = (_offsetInLastByte + 1) % 8;
 
@@ -98,12 +103,18 @@ namespace Barchart.BinarySerializer.Schemas
                 }
                 return bit;
             }
+            catch (InvalidOperationException ex)
+            {
+                LoggerWrapper.LogError($"Buffer read error at offset {_offset}, bit {_offsetInLastByte}: {ex.Message}");
+                throw;
+            }
             catch (Exception ex)
             {
-                LoggerWrapper.LogError(ex.Message);
-                return 0;
+                LoggerWrapper.LogError($"Unexpected error while reading bit at offset {_offset}, bit {_offsetInLastByte}: {ex.Message}");
+                throw;
             }
         }
+
 
         /// <summary>
         ///     Writes a byte to the buffer.
