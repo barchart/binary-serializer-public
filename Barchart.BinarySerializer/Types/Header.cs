@@ -37,6 +37,15 @@ namespace Barchart.BinarySerializer.Types
                 dataBuffer.WriteBit(IsNull);
             }
         }
+
+        /// <summary>
+        /// Checks if the header indicates that the value is missing or null.
+        /// </summary>
+        /// <returns>True if the value is missing or null, otherwise false.</returns>
+        public bool IsValueMissingOrNull()
+        {
+            return IsMissing || IsNull;
+        }
         
         #endregion
     }

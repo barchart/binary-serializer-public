@@ -20,7 +20,7 @@ namespace Barchart.BinarySerializer.Types
         {
             Header header = UtilityKit.ReadHeader(dataBuffer);
 
-            if (UtilityKit.IsHeaderMissingOrNull(header))
+            if (header.IsValueMissingOrNull())
             {
                 return new HeaderWithValue<TContainer>(header, default);
             }
@@ -34,7 +34,7 @@ namespace Barchart.BinarySerializer.Types
         {
             Header header = UtilityKit.ReadHeader(dataBuffer);
 
-            if (UtilityKit.IsHeaderMissingOrNull(header))
+            if (header.IsValueMissingOrNull())
             {
                 return new HeaderWithValue<TContainer>(header, default);
             }

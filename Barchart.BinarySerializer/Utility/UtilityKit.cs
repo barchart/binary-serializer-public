@@ -96,14 +96,6 @@ namespace Barchart.BinarySerializer.Utility
             return valueBytes;
         }
 
-        /// <summary>
-        /// Checks if the header indicates that the value is missing or null.
-        /// </summary>
-        /// <param name="header">The Header to check.</param>
-        /// <returns>True if the value is missing or null, otherwise false.</returns>
-        public static bool IsHeaderMissingOrNull(Header header)
-        {
-            return header.IsMissing || header.IsNull;
-        }
+    
     }
 }

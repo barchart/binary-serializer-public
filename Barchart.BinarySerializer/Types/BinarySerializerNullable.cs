@@ -35,7 +35,7 @@ namespace Barchart.BinarySerializer.Types
         {
             HeaderWithValue<TMember> headerWithValue = _serializer.Decode(dataBuffer);
 
-            if (UtilityKit.IsHeaderMissingOrNull(headerWithValue.Header)) 
+            if (headerWithValue.Header.IsValueMissingOrNull()) 
             {
                 return new HeaderWithValue<TMember?>(headerWithValue.Header, null);
             }
