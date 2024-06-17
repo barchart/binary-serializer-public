@@ -22,11 +22,9 @@
 
   <ItemGroup>
     <None Remove="output\" />
-    <None Remove="Utility\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="output\" />
-    <Folder Include="Utility\" />
   </ItemGroup>
   <Target Name="RemoveFilesFromRelease" BeforeTargets="BeforeBuild">
     <ItemGroup>
