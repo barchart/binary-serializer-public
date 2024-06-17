@@ -1,4 +1,8 @@
+#region Using Statements
+
 using Barchart.BinarySerializer.Schemas;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Tests.Schemas;
 
