@@ -6,3 +6,5 @@ output/
 Logs/
 
 .idea/
+
+*.DotSettings
