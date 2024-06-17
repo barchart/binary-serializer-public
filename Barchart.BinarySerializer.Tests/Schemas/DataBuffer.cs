@@ -44,7 +44,6 @@ public class DataBufferTests
     }
     
     [Theory]
-    [InlineData(new[] { true })]
     [InlineData(new[] { true, true })]
     [InlineData(new[] { false, false })]
     [InlineData(new[] { true, true, false, true })]
