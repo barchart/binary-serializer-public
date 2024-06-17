@@ -61,6 +61,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <exception cref="Exception">Thrown if the buffer is full.</exception>
         public void WriteBit(bool bit)
         {
+            if (_offset >= _buffer.Length)
+            {
+                throw new Exception($"Object is larger than {_buffer.Length} bytes.");
+            }
+
             byte valueToWrite = (byte)(bit ? 1 : 0);
             int bitPosition = 7 - _offsetInLastByte;
 
@@ -72,13 +77,11 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 _offsetInLastByte = 0;
                 _offset++;
-
-                if (_offset >= _buffer.Length)
+                
+                if (_offset < _buffer.Length)
                 {
-                    throw new Exception($"Object is larger than {_buffer.Length} bytes.");
-                }
-
-                _buffer[_offset] = 0;
+                    _buffer[_offset] = 0;
+                }           
             }
         }
 
@@ -101,6 +104,7 @@ namespace Barchart.BinarySerializer.Schemas
                 {
                     _offset++;
                 }
+
                 return bit;
             }
             catch (InvalidOperationException ex)
