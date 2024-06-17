@@ -84,7 +84,7 @@ public class DataBufferTests
             throw new ArgumentOutOfRangeException(nameof(index), index, "Bit index cannot be greater than seven.");
         }
 
-        return ((b >> 7 - index) & 1) == 1;
+        return ((b >> (7 - index)) & 1) == 1;
     }
 
     private static string PrintBits(byte b)
