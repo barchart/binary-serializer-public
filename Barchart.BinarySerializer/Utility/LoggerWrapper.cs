@@ -1,4 +1,8 @@
-﻿using Serilog;
+﻿#region Using Statements
+
+using Serilog;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Utility
 {
@@ -7,6 +11,8 @@ namespace Barchart.BinarySerializer.Utility
     /// </summary>
     public static class LoggerWrapper
     {
+        #region Methods
+        
         public static void InitializeLogger()
         {
             string logFilePath = "../../../../Logs/log-.txt";
@@ -35,5 +41,7 @@ namespace Barchart.BinarySerializer.Utility
         {
             Log.Error(text);
         }
+
+        #endregion
     }
 }

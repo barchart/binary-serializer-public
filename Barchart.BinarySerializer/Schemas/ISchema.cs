@@ -5,6 +5,8 @@
     /// </summary>
     public interface ISchema
 	{
+        #region Methods
+
         public byte[] Serialize(object schemaObject);
         public byte[] Serialize(object schemaObject, byte[] buffer);
         internal byte[] Serialize(object schemaObject, DataBuffer dataBuffer);
@@ -21,5 +23,7 @@
         public int GetLengthInBytes(object? oldObject, object? newObject);
         public int GetLengthInBits(object? schemaObject);
         public int GetLengthInBits(object? oldObject, object? newObject);
+
+        #endregion
     }
 }

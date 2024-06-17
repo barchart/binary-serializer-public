@@ -2,7 +2,13 @@
 {
     public class BinarySerializerUInt64 : BinarySerializerNumeric<ulong>
     {
+        #region Properties
+
         public override int Size => sizeof(ulong);
+
+        #endregion
+
+        #region Methods
 
         protected override byte[] ConvertToByteArray(ulong value)
         {
@@ -13,5 +19,7 @@
         {
             return BitConverter.ToUInt64(bytes);
         }
+
+        #endregion
     }
 }

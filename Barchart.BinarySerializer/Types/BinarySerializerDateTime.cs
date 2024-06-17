@@ -2,7 +2,13 @@
 {
     public class BinarySerializerDateTime : BinarySerializerNumeric<DateTime>
     {
+        #region Properties
+
         public override int Size => sizeof(long);
+
+        #endregion
+
+        #region Methods
 
         protected override byte[] ConvertToByteArray(DateTime value)
         {
@@ -18,5 +24,7 @@
             DateTime epoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return epoch.AddTicks(milliSeconds * ticksPerMillisecond);
         }
+
+        #endregion
     }
 }

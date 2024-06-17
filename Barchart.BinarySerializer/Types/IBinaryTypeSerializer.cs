@@ -1,4 +1,8 @@
-﻿using Barchart.BinarySerializer.Schemas;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Schemas;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -8,8 +12,12 @@ namespace Barchart.BinarySerializer.Types
     /// <typeparam name="TMember">The type of the value to be serialized.</typeparam>
     public interface IBinaryTypeSerializer<TMember>
     {
+        #region Methods
+
         public void Encode(DataBuffer dataBuffer, TMember value);
         public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer);
         public int GetLengthInBits(TMember value);
+
+        #endregion
     }
 }

@@ -2,7 +2,13 @@
 {
     public class BinarySerializerUInt32 : BinarySerializerNumeric<uint>
     {
+        #region Properties
+
         public override int Size => sizeof(uint);
+
+        #endregion
+
+        #region Methods
 
         protected override byte[] ConvertToByteArray(uint value)
         {
@@ -13,5 +19,7 @@
         {
             return BitConverter.ToUInt32(bytes);
         }
+
+        #endregion
     }
 }

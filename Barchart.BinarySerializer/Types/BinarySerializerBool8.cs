@@ -2,8 +2,14 @@
 {
     public class BinarySerializerBool8 : BinarySerializerNumeric<bool>
     {
+        #region Properties
+
         public override int Size => sizeof(bool);
 
+        #endregion
+
+        #region Methods
+        
         protected override byte[] ConvertToByteArray(bool value)
         {
             return BitConverter.GetBytes(value);
@@ -13,5 +19,7 @@
         {
             return bytes[0] == 1;
         }
+
+        #endregion
     }
 }

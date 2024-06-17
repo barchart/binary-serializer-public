@@ -12,6 +12,8 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="TContainer">The type of the container object that holds the members.</typeparam>
     public interface IMemberData<TContainer>
     {
+        #region Properties
+        
         /// <summary>
         ///     Gets the name of the member.
         /// </summary>
@@ -31,6 +33,10 @@ namespace Barchart.BinarySerializer.Schemas
         ///     Gets the metadata information of the member.
         /// </summary>
         public MemberInfo MemberInfo { get; }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     Encodes the member value into the provided DataBuffer.
@@ -83,5 +89,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="newObject">The new container object to compare and encode the differences.</param>
         /// <returns>The length in bits of the encoded differences.</returns>
         public int GetLengthInBits(TContainer oldObject, TContainer newObject);
+
+        #endregion
     }
 }

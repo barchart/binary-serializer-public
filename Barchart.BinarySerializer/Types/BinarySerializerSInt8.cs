@@ -2,7 +2,13 @@
 {
     public class BinarySerializerSInt8 : BinarySerializerNumeric<sbyte>
     {
+        #region Properties
+
         public override int Size => sizeof(sbyte);
+
+        #endregion
+
+        #region Methods
 
         protected override byte[] ConvertToByteArray(sbyte value)
         {
@@ -13,5 +19,7 @@
         {
             return (sbyte)bytes[0];
         }
+
+        #endregion
     }
 }

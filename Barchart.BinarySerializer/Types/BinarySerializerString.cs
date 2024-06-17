@@ -1,6 +1,10 @@
-﻿using Barchart.BinarySerializer.Schemas;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Utility;
 using System.Text;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -9,6 +13,8 @@ namespace Barchart.BinarySerializer.Types
     /// </summary>
     public class BinarySerializerString : IBinaryTypeSerializer<string?>
     {
+        #region Methods
+
         public void Encode(DataBuffer dataBuffer, string? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
@@ -51,5 +57,7 @@ namespace Barchart.BinarySerializer.Types
             int valueLength = Encoding.UTF8.GetByteCount(value);
             return valueLength * 8 + UtilityKit.NumberOfHeaderBitsString;
         }
+
+        #endregion
     }
 }

@@ -9,12 +9,22 @@ namespace Barchart.BinarySerializer.Types
     /// <typeparam name="TMember">The enum type to be serialized.</typeparam>
     public class BinarySerializerEnum<TMember> : IBinaryTypeSerializer<TMember> where TMember : Enum
     {
+        #region Fields
+
         private readonly BinarySerializerInt32 _serializer;
+
+        #endregion
+
+        #region  Constructor(s)
 
         public BinarySerializerEnum(BinarySerializerInt32 serializer)
         {
             _serializer = serializer;
         }
+
+        #endregion
+
+        #region Methods
 
         public void Encode(DataBuffer dataBuffer, TMember? value)
         {
@@ -45,5 +55,7 @@ namespace Barchart.BinarySerializer.Types
             }
             return 0;
         }
+
+        #endregion
     }
 }

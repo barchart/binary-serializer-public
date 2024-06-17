@@ -1,5 +1,9 @@
-﻿using Barchart.BinarySerializer.Schemas;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Utility;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -9,13 +13,21 @@ namespace Barchart.BinarySerializer.Types
     /// <typeparam name="TContainer">The type of objects to be serialized.</typeparam>
     public class ObjectBinarySerializer<TContainer> : IBinaryTypeObjectSerializer<TContainer> where TContainer : new()
     {
+        #region Properties
         public Schema<TContainer> Schema { get; }
+
+        #endregion
+
+        #region Constructor(s)
 
         public ObjectBinarySerializer(Schema<TContainer> schema)
         {
             Schema = schema;
         }
 
+        #endregion
+
+        #region Methods
         public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer)
         {
             Header header = UtilityKit.ReadHeader(dataBuffer);
@@ -82,5 +94,7 @@ namespace Barchart.BinarySerializer.Types
         {
             return ((ISchema)Schema).GetLengthInBits(oldValue, newValue);
         }
+
+        #endregion
     }
 }

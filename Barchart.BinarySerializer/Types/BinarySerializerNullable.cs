@@ -1,5 +1,9 @@
-﻿using Barchart.BinarySerializer.Schemas;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Utility;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -10,12 +14,22 @@ namespace Barchart.BinarySerializer.Types
     /// <typeparam name="TMember">The underlying value type of the nullable type.</typeparam>
     public class BinarySerializerNullable<TMember> : IBinaryTypeSerializer<TMember?> where TMember : struct
 	{
+        #region Fields
+
         private readonly IBinaryTypeSerializer<TMember> _serializer;
+
+        #endregion
+
+        #region  Constructor(s)
 
         public BinarySerializerNullable(IBinaryTypeSerializer<TMember> serializer)
         {
             _serializer = serializer;
         }
+
+        #endregion
+
+        #region Methods
 
         public void Encode(DataBuffer dataBuffer, TMember? value)
         {
@@ -47,5 +61,7 @@ namespace Barchart.BinarySerializer.Types
         {
             return value == null ? UtilityKit.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((TMember)value);
         }
+
+        #endregion
     }
 }

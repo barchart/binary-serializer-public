@@ -2,7 +2,13 @@
 {
     public class BinarySerializerDecimal : BinarySerializerNumeric<decimal>
     {
+        #region Properties
+
         public override int Size => sizeof(decimal);
+
+        #endregion
+
+        #region Methods
 
         protected override byte[] ConvertToByteArray(decimal value)
         {
@@ -20,5 +26,7 @@
 
             return reader.ReadDecimal();
         }
+
+        #endregion
     }
 }

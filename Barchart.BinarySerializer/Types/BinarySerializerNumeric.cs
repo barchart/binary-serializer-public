@@ -1,5 +1,10 @@
-﻿using Barchart.BinarySerializer.Schemas;
+﻿
+#region Using Statements
+
+using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Utility;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -9,8 +14,13 @@ namespace Barchart.BinarySerializer.Types
     /// <typeparam name="TMember">The underlying numeric type.</typeparam>
     public abstract class BinarySerializerNumeric<TMember> : IBinaryTypeSerializer<TMember> where TMember : struct
     {
+        #region Properties
+
         public abstract int Size { get; }
 
+        #endregion
+        
+        #region Methods
         public void Encode(DataBuffer dataBuffer, TMember value)
         {
             Header header = new() { IsMissing = false, IsNull = false };
@@ -42,5 +52,7 @@ namespace Barchart.BinarySerializer.Types
 
         protected abstract byte[] ConvertToByteArray(TMember value);
         protected abstract TMember DecodeBytes(byte[] bytes);
+
+        #endregion
     }
 }
