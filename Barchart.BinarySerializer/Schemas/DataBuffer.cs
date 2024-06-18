@@ -23,6 +23,7 @@ namespace Barchart.BinarySerializer.Schemas
         #endregion
 
         #region Constructor(s)
+
         /// <summary>
         ///     Instantiates the class using an external buffer.
         /// </summary>
@@ -51,12 +52,9 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>A byte array containing the data up to the current offset.</returns>
         public byte[] ToBytes()
         {
-            if (_offset == 0)
-            {
-                return new byte[0];
-            }
-
-            return _buffer.Take(_offset + 1).ToArray();
+            int byteCount = _offset + (_offsetInLastByte == 0 ? 0 : 1);
+            
+            return _buffer.Take(byteCount).ToArray();
         }
 
         /// <summary>
@@ -71,6 +69,11 @@ namespace Barchart.BinarySerializer.Schemas
                 throw new Exception($"Object is larger than {_buffer.Length} bytes.");
             }
 
+            if (IsBeginningOfNewByte())
+            {
+                ResetByte();
+            }
+
             byte valueToWrite = (byte)(bit ? 1 : 0);
             int bitPosition = 7 - _offsetInLastByte;
 
@@ -82,13 +85,9 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 _offsetInLastByte = 0;
                 _offset++;
-
-                if (_offset < _buffer.Length)
-                {
-                    _buffer[_offset] = 0;
-                }
             }
         }
+
 
         /// <summary>
         ///     Reads a single bit from the buffer.
@@ -105,7 +104,7 @@ namespace Barchart.BinarySerializer.Schemas
                 byte bit = (byte)((_buffer[_offset] >> (7 - _offsetInLastByte)) & 1);
                 _offsetInLastByte = (_offsetInLastByte + 1) % 8;
 
-                if (_offsetInLastByte == 0)
+                if (IsBeginningOfNewByte())
                 {
                     _offset++;
                 }
@@ -220,6 +219,16 @@ namespace Barchart.BinarySerializer.Schemas
         private bool IsBufferFull()
         {
             return _offset >= _buffer.Length;
+        }
+
+        private bool IsBufferEmpty()
+        {
+            return _offset == 0 && _offsetInLastByte == 0;
+        }
+
+        private bool IsBeginningOfNewByte()
+        {
+            return _offsetInLastByte == 0;
         }
 
         #endregion
