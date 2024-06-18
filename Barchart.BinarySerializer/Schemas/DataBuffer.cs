@@ -119,7 +119,6 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
-
         /// <summary>
         ///     Writes a byte to the buffer.
         /// </summary>

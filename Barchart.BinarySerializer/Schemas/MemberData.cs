@@ -20,7 +20,6 @@ namespace Barchart.BinarySerializer.Schemas
         public string Name { get; }
         public bool IsKeyAttribute { get; }
         public MemberInfo MemberInfo { get; }
-
         public Func<TContainer, TMember> GetDelegate { get; }
         public Action<TContainer, TMember?>? SetDelegate { get; }
         public IBinaryTypeSerializer<TMember> BinarySerializer { get; }
@@ -92,7 +91,7 @@ namespace Barchart.BinarySerializer.Schemas
             TMember oldValue = GetDelegate(firstObject);
             TMember newValue = GetDelegate(secondObject);
 
-            if(newValue != null && !Equals(oldValue,newValue) && SetDelegate != null) SetDelegate(firstObject, newValue);
+            if (newValue != null && !Equals(oldValue,newValue) && SetDelegate != null) SetDelegate(firstObject, newValue);
         }
 
         public int GetLengthInBits(TContainer schemaObject)
