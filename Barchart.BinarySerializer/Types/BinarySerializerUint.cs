@@ -1,6 +1,6 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerUInt : BinarySerializerNumeric<uint>
+    public class BinarySerializerUint : BinarySerializerNumeric<uint>
     {
         #region Properties
 
