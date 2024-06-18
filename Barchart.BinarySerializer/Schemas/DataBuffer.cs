@@ -51,6 +51,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>A byte array containing the data up to the current offset.</returns>
         public byte[] ToBytes()
         {
+            if (_offset == 0)
+            {
+                return new byte[0];
+            }
+
             return _buffer.Take(_offset + 1).ToArray();
         }
 

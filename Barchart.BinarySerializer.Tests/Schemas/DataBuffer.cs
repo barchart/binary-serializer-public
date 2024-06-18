@@ -71,6 +71,17 @@ public class DataBufferTests
             Assert.Equal(GetBit(byteArray[0], i), bits[i]);
         }
     }
+
+    [Fact]
+    public void ToBytes_ByteArrayEmpty_ReturnsEmptyArray()
+    {
+        var byteArray = new byte[5];
+        var dataBuffer = new DataBuffer(byteArray);
+
+        var bytes = dataBuffer.ToBytes();
+
+        Assert.Empty(bytes);
+    }
     
     #endregion
     
