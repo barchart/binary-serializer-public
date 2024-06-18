@@ -73,9 +73,9 @@ public class DataBufferTests
     }
 
     [Fact]
-    public void ToBytes_ByteArrayEmpty_ReturnsEmptyArray()
+    public void ToBytes_WhenZeroBitsAreWritten_ReturnsEmptyArray()
     {
-        var byteArray = new byte[5];
+        var byteArray = new byte[2];
         var dataBuffer = new DataBuffer(byteArray);
 
         var bytes = dataBuffer.ToBytes();
@@ -83,6 +83,21 @@ public class DataBufferTests
         Assert.Empty(bytes);
     }
     
+    [Fact]
+    public void ToBytes_WhenOneBitIsWritten_ReturnsOneByteArray()
+    {
+        var byteArray = new byte[2];
+        var dataBuffer = new DataBuffer(byteArray);
+        
+        for (int i = 0; i < 1; i++){
+            dataBuffer.WriteBit(i % 2 == 0);
+        }       
+        
+        var bytes = dataBuffer.ToBytes();
+
+        Assert.Single(bytes);
+    }
+
     #endregion
     
     #region Static Methods
