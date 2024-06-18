@@ -1,6 +1,6 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerBool8 : BinarySerializerNumeric<bool>
+    public class BinarySerializerBool : BinarySerializerNumeric<bool>
     {
         #region Properties
 

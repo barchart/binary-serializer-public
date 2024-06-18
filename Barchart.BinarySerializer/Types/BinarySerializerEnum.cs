@@ -11,13 +11,13 @@ namespace Barchart.BinarySerializer.Types
     {
         #region Fields
 
-        private readonly BinarySerializerInt32 _serializer;
+        private readonly BinarySerializerInt _serializer;
 
         #endregion
 
         #region  Constructor(s)
 
-        public BinarySerializerEnum(BinarySerializerInt32 serializer)
+        public BinarySerializerEnum(BinarySerializerInt serializer)
         {
             _serializer = serializer;
         }

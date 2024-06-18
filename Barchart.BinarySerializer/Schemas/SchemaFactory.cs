@@ -2,7 +2,6 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
-
 using Barchart.BinarySerializer.Types;
 
 #endregion
@@ -27,16 +26,16 @@ namespace Barchart.BinarySerializer.Schemas
             _serializers = new Dictionary<Type, object>();
             
             BinarySerializerString stringSerializer = new();
-            BinarySerializerInt32 intSerializer = new();
-            BinarySerializerInt16 shortSerializer = new();
-            BinarySerializerChar16 charSerializer = new();
-            BinarySerializerSInt8 sbyteSerializer = new();
-            BinarySerializerInt8 byteSerializer = new();
-            BinarySerializerBool8 boolSerializer = new();
-            BinarySerializerInt64 longSerializer = new();
-            BinarySerializerUInt16 ushortSerializer = new();
-            BinarySerializerUInt32 uintSerializer = new();
-            BinarySerializerUInt64 ulongSerializer = new();
+            BinarySerializerInt intSerializer = new();
+            BinarySerializerShort shortSerializer = new();
+            BinarySerializerChar charSerializer = new();
+            BinarySerializerSByte sbyteSerializer = new();
+            BinarySerializerByte byteSerializer = new();
+            BinarySerializerBool boolSerializer = new();
+            BinarySerializerLong longSerializer = new();
+            BinarySerializerUShort ushortSerializer = new();
+            BinarySerializerUInt uintSerializer = new();
+            BinarySerializerULong ulongSerializer = new();
             BinarySerializerFloat floatSerializer = new();
             BinarySerializerDouble doubleSerializer = new();
             BinarySerializerDecimal decimalSerializer = new();
@@ -195,7 +194,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// </remarks>
         public static BinarySerializerEnum<TMember> GetEnumSerializer<TMember>() where TMember : struct, Enum
         {
-            return new BinarySerializerEnum<TMember>((BinarySerializerInt32)GetSerializer<int>()!);
+            return new BinarySerializerEnum<TMember>((BinarySerializerInt)GetSerializer<int>()!);
         }
 
         /// <summary>
