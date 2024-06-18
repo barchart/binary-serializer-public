@@ -6,3 +6,4 @@ The schema that represents the structure of the data to be serialized can be fou
 
 The examples are located in the folders named `Barchart.Examples.WebsocketSerialization` and `Barchart.Examples.WebsocketDifferenceSerialization`.
 
+TThe examples are located in the folder named `Barchart.Examples.Barchart.BinarySerializer.Tests`.
