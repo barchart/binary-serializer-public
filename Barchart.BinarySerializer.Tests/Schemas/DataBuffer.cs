@@ -72,6 +72,9 @@ public class DataBufferTests
         }
     }
 
+    #endregion
+
+    #region Test Methods (ToBytes)
     [Fact]
     public void ToBytes_WhenZeroBitsAreWritten_ReturnsEmptyArray()
     {
