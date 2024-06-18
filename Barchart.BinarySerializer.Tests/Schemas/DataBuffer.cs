@@ -98,6 +98,48 @@ public class DataBufferTests
         Assert.Single(bytes);
     }
 
+    [Fact]
+    public void ToBytes_WhenOneByteIsWritten_ReturnsOneByteArray(){
+        var byteArray = new byte[2];
+        var dataBuffer = new DataBuffer(byteArray);
+        
+        for (int i = 0; i < 8; i++){
+            dataBuffer.WriteBit(i % 2 == 0);
+        }
+
+        var bytes = dataBuffer.ToBytes();
+
+        Assert.Single(bytes);
+    }
+    
+    [Fact]
+    public void ToBytes_WhenTwelveBitsAreWritten_ReturnsTwoBytesArray(){
+        var byteArray = new byte[2];
+        var dataBuffer = new DataBuffer(byteArray);
+        
+        for (int i = 0; i < 12; i++){
+            dataBuffer.WriteBit(i % 2 == 0);
+        }
+
+        var bytes = dataBuffer.ToBytes();
+
+        Assert.Equal(2, bytes.Length);
+    }
+
+    [Fact]
+    public void ToBytes_WhenTwoBytesAreWritten_ReturnsTwoBytesArray(){
+        var byteArray = new byte[2];
+        var dataBuffer = new DataBuffer(byteArray);
+        
+        for (int i = 0; i < 16; i++){
+            dataBuffer.WriteBit(i % 2 == 0);
+        }
+        
+        var bytes = dataBuffer.ToBytes();
+
+        Assert.Equal(2, bytes.Length);
+    }
+
     #endregion
     
     #region Static Methods
