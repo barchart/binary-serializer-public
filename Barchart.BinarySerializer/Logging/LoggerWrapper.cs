@@ -7,20 +7,23 @@ using Serilog;
 namespace Barchart.BinarySerializer.Logging
 {
     /// <summary>
-    /// Provides utility methods for logging using Serilog.
+    ///     Provides utility methods for logging using Serilog.
     /// </summary>
     public static class LoggerWrapper
     {
-        #region Methods
-        
-        public static void InitializeLogger()
-        {
+        #region Constructor(s)
+
+        static LoggerWrapper() {
             string logFilePath = "../../../../Logs/log-.txt";
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
-                .CreateLogger();
+            .MinimumLevel.Debug()
+            .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+            .CreateLogger();
         }
+
+        #endregion
+
+        #region Methods
 
         public static void LogInformation(string text)
         {
