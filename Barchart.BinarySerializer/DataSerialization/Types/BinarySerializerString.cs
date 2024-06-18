@@ -1,11 +1,12 @@
 ﻿#region Using Statements
 
+using Barchart.BinarySerializer.DataSerialization.Headers;
 using Barchart.BinarySerializer.Schemas;
 using System.Text;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Types
+namespace Barchart.BinarySerializer.DataSerialization.Types
 {
     /// <summary>
     ///     Provides binary serialization functionality for string types.

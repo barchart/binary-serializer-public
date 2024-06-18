@@ -1,4 +1,4 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿namespace Barchart.BinarySerializer.DataSerialization.Types
 {
     public class BinarySerializerDateTime : BinarySerializerNumeric<DateTime>
     {

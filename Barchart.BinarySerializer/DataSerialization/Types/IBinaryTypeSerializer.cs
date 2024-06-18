@@ -1,10 +1,11 @@
 ﻿#region Using Statements
 
+using Barchart.BinarySerializer.DataSerialization.Headers;
 using Barchart.BinarySerializer.Schemas;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Types
+namespace Barchart.BinarySerializer.DataSerialization.Types
 {
     /// <summary>
     ///     Provides methods for encoding and decoding values of type <typeparamref name="TMember"/> to and from a <see cref="DataBuffer"/>.

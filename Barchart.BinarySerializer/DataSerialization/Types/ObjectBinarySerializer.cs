@@ -1,10 +1,11 @@
 ﻿#region Using Statements
 
+using Barchart.BinarySerializer.DataSerialization.Headers;
 using Barchart.BinarySerializer.Schemas;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Types
+namespace Barchart.BinarySerializer.DataSerialization.Types
 {
     /// <summary>
     ///     Represents a binary serializer for objects of type <typeparamref name="TContainer"/> using a specified schema.

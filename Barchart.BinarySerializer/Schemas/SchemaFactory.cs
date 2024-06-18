@@ -2,7 +2,7 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
-using Barchart.BinarySerializer.Types;
+using Barchart.BinarySerializer.DataSerialization.Types;
 
 #endregion
 
