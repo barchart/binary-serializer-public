@@ -7,8 +7,7 @@ using Barchart.BinarySerializer.Schemas;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Provides binary serialization functionality for nullable value types.
-    /// This class implements the IBinaryTypeSerializer interface for nullable value types.
+    ///     Provides binary serialization functionality for nullable value types.
     /// </summary>
     /// <typeparam name="TMember">The underlying value type of the nullable type.</typeparam>
     public class BinarySerializerNullable<TMember> : IBinaryTypeSerializer<TMember?> where TMember : struct
@@ -30,6 +29,7 @@ namespace Barchart.BinarySerializer.Types
 
         #region Methods
 
+        /// <inheritdoc />
         public void Encode(DataBuffer dataBuffer, TMember? value)
         {
             if (value != null)
@@ -44,6 +44,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
+        /// <inheritdoc />
         public HeaderWithValue<TMember?> Decode(DataBuffer dataBuffer)
         {
             HeaderWithValue<TMember> headerWithValue = _serializer.Decode(dataBuffer);
@@ -56,6 +57,7 @@ namespace Barchart.BinarySerializer.Types
             return new HeaderWithValue<TMember?>(headerWithValue.Header, headerWithValue.Value);
         }
 
+        /// <inheritdoc />
         public int GetLengthInBits(TMember? value)
         {
             return value == null ? DataBuffer.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((TMember)value);

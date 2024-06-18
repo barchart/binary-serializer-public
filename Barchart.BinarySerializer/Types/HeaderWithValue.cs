@@ -1,7 +1,7 @@
 ﻿namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Stores header byte in a specified format based on missing/null bits and string length bits and the value of type <typeparamref name="TMember"/>.
+    ///     Stores header byte in a specified format based on missing/null bits and string length bits and the value of type <typeparamref name="TMember"/>.
     /// </summary>
     /// <typeparam name="TMember">The type of the value stored alongside the header.</typeparam>
     public readonly struct HeaderWithValue<TMember>

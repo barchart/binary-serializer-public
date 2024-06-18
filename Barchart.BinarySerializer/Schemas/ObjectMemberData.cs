@@ -24,6 +24,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         #region Methods
 
+        /// <inheritdoc />
         public override void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer buffer)
         {
             TMember oldValue = GetDelegate(oldObject);
@@ -41,6 +42,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
+        /// <inheritdoc />
         public override void Decode(TContainer existing, DataBuffer buffer)
         {
             HeaderWithValue<TMember> headerWithValue;
@@ -64,6 +66,7 @@ namespace Barchart.BinarySerializer.Schemas
             if (headerWithValue.Value != null) SetDelegate?.Invoke(existing, headerWithValue.Value);
         }
 
+        /// <inheritdoc />
         public override int GetLengthInBits(TContainer oldObject, TContainer newObject)
         {
             var oldValue = GetDelegate(oldObject);

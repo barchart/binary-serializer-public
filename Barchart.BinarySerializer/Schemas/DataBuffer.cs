@@ -147,7 +147,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Encodes the missing flag into the provided DataBuffer.
+        ///     Encodes the missing flag into the provided DataBuffer.
         /// </summary>
         public void EncodeMissingFlag()
         {
@@ -155,7 +155,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Reads the length of a value from the provided DataBuffer.
+        ///     Reads the length of a value from the provided DataBuffer.
         /// </summary>
         /// <returns>The length of the value.</returns>
         public int ReadLength()
@@ -171,7 +171,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Writes the length of a value to the provided DataBuffer.
+        ///     Writes the length of a value to the provided DataBuffer.
         /// </summary>
         /// <param name="length">The length of the value.</param>
         public void WriteLength(int length)
@@ -185,7 +185,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Writes an array of bytes to the provided DataBuffer.
+        ///     Writes an array of bytes to the provided DataBuffer.
         /// </summary>
         /// <param name="valueBytes">The array of bytes to write.</param>
         public void WriteValueBytes(byte[] valueBytes)
@@ -197,7 +197,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        /// Reads an array of bytes from the provided DataBuffer.
+        ///     Reads an array of bytes from the provided DataBuffer.
         /// </summary>
         /// <param name="size">The number of bytes to read.</param>
         /// <returns>The read array of bytes.</returns>

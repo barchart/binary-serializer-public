@@ -7,7 +7,7 @@ using Barchart.BinarySerializer.Schemas;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Represents a binary serializer for objects of type <typeparamref name="TContainer"/> using a specified schema.
+    ///     Represents a binary serializer for objects of type <typeparamref name="TContainer"/> using a specified schema.
     /// </summary>
     /// <typeparam name="TContainer">The type of objects to be serialized.</typeparam>
     public class ObjectBinarySerializer<TContainer> : IBinaryTypeObjectSerializer<TContainer> where TContainer : new()
@@ -27,6 +27,8 @@ namespace Barchart.BinarySerializer.Types
         #endregion
 
         #region Methods
+
+        /// <inheritdoc />
         public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
@@ -41,6 +43,7 @@ namespace Barchart.BinarySerializer.Types
             return new HeaderWithValue<TContainer>(header, deserializedObject);
         }
 
+        /// <inheritdoc />
         public HeaderWithValue<TContainer> Decode(DataBuffer dataBuffer, TContainer existing)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
@@ -55,6 +58,7 @@ namespace Barchart.BinarySerializer.Types
             return new HeaderWithValue<TContainer>(header, deserializedObject);
         }
 
+        /// <inheritdoc />
         public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
@@ -67,6 +71,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
+        /// <inheritdoc />
         public void Encode(DataBuffer dataBuffer, TContainer? oldObject, TContainer? newObject)
         {
             Header header = new() { IsMissing = false, IsNull = newObject == null };
@@ -79,11 +84,12 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
+        /// <inheritdoc />
         public int GetLengthInBytes(TContainer value)
         {
             return Schema.GetLengthInBytes(value);
         }
-
+    
         public int GetLengthInBits(TContainer? value)
         {
             return ((ISchema)Schema).GetLengthInBits(value);

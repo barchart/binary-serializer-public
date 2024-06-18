@@ -8,12 +8,13 @@ using System.Text;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Represents a binary serializer for string members of the class or structure.
+    ///     Provides binary serialization functionality for string types.
     /// </summary>
     public class BinarySerializerString : IBinaryTypeSerializer<string?>
     {
         #region Methods
 
+        /// <inheritdoc />
         public void Encode(DataBuffer dataBuffer, string? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
@@ -29,6 +30,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
+        /// <inheritdoc />
         public HeaderWithValue<string?> Decode(DataBuffer dataBuffer)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
@@ -46,6 +48,7 @@ namespace Barchart.BinarySerializer.Types
             return new HeaderWithValue<string?>(header, decodedString);
         }
 
+        /// <inheritdoc />
         public int GetLengthInBits(string? value)
         {
             if (value == null)

@@ -3,8 +3,7 @@
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Provides binary serialization functionality for enum types.
-    /// This class implements the IBinaryTypeSerializer interface for enum types.
+    ///     Provides binary serialization functionality for enum types.
     /// </summary>
     /// <typeparam name="TMember">The enum type to be serialized.</typeparam>
     public class BinarySerializerEnum<TMember> : IBinaryTypeSerializer<TMember> where TMember : Enum
@@ -26,6 +25,7 @@ namespace Barchart.BinarySerializer.Types
 
         #region Methods
 
+        /// <inheritdoc />
         public void Encode(DataBuffer dataBuffer, TMember? value)
         {
             int? integerValue = value != null? Convert.ToInt32(value) : null;
@@ -36,6 +36,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
+        /// <inheritdoc />
         public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer)
         {
             HeaderWithValue<int> headerWithValue = _serializer.Decode(dataBuffer);
@@ -44,6 +45,7 @@ namespace Barchart.BinarySerializer.Types
             return new HeaderWithValue<TMember>(headerWithValue.Header, (TMember?)Enum.Parse(typeof(TMember), value.ToString(), true));
         }
 
+        /// <inheritdoc />
         public int GetLengthInBits(TMember? value)
         {
             int? integerValue = value != null ? Convert.ToInt32(value) : null;

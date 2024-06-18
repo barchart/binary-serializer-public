@@ -39,7 +39,7 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <summary>
-        /// Reads a header from the provided DataBuffer.
+        ///     Reads a header from the provided DataBuffer.
         /// </summary>
         /// <param name="dataBuffer">The DataBuffer to read from.</param>
         /// <returns>The read Header.</returns>
@@ -52,7 +52,7 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <summary>
-        /// Checks if the header indicates that the value is missing or null.
+        ///     Checks if the header indicates that the value is missing or null.
         /// </summary>
         /// <returns>True if the value is missing or null, otherwise false.</returns>
         public bool IsValueMissingOrNull()

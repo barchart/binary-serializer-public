@@ -7,8 +7,7 @@ using Barchart.BinarySerializer.Schemas;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Provides binary serialization functionality for objects implementing the IList interface.
-    /// This class implements the IBinaryTypeObjectSerializer interface for IList types.
+    ///     Provides binary serialization functionality for objects implementing the IList interface.
     /// </summary>
     /// <typeparam name="TContainer">The type of the container implementing the IList interface.</typeparam>
     /// <typeparam name="TMember">The type of elements contained in the IList.</typeparam>
@@ -31,6 +30,7 @@ namespace Barchart.BinarySerializer.Types
 
         #region Methods
 
+        /// <inheritdoc />
         public void Encode(DataBuffer dataBuffer, TContainer? value)
         {
             Header header = new() { IsMissing = false, IsNull = value == null };
@@ -49,6 +49,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
+        /// <inheritdoc />
         public void Encode(DataBuffer dataBuffer, TContainer? oldValue, TContainer? newValue)
         {
             Header header = new() { IsMissing = false, IsNull = newValue == null };
@@ -74,6 +75,7 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
+        /// <inheritdoc />
         public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer, TContainer? existing)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
@@ -89,6 +91,7 @@ namespace Barchart.BinarySerializer.Types
             return new HeaderWithValue<TContainer?>(header, list);
         }
 
+        /// <inheritdoc />
         public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
@@ -104,6 +107,7 @@ namespace Barchart.BinarySerializer.Types
             return new HeaderWithValue<TContainer?>(header, list);
         }
 
+        /// <inheritdoc />
         public int GetLengthInBits(TContainer? value)
         {
             if (value == null)

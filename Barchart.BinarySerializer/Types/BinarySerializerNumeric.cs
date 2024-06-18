@@ -8,7 +8,7 @@ using Barchart.BinarySerializer.Schemas;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    /// Represents a base class for binary serializers handling numeric types.
+    ///     Represents a base class for binary serializers handling numeric types.
     /// </summary>
     /// <typeparam name="TMember">The underlying numeric type.</typeparam>
     public abstract class BinarySerializerNumeric<TMember> : IBinaryTypeSerializer<TMember> where TMember : struct
@@ -20,6 +20,8 @@ namespace Barchart.BinarySerializer.Types
         #endregion
         
         #region Methods
+
+        /// <inheritdoc />
         public void Encode(DataBuffer dataBuffer, TMember value)
         {
             Header header = new() { IsMissing = false, IsNull = false };
@@ -30,6 +32,7 @@ namespace Barchart.BinarySerializer.Types
             dataBuffer.WriteValueBytes(valueBytes);
         }
 
+        /// <inheritdoc />
         public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
@@ -44,6 +47,7 @@ namespace Barchart.BinarySerializer.Types
             return new HeaderWithValue<TMember>(header, DecodeBytes(valueBytes));
         }
 
+        /// <inheritdoc />
         public int GetLengthInBits(TMember value)
         {
             return Size * 8 + DataBuffer.NumberOfHeaderBitsNonString;

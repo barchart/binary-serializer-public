@@ -16,12 +16,25 @@ namespace Barchart.BinarySerializer.Schemas
     {
         #region Properties
 
+        /// <inheritdoc />
         public Type Type { get; }
+
+        /// <inheritdoc />
         public string Name { get; }
+
+        /// <inheritdoc />
         public bool IsKeyAttribute { get; }
+
+        /// <inheritdoc />
         public MemberInfo MemberInfo { get; }
+
+        /// <inheritdoc />
         public Func<TContainer, TMember> GetDelegate { get; }
+
+        /// <inheritdoc />
         public Action<TContainer, TMember?>? SetDelegate { get; }
+        
+        /// <inheritdoc />
         public IBinaryTypeSerializer<TMember> BinarySerializer { get; }
 
         #endregion
@@ -44,11 +57,13 @@ namespace Barchart.BinarySerializer.Schemas
 
         #region Methods
         
+        /// <inheritdoc />
         public void Encode(TContainer value, DataBuffer dataBuffer) {
             TMember member = GetDelegate(value);
             BinarySerializer.Encode(dataBuffer, member);
         }
 
+        /// <inheritdoc />
         public virtual void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer dataBuffer) {
             TMember oldValue = GetDelegate(oldObject);
             TMember newValue = GetDelegate(newObject);
@@ -65,6 +80,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
+        /// <inheritdoc />
         public virtual void Decode(TContainer existing, DataBuffer dataBuffer) {
 
             HeaderWithValue<TMember> headerWithValue;
@@ -77,7 +93,8 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (headerWithValue.Value != null) SetDelegate?.Invoke(existing, headerWithValue.Value);
         }
-
+        
+        /// <inheritdoc />
         public bool CompareObjects(TContainer firstObject, TContainer secondObject)
         {
             TMember oldValue = GetDelegate(firstObject);
@@ -86,6 +103,7 @@ namespace Barchart.BinarySerializer.Schemas
             return Equals(oldValue, newValue);
         }
 
+        /// <inheritdoc />
         public void CompareAndUpdateObject(TContainer firstObject, TContainer secondObject)
         {
             TMember oldValue = GetDelegate(firstObject);
@@ -94,12 +112,14 @@ namespace Barchart.BinarySerializer.Schemas
             if (newValue != null && !Equals(oldValue,newValue) && SetDelegate != null) SetDelegate(firstObject, newValue);
         }
 
+        /// <inheritdoc />
         public int GetLengthInBits(TContainer schemaObject)
         {
             var value = GetDelegate(schemaObject);
             return BinarySerializer.GetLengthInBits(value);
         }
 
+        /// <inheritdoc />
         public virtual int GetLengthInBits(TContainer oldObject, TContainer newObject)
         {
             var oldValue = GetDelegate(oldObject);
