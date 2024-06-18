@@ -26,11 +26,5 @@
   <ItemGroup>
     <Folder Include="output\" />
   </ItemGroup>
-  <Target Name="RemoveFilesFromRelease" BeforeTargets="BeforeBuild">
-    <ItemGroup>
-      <Compile Remove="Tests\**\*.cs" Condition="'$(Configuration)'=='Release'" />
-      <Compile Remove="Scripts\**\*.cs" Condition="'$(Configuration)'=='Release'" />
-    </ItemGroup>
-  </Target>
 
 </Project>
