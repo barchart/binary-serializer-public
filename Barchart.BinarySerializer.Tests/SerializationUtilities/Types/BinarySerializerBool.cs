@@ -72,6 +72,17 @@ namespace Barchart.BinarySerializer.Tests.SerializationUtilities.Types
             Assert.False(value);
         }
 
+        [Fact]
+        public void DecodeBytes_MoreBytesThanExpected_ThrowsArgumentException()
+        {
+            var serializer = new BinarySerializerBoolTest();
+            byte[] decodedBytes = new byte[] { 1, 2, 3 };
+
+            var exception = Assert.Throws<ArgumentException>(() => serializer.DecodeBytes(decodedBytes));
+
+            Assert.IsType<ArgumentException>(exception);
+        }
+
         #endregion
     }
 }
