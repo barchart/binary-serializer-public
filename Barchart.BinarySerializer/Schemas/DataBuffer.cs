@@ -213,11 +213,6 @@ namespace Barchart.BinarySerializer.Schemas
             return _offset >= _buffer.Length;
         }
 
-        private bool IsBufferEmpty()
-        {
-            return _offset == 0 && _offsetInLastByte == 0;
-        }
-
         private bool IsBeginningOfNewByte()
         {
             return _offsetInLastByte == 0;
