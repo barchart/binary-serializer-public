@@ -1,7 +1,7 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.DataSerialization.Headers;
-using Barchart.BinarySerializer.DataSerialization.Types;
+using Barchart.BinarySerializer.SerializationUtilities.Headers;
+using Barchart.BinarySerializer.SerializationUtilities.Types;
 using System.Reflection;
 
 #endregion

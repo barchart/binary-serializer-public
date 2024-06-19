@@ -1,4 +1,4 @@
-﻿namespace Barchart.BinarySerializer.DataSerialization.Types
+﻿namespace Barchart.BinarySerializer.SerializationUtilities.Types
 {
     public class BinarySerializerInt : BinarySerializerNumeric<int>
     {

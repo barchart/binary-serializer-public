@@ -1,7 +1,7 @@
-﻿using Barchart.BinarySerializer.DataSerialization.Headers;
+﻿using Barchart.BinarySerializer.SerializationUtilities.Headers;
 using Barchart.BinarySerializer.Schemas;
 
-namespace Barchart.BinarySerializer.DataSerialization.Types
+namespace Barchart.BinarySerializer.SerializationUtilities.Types
 {
     /// <summary>
     ///     Provides binary serialization functionality for enum types.

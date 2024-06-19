@@ -4,7 +4,7 @@ using Barchart.BinarySerializer.Schemas;
 
 #endregion
 
-namespace Barchart.BinarySerializer.DataSerialization.Headers
+namespace Barchart.BinarySerializer.SerializationUtilities.Headers
 {
     /// <summary>
     ///     Representing additional byte for a header for every property/field.

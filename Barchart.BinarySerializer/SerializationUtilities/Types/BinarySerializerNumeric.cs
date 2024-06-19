@@ -1,12 +1,12 @@
 ﻿
 #region Using Statements
 
-using Barchart.BinarySerializer.DataSerialization.Headers;
+using Barchart.BinarySerializer.SerializationUtilities.Headers;
 using Barchart.BinarySerializer.Schemas;
 
 #endregion
 
-namespace Barchart.BinarySerializer.DataSerialization.Types
+namespace Barchart.BinarySerializer.SerializationUtilities.Types
 {
     /// <summary>
     ///     Represents a base class for binary serializers handling numeric types.
