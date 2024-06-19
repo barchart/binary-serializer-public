@@ -48,5 +48,20 @@ namespace Barchart.BinarySerializer.Tests.SerializationUtilities.Types
         }
 
         #endregion
+
+        #region Test Methods (DecodeBytes)
+        [Fact]
+        public void DecodeBytes_ArrayWithOneAtTheEnd_ReturnsTrueIfValueIsOne()
+        {
+            var serializer = new BinarySerializerBoolTest();
+            byte[] decodedBytes = new byte[] { 1 };
+
+            bool value = serializer.DecodeBytes(decodedBytes);
+
+            Assert.True(value);
+        }
+
+        #endregion
+
     }
 }
