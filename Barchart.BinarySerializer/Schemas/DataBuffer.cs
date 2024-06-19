@@ -87,8 +87,44 @@ namespace Barchart.BinarySerializer.Schemas
                 _offset++;
             }
         }
+        
+        /// <summary>
+        ///     Writes a byte to the buffer.
+        /// </summary>
+        public void WriteByte(byte valueByte)
+        {
+            for (int j = 7; j >= 0; j--)
+            {
+                WriteBit(((valueByte >> j) & 1) == 1);
+            }
+        }
+        
+        /// <summary>
+        ///     Writes an array of bytes to the provided DataBuffer.
+        /// </summary>
+        /// <param name="valueBytes">The array of bytes to write.</param>
+        public void WriteBytes(byte[] valueBytes)
+        {
+            for (int i = 0; i < valueBytes.Length; i++)
+            {
+                WriteByte(valueBytes[i]);
+            }
+        }
 
+        /// <summary>
+        ///     Writes the length of a value to the provided DataBuffer.
+        /// </summary>
+        /// <param name="length">The length of the value.</param>
+        public void WriteLength(int length)
+        {
+            byte[] lengthBytes = BitConverter.GetBytes(length);
 
+            for (int i = 0; i < lengthBytes.Length; i++)
+            {
+                WriteByte(lengthBytes[i]);
+            }
+        }
+        
         /// <summary>
         ///     Reads a single bit from the buffer.
         /// </summary>
@@ -122,18 +158,7 @@ namespace Barchart.BinarySerializer.Schemas
                 throw;
             }
         }
-
-        /// <summary>
-        ///     Writes a byte to the buffer.
-        /// </summary>
-        public void WriteByte(byte valueByte)
-        {
-            for (int j = 7; j >= 0; j--)
-            {
-                WriteBit(((valueByte >> j) & 1) == 1);
-            }
-        }
-
+        
         /// <summary>
         ///     Reads a byte from the buffer.
         /// </summary>
@@ -149,13 +174,22 @@ namespace Barchart.BinarySerializer.Schemas
 
             return byteToAdd;
         }
-
+        
         /// <summary>
-        ///     Encodes the missing flag into the provided DataBuffer.
+        ///     Reads an array of bytes from the provided DataBuffer.
         /// </summary>
-        public void EncodeMissingFlag()
+        /// <param name="size">The number of bytes to read.</param>
+        /// <returns>The read array of bytes.</returns>
+        public byte[] ReadBytes(int size)
         {
-            WriteBit(true);
+            byte[] valueBytes = new byte[size];
+            
+            for (int i = 0; i < size; i++)
+            {
+                valueBytes[i] = ReadByte();
+            }
+
+            return valueBytes;
         }
 
         /// <summary>
@@ -173,47 +207,13 @@ namespace Barchart.BinarySerializer.Schemas
 
             return BitConverter.ToInt32(lengthBytes, 0);
         }
-
+        
         /// <summary>
-        ///     Writes the length of a value to the provided DataBuffer.
+        ///     Encodes the missing flag into the provided DataBuffer.
         /// </summary>
-        /// <param name="length">The length of the value.</param>
-        public void WriteLength(int length)
+        public void EncodeMissingFlag()
         {
-            byte[] lengthBytes = BitConverter.GetBytes(length);
-
-            for (int i = 0; i < lengthBytes.Length; i++)
-            {
-                WriteByte(lengthBytes[i]);
-            }
-        }
-
-        /// <summary>
-        ///     Writes an array of bytes to the provided DataBuffer.
-        /// </summary>
-        /// <param name="valueBytes">The array of bytes to write.</param>
-        public void WriteBytes(byte[] valueBytes)
-        {
-            for (int i = 0; i < valueBytes.Length; i++)
-            {
-                WriteByte(valueBytes[i]);
-            }
-        }
-
-        /// <summary>
-        ///     Reads an array of bytes from the provided DataBuffer.
-        /// </summary>
-        /// <param name="size">The number of bytes to read.</param>
-        /// <returns>The read array of bytes.</returns>
-        public byte[] ReadBytes(int size)
-        {
-            byte[] valueBytes = new byte[size];
-            for (int i = 0; i < size; i++)
-            {
-                valueBytes[i] = ReadByte();
-            }
-
-            return valueBytes;
+            WriteBit(true);
         }
 
         private bool IsBufferFull()
