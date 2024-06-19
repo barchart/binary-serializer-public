@@ -35,6 +35,18 @@ namespace Barchart.BinarySerializer.Tests.SerializationUtilities.Types
             Assert.Equal(new byte[] { 1 }, result);
         }
 
+
+        [Fact]
+        public void ConvertToByteArray_False_ReturnsByteArrayWithZeroAtTheEnd()
+        {
+            var serializer = new BinarySerializerBoolTest();
+            bool value = false;
+
+            byte[] result = serializer.ConvertToByteArray(value);
+
+            Assert.Equal(new byte[] { 0 }, result);
+        }
+
         #endregion
     }
 }
