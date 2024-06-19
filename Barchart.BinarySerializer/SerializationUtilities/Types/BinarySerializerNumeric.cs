@@ -30,7 +30,7 @@ namespace Barchart.BinarySerializer.SerializationUtilities.Types
             header.WriteToBuffer(dataBuffer);
 
             byte[] valueBytes = ConvertToByteArray(value);
-            dataBuffer.WriteValueBytes(valueBytes);
+            dataBuffer.WriteBytes(valueBytes);
         }
 
         /// <inheritdoc />
@@ -43,7 +43,7 @@ namespace Barchart.BinarySerializer.SerializationUtilities.Types
                 return new HeaderWithValue<TMember>(header, default);
             }
 
-            byte[] valueBytes = dataBuffer.ReadValueBytes(Size);
+            byte[] valueBytes = dataBuffer.ReadBytes(Size);
 
             return new HeaderWithValue<TMember>(header, DecodeBytes(valueBytes));
         }

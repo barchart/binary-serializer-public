@@ -192,7 +192,7 @@ namespace Barchart.BinarySerializer.Schemas
         ///     Writes an array of bytes to the provided DataBuffer.
         /// </summary>
         /// <param name="valueBytes">The array of bytes to write.</param>
-        public void WriteValueBytes(byte[] valueBytes)
+        public void WriteBytes(byte[] valueBytes)
         {
             for (int i = 0; i < valueBytes.Length; i++)
             {
@@ -205,7 +205,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="size">The number of bytes to read.</param>
         /// <returns>The read array of bytes.</returns>
-        public byte[] ReadValueBytes(int size)
+        public byte[] ReadBytes(int size)
         {
             byte[] valueBytes = new byte[size];
             for (int i = 0; i < size; i++)
