@@ -16,6 +16,11 @@ namespace Barchart.BinarySerializer.Tests.Utility {
 
         public new bool DecodeBytes(byte[] bytes)
         {
+            if (bytes.Length != Size)
+            {
+                throw new ArgumentException("Invalid byte array length for decoding boolean value.");
+            }
+            
             return base.DecodeBytes(bytes);
         }
 
