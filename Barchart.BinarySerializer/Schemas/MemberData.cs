@@ -77,7 +77,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                dataBuffer.EncodeMissingFlag();
+                dataBuffer.WriteBit(true); // missing ...
             }
         }
 

@@ -207,14 +207,6 @@ namespace Barchart.BinarySerializer.Schemas
             
             return _buffer.Take(byteCount).ToArray();
         }
-        
-        /// <summary>
-        ///     Encodes the missing flag into the provided DataBuffer.
-        /// </summary>
-        public void EncodeMissingFlag()
-        {
-            WriteBit(true);
-        }
 
         private bool IsBufferFull()
         {

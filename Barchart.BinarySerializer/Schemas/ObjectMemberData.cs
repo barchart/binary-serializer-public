@@ -39,7 +39,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                buffer.EncodeMissingFlag();
+                buffer.WriteBit(true); // missing ...
             }
         }
 

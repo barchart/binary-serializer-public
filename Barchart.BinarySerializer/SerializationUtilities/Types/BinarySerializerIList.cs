@@ -66,7 +66,7 @@ namespace Barchart.BinarySerializer.SerializationUtilities.Types
                 {
                     if (oldValue != null && i < oldValue.Count && Equals(oldValue[i], newValue[i]))
                     {
-                        dataBuffer.EncodeMissingFlag();
+                        dataBuffer.WriteBit(true); // missing ...
                     }
                     else
                     {
