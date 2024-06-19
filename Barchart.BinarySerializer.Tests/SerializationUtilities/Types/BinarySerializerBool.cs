@@ -1,6 +1,7 @@
 #region Using Statements
 
-using Barchart.BinarySerializer.Tests.Utility;
+using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.SerializationUtilities.Types;
 
 #endregion
 
@@ -24,63 +25,49 @@ namespace Barchart.BinarySerializer.Tests.SerializationUtilities.Types
         #endregion
 
         #region Test Methods (ConvertToByteArray)
+        
         [Fact]
-        public void ConvertToByteArray_True_ReturnsOneByteArrayWithOneAtTheEnd()
+        public void Encode_True_WritesToDataBuffer()
         {
-            var serializer = new BinarySerializerBoolTest();
-            bool value = true;
+            var serializer = new BinarySerializerBool();
+            
+            var mock = new Mock<DataBuffer>(new byte[2]);
 
-            byte[] result = serializer.ConvertToByteArray(value);
-
-            Assert.Equal(new byte[] { 1 }, result);
+            var bitsWritten = new List<bool>();
+            var bytesWritten = new List<byte[]>();
+            
+            mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
+            mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
+            
+            serializer.Encode(mock.Object, true);
+            
+            Assert.False(bitsWritten[0]);
+            Assert.False(bitsWritten[1]);
+            
+            Assert.Single(bytesWritten);
+            Assert.Equal(1, bytesWritten[0][0]);
         }
-
-
+        
         [Fact]
-        public void ConvertToByteArray_False_ReturnsByteArrayWithZeroAtTheEnd()
+        public void Encode_False_WritesToDataBuffer()
         {
-            var serializer = new BinarySerializerBoolTest();
-            bool value = false;
+            var serializer = new BinarySerializerBool();
+            
+            var mock = new Mock<DataBuffer>(new byte[2]);
 
-            byte[] result = serializer.ConvertToByteArray(value);
-
-            Assert.Equal(new byte[] { 0 }, result);
-        }
-
-        #endregion
-
-        #region Test Methods (DecodeBytes)
-        [Fact]
-        public void DecodeBytes_ArrayWithOneAtTheEnd_ReturnsTrueIfValueIsOne()
-        {
-            var serializer = new BinarySerializerBoolTest();
-            byte[] decodedBytes = new byte[] { 1 };
-
-            bool value = serializer.DecodeBytes(decodedBytes);
-
-            Assert.True(value);
-        }
-
-        [Fact]
-        public void DecodeBytes_ArrayWithZeroAtTheEnd_ReturnsTrueIfValueIsZero()
-        {
-            var serializer = new BinarySerializerBoolTest();
-            byte[] decodedBytes = new byte[] { 0 };
-
-            bool value = serializer.DecodeBytes(decodedBytes);
-
-            Assert.False(value);
-        }
-
-        [Fact]
-        public void DecodeBytes_MoreBytesThanExpected_ThrowsArgumentException()
-        {
-            var serializer = new BinarySerializerBoolTest();
-            byte[] decodedBytes = new byte[] { 1, 2, 3 };
-
-            var exception = Assert.Throws<ArgumentException>(() => serializer.DecodeBytes(decodedBytes));
-
-            Assert.IsType<ArgumentException>(exception);
+            var bitsWritten = new List<bool>();
+            var bytesWritten = new List<byte[]>();
+            
+            mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
+            mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
+            
+            serializer.Encode(mock.Object, false);
+            
+            Assert.False(bitsWritten[0]);
+            Assert.False(bitsWritten[1]);
+            
+            Assert.Single(bytesWritten);
+            Assert.Equal(0, bytesWritten[0][0]);
         }
 
         #endregion

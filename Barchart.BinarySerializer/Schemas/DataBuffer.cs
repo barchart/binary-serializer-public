@@ -33,6 +33,7 @@ namespace Barchart.BinarySerializer.Schemas
             _offset = 0;
             _offsetInLastByte = 0;
         }
+        
         #endregion
 
         #region Methods
@@ -42,7 +43,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="bit">Boolean value representing the bit to write (true for 1, false for 0).</param>
         /// <exception cref="Exception">Thrown if the buffer is full.</exception>
-        public void WriteBit(bool bit)
+        public virtual void WriteBit(bool bit)
         {
             if (IsBufferFull())
             {
@@ -83,7 +84,7 @@ namespace Barchart.BinarySerializer.Schemas
         ///     Writes an array of bytes to the provided DataBuffer.
         /// </summary>
         /// <param name="valueBytes">The array of bytes to write.</param>
-        public void WriteBytes(byte[] valueBytes)
+        public virtual void WriteBytes(byte[] valueBytes)
         {
             for (int i = 0; i < valueBytes.Length; i++)
             {
