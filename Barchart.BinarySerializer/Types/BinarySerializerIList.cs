@@ -1,11 +1,11 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.SerializationUtilities.Headers;
+using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 
 #endregion
 
-namespace Barchart.BinarySerializer.SerializationUtilities.Types
+namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
     ///     Provides binary serialization functionality for objects implementing the IList interface.

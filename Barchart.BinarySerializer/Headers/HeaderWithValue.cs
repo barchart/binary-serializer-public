@@ -1,4 +1,4 @@
-﻿namespace Barchart.BinarySerializer.SerializationUtilities.Headers
+﻿namespace Barchart.BinarySerializer.Headers
 {
     /// <summary>
     ///     Stores header byte in a specified format based on missing/null bits and string length bits and the value of type <typeparamref name="TMember"/>.

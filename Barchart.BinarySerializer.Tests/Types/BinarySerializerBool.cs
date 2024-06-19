@@ -1,11 +1,11 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.SerializationUtilities.Types;
+using Barchart.BinarySerializer.Types;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Tests.SerializationUtilities.Types
+namespace Barchart.BinarySerializer.Tests.Types
 {
     public class BinarySerializerBoolTests
     {

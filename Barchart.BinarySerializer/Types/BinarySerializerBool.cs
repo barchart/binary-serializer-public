@@ -1,4 +1,4 @@
-﻿namespace Barchart.BinarySerializer.SerializationUtilities.Types
+﻿namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerBool : BinarySerializerNumeric<bool>
     {
