@@ -38,26 +38,6 @@ namespace Barchart.BinarySerializer.Schemas
         #region Methods
 
         /// <summary>
-        ///     Resets the current byte index to zero.
-        /// </summary>
-        public void ResetByte()
-        {
-            _buffer[_offset] = 0;
-        }
-
-        /// <summary>
-        ///     Generates a copy of the buffer, as a byte array, from from the
-        ///     start of the array to the current position.
-        /// </summary>
-        /// <returns>A byte array containing the data up to the current offset.</returns>
-        public byte[] ToBytes()
-        {
-            int byteCount = _offset + (_offsetInLastByte == 0 ? 0 : 1);
-            
-            return _buffer.Take(byteCount).ToArray();
-        }
-
-        /// <summary>
         ///     Writes a single bit to the buffer.
         /// </summary>
         /// <param name="bit">Boolean value representing the bit to write (true for 1, false for 0).</param>
@@ -206,6 +186,26 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             return BitConverter.ToInt32(lengthBytes, 0);
+        }
+        
+        /// <summary>
+        ///     Resets the current byte index to zero.
+        /// </summary>
+        public void ResetByte()
+        {
+            _buffer[_offset] = 0;
+        }
+
+        /// <summary>
+        ///     Generates a copy of the buffer, as a byte array, from from the
+        ///     start of the array to the current position.
+        /// </summary>
+        /// <returns>A byte array containing the data up to the current offset.</returns>
+        public byte[] ToBytes()
+        {
+            int byteCount = _offset + (_offsetInLastByte == 0 ? 0 : 1);
+            
+            return _buffer.Take(byteCount).ToArray();
         }
         
         /// <summary>
