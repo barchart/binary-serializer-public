@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿using Barchart.BinarySerializer.Schemas;
+
+namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerShort : BinarySerializerNumeric<short>
     {
@@ -10,9 +12,9 @@
 
         #region Methods
 
-        protected override byte[] ConvertToByteArray(short value)
+        protected override void EncodeValue(DataBuffer dataBuffer, short value)
         {
-            return BitConverter.GetBytes(value);
+            dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         protected override short DecodeBytes(byte[] bytes)

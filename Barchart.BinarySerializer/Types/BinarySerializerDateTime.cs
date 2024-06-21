@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿using Barchart.BinarySerializer.Schemas;
+
+namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerDateTime : BinarySerializerNumeric<DateTime>
     {
@@ -10,11 +12,12 @@
 
         #region Methods
 
-        protected override byte[] ConvertToByteArray(DateTime value)
+        protected override void EncodeValue(DataBuffer dataBuffer, DateTime value)
         {
             TimeSpan unixTimeSpan = value - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             long unixTime = (long)unixTimeSpan.TotalMilliseconds;
-            return BitConverter.GetBytes(unixTime);
+
+            dataBuffer.WriteBytes(BitConverter.GetBytes(unixTime));
         }
 
         protected override DateTime DecodeBytes(byte[] bytes)

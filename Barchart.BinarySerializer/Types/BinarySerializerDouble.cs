@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿using Barchart.BinarySerializer.Schemas;
+
+namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerDouble : BinarySerializerNumeric<double>
     {
@@ -10,16 +12,16 @@
 
         #region Methods
 
-        protected override byte[] ConvertToByteArray(double value)
+        protected override void EncodeValue(DataBuffer dataBuffer, double value)
         {
-            return BitConverter.GetBytes(value);
+            dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         protected override double DecodeBytes(byte[] bytes)
         {
             return BitConverter.ToDouble(bytes);
         }
-        
+
         #endregion
     }
 }

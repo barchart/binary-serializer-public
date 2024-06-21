@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿using Barchart.BinarySerializer.Schemas;
+
+namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerDecimal : BinarySerializerNumeric<decimal>
     {
@@ -10,13 +12,13 @@
 
         #region Methods
 
-        protected override byte[] ConvertToByteArray(decimal value)
+        protected override void EncodeValue(DataBuffer dataBuffer, decimal value)
         {
             using MemoryStream stream = new();
             using BinaryWriter writer = new(stream);
             writer.Write(value);
 
-            return stream.ToArray();
+            dataBuffer.WriteBytes(stream.ToArray());
         }
 
         protected override decimal DecodeBytes(byte[] bytes)

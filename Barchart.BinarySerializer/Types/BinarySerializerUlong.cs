@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿using Barchart.BinarySerializer.Schemas;
+
+namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerUlong : BinarySerializerNumeric<ulong>
     {
@@ -10,10 +12,11 @@
 
         #region Methods
 
-        protected override byte[] ConvertToByteArray(ulong value)
+        protected override void EncodeValue(DataBuffer dataBuffer, ulong value)
         {
-            return BitConverter.GetBytes(value);
+            dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
+
 
         protected override ulong DecodeBytes(byte[] bytes)
         {

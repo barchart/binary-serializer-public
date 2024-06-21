@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿using Barchart.BinarySerializer.Schemas;
+
+namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerUint : BinarySerializerNumeric<uint>
     {
@@ -10,9 +12,9 @@
 
         #region Methods
 
-        protected override byte[] ConvertToByteArray(uint value)
+        protected override void EncodeValue(DataBuffer dataBuffer, uint value)
         {
-            return BitConverter.GetBytes(value);
+            dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         protected override uint DecodeBytes(byte[] bytes)

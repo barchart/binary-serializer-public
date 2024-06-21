@@ -109,7 +109,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         ///     Reads a single bit from the buffer.
         /// </summary>
-        public bool ReadBit()
+        public byte ReadBit()
         {
             try
             {
@@ -118,7 +118,7 @@ namespace Barchart.BinarySerializer.Schemas
                     throw new InvalidOperationException("Attempt to read beyond the end of the buffer.");
                 }
 
-                bool bit = (_buffer[_offset] >> (7 - _offsetInLastByte)) == 1;
+                byte bit = (byte)((_buffer[_offset] >> (7 - _offsetInLastByte)) & 1);
                 _offsetInLastByte = (_offsetInLastByte + 1) % 8;
 
                 if (IsBeginningOfNewByte())
@@ -149,8 +149,8 @@ namespace Barchart.BinarySerializer.Schemas
 
             for (int j = 7; j >= 0; j--)
             {
-                bool bit = ReadBit();
-                byteToAdd |= (byte)(bit ? (1 << j) : 0);
+                 byte bit = ReadBit();
+                byteToAdd |= (byte)(bit << j);
             }
 
             return byteToAdd;

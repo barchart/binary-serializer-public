@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿using Barchart.BinarySerializer.Schemas;
+
+namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerFloat : BinarySerializerNumeric<float>
     {
@@ -10,9 +12,9 @@
 
         #region Methods
 
-        protected override byte[] ConvertToByteArray(float value)
+        protected override void EncodeValue(DataBuffer dataBuffer, float value)
         {
-            return BitConverter.GetBytes(value);
+            dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         protected override float DecodeBytes(byte[] bytes)

@@ -29,8 +29,7 @@ namespace Barchart.BinarySerializer.Types
             
             header.WriteToBuffer(dataBuffer);
 
-            byte[] valueBytes = ConvertToByteArray(value);
-            dataBuffer.WriteBytes(valueBytes);
+            EncodeValue(dataBuffer, value);
         }
 
         /// <inheritdoc />
@@ -43,9 +42,20 @@ namespace Barchart.BinarySerializer.Types
                 return new HeaderWithValue<TMember>(header, default);
             }
 
-            byte[] valueBytes = dataBuffer.ReadBytes(Size);
+            TMember decodedValue;
+            
+            if (typeof(TMember) == typeof(bool))
+            {
+                decodedValue = (TMember)(object)(dataBuffer.ReadBit() == 1);
+            }
+            else
+            {
+                byte[] valueBytes = dataBuffer.ReadBytes(Size);
+                decodedValue = DecodeBytes(valueBytes);
+            }
 
-            return new HeaderWithValue<TMember>(header, DecodeBytes(valueBytes));
+
+            return new HeaderWithValue<TMember>(header, decodedValue);
         }
 
         /// <inheritdoc />
@@ -54,7 +64,7 @@ namespace Barchart.BinarySerializer.Types
             return Size * 8 + DataBuffer.NumberOfHeaderBitsNonString;
         }
 
-        protected abstract byte[] ConvertToByteArray(TMember value);
+        protected abstract void EncodeValue(DataBuffer dataBuffer, TMember value);
         protected abstract TMember DecodeBytes(byte[] bytes);
 
         #endregion

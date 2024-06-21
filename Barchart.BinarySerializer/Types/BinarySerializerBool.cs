@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Types
+﻿using Barchart.BinarySerializer.Schemas;
+
+namespace Barchart.BinarySerializer.Types
 {
     public class BinarySerializerBool : BinarySerializerNumeric<bool>
     {
@@ -10,9 +12,9 @@
 
         #region Methods
         
-        protected override byte[] ConvertToByteArray(bool value)
+        protected override void EncodeValue(DataBuffer dataBuffer, bool value)
         {
-            return BitConverter.GetBytes(value);
+            dataBuffer.WriteBit(value);
         }
 
         protected override bool DecodeBytes(byte[] bytes)
