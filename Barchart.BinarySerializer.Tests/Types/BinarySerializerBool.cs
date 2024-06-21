@@ -13,6 +13,7 @@ namespace Barchart.BinarySerializer.Tests.Types
     
         private readonly ITestOutputHelper _testOutputHelper;
         
+        private readonly BinarySerializerBool _serializer;
         #endregion
         
         #region Constructor(s)
@@ -20,6 +21,8 @@ namespace Barchart.BinarySerializer.Tests.Types
         public BinarySerializerBoolTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
+
+            _serializer = new BinarySerializerBool();
         }
     
         #endregion
@@ -29,8 +32,6 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Fact]
         public void Encode_True_WritesToDataBuffer()
         {
-            var serializer = new BinarySerializerBool();
-            
             var mock = new Mock<DataBuffer>(new byte[2]);
 
             var bitsWritten = new List<bool>();
@@ -39,7 +40,7 @@ namespace Barchart.BinarySerializer.Tests.Types
             mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
             mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
             
-            serializer.Encode(mock.Object, true);
+            _serializer.Encode(mock.Object, true);
             
             Assert.False(bitsWritten[0]);
             Assert.False(bitsWritten[1]);
@@ -51,8 +52,6 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Fact]
         public void Encode_False_WritesToDataBuffer()
         {
-            var serializer = new BinarySerializerBool();
-            
             var mock = new Mock<DataBuffer>(new byte[2]);
 
             var bitsWritten = new List<bool>();
@@ -61,7 +60,7 @@ namespace Barchart.BinarySerializer.Tests.Types
             mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
             mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
             
-            serializer.Encode(mock.Object, false);
+            _serializer.Encode(mock.Object, false);
             
             Assert.False(bitsWritten[0]);
             Assert.False(bitsWritten[1]);
