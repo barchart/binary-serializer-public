@@ -149,8 +149,8 @@ namespace Barchart.BinarySerializer.Schemas
 
             for (int j = 7; j >= 0; j--)
             {
-                byte bit = ReadBit();
-                byteToAdd |= (byte)(bit << j);
+                bool bit = ReadBit();
+                byteToAdd |= (byte)(bit ? (1 << j) : 0);
             }
 
             return byteToAdd;
