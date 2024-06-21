@@ -46,6 +46,7 @@ namespace Barchart.BinarySerializer.Tests.Types
             Assert.False(bitsWritten[0]);
             Assert.False(bitsWritten[1]);
             Assert.True(bitsWritten[2]);
+            Assert.Empty(bytesWritten);
         }
         
         [Fact]
@@ -64,6 +65,7 @@ namespace Barchart.BinarySerializer.Tests.Types
             Assert.False(bitsWritten[0]);
             Assert.False(bitsWritten[1]);
             Assert.False(bitsWritten[2]);
+            Assert.Empty(bytesWritten);
         }
 
         #endregion
