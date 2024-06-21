@@ -17,11 +17,6 @@
 
         protected override bool DecodeBytes(byte[] bytes)
         {
-            if (bytes.Length != Size)
-            {
-                throw new ArgumentException("Invalid byte array length for decoding boolean value.");
-            }
-
             return bytes[0] == 1;
         }
 
