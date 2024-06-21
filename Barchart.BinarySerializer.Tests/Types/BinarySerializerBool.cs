@@ -1,5 +1,6 @@
 #region Using Statements
 
+using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Types;
 
@@ -27,7 +28,7 @@ namespace Barchart.BinarySerializer.Tests.Types
     
         #endregion
 
-        #region Test Methods (ConvertToByteArray)
+        #region Test Methods (Encode)
         
         [Fact]
         public void Encode_True_WritesToDataBuffer()
@@ -44,7 +45,6 @@ namespace Barchart.BinarySerializer.Tests.Types
             
             Assert.False(bitsWritten[0]);
             Assert.False(bitsWritten[1]);
-            
             Assert.Single(bytesWritten);
             Assert.Equal(1, bytesWritten[0][0]);
         }
@@ -64,9 +64,44 @@ namespace Barchart.BinarySerializer.Tests.Types
             
             Assert.False(bitsWritten[0]);
             Assert.False(bitsWritten[1]);
-            
             Assert.Single(bytesWritten);
             Assert.Equal(0, bytesWritten[0][0]);
+        }
+
+        #endregion
+
+        #region Test Methods (Decode)
+
+        [Fact]
+        public void Decode_DataBufferWithSerializedtrueValue_ReturnsHeaderWithDecodedValue()
+        {
+            var header = new Header() { IsMissing = false, IsNull = false };
+            var dataBuffer = new DataBuffer(new byte[2]);
+
+            dataBuffer.WriteBit(false);
+            dataBuffer.WriteBit(false);
+            dataBuffer.WriteBit(true);
+
+            HeaderWithValue<bool> headerWithValue = _serializer.Decode(dataBuffer);
+            
+            Assert.Equal(header, headerWithValue.Header);
+            Assert.True(headerWithValue.Value);
+        }
+        
+        [Fact]
+        public void Decode_DataBufferWithSerializedFalseValue_ReturnsHeaderWithDecodedValue()
+        {
+            var header = new Header() { IsMissing = false, IsNull = false };
+            var dataBuffer = new DataBuffer(new byte[2]);
+
+            dataBuffer.WriteBit(false);
+            dataBuffer.WriteBit(false);
+            dataBuffer.WriteBit(false);
+
+            HeaderWithValue<bool> headerWithValue = _serializer.Decode(dataBuffer);
+
+            Assert.Equal(header, headerWithValue.Header);
+            Assert.True(headerWithValue.Value);
         }
 
         #endregion
