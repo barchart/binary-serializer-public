@@ -45,8 +45,8 @@ namespace Barchart.BinarySerializer.Headers
         /// <returns>The read Header.</returns>
         public static Header ReadFromBuffer(DataBuffer dataBuffer)
         {
-            bool headerIsMissing = dataBuffer.ReadBit() == 1;
-            bool headerIsNull = !headerIsMissing && dataBuffer.ReadBit() == 1;
+            bool headerIsMissing = dataBuffer.ReadBit();
+            bool headerIsNull = !headerIsMissing && dataBuffer.ReadBit();
             
             return new() { IsMissing = headerIsMissing, IsNull = headerIsNull };
         }

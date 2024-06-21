@@ -46,7 +46,7 @@ namespace Barchart.BinarySerializer.Types
             
             if (typeof(TMember) == typeof(bool))
             {
-                decodedValue = (TMember)(object)(dataBuffer.ReadBit() == 1);
+                decodedValue = (TMember)(object)dataBuffer.ReadBit();
             }
             else
             {

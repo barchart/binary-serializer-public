@@ -109,7 +109,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         ///     Reads a single bit from the buffer.
         /// </summary>
-        public byte ReadBit()
+        public bool ReadBit()
         {
             try
             {
@@ -126,7 +126,7 @@ namespace Barchart.BinarySerializer.Schemas
                     _offset++;
                 }
 
-                return bit;
+                return bit == 1;
             }
             catch (InvalidOperationException ex)
             {
@@ -149,8 +149,8 @@ namespace Barchart.BinarySerializer.Schemas
 
             for (int j = 7; j >= 0; j--)
             {
-                 byte bit = ReadBit();
-                byteToAdd |= (byte)(bit << j);
+                bool bit = ReadBit();
+                byteToAdd |= (byte)(bit ? (1 << j) : 0); 
             }
 
             return byteToAdd;
