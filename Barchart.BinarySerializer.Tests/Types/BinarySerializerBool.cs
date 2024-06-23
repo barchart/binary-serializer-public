@@ -75,13 +75,10 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Fact]
         public void Decode_DataBufferWithSerializedtrueValue_ReturnsHeaderWithDecodedValue()
         {
+            var byteArray = BitsToBytes(new bool[] { false, false, true }) ;
             var header = new Header() { IsMissing = false, IsNull = false };
-            var dataBuffer = new DataBuffer(new byte[2]);
-
-            dataBuffer.WriteBit(false);
-            dataBuffer.WriteBit(false);
-            dataBuffer.WriteBit(true);
-
+            var dataBuffer = new DataBuffer(byteArray);
+            
             HeaderWithValue<bool> headerWithValue = _serializer.Decode(dataBuffer);
             
             Assert.Equal(header, headerWithValue.Header);
@@ -91,17 +88,40 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Fact]
         public void Decode_DataBufferWithSerializedFalseValue_ReturnsHeaderWithDecodedValue()
         {
+            var byteArray = BitsToBytes(new bool[] { false, false, false }) ;
             var header = new Header() { IsMissing = false, IsNull = false };
-            var dataBuffer = new DataBuffer(new byte[2]);
-
-            dataBuffer.WriteBit(false);
-            dataBuffer.WriteBit(false);
-            dataBuffer.WriteBit(false);
+            var dataBuffer = new DataBuffer(byteArray);
 
             HeaderWithValue<bool> headerWithValue = _serializer.Decode(dataBuffer);
 
             Assert.Equal(header, headerWithValue.Header);
-            Assert.True(headerWithValue.Value);
+            Assert.False(headerWithValue.Value);
+        }
+
+        private static byte[] BitsToBytes(bool[] bits)
+        {
+            int byteCount = (int)Math.Ceiling(bits.Length / 8.0); 
+            byte[] bytes = new byte[byteCount];
+
+            int byteIndex = 0;
+            int bitIndex = 7;
+
+            for (int i = 0; i < bits.Length; i++)
+            {
+                if (bits[i])
+                {
+                    bytes[byteIndex] |= (byte)(1 << bitIndex);
+                }
+
+                bitIndex--;
+                if (bitIndex < 0)
+                {
+                    byteIndex++;
+                    bitIndex = 7;
+                }
+            }
+
+            return bytes;
         }
 
         #endregion
