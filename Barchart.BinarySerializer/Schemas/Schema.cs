@@ -279,16 +279,6 @@
             return Serialize((TContainer)oldObject, (TContainer)newObject, buffer);
         }
 
-        byte[] ISchema.Serialize(object schemaObject, DataBuffer dataBuffer)
-        {
-            return Serialize((TContainer)schemaObject, dataBuffer);
-        }
-
-        byte[] ISchema.Serialize(object oldObject, object newObject, DataBuffer dataBuffer)
-        {
-            return Serialize((TContainer)oldObject, (TContainer)newObject, dataBuffer);
-        }
-
         object? ISchema.Deserialize(byte[] buffer)
         {
             return Deserialize(buffer);
@@ -297,16 +287,6 @@
         object? ISchema.Deserialize(byte[] buffer, object existing)
         {
             return Deserialize(buffer, (TContainer)existing);
-        }
-
-        object? ISchema.Deserialize(DataBuffer dataBuffer)
-        {
-            return Deserialize(dataBuffer);
-        }
-
-        object? ISchema.Deserialize(object existing, DataBuffer dataBuffer)
-        {
-            return Deserialize((TContainer)existing, dataBuffer);
         }
 
         int ISchema.GetLengthInBytes(object? schemaObject)
