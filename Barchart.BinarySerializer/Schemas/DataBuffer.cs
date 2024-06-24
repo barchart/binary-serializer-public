@@ -29,6 +29,9 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         ///     Instantiates the class using an external buffer.
         /// </summary>
+        /// <param name="byteArray">
+        ///     The data storage mechanism for the buffer. Write operations will mutate this array.
+        /// </param>
         public DataBuffer(byte[] byteArray)
         {
             _byteArray = byteArray;
