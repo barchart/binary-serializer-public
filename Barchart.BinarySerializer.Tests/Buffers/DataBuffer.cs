@@ -93,7 +93,8 @@ public class DataBufferTests
         var byteArray = new byte[2];
         var dataBuffer = new DataBuffer(byteArray);
         
-        for (int i = 0; i < 1; i++){
+        for (int i = 0; i < 1; i++)
+        {
             dataBuffer.WriteBit(i % 2 == 0);
         }       
         
@@ -107,7 +108,8 @@ public class DataBufferTests
         var byteArray = new byte[2];
         var dataBuffer = new DataBuffer(byteArray);
         
-        for (int i = 0; i < 8; i++){
+        for (int i = 0; i < 8; i++)
+        {
             dataBuffer.WriteBit(i % 2 == 0);
         }
 
@@ -121,7 +123,8 @@ public class DataBufferTests
         var byteArray = new byte[2];
         var dataBuffer = new DataBuffer(byteArray);
         
-        for (int i = 0; i < 12; i++){
+        for (int i = 0; i < 12; i++)
+        {
             dataBuffer.WriteBit(i % 2 == 0);
         }
 
@@ -135,7 +138,8 @@ public class DataBufferTests
         var byteArray = new byte[2];
         var dataBuffer = new DataBuffer(byteArray);
         
-        for (int i = 0; i < 16; i++){
+        for (int i = 0; i < 16; i++)
+        {
             dataBuffer.WriteBit(i % 2 == 0);
         }
         
