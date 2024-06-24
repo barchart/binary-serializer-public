@@ -1,8 +1,4 @@
-﻿#region Using Statements
-
-#endregion
-
-namespace Barchart.BinarySerializer.Buffers
+﻿namespace Barchart.BinarySerializer.Buffers
 {
     /// <summary>
     ///     A data buffer which uses a fixed-length byte array to store data.
@@ -18,7 +14,7 @@ namespace Barchart.BinarySerializer.Buffers
         private readonly byte[] _byteArray;
         
         private int _positionByte;
-        private byte _positionBit;
+        private int _positionBit;
 
         private const byte TRUE = 1;
 
@@ -62,16 +58,21 @@ namespace Barchart.BinarySerializer.Buffers
         /// <inheritdoc />
         public byte ReadByte()
         {
-            byte byteToAdd = 0;
-
+            byte value = 0;
+            
             for (int j = 7; j >= 0; j--)
             {
                 bool bit = ReadBit();
+
+                if (bit)
+                {
+                    value = (byte)(value | TRUE << j);
+                }
                 
-                byteToAdd |= (byte)(bit ? (1 << j) : 0); 
+                value |= (byte)(bit ? (1 << j) : 0); 
             }
 
-            return byteToAdd;
+            return value;
         }
         
         /// <inheritdoc />
@@ -144,15 +145,14 @@ namespace Barchart.BinarySerializer.Buffers
 
         private void AdvanceBit()
         {
-            unchecked
-            {
-                _positionBit++;
-            }
-
-            if (_positionBit == 8)
+            if (_positionBit == 7)
             {
                 _positionBit = 0;
                 _positionByte++;
+            }
+            else
+            {
+                _positionBit++;
             }
         }
 

@@ -22,7 +22,40 @@ public class DataBufferTests
     }
     
     #endregion
+    
+    #region Test Methods (ReadByte)
 
+    [Fact]
+    public void ReadByte_Once_ReturnsFirstByte()
+    {
+        byte first;
+        
+        var byteArray = new [] { first = 250 };
+        var dataBuffer = new DataBuffer(byteArray);
+
+        byte readFirst = dataBuffer.ReadByte();
+        
+        Assert.Equal(first, readFirst);
+    }
+    
+    [Fact]
+    public void ReadByte_Twice_ReturnsSecondByte()
+    {
+        byte first;
+        byte second;
+
+        var byteArray = new [] { first = 250, second = 175 };
+        var dataBuffer = new DataBuffer(byteArray);
+
+        byte readFirst = dataBuffer.ReadByte();
+        byte readSecond = dataBuffer.ReadByte();
+        
+        Assert.Equal(first, readFirst);
+        Assert.Equal(second, readSecond);
+    }
+    
+    #endregion
+    
     #region Test Methods (WriteBit)
     
     [Fact]
@@ -173,7 +206,7 @@ public class DataBufferTests
     private static string PrintBits(byte b)
     {
         return Convert.ToString(b, 2).PadLeft(8, '0');
-    } 
+    }
     
     #endregion
 }
