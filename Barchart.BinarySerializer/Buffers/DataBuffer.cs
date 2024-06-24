@@ -57,7 +57,7 @@ namespace Barchart.BinarySerializer.Buffers
         {
             if (IsBufferFull())
             {
-                throw new InvalidOperationException($"Object is larger than {_byteArray.Length} bytes.");
+                throw new InvalidOperationException("Unable to write bit. The buffer is currently positioned at the end of the internal byte array.");
             }
 
             if (value)
@@ -128,7 +128,7 @@ namespace Barchart.BinarySerializer.Buffers
         {
             if (IsBufferFull())
             {
-                throw new InvalidOperationException("Attempt to read beyond the end of the buffer.");
+                throw new InvalidOperationException("Unable to read bit. The buffer is currently positioned at the end of the internal byte array.");
             }
 
             int bit = (_byteArray[_positionByte] >> (7 - _positionBit)) & 1;
