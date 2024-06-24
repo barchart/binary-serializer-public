@@ -85,7 +85,6 @@ namespace Barchart.BinarySerializer.Schemas
 
         /// <inheritdoc />
         public virtual void Decode(TContainer existing, IDataBuffer dataBuffer) {
-
             AttributeValue<T> attributeValue;
             attributeValue = BinarySerializer.Decode(dataBuffer);
            
