@@ -13,13 +13,13 @@ namespace Barchart.BinarySerializer.Schemas
     ///     Represents metadata about an object member of a class or structure with encoding/decoding functionality.
     /// </summary>
     /// <typeparam name="TContainer">The type of the class or structure.</typeparam>
-    /// <typeparam name="TMember">The type of the member.</typeparam>
-    public class ObjectMemberData<TContainer, TMember> : MemberData<TContainer, TMember> where TMember : new()
+    /// <typeparam name="T">The type of the member.</typeparam>
+    public class ObjectMemberData<TContainer, T> : MemberData<TContainer, T> where T : new()
     {
         #region Constructor(s)
 
         public ObjectMemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo,
-            Func<TContainer, TMember> getDelegate, Action<TContainer, TMember?>? setDelegate, IBinaryTypeObjectSerializer<TMember> binarySerializer)
+            Func<TContainer, T> getDelegate, Action<TContainer, T?>? setDelegate, IBinaryTypeObjectSerializer<T> binarySerializer)
             : base(type, name, isKeyAttribute, memberInfo, getDelegate, setDelegate, binarySerializer) { }
 
         #endregion
@@ -29,14 +29,14 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public override void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBuffer buffer)
         {
-            TMember oldValue = GetDelegate(oldObject);
-            TMember newValue = GetDelegate(newObject);
+            T oldValue = GetDelegate(oldObject);
+            T newValue = GetDelegate(newObject);
 
             bool valuesEqual = Equals(oldValue, newValue);
 
             if (!valuesEqual || IsKeyAttribute)
             {
-                ((IBinaryTypeObjectSerializer<TMember>)BinarySerializer).Encode(buffer, oldValue, newValue);
+                ((IBinaryTypeObjectSerializer<T>)BinarySerializer).Encode(buffer, oldValue, newValue);
             }
             else
             {
@@ -47,17 +47,17 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public override void Decode(TContainer existing, IDataBuffer buffer)
         {
-            HeaderWithValue<TMember> headerWithValue;
+            HeaderWithValue<T> headerWithValue;
 
-            TMember currentObject = GetDelegate(existing);
+            T currentObject = GetDelegate(existing);
 
             if (currentObject == null)
             {
-                headerWithValue = ((IBinaryTypeObjectSerializer<TMember>)BinarySerializer).Decode(buffer);
+                headerWithValue = ((IBinaryTypeObjectSerializer<T>)BinarySerializer).Decode(buffer);
             }
             else
             {
-                headerWithValue = ((IBinaryTypeObjectSerializer<TMember>)BinarySerializer).Decode(buffer, currentObject);
+                headerWithValue = ((IBinaryTypeObjectSerializer<T>)BinarySerializer).Decode(buffer, currentObject);
             }
 
             if (headerWithValue.Header.IsMissing)
@@ -78,7 +78,7 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (!valuesEqual || IsKeyAttribute)
             {
-                return ((IBinaryTypeObjectSerializer<TMember>)BinarySerializer).GetLengthInBits(newValue);
+                return ((IBinaryTypeObjectSerializer<T>)BinarySerializer).GetLengthInBits(newValue);
             }
             else
             {

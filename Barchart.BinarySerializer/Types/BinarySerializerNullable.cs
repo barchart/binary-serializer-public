@@ -11,18 +11,18 @@ namespace Barchart.BinarySerializer.Types
     /// <summary>
     ///     Provides binary serialization functionality for nullable value types.
     /// </summary>
-    /// <typeparam name="TMember">The underlying value type of the nullable type.</typeparam>
-    public class BinarySerializerNullable<TMember> : IBinaryTypeSerializer<TMember?> where TMember : struct
+    /// <typeparam name="T">The underlying value type of the nullable type.</typeparam>
+    public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : struct
 	{
         #region Fields
 
-        private readonly IBinaryTypeSerializer<TMember> _serializer;
+        private readonly IBinaryTypeSerializer<T> _serializer;
 
         #endregion
 
         #region  Constructor(s)
 
-        public BinarySerializerNullable(IBinaryTypeSerializer<TMember> serializer)
+        public BinarySerializerNullable(IBinaryTypeSerializer<T> serializer)
         {
             _serializer = serializer;
         }
@@ -32,11 +32,11 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, TMember? value)
+        public void Encode(IDataBuffer dataBuffer, T? value)
         {
             if (value != null)
             {
-                _serializer.Encode(dataBuffer, (TMember)value);
+                _serializer.Encode(dataBuffer, (T)value);
             }
             else
             {
@@ -45,22 +45,22 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<TMember?> Decode(IDataBuffer dataBuffer)
+        public HeaderWithValue<T?> Decode(IDataBuffer dataBuffer)
         {
-            HeaderWithValue<TMember> headerWithValue = _serializer.Decode(dataBuffer);
+            HeaderWithValue<T> headerWithValue = _serializer.Decode(dataBuffer);
 
             if (headerWithValue.Header.IsValueMissingOrNull()) 
             {
-                return new HeaderWithValue<TMember?>(headerWithValue.Header, null);
+                return new HeaderWithValue<T?>(headerWithValue.Header, null);
             }
 
-            return new HeaderWithValue<TMember?>(headerWithValue.Header, headerWithValue.Value);
+            return new HeaderWithValue<T?>(headerWithValue.Header, headerWithValue.Value);
         }
 
         /// <inheritdoc />
-        public int GetLengthInBits(TMember? value)
+        public int GetLengthInBits(T? value)
         {
-            return value == null ? DataBuffer.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((TMember)value);
+            return value == null ? DataBuffer.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((T)value);
         }
 
         #endregion

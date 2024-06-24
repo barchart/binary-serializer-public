@@ -12,18 +12,18 @@ namespace Barchart.BinarySerializer.Types
     ///     Provides binary serialization functionality for objects implementing the IList interface.
     /// </summary>
     /// <typeparam name="TContainer">The type of the container implementing the IList interface.</typeparam>
-    /// <typeparam name="TMember">The type of elements contained in the IList.</typeparam>
-    public class BinarySerializerIList<TContainer, TMember> : IBinaryTypeObjectSerializer<TContainer?> where TContainer: IList<TMember>, new()
+    /// <typeparam name="T">The type of elements contained in the IList.</typeparam>
+    public class BinarySerializerIList<TContainer, T> : IBinaryTypeObjectSerializer<TContainer?> where TContainer: IList<T>, new()
     {
         #region Fields
 
-        private readonly IBinaryTypeSerializer<TMember> _serializer;
+        private readonly IBinaryTypeSerializer<T> _serializer;
 
         #endregion
 
         #region Constructor(s)
 
-        public BinarySerializerIList(IBinaryTypeSerializer<TMember> serializer)
+        public BinarySerializerIList(IBinaryTypeSerializer<T> serializer)
         {
             _serializer = serializer;
         }

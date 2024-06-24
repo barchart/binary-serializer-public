@@ -155,83 +155,83 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        ///     Gets a serializer for a Complex type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for a Complex type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="TMember">The type of elements in the list.</typeparam>
-        /// <returns>A serializer for a list of elements of type <typeparamref name="TMember"/>.</returns>
-        public static ObjectBinarySerializer<TMember> GetObjectSerializer<TMember>() where TMember : new()
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
+        public static ObjectBinarySerializer<T> GetObjectSerializer<T>() where T : new()
         {
-            Schema<TMember> schema = GetSchema<TMember>();
+            Schema<T> schema = GetSchema<T>();
             
-            return new ObjectBinarySerializer<TMember>(schema);
+            return new ObjectBinarySerializer<T>(schema);
         }
 
         /// <summary>
-        ///     Gets a serializer for a list type <typeparamref name="TList"/> containing elements of type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for a list type <typeparamref name="TList"/> containing elements of type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="TMember">The type of elements in the list.</typeparam>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <typeparam name="TList">The type of list for which to get the serializer.</typeparam>
-        /// <returns>A serializer for the specified list type <typeparamref name="TList"/> containing elements of type <typeparamref name="TMember"/> if successful; otherwise, <see langword="null"/>.</returns>
-        public static BinarySerializerIList<TList, TMember>? GetListSerializer<TMember, TList>() where TList : IList<TMember>, new()
+        /// <returns>A serializer for the specified list type <typeparamref name="TList"/> containing elements of type <typeparamref name="T"/> if successful; otherwise, <see langword="null"/>.</returns>
+        public static BinarySerializerIList<TList, T>? GetListSerializer<T, TList>() where TList : IList<T>, new()
         {
-            IBinaryTypeSerializer<TMember>? serializer = GetSerializer<TMember>();
+            IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
             
             if (serializer == null)
             {
                 return null;
             }
             
-            return new BinarySerializerIList<TList, TMember>(serializer);
+            return new BinarySerializerIList<TList, T>(serializer);
         }
 
         /// <summary>
-        ///     Gets a serializer for an enum type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for an enum type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="TMember">The enum type for which to get the serializer.</typeparam>
-        /// <returns>A serializer for the specified enum type <typeparamref name="TMember"/> if successful; otherwise, <see langword="null"/>.</returns>
+        /// <typeparam name="T">The enum type for which to get the serializer.</typeparam>
+        /// <returns>A serializer for the specified enum type <typeparamref name="T"/> if successful; otherwise, <see langword="null"/>.</returns>
         /// <remarks>
         ///     The method assumes that the underlying storage type for the enum is `int`, and retrieves a serializer for `int` type to serialize the enum values.
         /// </remarks>
-        public static BinarySerializerEnum<TMember> GetEnumSerializer<TMember>() where TMember : struct, Enum
+        public static BinarySerializerEnum<T> GetEnumSerializer<T>() where T : struct, Enum
         {
-            return new BinarySerializerEnum<TMember>((BinarySerializerInt)GetSerializer<int>()!);
+            return new BinarySerializerEnum<T>((BinarySerializerInt)GetSerializer<int>()!);
         }
 
         /// <summary>
-        ///     Gets a serializer for a nullable value type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for a nullable value type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="TMember">The nullable value type for which to get the serializer.</typeparam>
+        /// <typeparam name="T">The nullable value type for which to get the serializer.</typeparam>
         /// <returns>
-        ///     A serializer for the specified nullable value type <typeparamref name="TMember"/> if successful; otherwise, <see langword="null"/>.
+        ///     A serializer for the specified nullable value type <typeparamref name="T"/> if successful; otherwise, <see langword="null"/>.
         /// </returns>
         /// <remarks>
-        ///     The method first attempts to retrieve a serializer for the nullable type <typeparamref name="TMember"/> from the <paramref name="_serializers"/> dictionary.
+        ///     The method first attempts to retrieve a serializer for the nullable type <typeparamref name="T"/> from the <paramref name="_serializers"/> dictionary.
         ///     If a serializer is found, it is cast to the appropriate type and returned.
-        ///     If a serializer is not found, the method retrieves a serializer for the underlying non-nullable type <typeparamref name="TMember"/>.
-        ///     If the retrieval is successful, the method constructs and returns a new serializer for the nullable type <typeparamref name="TMember"/>.
+        ///     If a serializer is not found, the method retrieves a serializer for the underlying non-nullable type <typeparamref name="T"/>.
+        ///     If the retrieval is successful, the method constructs and returns a new serializer for the nullable type <typeparamref name="T"/>.
         ///     If the retrieval fails, the method returns <see langword="null"/>.
         /// </remarks>
-        public static BinarySerializerNullable<TMember>? GetNullableSerializer<TMember>() where TMember : struct
+        public static BinarySerializerNullable<T>? GetNullableSerializer<T>() where T : struct
         {
-            if (_serializers.TryGetValue(typeof(TMember?), out object? serializer))
+            if (_serializers.TryGetValue(typeof(T?), out object? serializer))
             {
-                return (BinarySerializerNullable<TMember>)serializer;
+                return (BinarySerializerNullable<T>)serializer;
             }
 
-            IBinaryTypeSerializer<TMember>? newSerializer = GetSerializer<TMember>();
+            IBinaryTypeSerializer<T>? newSerializer = GetSerializer<T>();
             
             if (newSerializer == null)
             {
                 return null;
             }
 
-            BinarySerializerNullable<TMember> nullableSerializer = new(newSerializer);
+            BinarySerializerNullable<T> nullableSerializer = new(newSerializer);
 
             lock (_serializers)
             {
-                if (!_serializers.ContainsKey(typeof(TMember?)))
+                if (!_serializers.ContainsKey(typeof(T?)))
                 {
-                    _serializers.Add(typeof(TMember?), nullableSerializer);
+                    _serializers.Add(typeof(T?), nullableSerializer);
                 }
             }
 
@@ -239,44 +239,44 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <summary>
-        ///     Gets a serializer for the specified type <typeparamref name="TMember"/>.
+        ///     Gets a serializer for the specified type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="TMember">The type for which to get the serializer.</typeparam>
-        /// <returns>A serializer for the specified type <typeparamref name="TMember"/> if available; otherwise, <c>null</c>.</returns>
-        public static IBinaryTypeSerializer<TMember>? GetSerializer<TMember>()
+        /// <typeparam name="T">The type for which to get the serializer.</typeparam>
+        /// <returns>A serializer for the specified type <typeparamref name="T"/> if available; otherwise, <c>null</c>.</returns>
+        public static IBinaryTypeSerializer<T>? GetSerializer<T>()
         {
-            if (IsMemberComplexType(typeof(TMember)))
+            if (IsMemberComplexType(typeof(T)))
             {
-                return GenerateSerializer<TMember>(nameof(GetObjectSerializer), null);
+                return GenerateSerializer<T>(nameof(GetObjectSerializer), null);
             }
             
-            if (IsMemberListType(typeof(TMember)))
+            if (IsMemberListType(typeof(T)))
             {
-                Type elementsType = typeof(TMember).GetGenericArguments()[0];
+                Type elementsType = typeof(T).GetGenericArguments()[0];
                 
-                return GenerateSerializer<TMember>(nameof(GetListSerializer), elementsType);
+                return GenerateSerializer<T>(nameof(GetListSerializer), elementsType);
             }
             
-            if (IsMemberEnumType(typeof(TMember)))
+            if (IsMemberEnumType(typeof(T)))
             {
-                return GenerateSerializer<TMember>(nameof(GetEnumSerializer), null);
+                return GenerateSerializer<T>(nameof(GetEnumSerializer), null);
             }
             
-            if (IsNullableNumericType(typeof(TMember)))
+            if (IsNullableNumericType(typeof(T)))
             {
-                Type? underlyingType = Nullable.GetUnderlyingType(typeof(TMember));
+                Type? underlyingType = Nullable.GetUnderlyingType(typeof(T));
                 
                 if (underlyingType == null)
                 {
                     return null;
                 }
 
-                return GenerateSerializer<TMember>(nameof(GetNullableSerializer), underlyingType);
+                return GenerateSerializer<T>(nameof(GetNullableSerializer), underlyingType);
             }
 
-            if (_serializers.TryGetValue(typeof(TMember), out object? serializer))
+            if (_serializers.TryGetValue(typeof(T), out object? serializer))
             {
-                return (IBinaryTypeSerializer<TMember>?)serializer;
+                return (IBinaryTypeSerializer<T>?)serializer;
             }
             
             return null;
@@ -286,25 +286,25 @@ namespace Barchart.BinarySerializer.Schemas
         ///     Generates member data for the specified member.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
-        /// <typeparam name="TMember">The type of the member.</typeparam>
+        /// <typeparam name="T">The type of the member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The member data if successful; otherwise, <see langword="null"/>.</returns>
-        public static IMemberData<TContainer>? GenerateData<TContainer, TMember> (MemberInfo memberInfo)
+        public static IMemberData<TContainer>? GenerateData<TContainer, T> (MemberInfo memberInfo)
         {
-            IBinaryTypeSerializer<TMember>? serializer = GetSerializer<TMember>();
+            IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
 
             if (serializer == null)
             {
                 return null;
             }
 
-            MemberData<TContainer, TMember> newMemberData = new(
-                typeof(TMember),
+            MemberData<TContainer, T> newMemberData = new(
+                typeof(T),
                 memberInfo.Name,
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
-                GenerateGetter<TContainer, TMember>(memberInfo),
-                GenerateSetter<TContainer, TMember?>(memberInfo),
+                GenerateGetter<TContainer, T>(memberInfo),
+                GenerateSetter<TContainer, T?>(memberInfo),
                 serializer
             );
 
@@ -315,26 +315,26 @@ namespace Barchart.BinarySerializer.Schemas
         ///     Generates object member data for the specified member.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
-        /// <typeparam name="TMember">The type of the object member.</typeparam>
+        /// <typeparam name="T">The type of the object member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The object member data if successful; otherwise, <see langword="null"/>.</returns>
-        public static IMemberData<TContainer>? GenerateObjectData<TContainer, TMember>(MemberInfo memberInfo) where TMember : new()
+        public static IMemberData<TContainer>? GenerateObjectData<TContainer, T>(MemberInfo memberInfo) where T : new()
         {
-            IBinaryTypeSerializer<TMember>? serializer = GetSerializer<TMember>();
+            IBinaryTypeSerializer<T>? serializer = GetSerializer<T>();
 
             if (serializer == null)
             {
                 return null;
             }
 
-            ObjectMemberData<TContainer, TMember> newMemberData = new(
-                typeof(TMember),
+            ObjectMemberData<TContainer, T> newMemberData = new(
+                typeof(T),
                 memberInfo.Name,
                 GetKeyAttributeValue(memberInfo),
                 memberInfo,
-                GenerateGetter<TContainer, TMember>(memberInfo),
-                GenerateSetter<TContainer, TMember?>(memberInfo),
-                (IBinaryTypeObjectSerializer<TMember>)serializer
+                GenerateGetter<TContainer, T>(memberInfo),
+                GenerateSetter<TContainer, T?>(memberInfo),
+                (IBinaryTypeObjectSerializer<T>)serializer
             );
 
             return newMemberData;
@@ -384,32 +384,32 @@ namespace Barchart.BinarySerializer.Schemas
         ///     Generates a setter function for the specified member.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
-        /// <typeparam name="TMember">The type of the member.</typeparam>
+        /// <typeparam name="T">The type of the member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The setter function for the specified member.</returns>
-        public static Action<TContainer, TMember>? GenerateSetter<TContainer, TMember>(MemberInfo memberInfo)
+        public static Action<TContainer, T>? GenerateSetter<TContainer, T>(MemberInfo memberInfo)
         {
             var instance = Expression.Parameter(typeof(TContainer), "instance");
-            var value = Expression.Parameter(typeof(TMember), "value");
+            var value = Expression.Parameter(typeof(T), "value");
             var member = Expression.MakeMemberAccess(instance, memberInfo);
             var assign = Expression.Assign(member, value);
 
-            return Expression.Lambda<Action<TContainer, TMember>>(assign, instance, value).Compile();
+            return Expression.Lambda<Action<TContainer, T>>(assign, instance, value).Compile();
         }
 
         /// <summary>
         ///     Generates a getter function for the specified member.
         /// </summary>
         /// <typeparam name="TContainer">The type of object.</typeparam>
-        /// <typeparam name="TMember">The type of the member.</typeparam>
+        /// <typeparam name="T">The type of the member.</typeparam>
         /// <param name="memberInfo">The member information.</param>
         /// <returns>The getter function for the specified member.</returns>
-        public static Func<TContainer, TMember> GenerateGetter<TContainer, TMember>(MemberInfo memberInfo)
+        public static Func<TContainer, T> GenerateGetter<TContainer, T>(MemberInfo memberInfo)
         {
             var instance = Expression.Parameter(typeof(TContainer), "instance");
             var member = Expression.MakeMemberAccess(instance, memberInfo);
 
-            return Expression.Lambda<Func<TContainer, TMember>>(member, instance).Compile();
+            return Expression.Lambda<Func<TContainer, T>>(member, instance).Compile();
         }
 
         /// <summary>
@@ -449,14 +449,14 @@ namespace Barchart.BinarySerializer.Schemas
             return type.IsEnum;
         }
 
-        private static IBinaryTypeSerializer<TMember>? GenerateSerializer<TMember>(string methodName, Type? type)
+        private static IBinaryTypeSerializer<T>? GenerateSerializer<T>(string methodName, Type? type)
         {
             Type[]? genericArgs = null;
 
             genericArgs = methodName switch
             {
-                nameof(GetObjectSerializer) or nameof(GetEnumSerializer) => new[] { typeof(TMember) },
-                nameof(GetListSerializer) => new[] { type!, typeof(TMember) },
+                nameof(GetObjectSerializer) or nameof(GetEnumSerializer) => new[] { typeof(T) },
+                nameof(GetListSerializer) => new[] { type!, typeof(T) },
                 nameof(GetNullableSerializer) => new[] { type! },
                 _ => Array.Empty<Type>(),
             };
@@ -469,7 +469,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             
             var generateSerializerCallExpr = Expression.Call(null, generateSerializerMethod);
-            var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<TMember>?>>(generateSerializerCallExpr);
+            var lambdaExpr = Expression.Lambda<Func<IBinaryTypeSerializer<T>?>>(generateSerializerCallExpr);
             var func = lambdaExpr.Compile();
             var result = func();
 

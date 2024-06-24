@@ -13,8 +13,8 @@ namespace Barchart.BinarySerializer.Schemas
     ///     Represents metadata about a member of a class or structure with encoding/decoding functionality.
     /// </summary>
     /// <typeparam name="TContainer">The type of the class or structure.</typeparam>
-    /// <typeparam name="TMember">The type of the member.</typeparam>
-    public class MemberData<TContainer, TMember> : IMemberData<TContainer>
+    /// <typeparam name="T">The type of the member.</typeparam>
+    public class MemberData<TContainer, T> : IMemberData<TContainer>
     {
         #region Properties
 
@@ -31,20 +31,20 @@ namespace Barchart.BinarySerializer.Schemas
         public MemberInfo MemberInfo { get; }
 
         /// <inheritdoc />
-        public Func<TContainer, TMember> GetDelegate { get; }
+        public Func<TContainer, T> GetDelegate { get; }
 
         /// <inheritdoc />
-        public Action<TContainer, TMember?>? SetDelegate { get; }
+        public Action<TContainer, T?>? SetDelegate { get; }
         
         /// <inheritdoc />
-        public IBinaryTypeSerializer<TMember> BinarySerializer { get; }
+        public IBinaryTypeSerializer<T> BinarySerializer { get; }
 
         #endregion
 
         #region Constructor(s)
 
         public MemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo,
-            Func<TContainer, TMember> getDelegate, Action<TContainer, TMember?>? setDelegate, IBinaryTypeSerializer<TMember> binarySerializer)
+            Func<TContainer, T> getDelegate, Action<TContainer, T?>? setDelegate, IBinaryTypeSerializer<T> binarySerializer)
         {
             Type = type;
             Name = name;
@@ -61,14 +61,14 @@ namespace Barchart.BinarySerializer.Schemas
         
         /// <inheritdoc />
         public void Encode(TContainer value, IDataBuffer dataBuffer) {
-            TMember member = GetDelegate(value);
+            T member = GetDelegate(value);
             BinarySerializer.Encode(dataBuffer, member);
         }
 
         /// <inheritdoc />
         public virtual void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBuffer dataBuffer) {
-            TMember oldValue = GetDelegate(oldObject);
-            TMember newValue = GetDelegate(newObject);
+            T oldValue = GetDelegate(oldObject);
+            T newValue = GetDelegate(newObject);
 
             bool valuesEqual = Equals(oldValue, newValue);
 
@@ -85,7 +85,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public virtual void Decode(TContainer existing, IDataBuffer dataBuffer) {
 
-            HeaderWithValue<TMember> headerWithValue;
+            HeaderWithValue<T> headerWithValue;
             headerWithValue = BinarySerializer.Decode(dataBuffer);
            
             if (headerWithValue.Header.IsMissing)
@@ -99,8 +99,8 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public bool CompareObjects(TContainer firstObject, TContainer secondObject)
         {
-            TMember oldValue = GetDelegate(firstObject);
-            TMember newValue = GetDelegate(secondObject);
+            T oldValue = GetDelegate(firstObject);
+            T newValue = GetDelegate(secondObject);
 
             return Equals(oldValue, newValue);
         }
@@ -108,8 +108,8 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public void CompareAndUpdateObject(TContainer firstObject, TContainer secondObject)
         {
-            TMember oldValue = GetDelegate(firstObject);
-            TMember newValue = GetDelegate(secondObject);
+            T oldValue = GetDelegate(firstObject);
+            T newValue = GetDelegate(secondObject);
 
             if (newValue != null && !Equals(oldValue,newValue) && SetDelegate != null) SetDelegate(firstObject, newValue);
         }

@@ -12,8 +12,8 @@ namespace Barchart.BinarySerializer.Types
     /// <summary>
     ///     Represents a base class for binary serializers handling numeric types.
     /// </summary>
-    /// <typeparam name="TMember">The underlying numeric type.</typeparam>
-    public abstract class BinarySerializerNumeric<TMember> : IBinaryTypeSerializer<TMember> where TMember : struct
+    /// <typeparam name="T">The underlying numeric type.</typeparam>
+    public abstract class BinarySerializerNumeric<T> : IBinaryTypeSerializer<T> where T : struct
     {
         #region Properties
 
@@ -24,7 +24,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, TMember value)
+        public void Encode(IDataBuffer dataBuffer, T value)
         {
             Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = false });
 
@@ -32,20 +32,20 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<TMember> Decode(IDataBuffer dataBuffer)
+        public HeaderWithValue<T> Decode(IDataBuffer dataBuffer)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsValueMissingOrNull())
             {
-                return new HeaderWithValue<TMember>(header, default);
+                return new HeaderWithValue<T>(header, default);
             }
 
-            TMember decodedValue;
+            T decodedValue;
             
-            if (typeof(TMember) == typeof(bool))
+            if (typeof(T) == typeof(bool))
             {
-                decodedValue = (TMember)(object)dataBuffer.ReadBit();
+                decodedValue = (T)(object)dataBuffer.ReadBit();
             }
             else
             {
@@ -54,17 +54,17 @@ namespace Barchart.BinarySerializer.Types
             }
 
 
-            return new HeaderWithValue<TMember>(header, decodedValue);
+            return new HeaderWithValue<T>(header, decodedValue);
         }
 
         /// <inheritdoc />
-        public int GetLengthInBits(TMember value)
+        public int GetLengthInBits(T value)
         {
             return Size * 8 + DataBuffer.NumberOfHeaderBitsNonString;
         }
 
-        protected abstract void EncodeValue(IDataBuffer dataBuffer, TMember value);
-        protected abstract TMember DecodeBytes(byte[] bytes);
+        protected abstract void EncodeValue(IDataBuffer dataBuffer, T value);
+        protected abstract T DecodeBytes(byte[] bytes);
 
         #endregion
     }

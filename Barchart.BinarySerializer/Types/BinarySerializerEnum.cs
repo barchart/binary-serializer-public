@@ -7,8 +7,8 @@ namespace Barchart.BinarySerializer.Types
     /// <summary>
     ///     Provides binary serialization functionality for enum types.
     /// </summary>
-    /// <typeparam name="TMember">The enum type to be serialized.</typeparam>
-    public class BinarySerializerEnum<TMember> : IBinaryTypeSerializer<TMember> where TMember : Enum
+    /// <typeparam name="T">The enum type to be serialized.</typeparam>
+    public class BinarySerializerEnum<T> : IBinaryTypeSerializer<T> where T : Enum
     {
         #region Fields
 
@@ -28,7 +28,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, TMember? value)
+        public void Encode(IDataBuffer dataBuffer, T? value)
         {
             int? integerValue = value != null? Convert.ToInt32(value) : null;
 
@@ -39,16 +39,16 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<TMember> Decode(IDataBuffer dataBuffer)
+        public HeaderWithValue<T> Decode(IDataBuffer dataBuffer)
         {
             HeaderWithValue<int> headerWithValue = _serializer.Decode(dataBuffer);
             int value = headerWithValue.Value;
 
-            return new HeaderWithValue<TMember>(headerWithValue.Header, (TMember?)Enum.Parse(typeof(TMember), value.ToString(), true));
+            return new HeaderWithValue<T>(headerWithValue.Header, (T?)Enum.Parse(typeof(T), value.ToString(), true));
         }
 
         /// <inheritdoc />
-        public int GetLengthInBits(TMember? value)
+        public int GetLengthInBits(T? value)
         {
             int? integerValue = value != null ? Convert.ToInt32(value) : null;
 
