@@ -15,6 +15,7 @@ namespace Barchart.BinarySerializer.Tests.Types
         private readonly ITestOutputHelper _testOutputHelper;
         
         private readonly BinarySerializerBool _serializer;
+        
         #endregion
         
         #region Constructor(s)
