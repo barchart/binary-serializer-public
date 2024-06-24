@@ -34,7 +34,7 @@ namespace Barchart.BinarySerializer.Types
         {
             AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
 
-            if (header.IsValueMissingOrNull())
+            if (header.IsMissing || header.IsNull)
             {
                 return new AttributeValue<string?>(header, default);
             }

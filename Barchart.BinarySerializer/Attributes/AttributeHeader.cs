@@ -65,15 +65,6 @@ namespace Barchart.BinarySerializer.Attributes
             return new() { IsMissing = headerIsMissing, IsNull = headerIsNull };
         }
         
-        /// <summary>
-        ///     Checks if the header indicates that the value is missing or null.
-        /// </summary>
-        /// <returns>True if the value is missing or null, otherwise false.</returns>
-        public bool IsValueMissingOrNull()
-        {
-            return IsMissing || IsNull;
-        }
-        
         #endregion
     }
 }
