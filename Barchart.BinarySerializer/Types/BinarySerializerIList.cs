@@ -2,7 +2,6 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Headers;
-using Barchart.BinarySerializer.Schemas;
 
 #endregion
 

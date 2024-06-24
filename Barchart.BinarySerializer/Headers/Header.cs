@@ -1,7 +1,6 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Schemas;
 
 #endregion
 
