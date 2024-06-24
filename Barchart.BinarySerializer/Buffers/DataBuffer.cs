@@ -77,14 +77,14 @@ namespace Barchart.BinarySerializer.Buffers
         /// <inheritdoc />
         public byte[] ReadBytes(int size)
         {
-            byte[] valueBytes = new byte[size];
+            byte[] bytes = new byte[size];
             
             for (int i = 0; i < size; i++)
             {
-                valueBytes[i] = ReadByte();
+                bytes[i] = ReadByte();
             }
 
-            return valueBytes;
+            return bytes;
         }
         
         /// <inheritdoc />
