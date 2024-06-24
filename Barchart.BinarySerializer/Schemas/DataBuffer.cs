@@ -202,11 +202,6 @@ namespace Barchart.BinarySerializer.Schemas
 
             return valueBytes;
         }
-        
-        public void ResetByte()
-        {
-            _byteArray[_positionByte] = 0;
-        }
 
         /// <summary>
         ///     Generates a copy of the internal storage, as a byte array, containing
@@ -230,6 +225,11 @@ namespace Barchart.BinarySerializer.Schemas
         private bool IsBeginningOfNewByte()
         {
             return _positionBit == 0;
+        }
+        
+        private void ResetByte()
+        {
+            _byteArray[_positionByte] = 0;
         }
 
         #endregion

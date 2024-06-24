@@ -64,7 +64,6 @@
         public byte[] Serialize(TContainer schemaObject, byte[] buffer)
         {
             DataBuffer dataBuffer = new(buffer);
-            dataBuffer.ResetByte();
 
             return Serialize(schemaObject, dataBuffer);
         }
@@ -105,7 +104,6 @@
         public byte[] Serialize(TContainer oldObject, TContainer newObject, byte[] buffer)
         {
             DataBuffer dataBuffer = new(buffer);
-            dataBuffer.ResetByte();
 
             return Serialize(oldObject, newObject, dataBuffer);
         }
