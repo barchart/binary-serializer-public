@@ -149,8 +149,9 @@ namespace Barchart.BinarySerializer.Buffers
                 _positionBit++;
             }
 
-            if (_positionBit == 0)
+            if (_positionBit == 8)
             {
+                _positionBit = 0;
                 _positionByte++;
             }
         }
