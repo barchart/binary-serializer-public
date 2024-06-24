@@ -39,9 +39,7 @@ namespace Barchart.BinarySerializer.Types
             }
             else
             {
-                Header header = new() { IsMissing = false, IsNull = true };
-                
-                header.WriteToBuffer(dataBuffer);
+                Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = true });
             }
         }
 

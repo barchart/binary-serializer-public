@@ -18,9 +18,7 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(DataBuffer dataBuffer, string? value)
         {
-            Header header = new() { IsMissing = false, IsNull = value == null };
-
-            header.WriteToBuffer(dataBuffer);
+            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
 
             if (value != null)
             {
