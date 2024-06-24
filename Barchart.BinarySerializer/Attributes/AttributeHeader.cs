@@ -35,16 +35,16 @@ namespace Barchart.BinarySerializer.Attributes
         /// <param name="dataBuffer">
         ///     The data buffer to write to.
         /// </param>
-        /// <param name="attributeHeader">
+        /// <param name="header">
         ///     The header to write.
         /// </param>
-        public static void WriteToBuffer(IDataBuffer dataBuffer, AttributeHeader attributeHeader)
+        public static void WriteToBuffer(IDataBuffer dataBuffer, AttributeHeader header)
         {
-            dataBuffer.WriteBit(attributeHeader.IsMissing);
+            dataBuffer.WriteBit(header.IsMissing);
 
-            if (!attributeHeader.IsMissing)
+            if (!header.IsMissing)
             {
-                dataBuffer.WriteBit(attributeHeader.IsNull);
+                dataBuffer.WriteBit(header.IsNull);
             }
         }
         

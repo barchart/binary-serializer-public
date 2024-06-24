@@ -77,35 +77,35 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public AttributeValue<TContainer?> Decode(IDataBuffer dataBuffer, TContainer? existing)
         {
-            AttributeHeader attributeHeader = AttributeHeader.ReadFromBuffer(dataBuffer);
+            AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
 
-            if (attributeHeader.IsValueMissingOrNull())
+            if (header.IsValueMissingOrNull())
             {
-                return new AttributeValue<TContainer?>(attributeHeader, default);
+                return new AttributeValue<TContainer?>(header, default);
             }
 
             int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
             
             TContainer list = ReadList(dataBuffer, length, existing);
 
-            return new AttributeValue<TContainer?>(attributeHeader, list);
+            return new AttributeValue<TContainer?>(header, list);
         }
 
         /// <inheritdoc />
         public AttributeValue<TContainer?> Decode(IDataBuffer dataBuffer)
         {
-            AttributeHeader attributeHeader = AttributeHeader.ReadFromBuffer(dataBuffer);
+            AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
 
-            if (attributeHeader.IsValueMissingOrNull())
+            if (header.IsValueMissingOrNull())
             {
-                return new AttributeValue<TContainer?>(attributeHeader, default);
+                return new AttributeValue<TContainer?>(header, default);
             }
 
             int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
             
             TContainer list = ReadList(dataBuffer, length, default);
 
-            return new AttributeValue<TContainer?>(attributeHeader, list);
+            return new AttributeValue<TContainer?>(header, list);
         }
 
         /// <inheritdoc />

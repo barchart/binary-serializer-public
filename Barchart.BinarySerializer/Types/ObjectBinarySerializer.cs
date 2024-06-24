@@ -33,31 +33,31 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public AttributeValue<TContainer> Decode(IDataBuffer dataBuffer)
         {
-            AttributeHeader attributeHeader = AttributeHeader.ReadFromBuffer(dataBuffer);
+            AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
 
-            if (attributeHeader.IsValueMissingOrNull())
+            if (header.IsValueMissingOrNull())
             {
-                return new AttributeValue<TContainer>(attributeHeader, default);
+                return new AttributeValue<TContainer>(header, default);
             }
 
             TContainer? deserializedObject = Schema.Deserialize(dataBuffer);
 
-            return new AttributeValue<TContainer>(attributeHeader, deserializedObject);
+            return new AttributeValue<TContainer>(header, deserializedObject);
         }
 
         /// <inheritdoc />
         public AttributeValue<TContainer> Decode(IDataBuffer dataBuffer, TContainer existing)
         {
-            AttributeHeader attributeHeader = AttributeHeader.ReadFromBuffer(dataBuffer);
+            AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
 
-            if (attributeHeader.IsValueMissingOrNull())
+            if (header.IsValueMissingOrNull())
             {
-                return new AttributeValue<TContainer>(attributeHeader, default);
+                return new AttributeValue<TContainer>(header, default);
             }
 
             TContainer? deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
 
-            return new AttributeValue<TContainer>(attributeHeader, deserializedObject);
+            return new AttributeValue<TContainer>(header, deserializedObject);
         }
 
         /// <inheritdoc />
