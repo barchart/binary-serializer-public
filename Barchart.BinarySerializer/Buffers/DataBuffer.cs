@@ -1,15 +1,13 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.Logging;
-
 #endregion
 
-namespace Barchart.BinarySerializer.Schemas
+namespace Barchart.BinarySerializer.Buffers
 {
     /// <summary>
     ///     A utility for writing (and reading) binary data to (and from) a byte array.
     /// </summary>
-    public class DataBuffer
+    public class DataBuffer : IDataBuffer
     {
         #region Fields
         
@@ -55,7 +53,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <exception cref="InvalidOperationException">
         ///     Thrown when internal storage is full.
         /// </exception>
-        public virtual void WriteBit(bool value)
+        public void WriteBit(bool value)
         {
             if (IsBufferFull())
             {
@@ -109,7 +107,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <exception cref="InvalidOperationException">
         ///     Thrown when remaining internal storage is than the number of bytes to write.
         /// </exception>
-        public virtual void WriteBytes(byte[] value)
+        public void WriteBytes(byte[] value)
         {
             for (int i = 0; i < value.Length; i++)
             {

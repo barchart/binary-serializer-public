@@ -1,5 +1,6 @@
 ﻿#region Using Statements
 
+using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 
@@ -20,14 +21,14 @@ namespace Barchart.BinarySerializer.Types
         /// </summary>
         /// <param name="dataBuffer">The buffer to write the encoded value to.</param>
         /// <param name="value">The value to be encoded.</param>
-        public void Encode(DataBuffer dataBuffer, TMember value);
+        public void Encode(IDataBuffer dataBuffer, TMember value);
 
         /// <summary>
         ///     Decodes a value from the provided <see cref="DataBuffer"/>.
         /// </summary>
         /// <param name="dataBuffer">The buffer to read the encoded value from.</param>
         /// <returns>A <see cref="HeaderWithValue{TMember}"/> containing the decoded value and its length in bits.</returns>
-        public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer);
+        public HeaderWithValue<TMember> Decode(IDataBuffer dataBuffer);
 
         /// <summary>
         ///     Calculates the length of the specified value in bits.

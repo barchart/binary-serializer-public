@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Schemas
+﻿using Barchart.BinarySerializer.Buffers;
+
+namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
     ///     Represents a schema for serializing and deserializing objects of type <typeparamref name="TContainer"/>.
@@ -68,7 +70,7 @@
             return Serialize(schemaObject, dataBuffer);
         }
 
-        internal byte[] Serialize(TContainer schemaObject, DataBuffer dataBuffer) {
+        internal byte[] Serialize(TContainer schemaObject, IDataBuffer dataBuffer) {
 
             if (schemaObject == null)
             {
@@ -108,7 +110,7 @@
             return Serialize(oldObject, newObject, dataBuffer);
         }
 
-        internal byte[] Serialize(TContainer oldObject, TContainer newObject, DataBuffer dataBuffer)
+        internal byte[] Serialize(TContainer oldObject, TContainer newObject, IDataBuffer dataBuffer)
         {
             if (oldObject == null)
             {
@@ -134,7 +136,7 @@
             return Deserialize(dataBuffer);
         }
 
-        internal TContainer Deserialize(DataBuffer dataBuffer) {
+        internal TContainer Deserialize(IDataBuffer dataBuffer) {
             TContainer existing = new();
 
             foreach (IMemberData<TContainer> memberData in _memberDataContainer)
@@ -157,7 +159,7 @@
             return Deserialize(existing, dataBuffer);
         }
 
-        internal TContainer Deserialize(TContainer existing, DataBuffer dataBuffer)
+        internal TContainer Deserialize(TContainer existing, IDataBuffer dataBuffer)
         {
             foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {

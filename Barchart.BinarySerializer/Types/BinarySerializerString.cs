@@ -3,6 +3,7 @@
 using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 using System.Text;
+using Barchart.BinarySerializer.Buffers;
 
 #endregion
 
@@ -16,7 +17,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(DataBuffer dataBuffer, string? value)
+        public void Encode(IDataBuffer dataBuffer, string? value)
         {
             Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
 
@@ -30,7 +31,7 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<string?> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<string?> Decode(IDataBuffer dataBuffer)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
 

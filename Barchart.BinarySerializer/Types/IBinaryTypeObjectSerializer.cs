@@ -1,5 +1,6 @@
 ﻿#region Using Statements
 
+using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 
@@ -21,7 +22,7 @@ namespace Barchart.BinarySerializer.Types
         /// <param name="dataBuffer">The DataBuffer to which the values will be encoded.</param>
         /// <param name="oldValue">The old value to be encoded.</param>
         /// <param name="newValue">The new value to be encoded.</param>
-        public void Encode(DataBuffer dataBuffer, TMember oldValue, TMember newValue);
+        public void Encode(IDataBuffer dataBuffer, TMember oldValue, TMember newValue);
 
         /// <summary>
         ///     Decodes the specified existing value from the given DataBuffer.
@@ -29,7 +30,7 @@ namespace Barchart.BinarySerializer.Types
         /// <param name="dataBuffer">The DataBuffer from which the value will be decoded.</param>
         /// <param name="existing">The existing value to be decoded.</param>
         /// <returns>A HeaderWithValue&lt;TMember&gt; containing the decoded value and its header information.</returns>
-        public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer, TMember existing);
+        public HeaderWithValue<TMember> Decode(IDataBuffer dataBuffer, TMember existing);
 
         #endregion
     }

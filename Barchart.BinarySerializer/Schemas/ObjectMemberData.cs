@@ -3,6 +3,7 @@
 using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Types;
 using System.Reflection;
+using Barchart.BinarySerializer.Buffers;
 
 #endregion
 
@@ -26,7 +27,7 @@ namespace Barchart.BinarySerializer.Schemas
         #region Methods
 
         /// <inheritdoc />
-        public override void EncodeCompare(TContainer newObject, TContainer oldObject, DataBuffer buffer)
+        public override void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBuffer buffer)
         {
             TMember oldValue = GetDelegate(oldObject);
             TMember newValue = GetDelegate(newObject);
@@ -44,7 +45,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public override void Decode(TContainer existing, DataBuffer buffer)
+        public override void Decode(TContainer existing, IDataBuffer buffer)
         {
             HeaderWithValue<TMember> headerWithValue;
 

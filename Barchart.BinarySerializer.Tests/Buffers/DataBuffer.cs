@@ -1,10 +1,10 @@
 #region Using Statements
 
-using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Buffers;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Tests.Schemas;
+namespace Barchart.BinarySerializer.Tests.Buffers;
 
 public class DataBufferTests
 {

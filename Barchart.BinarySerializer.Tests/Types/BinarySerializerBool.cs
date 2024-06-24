@@ -1,5 +1,6 @@
 #region Using Statements
 
+using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Types;
@@ -34,7 +35,7 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Fact]
         public void Encode_True_WritesToDataBuffer()
         {
-            var mock = new Mock<DataBuffer>(new byte[2]);
+            var mock = new Mock<IDataBuffer>();
 
             var bitsWritten = new List<bool>();
             var bytesWritten = new List<byte[]>();
@@ -53,7 +54,7 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Fact]
         public void Encode_False_WritesToDataBuffer()
         {
-            var mock = new Mock<DataBuffer>(new byte[2]);
+            var mock = new Mock<IDataBuffer>();
 
             var bitsWritten = new List<bool>();
             var bytesWritten = new List<byte[]>();

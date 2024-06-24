@@ -1,4 +1,5 @@
-﻿using Barchart.BinarySerializer.Headers;
+﻿using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 
 namespace Barchart.BinarySerializer.Types
@@ -27,7 +28,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(DataBuffer dataBuffer, TMember? value)
+        public void Encode(IDataBuffer dataBuffer, TMember? value)
         {
             int? integerValue = value != null? Convert.ToInt32(value) : null;
 
@@ -38,7 +39,7 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<TMember> Decode(IDataBuffer dataBuffer)
         {
             HeaderWithValue<int> headerWithValue = _serializer.Decode(dataBuffer);
             int value = headerWithValue.Value;

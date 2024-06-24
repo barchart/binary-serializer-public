@@ -1,6 +1,7 @@
 ﻿#region Using Statements
 
 using System.Reflection;
+using Barchart.BinarySerializer.Buffers;
 
 #endregion
 
@@ -43,7 +44,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <param name="value">The container object whose member value is to be encoded.</param>
         /// <param name="buffer">The DataBuffer to write the encoded data to.</param>
-        void Encode(TContainer value, DataBuffer buffer);
+        void Encode(TContainer value, IDataBuffer buffer);
 
         /// <summary>
         ///     Encodes the differences between the new and old member values into the provided DataBuffer.
@@ -51,14 +52,14 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="newValue">The new container object whose member value is to be compared and encoded.</param>
         /// <param name="oldValue">The old container object whose member value is to be compared.</param>
         /// <param name="buffer">The DataBuffer to write the encoded data to.</param>
-        void EncodeCompare(TContainer newValue, TContainer oldValue, DataBuffer buffer);
+        void EncodeCompare(TContainer newValue, TContainer oldValue, IDataBuffer buffer);
 
         /// <summary>
         ///     Decodes the member value from the provided DataBuffer and sets it to the container object.
         /// </summary>
         /// <param name="value">The container object where the decoded member value will be set.</param>
         /// <param name="buffer">The DataBuffer to read the encoded data from.</param>
-        void Decode(TContainer value, DataBuffer buffer);
+        void Decode(TContainer value, IDataBuffer buffer);
 
         /// <summary>
         ///     Compares the member values of two container objects.

@@ -1,5 +1,6 @@
 ﻿#region Using Statements
 
+using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas;
 
 #endregion
@@ -39,7 +40,7 @@ namespace Barchart.BinarySerializer.Headers
         /// <param name="header">
         ///     The header to write.
         /// </param>
-        public static void WriteToBuffer(DataBuffer dataBuffer, Header header)
+        public static void WriteToBuffer(IDataBuffer dataBuffer, Header header)
         {
             dataBuffer.WriteBit(header.IsMissing);
 
@@ -58,7 +59,7 @@ namespace Barchart.BinarySerializer.Headers
         /// <returns>
         ///     A header consisting of the next one (or two) bits from the data buffer.
         /// </returns>
-        public static Header ReadFromBuffer(DataBuffer dataBuffer)
+        public static Header ReadFromBuffer(IDataBuffer dataBuffer)
         {
             bool headerIsMissing = dataBuffer.ReadBit();
             bool headerIsNull = !headerIsMissing && dataBuffer.ReadBit();

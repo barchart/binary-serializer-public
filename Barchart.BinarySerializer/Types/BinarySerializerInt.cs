@@ -1,4 +1,5 @@
-﻿using Barchart.BinarySerializer.Schemas;
+﻿using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas;
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -17,7 +18,7 @@ namespace Barchart.BinarySerializer.Types
             return BitConverter.ToInt32(bytes);
         }
 
-        protected override void EncodeValue(DataBuffer dataBuffer, int value)
+        protected override void EncodeValue(IDataBuffer dataBuffer, int value)
         {
             dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }

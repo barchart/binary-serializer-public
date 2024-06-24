@@ -1,6 +1,7 @@
 ﻿
 #region Using Statements
 
+using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 
@@ -23,7 +24,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(DataBuffer dataBuffer, TMember value)
+        public void Encode(IDataBuffer dataBuffer, TMember value)
         {
             Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = false });
 
@@ -31,7 +32,7 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<TMember> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<TMember> Decode(IDataBuffer dataBuffer)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
 
@@ -62,7 +63,7 @@ namespace Barchart.BinarySerializer.Types
             return Size * 8 + DataBuffer.NumberOfHeaderBitsNonString;
         }
 
-        protected abstract void EncodeValue(DataBuffer dataBuffer, TMember value);
+        protected abstract void EncodeValue(IDataBuffer dataBuffer, TMember value);
         protected abstract TMember DecodeBytes(byte[] bytes);
 
         #endregion

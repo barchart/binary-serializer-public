@@ -1,5 +1,6 @@
 ﻿#region Using Statements
 
+using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 
@@ -32,7 +33,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(DataBuffer dataBuffer, TContainer? value)
+        public void Encode(IDataBuffer dataBuffer, TContainer? value)
         {
             Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
 
@@ -50,7 +51,7 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public void Encode(DataBuffer dataBuffer, TContainer? oldValue, TContainer? newValue)
+        public void Encode(IDataBuffer dataBuffer, TContainer? oldValue, TContainer? newValue)
         {
             Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = newValue == null });
 
@@ -75,7 +76,7 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer, TContainer? existing)
+        public HeaderWithValue<TContainer?> Decode(IDataBuffer dataBuffer, TContainer? existing)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
 
@@ -92,7 +93,7 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<TContainer?> Decode(DataBuffer dataBuffer)
+        public HeaderWithValue<TContainer?> Decode(IDataBuffer dataBuffer)
         {
             Header header = Header.ReadFromBuffer(dataBuffer);
 
@@ -131,7 +132,7 @@ namespace Barchart.BinarySerializer.Types
             return length;
         }
 
-        protected TContainer ReadList(DataBuffer dataBuffer, int length, TContainer? existing)
+        protected TContainer ReadList(IDataBuffer dataBuffer, int length, TContainer? existing)
         {
             TContainer list = new();
 
