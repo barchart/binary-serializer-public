@@ -1,7 +1,8 @@
 ﻿namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    ///     Class that specifies attributes that needs to be set on the property or field of the class or structure
+    ///     An attribute which can be used to define properties of a class (or struct)
+    ///     which should be serialized.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class BinarySerializeAttribute : Attribute
