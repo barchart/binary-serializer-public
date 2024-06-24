@@ -20,7 +20,6 @@ namespace Barchart.BinarySerializer.Attributes
         /// </summary>
         public bool IsMissing { get; init; }
         
-        
         /// <summary>
         ///     If true, the attribute's value is null.
         /// </summary>
