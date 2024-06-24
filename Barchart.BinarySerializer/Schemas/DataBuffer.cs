@@ -16,7 +16,9 @@ namespace Barchart.BinarySerializer.Schemas
         public static readonly int NumberOfBitsIsMissing = 1;
         public static readonly int NumberOfHeaderBitsNonString = 2;
         public static readonly int NumberOfHeaderBitsString = 8;
-        private readonly byte[] _buffer;
+        
+        private readonly byte[] _byteArray;
+        
         private int _offset;
         private int _offsetInLastByte;
 
@@ -27,9 +29,10 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         ///     Instantiates the class using an external buffer.
         /// </summary>
-        public DataBuffer(byte[] buffer)
+        public DataBuffer(byte[] byteArray)
         {
-            _buffer = buffer;
+            _byteArray = byteArray;
+            
             _offset = 0;
             _offsetInLastByte = 0;
         }
@@ -47,7 +50,7 @@ namespace Barchart.BinarySerializer.Schemas
         {
             if (IsBufferFull())
             {
-                throw new Exception($"Object is larger than {_buffer.Length} bytes.");
+                throw new Exception($"Object is larger than {_byteArray.Length} bytes.");
             }
 
             if (IsBeginningOfNewByte())
@@ -58,7 +61,7 @@ namespace Barchart.BinarySerializer.Schemas
             byte valueToWrite = (byte)(bit ? 1 : 0);
             int bitPosition = 7 - _offsetInLastByte;
 
-            _buffer[_offset] |= (byte)(valueToWrite << bitPosition);
+            _byteArray[_offset] |= (byte)(valueToWrite << bitPosition);
 
             _offsetInLastByte++;
 
@@ -118,7 +121,7 @@ namespace Barchart.BinarySerializer.Schemas
                     throw new InvalidOperationException("Attempt to read beyond the end of the buffer.");
                 }
 
-                byte bit = (byte)((_buffer[_offset] >> (7 - _offsetInLastByte)) & 1);
+                byte bit = (byte)((_byteArray[_offset] >> (7 - _offsetInLastByte)) & 1);
                 _offsetInLastByte = (_offsetInLastByte + 1) % 8;
 
                 if (IsBeginningOfNewByte())
@@ -194,7 +197,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         public void ResetByte()
         {
-            _buffer[_offset] = 0;
+            _byteArray[_offset] = 0;
         }
 
         /// <summary>
@@ -206,12 +209,12 @@ namespace Barchart.BinarySerializer.Schemas
         {
             int byteCount = _offset + (_offsetInLastByte == 0 ? 0 : 1);
             
-            return _buffer.Take(byteCount).ToArray();
+            return _byteArray.Take(byteCount).ToArray();
         }
 
         private bool IsBufferFull()
         {
-            return _offset >= _buffer.Length;
+            return _offset >= _byteArray.Length;
         }
 
         private bool IsBeginningOfNewByte()
