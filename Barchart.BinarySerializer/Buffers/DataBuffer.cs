@@ -5,7 +5,7 @@
 namespace Barchart.BinarySerializer.Buffers
 {
     /// <summary>
-    ///     A utility for writing (and reading) binary data to (and from) a byte array.
+    ///     A data buffer which uses a fixed-length byte array to store data.
     /// </summary>
     public class DataBuffer : IDataBuffer
     {
@@ -43,16 +43,51 @@ namespace Barchart.BinarySerializer.Buffers
         #endregion
 
         #region Methods
+        
+        /// <inheritdoc />
+        public bool ReadBit()
+        {
+            if (IsBufferFull())
+            {
+                throw new InvalidOperationException("Unable to read bit. The buffer is currently positioned at the end of the internal byte array.");
+            }
 
-        /// <summary>
-        ///     Writes a single bit to the internal storage.
-        /// </summary>
-        /// <param name="value">
-        ///     Value of the bit to write.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown when internal storage is full.
-        /// </exception>
+            int bit = (_byteArray[_positionByte] >> (7 - _positionBit)) & 1;
+
+            AdvanceBit();
+
+            return bit == 1;
+        }
+        
+        /// <inheritdoc />
+        public byte ReadByte()
+        {
+            byte byteToAdd = 0;
+
+            for (int j = 7; j >= 0; j--)
+            {
+                bool bit = ReadBit();
+                
+                byteToAdd |= (byte)(bit ? (1 << j) : 0); 
+            }
+
+            return byteToAdd;
+        }
+        
+        /// <inheritdoc />
+        public byte[] ReadBytes(int size)
+        {
+            byte[] valueBytes = new byte[size];
+            
+            for (int i = 0; i < size; i++)
+            {
+                valueBytes[i] = ReadByte();
+            }
+
+            return valueBytes;
+        }
+        
+        /// <inheritdoc />
         public void WriteBit(bool value)
         {
             if (IsBufferFull())
@@ -81,15 +116,7 @@ namespace Barchart.BinarySerializer.Buffers
             AdvanceBit();
         }
         
-        /// <summary>
-        ///     Writes a byte to the internal storage.
-        /// </summary>
-        /// <param name="value">
-        ///     Value of the byte to write.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown when remaining internal storage is less than one byte.
-        /// </exception>
+        /// <inheritdoc />
         public void WriteByte(byte value)
         {
             for (int j = 7; j >= 0; j--)
@@ -98,15 +125,7 @@ namespace Barchart.BinarySerializer.Buffers
             }
         }
         
-        /// <summary>
-        ///     Writes an array of bytes to the internal storage.
-        /// </summary>
-        /// <param name="value">
-        ///     Value of the bytes to write.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown when remaining internal storage is than the number of bytes to write.
-        /// </exception>
+        /// <inheritdoc />
         public void WriteBytes(byte[] value)
         {
             for (int i = 0; i < value.Length; i++)
@@ -114,84 +133,8 @@ namespace Barchart.BinarySerializer.Buffers
                 WriteByte(value[i]);
             }
         }
-        
-        /// <summary>
-        ///     Reads a single bit from the internal storage.
-        /// </summary>
-        /// <returns>
-        ///     The next bit from the internal storage.
-        /// </returns>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown when the internal storage has been read completely.
-        /// </exception>
-        public bool ReadBit()
-        {
-            if (IsBufferFull())
-            {
-                throw new InvalidOperationException("Unable to read bit. The buffer is currently positioned at the end of the internal byte array.");
-            }
 
-            int bit = (_byteArray[_positionByte] >> (7 - _positionBit)) & 1;
-
-            AdvanceBit();
-
-            return bit == 1;
-        }
-        
-        /// <summary>
-        ///     Reads a byte from the internal storage.
-        /// </summary>
-        /// <returns>
-        ///     The next byte from the internal storage.
-        /// </returns>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown when the internal storage has less than one byte remaining.
-        /// </exception>
-        public byte ReadByte()
-        {
-            byte byteToAdd = 0;
-
-            for (int j = 7; j >= 0; j--)
-            {
-                bool bit = ReadBit();
-                
-                byteToAdd |= (byte)(bit ? (1 << j) : 0); 
-            }
-
-            return byteToAdd;
-        }
-        
-        /// <summary>
-        ///     Reads multiple bytes from the internal storage.
-        /// </summary>
-        /// <param name="size">
-        ///     The number of bytes to read from the internal storage.
-        /// </param>
-        /// <returns>
-        ///     A byte array, with length of <paramref name="size"/>, with data from the internal storage.
-        /// </returns>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
-        /// </exception>
-        public byte[] ReadBytes(int size)
-        {
-            byte[] valueBytes = new byte[size];
-            
-            for (int i = 0; i < size; i++)
-            {
-                valueBytes[i] = ReadByte();
-            }
-
-            return valueBytes;
-        }
-
-        /// <summary>
-        ///     Generates a copy of the internal storage, as a byte array, containing
-        ///     the data that has been written to the buffer.
-        /// </summary>
-        /// <returns>
-        ///     A byte array containing the data up to the current offset.
-        /// </returns>
+        /// <inheritdoc />
         public byte[] ToBytes()
         {
             int byteCount = _positionByte + (_positionBit == 0 ? 0 : 1);
