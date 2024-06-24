@@ -22,6 +22,8 @@ namespace Barchart.BinarySerializer.Schemas
         private int _positionByte;
         private byte _positionBit;
 
+        private const byte TRUE = 1;
+
         #endregion
 
         #region Constructor(s)
@@ -60,23 +62,25 @@ namespace Barchart.BinarySerializer.Schemas
                 throw new InvalidOperationException($"Object is larger than {_byteArray.Length} bytes.");
             }
 
-            if (IsBeginningOfNewByte())
+            if (value)
             {
-                ResetByte();
+                byte byteCurrent;
+
+                if (_positionBit == 0)
+                {
+                    byteCurrent = 0;
+                }
+                else
+                {
+                    byteCurrent = _byteArray[_positionByte];
+                }
+
+                byte byteMask = (byte)(TRUE << (7 - _positionBit));
+
+                _byteArray[_positionByte] = (byte)(byteCurrent | byteMask);
             }
 
-            byte valueToWrite = (byte)(value ? 1 : 0);
-            int bitPosition = 7 - _positionBit;
-
-            _byteArray[_positionByte] |= (byte)(valueToWrite << bitPosition);
-
-            _positionBit++;
-
-            if (_positionBit == 8)
-            {
-                _positionBit = 0;
-                _positionByte++;
-            }
+            AdvanceBit();
         }
         
         /// <summary>
@@ -132,16 +136,8 @@ namespace Barchart.BinarySerializer.Schemas
                 }
 
                 byte bit = (byte)((_byteArray[_positionByte] >> (7 - _positionBit)) & 1);
-                
-                unchecked
-                {
-                    _positionBit++;
-                }
-                
-                if (IsBeginningOfNewByte())
-                {
-                    _positionByte++;
-                }
+
+                AdvanceBit();
 
                 return bit == 1;
             }
@@ -217,19 +213,22 @@ namespace Barchart.BinarySerializer.Schemas
             return _byteArray.Take(byteCount).ToArray();
         }
 
+        private void AdvanceBit()
+        {
+            unchecked
+            {
+                _positionBit++;
+            }
+
+            if (_positionBit == 0)
+            {
+                _positionByte++;
+            }
+        }
+
         private bool IsBufferFull()
         {
             return _positionByte >= _byteArray.Length;
-        }
-
-        private bool IsBeginningOfNewByte()
-        {
-            return _positionBit == 0;
-        }
-        
-        private void ResetByte()
-        {
-            _byteArray[_positionByte] = 0;
         }
 
         #endregion
