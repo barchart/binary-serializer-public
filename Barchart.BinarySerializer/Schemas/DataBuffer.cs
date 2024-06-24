@@ -19,8 +19,8 @@ namespace Barchart.BinarySerializer.Schemas
         
         private readonly byte[] _byteArray;
         
-        private int _offset;
-        private int _offsetInLastByte;
+        private int _positionByte;
+        private int _positionBit;
 
         #endregion
 
@@ -36,8 +36,8 @@ namespace Barchart.BinarySerializer.Schemas
         {
             _byteArray = byteArray;
             
-            _offset = 0;
-            _offsetInLastByte = 0;
+            _positionByte = 0;
+            _positionBit = 0;
         }
         
         #endregion
@@ -66,16 +66,16 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             byte valueToWrite = (byte)(value ? 1 : 0);
-            int bitPosition = 7 - _offsetInLastByte;
+            int bitPosition = 7 - _positionBit;
 
-            _byteArray[_offset] |= (byte)(valueToWrite << bitPosition);
+            _byteArray[_positionByte] |= (byte)(valueToWrite << bitPosition);
 
-            _offsetInLastByte++;
+            _positionBit++;
 
-            if (_offsetInLastByte == 8)
+            if (_positionBit == 8)
             {
-                _offsetInLastByte = 0;
-                _offset++;
+                _positionBit = 0;
+                _positionByte++;
             }
         }
         
@@ -131,24 +131,24 @@ namespace Barchart.BinarySerializer.Schemas
                     throw new InvalidOperationException("Attempt to read beyond the end of the buffer.");
                 }
 
-                byte bit = (byte)((_byteArray[_offset] >> (7 - _offsetInLastByte)) & 1);
-                _offsetInLastByte = (_offsetInLastByte + 1) % 8;
+                byte bit = (byte)((_byteArray[_positionByte] >> (7 - _positionBit)) & 1);
+                _positionBit = (_positionBit + 1) % 8;
 
                 if (IsBeginningOfNewByte())
                 {
-                    _offset++;
+                    _positionByte++;
                 }
 
                 return bit == 1;
             }
             catch (InvalidOperationException ex)
             {
-                LoggerWrapper.LogError($"Buffer read error at offset {_offset}, bit {_offsetInLastByte}: {ex.Message}");
+                LoggerWrapper.LogError($"Buffer read error at offset {_positionByte}, bit {_positionBit}: {ex.Message}");
                 throw;
             }
             catch (Exception ex)
             {
-                LoggerWrapper.LogError($"Unexpected error while reading bit at offset {_offset}, bit {_offsetInLastByte}: {ex.Message}");
+                LoggerWrapper.LogError($"Unexpected error while reading bit at offset {_positionByte}, bit {_positionBit}: {ex.Message}");
                 throw;
             }
         }
@@ -201,7 +201,7 @@ namespace Barchart.BinarySerializer.Schemas
         
         public void ResetByte()
         {
-            _byteArray[_offset] = 0;
+            _byteArray[_positionByte] = 0;
         }
 
         /// <summary>
@@ -213,19 +213,19 @@ namespace Barchart.BinarySerializer.Schemas
         /// </returns>
         public byte[] ToBytes()
         {
-            int byteCount = _offset + (_offsetInLastByte == 0 ? 0 : 1);
+            int byteCount = _positionByte + (_positionBit == 0 ? 0 : 1);
             
             return _byteArray.Take(byteCount).ToArray();
         }
 
         private bool IsBufferFull()
         {
-            return _offset >= _byteArray.Length;
+            return _positionByte >= _byteArray.Length;
         }
 
         private bool IsBeginningOfNewByte()
         {
-            return _offsetInLastByte == 0;
+            return _positionBit == 0;
         }
 
         #endregion
