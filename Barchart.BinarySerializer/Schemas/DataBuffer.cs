@@ -20,7 +20,7 @@ namespace Barchart.BinarySerializer.Schemas
         private readonly byte[] _byteArray;
         
         private int _positionByte;
-        private int _positionBit;
+        private byte _positionBit;
 
         #endregion
 
@@ -132,8 +132,12 @@ namespace Barchart.BinarySerializer.Schemas
                 }
 
                 byte bit = (byte)((_byteArray[_positionByte] >> (7 - _positionBit)) & 1);
-                _positionBit = (_positionBit + 1) % 8;
-
+                
+                unchecked
+                {
+                    _positionBit++;
+                }
+                
                 if (IsBeginningOfNewByte())
                 {
                     _positionByte++;
