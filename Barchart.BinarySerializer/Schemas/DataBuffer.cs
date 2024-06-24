@@ -7,7 +7,7 @@ using Barchart.BinarySerializer.Logging;
 namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    ///     A wrapper around a byte array with convenience reading and writing to the buffer.
+    ///     A utility for writing (and reading) binary data to (and from) a byte array.
     /// </summary>
     public class DataBuffer
     {
@@ -30,7 +30,7 @@ namespace Barchart.BinarySerializer.Schemas
         ///     Instantiates the class using an external buffer.
         /// </summary>
         /// <param name="byteArray">
-        ///     The data storage mechanism for the buffer. Write operations will mutate this array.
+        ///     The internal storage mechanism for the class. Write operations will mutate this array.
         /// </param>
         public DataBuffer(byte[] byteArray)
         {
@@ -45,10 +45,14 @@ namespace Barchart.BinarySerializer.Schemas
         #region Methods
 
         /// <summary>
-        ///     Writes a single bit to the buffer.
+        ///     Writes a single bit to the internal storage.
         /// </summary>
-        /// <param name="data">Boolean value representing the bit to write (true for 1, false for 0).</param>
-        /// <exception cref="Exception">Thrown if the buffer is full.</exception>
+        /// <param name="value">
+        ///     Value of the bit to write.
+        /// </param>
+        /// <exception cref="Exception">
+        ///     Thrown when internal storage is already full.
+        /// </exception>
         public virtual void WriteBit(bool value)
         {
             if (IsBufferFull())
@@ -76,8 +80,14 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <summary>
-        ///     Writes a byte to the buffer.
+        ///     Writes a byte to the internal storage.
         /// </summary>
+        /// <param name="value">
+        ///     Value of the byte to write.
+        /// </param>
+        /// <exception cref="Exception">
+        ///     Thrown when remaining internal storage is less than one byte.
+        /// </exception>
         public void WriteByte(byte value)
         {
             for (int j = 7; j >= 0; j--)
@@ -87,9 +97,14 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <summary>
-        ///     Writes an array of bytes to the provided DataBuffer.
+        ///     Writes an array of bytes to the internal storage.
         /// </summary>
-        /// <param name="value">The array of bytes to write.</param>
+        /// <param name="value">
+        ///     Value of the bytes to write.
+        /// </param>
+        /// <exception cref="Exception">
+        ///     Thrown when remaining internal storage is than the number of bytes to write.
+        /// </exception>
         public virtual void WriteBytes(byte[] value)
         {
             for (int i = 0; i < value.Length; i++)
@@ -97,11 +112,7 @@ namespace Barchart.BinarySerializer.Schemas
                 WriteByte(value[i]);
             }
         }
-
-        /// <summary>
-        ///     Writes the length of a value to the provided DataBuffer.
-        /// </summary>
-        /// <param name="length">The length of the value.</param>
+        
         public void WriteLength(int length)
         {
             byte[] lengthBytes = BitConverter.GetBytes(length);
@@ -113,8 +124,14 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <summary>
-        ///     Reads a single bit from the buffer.
+        ///     Reads a single bit from the internal storage.
         /// </summary>
+        /// <returns>
+        ///     The next bit from the internal storage.
+        /// </returns>
+        /// <exception cref="Exception">
+        ///     Thrown when the internal storage has been read completely.
+        /// </exception>
         public bool ReadBit()
         {
             try
@@ -147,8 +164,14 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <summary>
-        ///     Reads a byte from the buffer.
+        ///     Reads a byte from the internal storage.
         /// </summary>
+        /// <returns>
+        ///     The next byte from the internal storage.
+        /// </returns>
+        /// <exception cref="Exception">
+        ///     Thrown when the internal storage has less than one byte remaining.
+        /// </exception>
         public byte ReadByte()
         {
             byte byteToAdd = 0;
@@ -163,10 +186,17 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <summary>
-        ///     Reads an array of bytes from the provided DataBuffer.
+        ///     Reads multiple bytes from the internal storage.
         /// </summary>
-        /// <param name="size">The number of bytes to read.</param>
-        /// <returns>The read array of bytes.</returns>
+        /// <param name="size">
+        ///     The number of bytes to read from the internal storage.
+        /// </param>
+        /// <returns>
+        ///     A byte array, with length of <paramref name="size"/>, with data from the internal storage.
+        /// </returns>
+        /// <exception cref="Exception">
+        ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
+        /// </exception>
         public byte[] ReadBytes(int size)
         {
             byte[] valueBytes = new byte[size];
@@ -178,11 +208,7 @@ namespace Barchart.BinarySerializer.Schemas
 
             return valueBytes;
         }
-
-        /// <summary>
-        ///     Reads the length of a value from the provided DataBuffer.
-        /// </summary>
-        /// <returns>The length of the value.</returns>
+        
         public int ReadLength()
         {
             byte[] lengthBytes = new byte[sizeof(int)];
@@ -195,19 +221,18 @@ namespace Barchart.BinarySerializer.Schemas
             return BitConverter.ToInt32(lengthBytes, 0);
         }
         
-        /// <summary>
-        ///     Resets the current byte index to zero.
-        /// </summary>
         public void ResetByte()
         {
             _byteArray[_offset] = 0;
         }
 
         /// <summary>
-        ///     Generates a copy of the buffer, as a byte array, from from the
-        ///     start of the array to the current position.
+        ///     Generates a copy of the internal storage, as a byte array, containing
+        ///     the data that has been written to the buffer.
         /// </summary>
-        /// <returns>A byte array containing the data up to the current offset.</returns>
+        /// <returns>
+        ///     A byte array containing the data up to the current offset.
+        /// </returns>
         public byte[] ToBytes()
         {
             int byteCount = _offset + (_offsetInLastByte == 0 ? 0 : 1);
