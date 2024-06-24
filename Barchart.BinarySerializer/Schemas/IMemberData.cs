@@ -1,6 +1,7 @@
 ﻿#region Using Statements
 
 using System.Reflection;
+
 using Barchart.BinarySerializer.Buffers;
 
 #endregion
