@@ -135,7 +135,7 @@ namespace Barchart.BinarySerializer.Schemas
                     throw new InvalidOperationException("Attempt to read beyond the end of the buffer.");
                 }
 
-                byte bit = (byte)((_byteArray[_positionByte] >> (7 - _positionBit)) & 1);
+                int bit = (_byteArray[_positionByte] >> (7 - _positionBit)) & 1;
 
                 AdvanceBit();
 
