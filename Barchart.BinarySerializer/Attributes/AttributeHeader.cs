@@ -7,9 +7,9 @@ using Barchart.BinarySerializer.Buffers;
 namespace Barchart.BinarySerializer.Attributes
 {
     /// <summary>
-    ///   A data structure used to store metadata regarding an attribute.
+    ///     Metadata regarding an attribute.
     /// </summary>
-    public readonly struct Header
+    public readonly struct AttributeHeader
     {
         #region Properties
         
@@ -35,16 +35,16 @@ namespace Barchart.BinarySerializer.Attributes
         /// <param name="dataBuffer">
         ///     The data buffer to write to.
         /// </param>
-        /// <param name="header">
+        /// <param name="attributeHeader">
         ///     The header to write.
         /// </param>
-        public static void WriteToBuffer(IDataBuffer dataBuffer, Header header)
+        public static void WriteToBuffer(IDataBuffer dataBuffer, AttributeHeader attributeHeader)
         {
-            dataBuffer.WriteBit(header.IsMissing);
+            dataBuffer.WriteBit(attributeHeader.IsMissing);
 
-            if (!header.IsMissing)
+            if (!attributeHeader.IsMissing)
             {
-                dataBuffer.WriteBit(header.IsNull);
+                dataBuffer.WriteBit(attributeHeader.IsNull);
             }
         }
         
@@ -57,7 +57,7 @@ namespace Barchart.BinarySerializer.Attributes
         /// <returns>
         ///     A header consisting of the next one (or two) bits from the data buffer.
         /// </returns>
-        public static Header ReadFromBuffer(IDataBuffer dataBuffer)
+        public static AttributeHeader ReadFromBuffer(IDataBuffer dataBuffer)
         {
             bool headerIsMissing = dataBuffer.ReadBit();
             bool headerIsNull = !headerIsMissing && dataBuffer.ReadBit();

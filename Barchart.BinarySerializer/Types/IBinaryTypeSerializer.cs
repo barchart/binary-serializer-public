@@ -26,8 +26,8 @@ namespace Barchart.BinarySerializer.Types
         ///     Decodes a value from the provided <see cref="DataBuffer"/>.
         /// </summary>
         /// <param name="dataBuffer">The buffer to read the encoded value from.</param>
-        /// <returns>A <see cref="HeaderWithValue{T}"/> containing the decoded value and its length in bits.</returns>
-        public HeaderWithValue<T> Decode(IDataBuffer dataBuffer);
+        /// <returns>A <see cref="AttributeValue{T}"/> containing the decoded value and its length in bits.</returns>
+        public AttributeValue<T> Decode(IDataBuffer dataBuffer);
 
         /// <summary>
         ///     Calculates the length of the specified value in bits.

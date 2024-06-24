@@ -39,21 +39,21 @@ namespace Barchart.BinarySerializer.Types
             }
             else
             {
-                Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = true });
+                AttributeHeader.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = true });
             }
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<T?> Decode(IDataBuffer dataBuffer)
+        public AttributeValue<T?> Decode(IDataBuffer dataBuffer)
         {
-            HeaderWithValue<T> headerWithValue = _serializer.Decode(dataBuffer);
+            AttributeValue<T> attributeValue = _serializer.Decode(dataBuffer);
 
-            if (headerWithValue.Header.IsValueMissingOrNull()) 
+            if (attributeValue.AttributeHeader.IsValueMissingOrNull()) 
             {
-                return new HeaderWithValue<T?>(headerWithValue.Header, null);
+                return new AttributeValue<T?>(attributeValue.AttributeHeader, null);
             }
 
-            return new HeaderWithValue<T?>(headerWithValue.Header, headerWithValue.Value);
+            return new AttributeValue<T?>(attributeValue.AttributeHeader, attributeValue.Value);
         }
 
         /// <inheritdoc />

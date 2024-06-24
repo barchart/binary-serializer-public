@@ -4,11 +4,11 @@
     ///     Stores header byte in a specified format based on missing/null bits and string length bits and the value of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The type of the value stored alongside the header.</typeparam>
-    public readonly struct HeaderWithValue<T>
+    public readonly struct AttributeValue<T>
     {
         #region Properties
 
-        public Header Header { get; }
+        public AttributeHeader AttributeHeader { get; }
 
         public T? Value { get; }
 
@@ -16,9 +16,9 @@
         
         #region Constructor(s)
 
-        public HeaderWithValue(Header header, T? value)
+        public AttributeValue(AttributeHeader attributeHeader, T? value)
         {
-            Header = header;
+            AttributeHeader = attributeHeader;
             Value = value;
         }
 

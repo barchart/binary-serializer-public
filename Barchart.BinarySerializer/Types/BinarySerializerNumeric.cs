@@ -24,19 +24,19 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBuffer dataBuffer, T value)
         {
-            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = false });
+            AttributeHeader.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = false });
 
             EncodeValue(dataBuffer, value);
         }
 
         /// <inheritdoc />
-        public HeaderWithValue<T> Decode(IDataBuffer dataBuffer)
+        public AttributeValue<T> Decode(IDataBuffer dataBuffer)
         {
-            Header header = Header.ReadFromBuffer(dataBuffer);
+            AttributeHeader attributeHeader = AttributeHeader.ReadFromBuffer(dataBuffer);
 
-            if (header.IsValueMissingOrNull())
+            if (attributeHeader.IsValueMissingOrNull())
             {
-                return new HeaderWithValue<T>(header, default);
+                return new AttributeValue<T>(attributeHeader, default);
             }
 
             T decodedValue;
@@ -52,7 +52,7 @@ namespace Barchart.BinarySerializer.Types
             }
 
 
-            return new HeaderWithValue<T>(header, decodedValue);
+            return new AttributeValue<T>(attributeHeader, decodedValue);
         }
 
         /// <inheritdoc />

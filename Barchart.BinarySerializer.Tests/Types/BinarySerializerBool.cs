@@ -78,26 +78,26 @@ namespace Barchart.BinarySerializer.Tests.Types
         public void Decode_DataBufferWithSerializedtrueValue_ReturnsHeaderWithDecodedValue()
         {
             var byteArray = BitsToBytes(new bool[] { false, false, true }) ;
-            var header = new Header() { IsMissing = false, IsNull = false };
+            var header = new AttributeHeader() { IsMissing = false, IsNull = false };
             var dataBuffer = new DataBuffer(byteArray);
             
-            HeaderWithValue<bool> headerWithValue = _serializer.Decode(dataBuffer);
+            AttributeValue<bool> attributeValue = _serializer.Decode(dataBuffer);
             
-            Assert.Equal(header, headerWithValue.Header);
-            Assert.True(headerWithValue.Value);
+            Assert.Equal(header, attributeValue.AttributeHeader);
+            Assert.True(attributeValue.Value);
         }
         
         [Fact]
         public void Decode_DataBufferWithSerializedFalseValue_ReturnsHeaderWithDecodedValue()
         {
             var byteArray = BitsToBytes(new bool[] { false, false, false }) ;
-            var header = new Header() { IsMissing = false, IsNull = false };
+            var header = new AttributeHeader() { IsMissing = false, IsNull = false };
             var dataBuffer = new DataBuffer(byteArray);
 
-            HeaderWithValue<bool> headerWithValue = _serializer.Decode(dataBuffer);
+            AttributeValue<bool> attributeValue = _serializer.Decode(dataBuffer);
 
-            Assert.Equal(header, headerWithValue.Header);
-            Assert.False(headerWithValue.Value);
+            Assert.Equal(header, attributeValue.AttributeHeader);
+            Assert.False(attributeValue.Value);
         }
 
         private static byte[] BitsToBytes(bool[] bits)

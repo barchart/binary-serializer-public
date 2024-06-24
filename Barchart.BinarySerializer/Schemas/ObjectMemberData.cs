@@ -47,25 +47,25 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public override void Decode(TContainer existing, IDataBuffer buffer)
         {
-            HeaderWithValue<T> headerWithValue;
+            AttributeValue<T> attributeValue;
 
             T currentObject = GetDelegate(existing);
 
             if (currentObject == null)
             {
-                headerWithValue = ((IBinaryTypeObjectSerializer<T>)BinarySerializer).Decode(buffer);
+                attributeValue = ((IBinaryTypeObjectSerializer<T>)BinarySerializer).Decode(buffer);
             }
             else
             {
-                headerWithValue = ((IBinaryTypeObjectSerializer<T>)BinarySerializer).Decode(buffer, currentObject);
+                attributeValue = ((IBinaryTypeObjectSerializer<T>)BinarySerializer).Decode(buffer, currentObject);
             }
 
-            if (headerWithValue.Header.IsMissing)
+            if (attributeValue.AttributeHeader.IsMissing)
             {
                 return;
             }
 
-            if (headerWithValue.Value != null) SetDelegate?.Invoke(existing, headerWithValue.Value);
+            if (attributeValue.Value != null) SetDelegate?.Invoke(existing, attributeValue.Value);
         }
 
         /// <inheritdoc />
