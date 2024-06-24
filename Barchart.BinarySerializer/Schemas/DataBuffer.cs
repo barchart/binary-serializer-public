@@ -27,7 +27,7 @@ namespace Barchart.BinarySerializer.Schemas
         #region Constructor(s)
 
         /// <summary>
-        ///     Instantiates the class using an external buffer.
+        ///     Creates a new <see cref="DataBuffer"/> instance.
         /// </summary>
         /// <param name="byteArray">
         ///     The internal storage mechanism for the class. Write operations will mutate this array.
