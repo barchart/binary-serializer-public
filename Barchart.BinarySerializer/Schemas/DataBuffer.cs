@@ -156,6 +156,7 @@ namespace Barchart.BinarySerializer.Schemas
             for (int j = 7; j >= 0; j--)
             {
                 bool bit = ReadBit();
+                
                 byteToAdd |= (byte)(bit ? (1 << j) : 0); 
             }
 
