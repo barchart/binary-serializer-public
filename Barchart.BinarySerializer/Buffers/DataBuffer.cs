@@ -68,8 +68,6 @@
                 {
                     value = (byte)(value | TRUE << j);
                 }
-                
-                value |= (byte)(bit ? (1 << j) : 0); 
             }
 
             return value;
