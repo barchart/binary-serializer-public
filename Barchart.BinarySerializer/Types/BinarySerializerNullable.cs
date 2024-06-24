@@ -48,12 +48,12 @@ namespace Barchart.BinarySerializer.Types
         {
             AttributeValue<T> attributeValue = _serializer.Decode(dataBuffer);
 
-            if (attributeValue.AttributeHeader.IsValueMissingOrNull()) 
+            if (attributeValue.Header.IsValueMissingOrNull()) 
             {
-                return new AttributeValue<T?>(attributeValue.AttributeHeader, null);
+                return new AttributeValue<T?>(attributeValue.Header, null);
             }
 
-            return new AttributeValue<T?>(attributeValue.AttributeHeader, attributeValue.Value);
+            return new AttributeValue<T?>(attributeValue.Header, attributeValue.Value);
         }
 
         /// <inheritdoc />

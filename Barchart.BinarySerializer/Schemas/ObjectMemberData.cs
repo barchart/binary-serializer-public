@@ -60,7 +60,7 @@ namespace Barchart.BinarySerializer.Schemas
                 attributeValue = ((IBinaryTypeObjectSerializer<T>)BinarySerializer).Decode(buffer, currentObject);
             }
 
-            if (attributeValue.AttributeHeader.IsMissing)
+            if (attributeValue.Header.IsMissing)
             {
                 return;
             }

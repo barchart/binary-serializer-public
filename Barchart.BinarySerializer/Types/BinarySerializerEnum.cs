@@ -43,7 +43,7 @@ namespace Barchart.BinarySerializer.Types
             AttributeValue<int> attributeValue = _serializer.Decode(dataBuffer);
             int value = attributeValue.Value;
 
-            return new AttributeValue<T>(attributeValue.AttributeHeader, (T?)Enum.Parse(typeof(T), value.ToString(), true));
+            return new AttributeValue<T>(attributeValue.Header, (T?)Enum.Parse(typeof(T), value.ToString(), true));
         }
 
         /// <inheritdoc />

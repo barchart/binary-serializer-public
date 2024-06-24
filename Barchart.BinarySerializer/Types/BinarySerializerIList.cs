@@ -139,7 +139,7 @@ namespace Barchart.BinarySerializer.Types
             {
                 var headerWithValue = _serializer.Decode(dataBuffer);
                 var value = headerWithValue.Value;
-                var header = headerWithValue.AttributeHeader;
+                var header = headerWithValue.Header;
 
                 if (!header.IsMissing && value != null)
                 {

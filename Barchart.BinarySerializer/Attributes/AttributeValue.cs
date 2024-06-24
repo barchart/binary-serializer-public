@@ -8,7 +8,7 @@
     {
         #region Properties
 
-        public AttributeHeader AttributeHeader { get; }
+        public AttributeHeader Header { get; }
 
         public T? Value { get; }
 
@@ -16,9 +16,9 @@
         
         #region Constructor(s)
 
-        public AttributeValue(AttributeHeader attributeHeader, T? value)
+        public AttributeValue(AttributeHeader header, T? value)
         {
-            AttributeHeader = attributeHeader;
+            Header = header;
             Value = value;
         }
 

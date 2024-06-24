@@ -88,7 +88,7 @@ namespace Barchart.BinarySerializer.Schemas
             AttributeValue<T> attributeValue;
             attributeValue = BinarySerializer.Decode(dataBuffer);
            
-            if (attributeValue.AttributeHeader.IsMissing)
+            if (attributeValue.Header.IsMissing)
             {
                 return;
             }

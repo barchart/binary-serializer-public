@@ -83,7 +83,7 @@ namespace Barchart.BinarySerializer.Tests.Types
             
             AttributeValue<bool> attributeValue = _serializer.Decode(dataBuffer);
             
-            Assert.Equal(header, attributeValue.AttributeHeader);
+            Assert.Equal(header, attributeValue.Header);
             Assert.True(attributeValue.Value);
         }
         
@@ -96,7 +96,7 @@ namespace Barchart.BinarySerializer.Tests.Types
 
             AttributeValue<bool> attributeValue = _serializer.Decode(dataBuffer);
 
-            Assert.Equal(header, attributeValue.AttributeHeader);
+            Assert.Equal(header, attributeValue.Header);
             Assert.False(attributeValue.Value);
         }
 
