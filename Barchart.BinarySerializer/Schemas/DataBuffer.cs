@@ -47,9 +47,9 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         ///     Writes a single bit to the buffer.
         /// </summary>
-        /// <param name="bit">Boolean value representing the bit to write (true for 1, false for 0).</param>
+        /// <param name="data">Boolean value representing the bit to write (true for 1, false for 0).</param>
         /// <exception cref="Exception">Thrown if the buffer is full.</exception>
-        public virtual void WriteBit(bool bit)
+        public virtual void WriteBit(bool value)
         {
             if (IsBufferFull())
             {
@@ -61,7 +61,7 @@ namespace Barchart.BinarySerializer.Schemas
                 ResetByte();
             }
 
-            byte valueToWrite = (byte)(bit ? 1 : 0);
+            byte valueToWrite = (byte)(value ? 1 : 0);
             int bitPosition = 7 - _offsetInLastByte;
 
             _byteArray[_offset] |= (byte)(valueToWrite << bitPosition);
@@ -78,23 +78,23 @@ namespace Barchart.BinarySerializer.Schemas
         /// <summary>
         ///     Writes a byte to the buffer.
         /// </summary>
-        public void WriteByte(byte valueByte)
+        public void WriteByte(byte value)
         {
             for (int j = 7; j >= 0; j--)
             {
-                WriteBit(((valueByte >> j) & 1) == 1);
+                WriteBit(((value >> j) & 1) == 1);
             }
         }
         
         /// <summary>
         ///     Writes an array of bytes to the provided DataBuffer.
         /// </summary>
-        /// <param name="valueBytes">The array of bytes to write.</param>
-        public virtual void WriteBytes(byte[] valueBytes)
+        /// <param name="value">The array of bytes to write.</param>
+        public virtual void WriteBytes(byte[] value)
         {
-            for (int i = 0; i < valueBytes.Length; i++)
+            for (int i = 0; i < value.Length; i++)
             {
-                WriteByte(valueBytes[i]);
+                WriteByte(value[i]);
             }
         }
 
