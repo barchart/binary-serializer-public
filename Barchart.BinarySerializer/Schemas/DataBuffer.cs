@@ -51,7 +51,7 @@ namespace Barchart.BinarySerializer.Schemas
         ///     Value of the bit to write.
         /// </param>
         /// <exception cref="InvalidOperationException">
-        ///     Thrown when internal storage is already full.
+        ///     Thrown when internal storage is full.
         /// </exception>
         public virtual void WriteBit(bool value)
         {
