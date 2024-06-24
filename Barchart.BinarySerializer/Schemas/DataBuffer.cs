@@ -128,29 +128,16 @@ namespace Barchart.BinarySerializer.Schemas
         /// </exception>
         public bool ReadBit()
         {
-            try
+            if (IsBufferFull())
             {
-                if (IsBufferFull())
-                {
-                    throw new InvalidOperationException("Attempt to read beyond the end of the buffer.");
-                }
-
-                int bit = (_byteArray[_positionByte] >> (7 - _positionBit)) & 1;
-
-                AdvanceBit();
-
-                return bit == 1;
+                throw new InvalidOperationException("Attempt to read beyond the end of the buffer.");
             }
-            catch (InvalidOperationException ex)
-            {
-                LoggerWrapper.LogError($"Buffer read error at offset {_positionByte}, bit {_positionBit}: {ex.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                LoggerWrapper.LogError($"Unexpected error while reading bit at offset {_positionByte}, bit {_positionBit}: {ex.Message}");
-                throw;
-            }
+
+            int bit = (_byteArray[_positionByte] >> (7 - _positionBit)) & 1;
+
+            AdvanceBit();
+
+            return bit == 1;
         }
         
         /// <summary>
