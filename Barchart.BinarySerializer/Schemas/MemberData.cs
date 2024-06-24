@@ -1,8 +1,8 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Types;
 using System.Reflection;
+using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
 
 #endregion

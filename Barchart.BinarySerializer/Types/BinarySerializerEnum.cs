@@ -1,5 +1,5 @@
-﻿using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Headers;
+﻿using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Types
 {

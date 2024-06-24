@@ -4,7 +4,7 @@ using Barchart.BinarySerializer.Buffers;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Headers
+namespace Barchart.BinarySerializer.Attributes
 {
     /// <summary>
     ///   A data structure used to store metadata regarding an attribute.
