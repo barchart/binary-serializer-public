@@ -50,14 +50,14 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="value">
         ///     Value of the bit to write.
         /// </param>
-        /// <exception cref="Exception">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown when internal storage is already full.
         /// </exception>
         public virtual void WriteBit(bool value)
         {
             if (IsBufferFull())
             {
-                throw new Exception($"Object is larger than {_byteArray.Length} bytes.");
+                throw new InvalidOperationException($"Object is larger than {_byteArray.Length} bytes.");
             }
 
             if (IsBeginningOfNewByte())
@@ -85,7 +85,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="value">
         ///     Value of the byte to write.
         /// </param>
-        /// <exception cref="Exception">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown when remaining internal storage is less than one byte.
         /// </exception>
         public void WriteByte(byte value)
@@ -102,7 +102,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <param name="value">
         ///     Value of the bytes to write.
         /// </param>
-        /// <exception cref="Exception">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown when remaining internal storage is than the number of bytes to write.
         /// </exception>
         public virtual void WriteBytes(byte[] value)
@@ -119,7 +119,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>
         ///     The next bit from the internal storage.
         /// </returns>
-        /// <exception cref="Exception">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown when the internal storage has been read completely.
         /// </exception>
         public bool ReadBit()
@@ -159,7 +159,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>
         ///     The next byte from the internal storage.
         /// </returns>
-        /// <exception cref="Exception">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown when the internal storage has less than one byte remaining.
         /// </exception>
         public byte ReadByte()
@@ -184,7 +184,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <returns>
         ///     A byte array, with length of <paramref name="size"/>, with data from the internal storage.
         /// </returns>
-        /// <exception cref="Exception">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
         /// </exception>
         public byte[] ReadBytes(int size)
