@@ -26,7 +26,7 @@ namespace Barchart.BinarySerializer.Types
             {
                 byte[] valueBytes = Encoding.UTF8.GetBytes(value);
 
-                dataBuffer.WriteLength(valueBytes.Length);
+                dataBuffer.WriteBytes(BitConverter.GetBytes(valueBytes.Length));
                 dataBuffer.WriteBytes(valueBytes);
             }
         }
@@ -40,8 +40,8 @@ namespace Barchart.BinarySerializer.Types
             {
                 return new HeaderWithValue<string?>(header, default);
             }
-
-            int size = dataBuffer.ReadLength();
+            
+            int size = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
 
             byte[] valueBytes = dataBuffer.ReadBytes(size);
             string decodedString = Encoding.UTF8.GetString(valueBytes);

@@ -113,16 +113,6 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
         
-        public void WriteLength(int length)
-        {
-            byte[] lengthBytes = BitConverter.GetBytes(length);
-
-            for (int i = 0; i < lengthBytes.Length; i++)
-            {
-                WriteByte(lengthBytes[i]);
-            }
-        }
-        
         /// <summary>
         ///     Reads a single bit from the internal storage.
         /// </summary>
@@ -207,18 +197,6 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             return valueBytes;
-        }
-        
-        public int ReadLength()
-        {
-            byte[] lengthBytes = new byte[sizeof(int)];
-
-            for (int i = 0; i < lengthBytes.Length; i++)
-            {
-                lengthBytes[i] = ReadByte();
-            }
-
-            return BitConverter.ToInt32(lengthBytes, 0);
         }
         
         public void ResetByte()

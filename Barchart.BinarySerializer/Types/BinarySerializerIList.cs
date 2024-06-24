@@ -41,7 +41,8 @@ namespace Barchart.BinarySerializer.Types
             if (value != null)
             {
                 int length = value.Count;
-                dataBuffer.WriteLength(length);
+                
+                dataBuffer.WriteBytes(BitConverter.GetBytes(length));
 
                 foreach (var item in value)
                 {
@@ -60,7 +61,8 @@ namespace Barchart.BinarySerializer.Types
             if (newValue != null)
             {
                 int length = newValue.Count;
-                dataBuffer.WriteLength(length);
+                
+                dataBuffer.WriteBytes(BitConverter.GetBytes(length));
 
                 for (int i = 0; i < newValue.Count; i++)
                 {
@@ -86,7 +88,8 @@ namespace Barchart.BinarySerializer.Types
                 return new HeaderWithValue<TContainer?>(header, default);
             }
 
-            int length = dataBuffer.ReadLength();
+            int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
+            
             TContainer list = ReadList(dataBuffer, length, existing);
 
             return new HeaderWithValue<TContainer?>(header, list);
@@ -102,7 +105,8 @@ namespace Barchart.BinarySerializer.Types
                 return new HeaderWithValue<TContainer?>(header, default);
             }
 
-            int length = dataBuffer.ReadLength();
+            int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
+            
             TContainer list = ReadList(dataBuffer, length, default);
 
             return new HeaderWithValue<TContainer?>(header, list);
