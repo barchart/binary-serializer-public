@@ -104,7 +104,8 @@ public class DataBufferTests
     }
 
     [Fact]
-    public void ToBytes_WhenOneByteIsWritten_ReturnsOneByteArray(){
+    public void ToBytes_WhenOneByteIsWritten_ReturnsOneByteArray()
+    {
         var byteArray = new byte[2];
         var dataBuffer = new DataBuffer(byteArray);
         
@@ -119,7 +120,8 @@ public class DataBufferTests
     }
     
     [Fact]
-    public void ToBytes_WhenTwelveBitsAreWritten_ReturnsTwoBytesArray(){
+    public void ToBytes_WhenTwelveBitsAreWritten_ReturnsTwoBytesArray()
+    {
         var byteArray = new byte[2];
         var dataBuffer = new DataBuffer(byteArray);
         
@@ -134,7 +136,8 @@ public class DataBufferTests
     }
 
     [Fact]
-    public void ToBytes_WhenTwoBytesAreWritten_ReturnsTwoBytesArray(){
+    public void ToBytes_WhenTwoBytesAreWritten_ReturnsTwoBytesArray()
+    {
         var byteArray = new byte[2];
         var dataBuffer = new DataBuffer(byteArray);
         
