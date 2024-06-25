@@ -145,7 +145,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public int GetLengthInBytes(TContainer? schemaObject)
+        public int GetLengthInBytes(TContainer schemaObject)
         {
             if (schemaObject == null)
             {
@@ -156,7 +156,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public int GetLengthInBytes(TContainer? oldObject, TContainer? newObject)
+        public int GetLengthInBytes(TContainer oldObject, TContainer newObject)
         {
             if (oldObject == null && newObject == null)
             {
@@ -177,7 +177,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public int GetLengthInBits(TContainer? schemaObject)
+        public int GetLengthInBits(TContainer schemaObject)
         {
             if (schemaObject == null)
             {
@@ -195,7 +195,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public int GetLengthInBits(TContainer? oldObject, TContainer? newObject)
+        public int GetLengthInBits(TContainer oldObject, TContainer newObject)
         {
             if (oldObject == null && newObject == null)
             {
@@ -223,7 +223,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public bool CompareObjects(TContainer? firstObject, TContainer? secondObject)
+        public bool CompareObjects(TContainer firstObject, TContainer secondObject)
         {
             if (ReferenceEquals(firstObject, secondObject))
             {
@@ -244,7 +244,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public void CompareAndUpdateObject(TContainer? objectToUpdate, TContainer? newObject)
+        public void CompareAndUpdateObject(TContainer objectToUpdate, TContainer newObject)
         {
             if (objectToUpdate == null || newObject == null)
             {
@@ -296,39 +296,39 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        int ISchema.GetLengthInBytes(object? schemaObject)
+        int ISchema.GetLengthInBytes(object schemaObject)
         {
-            return GetLengthInBytes((TContainer?)schemaObject);
+            return GetLengthInBytes((TContainer)schemaObject);
         }
 
         /// <inheritdoc />
-        int ISchema.GetLengthInBytes(object? oldObject, object? newObject)
+        int ISchema.GetLengthInBytes(object oldObject, object newObject)
         {
-            return GetLengthInBytes((TContainer?)oldObject, (TContainer?)newObject);
+            return GetLengthInBytes((TContainer)oldObject, (TContainer)newObject);
         }
 
         /// <inheritdoc />
-        int ISchema.GetLengthInBits(object? schemaObject)
+        int ISchema.GetLengthInBits(object schemaObject)
         {
-            return GetLengthInBits((TContainer?)schemaObject);
+            return GetLengthInBits((TContainer)schemaObject);
         }
 
         /// <inheritdoc />
-        int ISchema.GetLengthInBits(object? oldObject, object? newObject)
+        int ISchema.GetLengthInBits(object oldObject, object newObject)
         {
             return GetLengthInBits((TContainer?)oldObject, (TContainer?)newObject);
         }
 
         /// <inheritdoc />
-        bool ISchema.CompareObjects(object? firstObject, object? secondObject)
+        bool ISchema.CompareObjects(object firstObject, object secondObject)
         {
-            return CompareObjects((TContainer?)firstObject, (TContainer?)secondObject);
+            return CompareObjects((TContainer)firstObject, (TContainer)secondObject);
         }
 
         /// <inheritdoc />
-        void ISchema.CompareAndUpdateObject(object? objectToUpdate, object? newObject)
+        void ISchema.CompareAndUpdateObject(object objectToUpdate, object newObject)
         {
-            CompareAndUpdateObject((TContainer?)objectToUpdate, (TContainer?)newObject);
+            CompareAndUpdateObject((TContainer)objectToUpdate, (TContainer)newObject);
         }
 
         #endregion

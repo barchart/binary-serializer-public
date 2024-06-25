@@ -59,7 +59,7 @@
         /// </summary>
         /// <param name="schemaObject">The schema object to calculate the length for.</param>
         /// <returns> The total length of the binary representation of the schema object in bytes. </returns>
-        public int GetLengthInBytes(object? schemaObject);
+        public int GetLengthInBytes(object schemaObject);
 
         /// <summary>
         ///     Calculates the total length of the binary representation of the difference between the provided schema objects in bytes.
@@ -67,14 +67,14 @@
         /// <param name="oldObject">The old schema object.</param>
         /// <param name="newObject">The new schema object.</param>
         /// <returns> The total length of the binary representation of the difference between the provided schema objects in bytes. </returns>
-        public int GetLengthInBytes(object? oldObject, object? newObject);
+        public int GetLengthInBytes(object oldObject, object newObject);
 
         /// <summary>
         ///     Calculates the total length of the binary representation of the provided schema object in bits.
         /// </summary>
         /// <param name="schemaObject">The schema object to calculate the length for.</param>
         /// <returns> The total length of the binary representation of the schema object in bits. </returns>
-        public int GetLengthInBits(object? schemaObject);
+        public int GetLengthInBits(object schemaObject);
 
         /// <summary>
         ///     Calculates the total length of the binary representation of the difference between the provided schema objects in bits.
@@ -82,7 +82,7 @@
         /// <param name="oldObject">The old schema object to calculate the length for.</param>
         /// <param name="newObject">The new schema object to calculate the length for.</param>
         /// <returns> The total length of the binary representation of the difference between the provided schema objects in bits. </returns>
-        public int GetLengthInBits(object? oldObject, object? newObject);
+        public int GetLengthInBits(object oldObject, object newObject);
 
         /// <summary>
         ///     ompares two objects of type T by iterating through the list of member data.
@@ -90,14 +90,14 @@
         /// <param name="firstObject">The first object to compare.</param>
         /// <param name="secondObject">The second object to compare.</param>
         /// <returns>True if all member data of the two objects are equal; otherwise, false.</returns>
-        public bool CompareObjects(object? firstObject, object? secondObject);
+        public bool CompareObjects(object firstObject, object secondObject);
 
         /// <summary>
         ///     Compares and updates the properties of an object of type T with corresponding properties of another object.
         /// </summary>
         /// <param name="objectToUpdate">The object to update.</param>
         /// <param name="newObject">The object containing the new values.</param>
-        public void CompareAndUpdateObject(object? objectToUpdate, object? newObject);
+        public void CompareAndUpdateObject(object objectToUpdate, object newObject);
 
         #endregion
     }
