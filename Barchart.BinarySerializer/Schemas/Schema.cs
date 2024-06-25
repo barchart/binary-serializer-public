@@ -182,12 +182,7 @@ namespace Barchart.BinarySerializer.Schemas
             return lengthInBits;
         }
 
-        /// <summary>
-        ///     ompares two objects of type T by iterating through the list of member data.
-        /// </summary>
-        /// <param name="firstObject">The first object to compare.</param>
-        /// <param name="secondObject">The second object to compare.</param>
-        /// <returns>True if all member data of the two objects are equal; otherwise, false.</returns>
+        /// <inheritdoc />
         public bool CompareObjects(TContainer firstObject, TContainer secondObject)
         {
             foreach (IMemberData<TContainer> memberData in _memberDataContainer)
@@ -198,11 +193,7 @@ namespace Barchart.BinarySerializer.Schemas
             return true;
         }
 
-        /// <summary>
-        ///     Compares and updates the properties of an object of type T with corresponding properties of another object.
-        /// </summary>
-        /// <param name="objectToUpdate">The object to update.</param>
-        /// <param name="newObject">The object containing the new values.</param>
+        /// <inheritdoc />
         public void CompareAndUpdateObject(TContainer? objectToUpdate, TContainer? newObject)
         {
             if (objectToUpdate == null || newObject == null)
@@ -302,6 +293,26 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             return GetLengthInBits((TContainer)oldObject!, (TContainer)newObject!);
+        }
+
+        bool ISchema.CompareObjects(object? firstObject, object? secondObject)
+        {
+            if (firstObject == secondObject)
+            {
+                return true;
+            }
+
+            if (firstObject == null || secondObject == null)
+            {
+                return false;
+            }
+            
+            return CompareObjects((TContainer)firstObject!, (TContainer)secondObject!);
+        }
+
+        void ISchema.CompareAndUpdateObject(object? objectToUpdate, object? newObject)
+        {
+            CompareAndUpdateObject((TContainer)objectToUpdate!, (TContainer)newObject!);
         }
 
         #endregion
