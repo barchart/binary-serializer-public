@@ -82,17 +82,18 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
-        /// <inheritdoc />
         public int GetLengthInBytes(TContainer value)
         {
             return Schema.GetLengthInBytes(value);
         }
     
+        /// <inheritdoc />
         public int GetLengthInBits(TContainer? value)
         {
             return ((ISchema)Schema).GetLengthInBits(value);
         }
 
+        /// <inheritdoc />
         public int GetLengthInBits(TContainer? oldValue, TContainer? newValue)
         {
             return ((ISchema)Schema).GetLengthInBits(oldValue, newValue);
