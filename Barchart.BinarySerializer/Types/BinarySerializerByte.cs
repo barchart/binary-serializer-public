@@ -15,7 +15,7 @@ namespace Barchart.BinarySerializer.Types
         #region Constants
         
         private const int ENCODED_HEADER_LENGTH = 2;
-        private const int ENCODED_VALUE_LENGTH = sizeof(byte);
+        private const int ENCODED_VALUE_LENGTH = sizeof(byte) * 8;
         
         private const int ENCODED_LENGTH = ENCODED_HEADER_LENGTH + ENCODED_VALUE_LENGTH;
         
