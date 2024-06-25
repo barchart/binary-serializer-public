@@ -250,6 +250,7 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 return 0;
             }
+
             return GetLengthInBytes((TContainer)schemaObject);
         }
 
@@ -281,6 +282,7 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 return 0;
             }
+            
             return GetLengthInBits((TContainer)schemaObject);
         }
 
