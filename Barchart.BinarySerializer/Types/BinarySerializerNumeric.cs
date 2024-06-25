@@ -38,20 +38,10 @@ namespace Barchart.BinarySerializer.Types
             {
                 return new Attribute<T>(header, default);
             }
-
-            T decodedValue;
             
-            if (typeof(T) == typeof(bool))
-            {
-                decodedValue = (T)(object)dataBuffer.ReadBit();
-            }
-            else
-            {
-                byte[] valueBytes = dataBuffer.ReadBytes(Size);
-                decodedValue = DecodeBytes(valueBytes);
-            }
-
-
+            byte[] valueBytes = dataBuffer.ReadBytes(Size);
+            T decodedValue = DecodeBytes(valueBytes);
+                
             return new Attribute<T>(header, decodedValue);
         }
 
