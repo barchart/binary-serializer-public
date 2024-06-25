@@ -145,20 +145,45 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public int GetLengthInBytes(TContainer schemaObject)
+        public int GetLengthInBytes(TContainer? schemaObject)
         {
+            if (schemaObject == null)
+            {
+                return 0;
+            }
+
             return (int)Math.Ceiling((double)GetLengthInBits(schemaObject) / 8);
         }
 
         /// <inheritdoc />
-        public int GetLengthInBytes(TContainer oldObject, TContainer newObject)
+        public int GetLengthInBytes(TContainer? oldObject, TContainer? newObject)
         {
-            return (int)Math.Ceiling((double)GetLengthInBits(oldObject, newObject) / 8);
+            if (oldObject == null && newObject == null)
+            {
+                return 0;
+            }
+
+            if (oldObject != null && newObject == null)
+            {
+                return GetLengthInBits((TContainer)oldObject);
+            }
+
+            if (oldObject == null && newObject != null)
+            {
+                return GetLengthInBytes((TContainer)newObject);
+            }
+
+            return (int)Math.Ceiling((double)GetLengthInBits(oldObject!, newObject!) / 8);
         }
 
         /// <inheritdoc />
-        public int GetLengthInBits(TContainer schemaObject)
+        public int GetLengthInBits(TContainer? schemaObject)
         {
+            if (schemaObject == null)
+            {
+                return 0;
+            }
+
             int lengthInBits = 0;
 
             foreach (IMemberData<TContainer> memberData in _memberDataContainer)
@@ -170,21 +195,46 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public int GetLengthInBits(TContainer oldObject, TContainer newObject)
+        public int GetLengthInBits(TContainer? oldObject, TContainer? newObject)
         {
+            if (oldObject == null && newObject == null)
+            {
+                return 0;
+            }
+
+            if (oldObject != null && newObject == null)
+            {
+                return GetLengthInBits((TContainer)oldObject);
+            }
+
+            if (oldObject == null && newObject != null)
+            {
+                return GetLengthInBits((TContainer)newObject);
+            }
+
             int lengthInBits = 0;
 
             foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
-                lengthInBits += memberData.GetLengthInBits(oldObject, newObject);
+                lengthInBits += memberData.GetLengthInBits(oldObject!, newObject!);
             }
 
             return lengthInBits;
         }
 
         /// <inheritdoc />
-        public bool CompareObjects(TContainer firstObject, TContainer secondObject)
+        public bool CompareObjects(TContainer? firstObject, TContainer? secondObject)
         {
+            if (ReferenceEquals(firstObject, secondObject))
+            {
+                return true;
+            }
+
+            if (firstObject == null || secondObject == null)
+            {
+                return false;
+            }
+            
             foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
                 if (memberData.CompareObjects(firstObject, secondObject) == false) return false;
@@ -248,87 +298,37 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         int ISchema.GetLengthInBytes(object? schemaObject)
         {
-            if (schemaObject == null)
-            {
-                return 0;
-            }
-
-            return GetLengthInBytes((TContainer)schemaObject);
+            return GetLengthInBytes((TContainer?)schemaObject);
         }
 
         /// <inheritdoc />
         int ISchema.GetLengthInBytes(object? oldObject, object? newObject)
         {
-            if (oldObject == null && newObject == null)
-            {
-                return 0;
-            }
-
-            if (oldObject != null && newObject == null)
-            {
-                return GetLengthInBits((TContainer)oldObject);
-            }
-
-            if (oldObject == null && newObject != null)
-            {
-                return GetLengthInBytes((TContainer)newObject);
-            }
-
-            return GetLengthInBytes((TContainer)oldObject!, (TContainer)newObject!);
+            return GetLengthInBytes((TContainer?)oldObject, (TContainer?)newObject);
         }
 
         /// <inheritdoc />
         int ISchema.GetLengthInBits(object? schemaObject)
         {
-            if (schemaObject == null)
-            {
-                return 0;
-            }
-
-            return GetLengthInBits((TContainer)schemaObject);
+            return GetLengthInBits((TContainer?)schemaObject);
         }
 
         /// <inheritdoc />
         int ISchema.GetLengthInBits(object? oldObject, object? newObject)
         {
-            if (oldObject == null && newObject == null)
-            {
-                return 0;
-            }
-
-            if(oldObject != null && newObject == null)
-            {
-                return GetLengthInBits((TContainer)oldObject);
-            }
-
-            if (oldObject == null && newObject != null)
-            {
-                return GetLengthInBits((TContainer)newObject);
-            }
-
-            return GetLengthInBits((TContainer)oldObject!, (TContainer)newObject!);
+            return GetLengthInBits((TContainer?)oldObject, (TContainer?)newObject);
         }
 
         /// <inheritdoc />
         bool ISchema.CompareObjects(object? firstObject, object? secondObject)
         {
-            if (firstObject == secondObject)
-            {
-                return true;
-            }
-
-            if (firstObject == null || secondObject == null)
-            {
-                return false;
-            }
-            
-            return CompareObjects((TContainer)firstObject!, (TContainer)secondObject!);
+            return CompareObjects((TContainer?)firstObject, (TContainer?)secondObject);
         }
 
         /// <inheritdoc />
         void ISchema.CompareAndUpdateObject(object? objectToUpdate, object? newObject)
         {
-            CompareAndUpdateObject((TContainer)objectToUpdate!, (TContainer)newObject!);
+            CompareAndUpdateObject((TContainer?)objectToUpdate, (TContainer?)newObject);
         }
 
         #endregion
