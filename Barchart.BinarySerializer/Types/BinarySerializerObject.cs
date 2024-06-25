@@ -82,21 +82,22 @@ namespace Barchart.BinarySerializer.Types
             }
         }
 
+        /// <inheritdoc cref="GetLengthInBits(object)" path="/Schemas/ISchema"/>
         public int GetLengthInBytes(TContainer value)
         {
             return Schema.GetLengthInBytes(value);
         }
     
-        /// <inheritdoc />
+        /// <inheritdoc cref="GetLengthInBits(object)" path="/Schemas/ISchema"/>
         public int GetLengthInBits(TContainer value)
         {
-            return ((ISchema)Schema).GetLengthInBits(value);
+            return Schema.GetLengthInBits(value);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="GetLengthInBits(object, object)" path="/Schemas/ISchema"/>
         public int GetLengthInBits(TContainer oldValue, TContainer newValue)
         {
-            return ((ISchema)Schema).GetLengthInBits(oldValue, newValue);
+            return Schema.GetLengthInBits(oldValue, newValue);
         }
 
         #endregion

@@ -85,7 +85,7 @@
         public int GetLengthInBits(object oldObject, object newObject);
 
         /// <summary>
-        ///     ompares two objects of type T by iterating through the list of member data.
+        ///     Compares two objects of type T by iterating through the list of member data.
         /// </summary>
         /// <param name="firstObject">The first object to compare.</param>
         /// <param name="secondObject">The second object to compare.</param>
