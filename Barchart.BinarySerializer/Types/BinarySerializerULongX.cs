@@ -2,7 +2,7 @@
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerUlong : BinarySerializerNumeric<ulong>
+    public class BinarySerializerULong : BinarySerializerNumeric<ulong>
     {
         #region Properties
 

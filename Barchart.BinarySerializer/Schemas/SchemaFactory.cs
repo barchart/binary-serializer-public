@@ -34,9 +34,9 @@ namespace Barchart.BinarySerializer.Schemas
             BinarySerializerByte byteSerializer = new();
             BinarySerializerBool boolSerializer = new();
             BinarySerializerLong longSerializer = new();
-            BinarySerializerUshort ushortSerializer = new();
-            BinarySerializerUint uintSerializer = new();
-            BinarySerializerUlong ulongSerializer = new();
+            BinarySerializerUShort ushortSerializer = new();
+            BinarySerializerUInt uintSerializer = new();
+            BinarySerializerULong ulongSerializer = new();
             BinarySerializerFloat floatSerializer = new();
             BinarySerializerDouble doubleSerializer = new();
             BinarySerializerDecimal decimalSerializer = new();
