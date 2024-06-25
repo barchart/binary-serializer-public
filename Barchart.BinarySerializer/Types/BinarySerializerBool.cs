@@ -18,6 +18,8 @@ namespace Barchart.BinarySerializer.Types
         
         #endregion
 
+        #region Methods
+
         public void Encode(IDataBuffer dataBuffer, bool value)
         {
             Header.WriteToBuffer(dataBuffer, false, false);
@@ -34,5 +36,7 @@ namespace Barchart.BinarySerializer.Types
         {
             return ENCODED_LENGTH;
         }
+
+        #endregion
     }
 }
