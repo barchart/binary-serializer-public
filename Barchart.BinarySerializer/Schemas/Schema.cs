@@ -316,7 +316,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         int ISchema.GetLengthInBits(object oldObject, object newObject)
         {
-            return GetLengthInBits((TContainer?)oldObject, (TContainer?)newObject);
+            return GetLengthInBits((TContainer)oldObject, (TContainer)newObject);
         }
 
         /// <inheritdoc />
