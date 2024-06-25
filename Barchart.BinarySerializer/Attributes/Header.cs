@@ -76,10 +76,28 @@ namespace Barchart.BinarySerializer.Attributes
         /// </returns>
         public static Header ReadFromBuffer(IDataBuffer dataBuffer)
         {
-            bool headerIsMissing = dataBuffer.ReadBit();
-            bool headerIsNull = !headerIsMissing && dataBuffer.ReadBit();
+            ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
             
-            return new() { IsMissing = headerIsMissing, IsNull = headerIsNull };
+            return new() { IsMissing = valueIsMissing, IsNull = valueIsNull };
+        }
+
+        /// <summary>
+        ///     Reads a header from the data buffer (into out parameters)
+        /// </summary>
+        /// <param name="dataBuffer">
+        ///     The data buffer to read from.
+        /// </param>
+        /// <param name="valueIsMissing">
+        ///     Indicates if the value of the attribute is included in serialized output (either
+        ///     as a null flag in the header or as binary data following the header).
+        /// </param>
+        /// <param name="valueIsNull">
+        ///     Indicates if the value of the attribute is null.
+        /// </param>
+        public static void ReadFromBuffer(IDataBuffer dataBuffer, out bool valueIsMissing, out bool valueIsNull)
+        {
+            valueIsMissing = dataBuffer.ReadBit();
+            valueIsNull = !valueIsMissing && dataBuffer.ReadBit();
         }
         
         #endregion
