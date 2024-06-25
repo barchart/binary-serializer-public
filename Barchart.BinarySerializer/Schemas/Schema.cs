@@ -207,36 +207,43 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
+        /// <inheritdoc />
         byte[] ISchema.Serialize(object schemaObject)
         {
             return Serialize((TContainer)schemaObject);
         }
 
+        /// <inheritdoc />
         byte[] ISchema.Serialize(object schemaObject, byte[] buffer)
         {
             return Serialize((TContainer)schemaObject, buffer);
         }
 
+        /// <inheritdoc />
         byte[] ISchema.Serialize(object oldObject, object newObject)
         {
             return Serialize((TContainer)oldObject, (TContainer)newObject);
         }
 
+        /// <inheritdoc />
         byte[] ISchema.Serialize(object oldObject, object newObject, byte[] buffer)
         {
             return Serialize((TContainer)oldObject, (TContainer)newObject, buffer);
         }
 
+        /// <inheritdoc />
         object? ISchema.Deserialize(byte[] buffer)
         {
             return Deserialize(buffer);
         }
 
+        /// <inheritdoc />
         object? ISchema.Deserialize(byte[] buffer, object existing)
         {
             return Deserialize(buffer, (TContainer)existing);
         }
 
+        /// <inheritdoc />
         int ISchema.GetLengthInBytes(object? schemaObject)
         {
             if (schemaObject == null)
@@ -246,6 +253,7 @@ namespace Barchart.BinarySerializer.Schemas
             return GetLengthInBytes((TContainer)schemaObject);
         }
 
+        /// <inheritdoc />
         int ISchema.GetLengthInBytes(object? oldObject, object? newObject)
         {
             if (oldObject == null && newObject == null)
@@ -266,6 +274,7 @@ namespace Barchart.BinarySerializer.Schemas
             return GetLengthInBytes((TContainer)oldObject!, (TContainer)newObject!);
         }
 
+        /// <inheritdoc />
         int ISchema.GetLengthInBits(object? schemaObject)
         {
             if (schemaObject == null)
@@ -275,6 +284,7 @@ namespace Barchart.BinarySerializer.Schemas
             return GetLengthInBits((TContainer)schemaObject);
         }
 
+        /// <inheritdoc />
         int ISchema.GetLengthInBits(object? oldObject, object? newObject)
         {
             if (oldObject == null && newObject == null)
@@ -295,6 +305,7 @@ namespace Barchart.BinarySerializer.Schemas
             return GetLengthInBits((TContainer)oldObject!, (TContainer)newObject!);
         }
 
+        /// <inheritdoc />
         bool ISchema.CompareObjects(object? firstObject, object? secondObject)
         {
             if (firstObject == secondObject)
@@ -310,6 +321,7 @@ namespace Barchart.BinarySerializer.Schemas
             return CompareObjects((TContainer)firstObject!, (TContainer)secondObject!);
         }
 
+        /// <inheritdoc />
         void ISchema.CompareAndUpdateObject(object? objectToUpdate, object? newObject)
         {
             CompareAndUpdateObject((TContainer)objectToUpdate!, (TContainer)newObject!);
