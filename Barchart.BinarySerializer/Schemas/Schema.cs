@@ -51,13 +51,13 @@ namespace Barchart.BinarySerializer.Schemas
 
         #region Methods
 
-        /// <inheritdoc /> 
+        /// <inheritdoc cref="ISchema.Serialize(object)" />
         public byte[] Serialize(TContainer schemaObject)
         {
             return Serialize(schemaObject, Buffer);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.Serialize(object, byte[])" />
         public byte[] Serialize(TContainer schemaObject, byte[] buffer)
         {
             DataBuffer dataBuffer = new(buffer);
@@ -80,13 +80,13 @@ namespace Barchart.BinarySerializer.Schemas
             return dataBuffer.ToBytes();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.Serialize(object, object)" />
         public byte[] Serialize(TContainer oldObject, TContainer newObject)
         {
             return Serialize(oldObject, newObject, Buffer);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.Serialize(object, object, byte[])" />
         public byte[] Serialize(TContainer oldObject, TContainer newObject, byte[] buffer)
         {
             DataBuffer dataBuffer = new(buffer);
@@ -109,14 +109,14 @@ namespace Barchart.BinarySerializer.Schemas
             return dataBuffer.ToBytes();
         }
 
-        /// <inheritdoc />        
+        /// <inheritdoc cref="ISchema.Deserialize(byte[])" />        
         public TContainer Deserialize(byte[] buffer)
         {
             DataBuffer dataBuffer  = new(buffer);
             return Deserialize(dataBuffer);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.Deserialize(byte[], object)" />
         public TContainer Deserialize(byte[] buffer, TContainer existing)
         {
             DataBuffer dataBuffer = new(buffer); 
@@ -144,7 +144,7 @@ namespace Barchart.BinarySerializer.Schemas
             return existing;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.GetLengthInBytes(object)" />
         public int GetLengthInBytes(TContainer schemaObject)
         {
             if (schemaObject == null)
@@ -155,7 +155,7 @@ namespace Barchart.BinarySerializer.Schemas
             return (int)Math.Ceiling((double)GetLengthInBits(schemaObject) / 8);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.GetLengthInBytes(object, object)" />
         public int GetLengthInBytes(TContainer oldObject, TContainer newObject)
         {
             if (oldObject == null && newObject == null)
@@ -176,7 +176,7 @@ namespace Barchart.BinarySerializer.Schemas
             return (int)Math.Ceiling((double)GetLengthInBits(oldObject!, newObject!) / 8);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.GetLengthInBits(object)" />
         public int GetLengthInBits(TContainer schemaObject)
         {
             if (schemaObject == null)
@@ -194,7 +194,7 @@ namespace Barchart.BinarySerializer.Schemas
             return lengthInBits;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.GetLengthInBits(object, object)" />
         public int GetLengthInBits(TContainer oldObject, TContainer newObject)
         {
             if (oldObject == null && newObject == null)
@@ -222,7 +222,7 @@ namespace Barchart.BinarySerializer.Schemas
             return lengthInBits;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.CompareObjects(object, object)" />
         public bool CompareObjects(TContainer firstObject, TContainer secondObject)
         {
             if (ReferenceEquals(firstObject, secondObject))
@@ -243,7 +243,7 @@ namespace Barchart.BinarySerializer.Schemas
             return true;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISchema.CompareAndUpdateObject(object, object)" />
         public void CompareAndUpdateObject(TContainer objectToUpdate, TContainer newObject)
         {
             if (objectToUpdate == null || newObject == null)
