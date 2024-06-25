@@ -8,32 +8,48 @@ using Barchart.BinarySerializer.Buffers;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    ///     Provides methods for encoding and decoding values of type <typeparamref name="T"/> to and from a <see cref="DataBuffer"/>.
+    ///     Writes (and reads) values of type <typeparam name="T" /> to (and from)
+    ///     a binary data source.
     /// </summary>
-    /// <typeparam name="T">The type of the value to be serialized.</typeparam>
+    /// <typeparam name="T">
+    ///     The type to serialize to binary (and deserialize from binary).
+    /// </typeparam>
     public interface IBinaryTypeSerializer<T>
     {
         #region Methods
 
         /// <summary>
-        ///     Encodes the specified value into the provided <see cref="DataBuffer"/>.
+        ///     Writes a value to a binary data source.
         /// </summary>
-        /// <param name="dataBuffer">The buffer to write the encoded value to.</param>
-        /// <param name="value">The value to be encoded.</param>
+        /// <param name="dataBuffer">
+        ///     The write target.
+        /// </param>
+        /// <param name="value">
+        ///     The value to write.
+        /// </param>
         public void Encode(IDataBuffer dataBuffer, T value);
 
         /// <summary>
-        ///     Decodes a value from the provided <see cref="DataBuffer"/>.
+        ///     Reads a value from a binary data source.
         /// </summary>
-        /// <param name="dataBuffer">The buffer to read the encoded value from.</param>
-        /// <returns>A <see cref="Attribute{T}"/> containing the decoded value and its length in bits.</returns>
+        /// <param name="dataBuffer">
+        ///     The binary data source.
+        /// </param>
+        /// <returns>
+        ///     The value.
+        /// </returns>
         public Attribute<T> Decode(IDataBuffer dataBuffer);
 
         /// <summary>
-        ///     Calculates the length of the specified value in bits.
+        ///     Calculates the number of bits needed to encode a value (or the
+        ///     number of bits required to read a value from the binary data source).
         /// </summary>
-        /// <param name="value">The value to calculate the length for.</param>
-        /// <returns>The length of the value in bits.</returns>
+        /// <param name="value">
+        ///     The value to be serialized.
+        /// </param>
+        /// <returns>
+        ///     The number of bits required to serialize the value.
+        /// </returns>
         public int GetLengthInBits(T value);
 
         #endregion

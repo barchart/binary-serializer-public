@@ -7,6 +7,9 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Types
 {
+    /// <summary>
+    ///     Reads (and writes) boolean values to (and from) a binary data source.
+    /// </summary>
     public class BinarySerializerBool : IBinaryTypeSerializer<bool>
     {
         #region Constants
@@ -20,6 +23,7 @@ namespace Barchart.BinarySerializer.Types
 
         #region Methods
 
+        /// <inheritdoc />
         public void Encode(IDataBuffer dataBuffer, bool value)
         {
             Header.WriteToBuffer(dataBuffer, false, false);
@@ -27,11 +31,13 @@ namespace Barchart.BinarySerializer.Types
             dataBuffer.WriteBit(value);
         }
 
+        /// <inheritdoc />
         public Attribute<bool> Decode(IDataBuffer dataBuffer)
         {
             return new Attribute<bool>(Header.ReadFromBuffer(dataBuffer), dataBuffer.ReadBit());
         }
 
+        /// <inheritdoc />
         public int GetLengthInBits(bool value)
         {
             return ENCODED_LENGTH;
