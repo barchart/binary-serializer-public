@@ -165,12 +165,12 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (oldObject != null && newObject == null)
             {
-                return GetLengthInBits((TContainer)oldObject);
+                return GetLengthInBits(oldObject);
             }
 
             if (oldObject == null && newObject != null)
             {
-                return GetLengthInBytes((TContainer)newObject);
+                return GetLengthInBytes(newObject);
             }
 
             return (int)Math.Ceiling((double)GetLengthInBits(oldObject!, newObject!) / 8);
@@ -204,12 +204,12 @@ namespace Barchart.BinarySerializer.Schemas
 
             if (oldObject != null && newObject == null)
             {
-                return GetLengthInBits((TContainer)oldObject);
+                return GetLengthInBits(oldObject);
             }
 
             if (oldObject == null && newObject != null)
             {
-                return GetLengthInBits((TContainer)newObject);
+                return GetLengthInBits(newObject);
             }
 
             int lengthInBits = 0;
