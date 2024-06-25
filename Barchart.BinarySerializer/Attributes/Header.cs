@@ -14,9 +14,8 @@ namespace Barchart.BinarySerializer.Attributes
         #region Properties
         
         /// <summary>
-        ///     If true, the referenced attribute has been omitted from the binary
-        ///     serialization. If true, that does not necessarily mean the attribute
-        ///     has no value (it simply means the attribute's value was not serialized).
+        ///     Indicates if the value of the attribute is included in serialized output (either
+        ///     as a null flag in the header or as binary data following the header).
         /// </summary>
         public bool IsMissing { get; init; }
         
@@ -40,11 +39,29 @@ namespace Barchart.BinarySerializer.Attributes
         /// </param>
         public static void WriteToBuffer(IDataBuffer dataBuffer, Header header)
         {
-            dataBuffer.WriteBit(header.IsMissing);
+            WriteToBuffer(dataBuffer, header.IsMissing, header.IsNull);
+        }
+        
+        /// <summary>
+        ///     Writes header data to a data buffer.
+        /// </summary>
+        /// <param name="dataBuffer">
+        ///     The data buffer to write to.
+        /// </param>
+        /// <param name="valueIsMissing">
+        ///     Indicates if the value of the attribute is included in serialized output (either
+        ///     as a null flag in the header or as binary data following the header).
+        /// </param>
+        /// <param name="valueIsNull">
+        ///     Indicates if the value of the attribute is null.
+        /// </param>
+        public static void WriteToBuffer(IDataBuffer dataBuffer, bool valueIsMissing, bool valueIsNull)
+        {
+            dataBuffer.WriteBit(valueIsMissing);
 
-            if (!header.IsMissing)
+            if (!valueIsMissing)
             {
-                dataBuffer.WriteBit(header.IsNull);
+                dataBuffer.WriteBit(valueIsNull);
             }
         }
         
