@@ -48,7 +48,7 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public int GetLengthInBits(T value)
         {
-            return Size * 8 + DataBuffer.NumberOfHeaderBitsNonString;
+            return Size * 8 + Header.NumberOfHeaderBitsNonString;
         }
 
         protected abstract void EncodeValue(IDataBuffer dataBuffer, T value);

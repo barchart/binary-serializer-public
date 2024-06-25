@@ -83,7 +83,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                return DataBuffer.NumberOfBitsIsMissing;
+                return Header.NumberOfBitsIsMissing;
             }
         }
 

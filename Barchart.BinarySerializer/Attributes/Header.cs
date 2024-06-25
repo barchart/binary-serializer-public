@@ -11,6 +11,14 @@ namespace Barchart.BinarySerializer.Attributes
     /// </summary>
     public readonly struct Header
     {
+        #region Fields
+
+        public const int NumberOfBitsIsMissing = 1;
+        public const int NumberOfHeaderBitsNonString = 2;
+        public const int NumberOfHeaderBitsString = 8;
+        
+        #endregion
+        
         #region Properties
         
         /// <summary>

@@ -7,10 +7,6 @@
     {
         #region Fields
         
-        public static readonly int NumberOfBitsIsMissing = 1;
-        public static readonly int NumberOfHeaderBitsNonString = 2;
-        public static readonly int NumberOfHeaderBitsString = 8;
-        
         private readonly byte[] _byteArray;
         
         private int _positionByte;

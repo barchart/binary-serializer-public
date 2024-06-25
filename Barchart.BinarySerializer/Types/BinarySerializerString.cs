@@ -52,11 +52,11 @@ namespace Barchart.BinarySerializer.Types
         {
             if (value == null)
             {
-                return DataBuffer.NumberOfHeaderBitsNonString;
+                return Header.NumberOfHeaderBitsNonString;
             }
 
             int valueLength = Encoding.UTF8.GetByteCount(value);
-            return valueLength * 8 + DataBuffer.NumberOfHeaderBitsString;
+            return valueLength * 8 + Header.NumberOfHeaderBitsString;
         }
 
         #endregion

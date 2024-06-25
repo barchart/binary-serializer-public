@@ -59,7 +59,7 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public int GetLengthInBits(T? value)
         {
-            return value == null ? DataBuffer.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((T)value);
+            return value == null ? Header.NumberOfHeaderBitsNonString : _serializer.GetLengthInBits((T)value);
         }
 
         #endregion
