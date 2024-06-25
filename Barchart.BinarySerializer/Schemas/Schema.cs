@@ -207,6 +207,8 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
+        #region ISchema implementation
+
         /// <inheritdoc />
         byte[] ISchema.Serialize(object schemaObject)
         {
@@ -282,7 +284,7 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 return 0;
             }
-            
+
             return GetLengthInBits((TContainer)schemaObject);
         }
 
@@ -328,6 +330,8 @@ namespace Barchart.BinarySerializer.Schemas
         {
             CompareAndUpdateObject((TContainer)objectToUpdate!, (TContainer)newObject!);
         }
+
+        #endregion
 
         #endregion
     }
