@@ -12,7 +12,7 @@ namespace Barchart.BinarySerializer.Types
     ///     Represents a binary serializer for objects of type <typeparamref name="TContainer"/> using a specified schema.
     /// </summary>
     /// <typeparam name="TContainer">The type of objects to be serialized.</typeparam>
-    public class ObjectBinarySerializer<TContainer> : IBinaryTypeObjectSerializer<TContainer> where TContainer : new()
+    public class BinarySerializerObject<TContainer> : IBinaryTypeObjectSerializer<TContainer> where TContainer : new()
     {
         #region Properties
         public Schema<TContainer> Schema { get; }
@@ -21,7 +21,7 @@ namespace Barchart.BinarySerializer.Types
 
         #region Constructor(s)
 
-        public ObjectBinarySerializer(Schema<TContainer> schema)
+        public BinarySerializerObject(Schema<TContainer> schema)
         {
             Schema = schema;
         }

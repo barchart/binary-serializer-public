@@ -160,11 +160,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <returns>A serializer for a list of elements of type <typeparamref name="T"/>.</returns>
-        public static ObjectBinarySerializer<T> GetObjectSerializer<T>() where T : new()
+        public static BinarySerializerObject<T> GetObjectSerializer<T>() where T : new()
         {
             Schema<T> schema = GetSchema<T>();
             
-            return new ObjectBinarySerializer<T>(schema);
+            return new BinarySerializerObject<T>(schema);
         }
 
         /// <summary>
