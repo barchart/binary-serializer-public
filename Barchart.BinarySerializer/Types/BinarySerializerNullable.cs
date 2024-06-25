@@ -19,7 +19,7 @@ namespace Barchart.BinarySerializer.Types
 
         #endregion
 
-        #region  Constructor(s)
+        #region Constructor(s)
 
         public BinarySerializerNullable(IBinaryTypeSerializer<T> serializer)
         {
