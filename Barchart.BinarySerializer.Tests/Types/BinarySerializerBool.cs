@@ -2,7 +2,6 @@
 
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Types;
 
 #endregion
@@ -78,26 +77,26 @@ namespace Barchart.BinarySerializer.Tests.Types
         public void Decode_DataBufferWithSerializedtrueValue_ReturnsHeaderWithDecodedValue()
         {
             var byteArray = BitsToBytes(new bool[] { false, false, true }) ;
-            var header = new AttributeHeader() { IsMissing = false, IsNull = false };
+            var header = new Header() { IsMissing = false, IsNull = false };
             var dataBuffer = new DataBuffer(byteArray);
             
-            AttributeValue<bool> attributeValue = _serializer.Decode(dataBuffer);
+            Attribute<bool> attribute = _serializer.Decode(dataBuffer);
             
-            Assert.Equal(header, attributeValue.Header);
-            Assert.True(attributeValue.Value);
+            Assert.Equal(header, attribute.Header);
+            Assert.True(attribute.Value);
         }
         
         [Fact]
         public void Decode_DataBufferWithSerializedFalseValue_ReturnsHeaderWithDecodedValue()
         {
             var byteArray = BitsToBytes(new bool[] { false, false, false }) ;
-            var header = new AttributeHeader() { IsMissing = false, IsNull = false };
+            var header = new Header() { IsMissing = false, IsNull = false };
             var dataBuffer = new DataBuffer(byteArray);
 
-            AttributeValue<bool> attributeValue = _serializer.Decode(dataBuffer);
+            Attribute<bool> attribute = _serializer.Decode(dataBuffer);
 
-            Assert.Equal(header, attributeValue.Header);
-            Assert.False(attributeValue.Value);
+            Assert.Equal(header, attribute.Header);
+            Assert.False(attribute.Value);
         }
 
         private static byte[] BitsToBytes(bool[] bits)

@@ -29,7 +29,7 @@ namespace Barchart.BinarySerializer.Types
         /// <param name="dataBuffer">The DataBuffer from which the value will be decoded.</param>
         /// <param name="existing">The existing value to be decoded.</param>
         /// <returns>A HeaderWithValue&lt;T&gt; containing the decoded value and its header information.</returns>
-        public AttributeValue<T> Decode(IDataBuffer dataBuffer, T existing);
+        public Attribute<T> Decode(IDataBuffer dataBuffer, T existing);
 
         #endregion
     }

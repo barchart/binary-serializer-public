@@ -31,39 +31,39 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public AttributeValue<TContainer> Decode(IDataBuffer dataBuffer)
+        public Attribute<TContainer> Decode(IDataBuffer dataBuffer)
         {
-            AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new AttributeValue<TContainer>(header, default);
+                return new Attribute<TContainer>(header, default);
             }
 
             TContainer? deserializedObject = Schema.Deserialize(dataBuffer);
 
-            return new AttributeValue<TContainer>(header, deserializedObject);
+            return new Attribute<TContainer>(header, deserializedObject);
         }
 
         /// <inheritdoc />
-        public AttributeValue<TContainer> Decode(IDataBuffer dataBuffer, TContainer existing)
+        public Attribute<TContainer> Decode(IDataBuffer dataBuffer, TContainer existing)
         {
-            AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new AttributeValue<TContainer>(header, default);
+                return new Attribute<TContainer>(header, default);
             }
 
             TContainer? deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
 
-            return new AttributeValue<TContainer>(header, deserializedObject);
+            return new Attribute<TContainer>(header, deserializedObject);
         }
 
         /// <inheritdoc />
         public void Encode(IDataBuffer dataBuffer, TContainer? value)
         {
-            AttributeHeader.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
+            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
 
             if (value != null)
             {
@@ -74,7 +74,7 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBuffer dataBuffer, TContainer? oldObject, TContainer? newObject)
         {
-            AttributeHeader.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = newObject == null });
+            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = newObject == null });
 
             if (newObject != null)
             {

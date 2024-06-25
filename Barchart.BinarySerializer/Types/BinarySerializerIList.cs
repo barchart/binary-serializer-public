@@ -34,7 +34,7 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBuffer dataBuffer, TContainer? value)
         {
-            AttributeHeader.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
+            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
 
             if (value != null)
             {
@@ -52,7 +52,7 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBuffer dataBuffer, TContainer? oldValue, TContainer? newValue)
         {
-            AttributeHeader.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = newValue == null });
+            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = newValue == null });
 
             if (newValue != null)
             {
@@ -75,37 +75,37 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public AttributeValue<TContainer?> Decode(IDataBuffer dataBuffer, TContainer? existing)
+        public Attribute<TContainer?> Decode(IDataBuffer dataBuffer, TContainer? existing)
         {
-            AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new AttributeValue<TContainer?>(header, default);
+                return new Attribute<TContainer?>(header, default);
             }
 
             int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
             
             TContainer list = ReadList(dataBuffer, length, existing);
 
-            return new AttributeValue<TContainer?>(header, list);
+            return new Attribute<TContainer?>(header, list);
         }
 
         /// <inheritdoc />
-        public AttributeValue<TContainer?> Decode(IDataBuffer dataBuffer)
+        public Attribute<TContainer?> Decode(IDataBuffer dataBuffer)
         {
-            AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new AttributeValue<TContainer?>(header, default);
+                return new Attribute<TContainer?>(header, default);
             }
 
             int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
             
             TContainer list = ReadList(dataBuffer, length, default);
 
-            return new AttributeValue<TContainer?>(header, list);
+            return new Attribute<TContainer?>(header, list);
         }
 
         /// <inheritdoc />

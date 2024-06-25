@@ -85,15 +85,15 @@ namespace Barchart.BinarySerializer.Schemas
 
         /// <inheritdoc />
         public virtual void Decode(TContainer existing, IDataBuffer dataBuffer) {
-            AttributeValue<T> attributeValue;
-            attributeValue = BinarySerializer.Decode(dataBuffer);
+            Attribute<T> attribute;
+            attribute = BinarySerializer.Decode(dataBuffer);
            
-            if (attributeValue.Header.IsMissing)
+            if (attribute.Header.IsMissing)
             {
                 return;
             }
 
-            if (attributeValue.Value != null) SetDelegate?.Invoke(existing, attributeValue.Value);
+            if (attribute.Value != null) SetDelegate?.Invoke(existing, attribute.Value);
         }
         
         /// <inheritdoc />

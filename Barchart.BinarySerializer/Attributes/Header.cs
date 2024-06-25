@@ -9,7 +9,7 @@ namespace Barchart.BinarySerializer.Attributes
     /// <summary>
     ///     Metadata regarding an attribute.
     /// </summary>
-    public readonly struct AttributeHeader
+    public readonly struct Header
     {
         #region Properties
         
@@ -38,7 +38,7 @@ namespace Barchart.BinarySerializer.Attributes
         /// <param name="header">
         ///     The header to write.
         /// </param>
-        public static void WriteToBuffer(IDataBuffer dataBuffer, AttributeHeader header)
+        public static void WriteToBuffer(IDataBuffer dataBuffer, Header header)
         {
             dataBuffer.WriteBit(header.IsMissing);
 
@@ -57,7 +57,7 @@ namespace Barchart.BinarySerializer.Attributes
         /// <returns>
         ///     A header consisting of the next one (or two) bits from the data buffer.
         /// </returns>
-        public static AttributeHeader ReadFromBuffer(IDataBuffer dataBuffer)
+        public static Header ReadFromBuffer(IDataBuffer dataBuffer)
         {
             bool headerIsMissing = dataBuffer.ReadBit();
             bool headerIsNull = !headerIsMissing && dataBuffer.ReadBit();

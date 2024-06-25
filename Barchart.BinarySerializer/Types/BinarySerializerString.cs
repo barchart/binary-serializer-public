@@ -18,7 +18,7 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBuffer dataBuffer, string? value)
         {
-            AttributeHeader.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
+            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
 
             if (value != null)
             {
@@ -30,13 +30,13 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public AttributeValue<string?> Decode(IDataBuffer dataBuffer)
+        public Attribute<string?> Decode(IDataBuffer dataBuffer)
         {
-            AttributeHeader header = AttributeHeader.ReadFromBuffer(dataBuffer);
+            Header header = Header.ReadFromBuffer(dataBuffer);
 
             if (header.IsMissing || header.IsNull)
             {
-                return new AttributeValue<string?>(header, default);
+                return new Attribute<string?>(header, default);
             }
             
             int size = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
@@ -44,7 +44,7 @@ namespace Barchart.BinarySerializer.Types
             byte[] valueBytes = dataBuffer.ReadBytes(size);
             string decodedString = Encoding.UTF8.GetString(valueBytes);
 
-            return new AttributeValue<string?>(header, decodedString);
+            return new Attribute<string?>(header, decodedString);
         }
 
         /// <inheritdoc />

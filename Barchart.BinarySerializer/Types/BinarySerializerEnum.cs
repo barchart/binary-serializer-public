@@ -38,12 +38,12 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public AttributeValue<T> Decode(IDataBuffer dataBuffer)
+        public Attribute<T> Decode(IDataBuffer dataBuffer)
         {
-            AttributeValue<int> attributeValue = _serializer.Decode(dataBuffer);
-            int value = attributeValue.Value;
+            Attribute<int> attribute = _serializer.Decode(dataBuffer);
+            int value = attribute.Value;
 
-            return new AttributeValue<T>(attributeValue.Header, (T?)Enum.Parse(typeof(T), value.ToString(), true));
+            return new Attribute<T>(attribute.Header, (T?)Enum.Parse(typeof(T), value.ToString(), true));
         }
 
         /// <inheritdoc />
