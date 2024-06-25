@@ -1,5 +1,9 @@
-﻿using Barchart.BinarySerializer.Attributes;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
