@@ -1,27 +1,42 @@
-﻿using Barchart.BinarySerializer.Buffers;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Buffers;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerByte : BinarySerializerNumeric<byte>
+    public class BinarySerializerByte : IBinaryTypeSerializer<byte>
     {
-        #region Properties
+        #region Constants
         
-        public override int Size => sizeof(byte);
-
+        private const int ENCODED_HEADER_LENGTH = 2;
+        private const int ENCODED_VALUE_LENGTH = sizeof(byte);
+        
+        private const int ENCODED_LENGTH = ENCODED_HEADER_LENGTH + ENCODED_VALUE_LENGTH;
+        
         #endregion
 
         #region Methods
-
-        protected override void EncodeValue(IDataBuffer dataBuffer, byte value)
+        
+        public void Encode(IDataBuffer dataBuffer, byte value)
         {
+            Header.WriteToBuffer(dataBuffer, false, false);
+            
             dataBuffer.WriteByte(value);
         }
 
-        protected override byte DecodeBytes(byte[] bytes)
+        public Attribute<byte> Decode(IDataBuffer dataBuffer)
         {
-            return bytes[0];
+            return new Attribute<byte>(Header.ReadFromBuffer(dataBuffer), dataBuffer.ReadByte());
         }
 
+        public int GetLengthInBits(byte value)
+        {
+            return ENCODED_LENGTH;
+        }
+        
         #endregion
     }
 }
