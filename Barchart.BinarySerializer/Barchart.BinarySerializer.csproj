@@ -20,11 +20,4 @@
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="output\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="output\" />
-  </ItemGroup>
-
 </Project>
