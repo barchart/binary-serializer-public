@@ -9,7 +9,7 @@ namespace Barchart.BinarySerializer.Attributes
     /// <summary>
     ///     Metadata regarding an attribute.
     /// </summary>
-    public readonly struct Header
+    public readonly class Header
     {
         #region Fields
 
@@ -31,6 +31,15 @@ namespace Barchart.BinarySerializer.Attributes
         ///     If true, the attribute's value is null.
         /// </summary>
         public bool IsNull { get; init; }
+        
+        #endregion
+
+        #region Constructor(s)
+
+        private Header()
+        {
+
+        }
         
         #endregion
         
