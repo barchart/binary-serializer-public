@@ -1,6 +1,5 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
 
 #endregion
@@ -12,12 +11,18 @@ namespace Barchart.BinarySerializer.Types
     /// </summary>
     public class BinarySerializerDateTime : IBinaryTypeSerializer<DateTime>
     {
-        #region Constants
+        #region Fields
         
-        private const int ENCODED_HEADER_LENGTH_BITS = 2;
-        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(long) * 8;
+        private readonly BinarySerializerLong _binarySerializerLong;
         
-        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        #endregion
+
+        #region Constructors
+
+        public BinarySerializerDateTime()
+        {
+            _binarySerializerLong = new BinarySerializerLong();
+        }
         
         #endregion
 
@@ -26,36 +31,32 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBufferWriter dataBuffer, DateTime value)
         {
-            Header.WriteToBuffer(dataBuffer, false, false);
-            TimeSpan unixTimeSpan = value - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            long unixTime = (long)unixTimeSpan.TotalMilliseconds;
-
-            dataBuffer.WriteBytes(BitConverter.GetBytes(unixTime));
+            long millisecondsSinceEpoch = GetMillisecondsSinceEpoch(value);
+            
+            _binarySerializerLong.Encode(dataBuffer, millisecondsSinceEpoch);
         }
 
         /// <inheritdoc />
-        public Attribute<DateTime> Decode(IDataBufferReader dataBuffer)
+        public DateTime Decode(IDataBufferReader dataBuffer)
         {
-            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-            DateTime decodedValue = default;
+            long millisecondsSinceEpoch = _binarySerializerLong.Decode(dataBuffer);
             
-            if (!valueIsMissing && !valueIsNull)
-            {
-                byte[] valueBytes = dataBuffer.ReadBytes(sizeof(long));
-                long milliSeconds = BitConverter.ToInt64(valueBytes, 0);
-                DateTime epoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                decodedValue = epoch.AddMilliseconds(milliSeconds);
-            }
-
-            return new Attribute<DateTime>(valueIsMissing, decodedValue);
+            return DateTime.UnixEpoch.AddMilliseconds(millisecondsSinceEpoch);
         }
 
         /// <inheritdoc />
         public int GetLengthInBits(DateTime value)
         {
-            return ENCODED_LENGTH_BITS;
+            return _binarySerializerLong.GetLengthInBits(GetMillisecondsSinceEpoch(value));
         }
 
+        private static long GetMillisecondsSinceEpoch(DateTime value)
+        {
+            TimeSpan timeSpan = value - DateTime.UnixEpoch;
+            
+           return Convert.ToInt64(timeSpan.TotalMilliseconds);
+        }
+        
         #endregion
     }
 }
