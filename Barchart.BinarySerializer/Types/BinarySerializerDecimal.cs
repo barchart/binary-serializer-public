@@ -1,6 +1,5 @@
 ﻿#region Using Statements
 
-using System.Runtime.CompilerServices;
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Common;
 
@@ -22,7 +21,7 @@ namespace Barchart.BinarySerializer.Types
         
         #region Fields
 
-        private readonly BinarySerializerInt binarySerialzierInt;
+        private readonly BinarySerializerInt _binarySerialzierInt;
         
         #endregion
 
@@ -30,7 +29,7 @@ namespace Barchart.BinarySerializer.Types
 
         public BinarySerializerDecimal()
         {
-            binarySerialzierInt = new BinarySerializerInt();
+            _binarySerialzierInt = new BinarySerializerInt();
         }
         
         #endregion
@@ -43,20 +42,20 @@ namespace Barchart.BinarySerializer.Types
         {
             int[] components = Decimal.GetBits(value);
             
-            binarySerialzierInt.Encode(dataBuffer, components[0]);
-            binarySerialzierInt.Encode(dataBuffer, components[1]);
-            binarySerialzierInt.Encode(dataBuffer, components[2]);
-            binarySerialzierInt.Encode(dataBuffer, components[3]);
+            _binarySerialzierInt.Encode(dataBuffer, components[0]);
+            _binarySerialzierInt.Encode(dataBuffer, components[1]);
+            _binarySerialzierInt.Encode(dataBuffer, components[2]);
+            _binarySerialzierInt.Encode(dataBuffer, components[3]);
         }
 
         /// <inheritdoc />
         public decimal Decode(IDataBufferReader dataBuffer)
         {
             int[] components = {
-                binarySerialzierInt.Decode(dataBuffer),
-                binarySerialzierInt.Decode(dataBuffer),
-                binarySerialzierInt.Decode(dataBuffer),
-                binarySerialzierInt.Decode(dataBuffer)
+                _binarySerialzierInt.Decode(dataBuffer),
+                _binarySerialzierInt.Decode(dataBuffer),
+                _binarySerialzierInt.Decode(dataBuffer),
+                _binarySerialzierInt.Decode(dataBuffer)
             };
 
             return new decimal(components);
