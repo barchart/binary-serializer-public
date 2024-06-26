@@ -21,7 +21,7 @@ namespace Barchart.BinarySerializer.Types
         
         #region Fields
 
-        private readonly BinarySerializerInt _binarySerialzierInt;
+        private readonly BinarySerializerInt _binarySerializerInt;
         
         #endregion
 
@@ -29,7 +29,7 @@ namespace Barchart.BinarySerializer.Types
 
         public BinarySerializerDecimal()
         {
-            _binarySerialzierInt = new BinarySerializerInt();
+            _binarySerializerInt = new BinarySerializerInt();
         }
         
         #endregion
@@ -41,20 +41,20 @@ namespace Barchart.BinarySerializer.Types
         {
             int[] components = Decimal.GetBits(value);
             
-            _binarySerialzierInt.Encode(dataBuffer, components[0]);
-            _binarySerialzierInt.Encode(dataBuffer, components[1]);
-            _binarySerialzierInt.Encode(dataBuffer, components[2]);
-            _binarySerialzierInt.Encode(dataBuffer, components[3]);
+            _binarySerializerInt.Encode(dataBuffer, components[0]);
+            _binarySerializerInt.Encode(dataBuffer, components[1]);
+            _binarySerializerInt.Encode(dataBuffer, components[2]);
+            _binarySerializerInt.Encode(dataBuffer, components[3]);
         }
 
         /// <inheritdoc />
         public decimal Decode(IDataBufferReader dataBuffer)
         {
             int[] components = {
-                _binarySerialzierInt.Decode(dataBuffer),
-                _binarySerialzierInt.Decode(dataBuffer),
-                _binarySerialzierInt.Decode(dataBuffer),
-                _binarySerialzierInt.Decode(dataBuffer)
+                _binarySerializerInt.Decode(dataBuffer),
+                _binarySerializerInt.Decode(dataBuffer),
+                _binarySerializerInt.Decode(dataBuffer),
+                _binarySerializerInt.Decode(dataBuffer)
             };
 
             return new decimal(components);

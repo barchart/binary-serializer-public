@@ -14,15 +14,15 @@ namespace Barchart.BinarySerializer.Types
     {
         #region Fields
 
-        private readonly BinarySerializerInt _binarySerialzierInt;
+        private readonly BinarySerializerInt _binarySerializerInt;
         
         #endregion
 
         #region Constructors
 
-        public BinarySerializerDecimal()
+        public BinarySerializerDateOnly()
         {
-            _binarySerialzierInt = new BinarySerializerInt();
+            _binarySerializerInt = new BinarySerializerInt();
         }
         
         #endregion
@@ -32,13 +32,13 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBufferWriter dataBuffer, DateOnly value)
         {
-            _binarySerialzierInt.Encode(dataBuffer, GetDaysSinceEpoch(value));
+            _binarySerializerInt.Encode(dataBuffer, GetDaysSinceEpoch(value));
         }
 
         /// <inheritdoc />
         public DateOnly Decode(IDataBufferReader dataBuffer)
         {
-            int daysSinceEpoch = _binarySerialzierInt.Decode(dataBuffer);
+            int daysSinceEpoch = _binarySerializerInt.Decode(dataBuffer);
             
             return DateOnly.MinValue.AddDays(daysSinceEpoch);
         }
@@ -46,7 +46,7 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public int GetLengthInBits(DateOnly value)
         {
-            return _binarySerialzierInt.GetLengthInBits(GetDaysSinceEpoch(value));
+            return _binarySerializerInt.GetLengthInBits(GetDaysSinceEpoch(value));
         }
 
         private static int GetDaysSinceEpoch(DateOnly value)
