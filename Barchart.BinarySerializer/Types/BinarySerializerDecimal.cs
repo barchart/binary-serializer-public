@@ -34,7 +34,6 @@ namespace Barchart.BinarySerializer.Types
         
         #endregion
         
-        
         #region Methods
 
         /// <inheritdoc />
