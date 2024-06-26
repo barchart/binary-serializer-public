@@ -1,6 +1,5 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
 
 #endregion
@@ -8,22 +7,24 @@ using Barchart.BinarySerializer.Buffers;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    ///     Provides binary serialization functionality for nullable value types.
+    ///     Provides binary serialization functionality for value types (that are nullable).
     /// </summary>
-    /// <typeparam name="T">The underlying value type of the nullable type.</typeparam>
+    /// <typeparam name="T">
+    ///     The value type to serialize.
+    /// </typeparam>
     public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : struct
 	{
         #region Fields
 
-        private readonly IBinaryTypeSerializer<T> _serializer;
+        private readonly IBinaryTypeSerializer<T> _typeSerializer;
 
         #endregion
 
         #region Constructor(s)
 
-        public BinarySerializerNullable(IBinaryTypeSerializer<T> serializer)
+        public BinarySerializerNullable(IBinaryTypeSerializer<T> typeSerializer)
         {
-            _serializer = serializer;
+            _typeSerializer = typeSerializer;
         }
 
         #endregion
@@ -33,28 +34,36 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBufferWriter dataBuffer, T? value)
         {
-            if (value != null)
+            dataBuffer.WriteBit(!value.HasValue);
+            
+            if (value.HasValue)
             {
-                _serializer.Encode(dataBuffer, (T)value);
-            }
-            else
-            {
-                Header.WriteToBuffer(dataBuffer, false, true);
+                _typeSerializer.Encode(dataBuffer, value.Value);
             }
         }
 
         /// <inheritdoc />
-        public Attribute<T?> Decode(IDataBufferReader dataBuffer)
+        public T? Decode(IDataBufferReader dataBuffer)
         {
-            Attribute<T> attribute = _serializer.Decode(dataBuffer);
+            if (dataBuffer.ReadBit())
+            {
+                return null;
+            }
 
-            return new Attribute<T?>(attribute.IsValueMissing, attribute.Value);
+            return _typeSerializer.Decode(dataBuffer);
         }
 
         /// <inheritdoc />
         public int GetLengthInBits(T? value)
         {
-            return value == null ? Header.NUMBER_OF_HEADER_BITS_NON_STRING : _serializer.GetLengthInBits((T)value);
+            int length = 1;
+            
+            if (value.HasValue)
+            {
+                length += _typeSerializer.GetLengthInBits(value.Value);
+            }
+
+            return length;
         }
 
         #endregion
