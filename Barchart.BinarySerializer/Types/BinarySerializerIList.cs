@@ -113,14 +113,14 @@ namespace Barchart.BinarySerializer.Types
         {
             if (value == null)
             {
-                return Header.NumberOfHeaderBitsNonString;
+                return Header.NUMBER_OF_HEADER_BITS_NON_STRING;
             }
 
-            int length = Header.NumberOfHeaderBitsNonString;
+            int length = Header.NUMBER_OF_HEADER_BITS_NON_STRING;
 
             foreach (var item in value)
             {
-                length += Header.NumberOfHeaderBitsNonString;
+                length += Header.NUMBER_OF_HEADER_BITS_NON_STRING;
 
                 if (item != null)
                 {

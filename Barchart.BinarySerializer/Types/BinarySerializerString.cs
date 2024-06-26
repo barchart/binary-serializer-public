@@ -13,6 +13,12 @@ namespace Barchart.BinarySerializer.Types
     /// </summary>
     public class BinarySerializerString : IBinaryTypeSerializer<string?>
     {
+        #region Constants
+
+        private const int MAX_STRING_LENGTH = 0x3F;
+
+        #endregion
+
         #region Methods
 
         /// <inheritdoc />
@@ -26,7 +32,7 @@ namespace Barchart.BinarySerializer.Types
             {
                 byte[] valueBytes = Encoding.UTF8.GetBytes(value);
 
-                if (valueBytes.Length > 0x3F)
+                if (valueBytes.Length > MAX_STRING_LENGTH)
                 {
                     throw new InvalidOperationException("String length exceeds 6-bit encoding capacity.");
                 }
@@ -66,11 +72,11 @@ namespace Barchart.BinarySerializer.Types
         {
             if (value == null)
             {
-                return Header.NumberOfHeaderBitsNonString;
+                return Header.NUMBER_OF_HEADER_BITS_NON_STRING;
             }
 
             int valueLength = Encoding.UTF8.GetByteCount(value);
-            return valueLength * 8 + Header.NumberOfHeaderBitsString;
+            return valueLength * 8 + Header.NUMBER_OF_HEADER_BITS_STRING;
         }
 
         #endregion

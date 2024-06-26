@@ -135,7 +135,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
             else
             {
-                return Header.NumberOfBitsIsMissing;
+                return Header.NUMBER_OF_BITS_IS_MISSING;
             }
         }
         
