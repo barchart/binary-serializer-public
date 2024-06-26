@@ -60,12 +60,12 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc cref="ISchema.Serialize(object, byte[])" />
         public byte[] Serialize(TContainer schemaObject, byte[] buffer)
         {
-            DataBuffer dataBuffer = new(buffer);
+            DataBufferWriter dataBuffer = new(buffer);
 
             return Serialize(schemaObject, dataBuffer);
         }
 
-        internal byte[] Serialize(TContainer schemaObject, IDataBuffer dataBuffer) {
+        public byte[] Serialize(TContainer schemaObject, IDataBufferWriter dataBuffer) {
 
             if (schemaObject == null)
             {
@@ -89,12 +89,13 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc cref="ISchema.Serialize(object, object, byte[])" />
         public byte[] Serialize(TContainer oldObject, TContainer newObject, byte[] buffer)
         {
-            DataBuffer dataBuffer = new(buffer);
+            DataBufferWriter dataBuffer = new(buffer);
 
             return Serialize(oldObject, newObject, dataBuffer);
         }
 
-        internal byte[] Serialize(TContainer oldObject, TContainer newObject, IDataBuffer dataBuffer)
+        /// <inheritdoc cref="ISchema.Serialize(object, object, IDataBufferWriter)" />
+        public byte[] Serialize(TContainer oldObject, TContainer newObject, IDataBufferWriter dataBuffer)
         {
             if (oldObject == null)
             {
@@ -112,18 +113,19 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc cref="ISchema.Deserialize(byte[])" />        
         public TContainer Deserialize(byte[] buffer)
         {
-            DataBuffer dataBuffer  = new(buffer);
+            DataBufferReader dataBuffer  = new(buffer);
             return Deserialize(dataBuffer);
         }
 
         /// <inheritdoc cref="ISchema.Deserialize(byte[], object)" />
         public TContainer Deserialize(byte[] buffer, TContainer existing)
         {
-            DataBuffer dataBuffer = new(buffer); 
+            DataBufferReader dataBuffer = new(buffer); 
             return Deserialize(existing, dataBuffer);
         }
 
-        internal TContainer Deserialize(IDataBuffer dataBuffer) {
+        /// <inheritdoc cref="ISchema.Deserialize(IDataBufferReader)" />
+        public TContainer Deserialize(IDataBufferReader dataBuffer) {
             TContainer existing = new();
 
             foreach (IMemberData<TContainer> memberData in _memberDataContainer)
@@ -134,7 +136,8 @@ namespace Barchart.BinarySerializer.Schemas
             return existing;
         }
 
-        internal TContainer Deserialize(TContainer existing, IDataBuffer dataBuffer)
+        /// <inheritdoc cref="ISchema.Deserialize(object, IDataBufferReader)" />
+        public TContainer Deserialize(TContainer existing, IDataBufferReader dataBuffer)
         {
             foreach (IMemberData<TContainer> memberData in _memberDataContainer)
             {
@@ -266,9 +269,21 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
+        byte[] ISchema.Serialize(object schemaObject, IDataBufferWriter dataBuffer)
+        {
+            return Serialize((TContainer)schemaObject, dataBuffer);
+        }
+
+        /// <inheritdoc />
         byte[] ISchema.Serialize(object schemaObject, byte[] buffer)
         {
             return Serialize((TContainer)schemaObject, buffer);
+        }
+
+        /// <inheritdoc />
+        byte[] ISchema.Serialize(object oldObject, object newObject, IDataBufferWriter dataBuffer)
+        {
+            return Serialize((TContainer)oldObject, (TContainer)newObject, dataBuffer);
         }
 
         /// <inheritdoc />
@@ -290,9 +305,21 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
+        object? ISchema.Deserialize(IDataBufferReader dataBuffer)
+        {
+            return Deserialize(dataBuffer);
+        }
+
+        /// <inheritdoc />
         object? ISchema.Deserialize(byte[] buffer, object existing)
         {
             return Deserialize(buffer, (TContainer)existing);
+        }
+
+        /// <inheritdoc />
+        object? ISchema.Deserialize(object existing, IDataBufferReader dataBuffer)
+        {
+            return Deserialize((TContainer)existing, dataBuffer);
         }
 
         /// <inheritdoc />

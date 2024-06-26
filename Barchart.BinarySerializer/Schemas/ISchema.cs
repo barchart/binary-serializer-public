@@ -1,4 +1,6 @@
-﻿namespace Barchart.BinarySerializer.Schemas
+﻿using Barchart.BinarySerializer.Buffers;
+
+namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
     ///     Interface for defining custom serialization schemas.
@@ -23,12 +25,21 @@
         public byte[] Serialize(object schemaObject, byte[] buffer);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaObject"></param>
+        /// <param name="dataBuffer"></param>
+        /// <returns></returns>
+        public byte[] Serialize(object schemaObject, IDataBufferWriter dataBuffer);
+
+        /// <summary>
         ///     Serialize only a difference between the new and the old object.
         /// </summary>
         /// <param name="oldObject">Old object of generic type.</param>
         /// <param name="newObject">New object of generic type.</param>
         /// <returns> Array of bytes that represents a result of binary serialization. </returns>
         public byte[] Serialize(object oldObject, object newObject);
+        
 
         /// <summary>
         ///     Serialize only a difference between the new and the old object.
@@ -40,11 +51,28 @@
         public byte[] Serialize(object oldObject, object newObject, byte[] buffer);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldObject"></param>
+        /// <param name="newObject"></param>
+        /// <param name="dataBuffer"></param>
+        /// <returns></returns>
+        public byte[] Serialize(object oldObject, object newObject, IDataBufferWriter dataBuffer);
+
+        /// <summary>
         ///     Deserialize array of bytes into object.
         /// </summary>
         /// <param name="buffer">Array oy bytes which will be deserialized.</param>
         /// <returns> Deserialized object written into newly created object of generic type. </returns>
         public object? Deserialize(byte[] buffer);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataBuffer"></param>
+        /// <returns></returns>
+        public object? Deserialize(IDataBufferReader dataBuffer);
+
 
         /// <summary>
         ///     eserialize array of bytes into object.
@@ -53,6 +81,15 @@
         /// <param name="existing">Existing generic object.</param>
         /// <returns> Deserialized object written into existing object of generic type. </returns>
         public object? Deserialize(byte[] buffer, object existing);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="existing"></param>
+        /// <param name="dataBuffer"></param>
+        /// <returns></returns>
+        public object? Deserialize(object existing, IDataBufferReader dataBuffer);
 
         /// <summary>
         ///     Calculates the total length of the binary representation of the provided schema object in bytes.
