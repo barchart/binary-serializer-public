@@ -1,6 +1,5 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
 
 #endregion
@@ -8,22 +7,24 @@ using Barchart.BinarySerializer.Buffers;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    ///     Provides binary serialization functionality for enum types.
+    ///     Reads (and writes) enumeration values to (and from) a binary data source.
     /// </summary>
-    /// <typeparam name="T">The enum type to be serialized.</typeparam>
+    /// <typeparam name="T">
+    ///     The enumeration type.
+    /// </typeparam>
     public class BinarySerializerEnum<T> : IBinaryTypeSerializer<T> where T : Enum
     {
         #region Fields
 
-        private readonly BinarySerializerInt _serializer;
+        private readonly BinarySerializerInt _binarySerializerInt;
 
         #endregion
 
-        #region  Constructor(s)
+        #region Constructor(s)
 
-        public BinarySerializerEnum(BinarySerializerInt serializer)
+        public BinarySerializerEnum(BinarySerializerInt binarySerializerInt)
         {
-            _serializer = serializer;
+            _binarySerializerInt = binarySerializerInt;
         }
 
         #endregion
@@ -31,36 +32,21 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, T? value)
+        public void Encode(IDataBufferWriter dataBuffer, T value)
         {
-            int? integerValue = value != null? Convert.ToInt32(value) : null;
-
-            if (integerValue != null)
-            {
-                _serializer.Encode(dataBuffer, (int)integerValue);
-            }
+            _binarySerializerInt.Encode(dataBuffer, Convert.ToInt32(value));
         }
 
         /// <inheritdoc />
-        public Attribute<T> Decode(IDataBufferReader dataBuffer)
+        public T Decode(IDataBufferReader dataBuffer)
         {
-            Attribute<int> attribute = _serializer.Decode(dataBuffer);
-            int value = attribute.Value;
-
-            return new Attribute<T>(attribute.IsValueMissing, (T)Enum.Parse(typeof(T), value.ToString(), true));
+            return (T)Enum.Parse(typeof(T), _binarySerializerInt.Decode(dataBuffer).ToString(), true);
         }
 
         /// <inheritdoc />
-        public int GetLengthInBits(T? value)
+        public int GetLengthInBits(T value)
         {
-            int? integerValue = value != null ? Convert.ToInt32(value) : null;
-
-            if (integerValue != null)
-            {
-                return _serializer.GetLengthInBits((int)integerValue);
-
-            }
-            return 0;
+            return _binarySerializerInt.GetLengthInBits(Convert.ToInt32(value));
         }
 
         #endregion
