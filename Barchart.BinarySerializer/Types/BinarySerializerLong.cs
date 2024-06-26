@@ -31,14 +31,13 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<long> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-
-            if (valueIsMissing || valueIsNull)
+            long decodedValue  = default;
+           
+            if (!valueIsMissing && !valueIsNull)
             {
-                return new Attribute<long>(valueIsMissing, default);
+                byte[] valueBytes = dataBuffer.ReadBytes(sizeof(long));
+                decodedValue = BitConverter.ToInt64(valueBytes);
             }
-
-            byte[] valueBytes = dataBuffer.ReadBytes(sizeof(long));
-            long decodedValue = BitConverter.ToInt64(valueBytes);
 
             return new Attribute<long>(valueIsMissing, decodedValue);
         }

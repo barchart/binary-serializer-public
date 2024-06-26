@@ -95,15 +95,13 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<TContainer?> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-
-            if (valueIsMissing || valueIsNull)
-            {
-                return new Attribute<TContainer?>(valueIsMissing, default);
-            }
-
-            int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
+            TContainer? list  = default;
             
-            TContainer list = ReadList(dataBuffer, length, default);
+            if (!valueIsMissing && !valueIsNull)
+            {
+                int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
+                list = ReadList(dataBuffer, length, default);
+            }
 
             return new Attribute<TContainer?>(valueIsMissing, list);
         }

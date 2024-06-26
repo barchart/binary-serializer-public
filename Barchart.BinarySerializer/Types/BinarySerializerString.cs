@@ -48,22 +48,21 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<string?> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-
-            if (valueIsMissing || valueIsNull)
+            string? decodedString = default;
+            
+            if (!valueIsMissing && !valueIsNull)
             {
-                return new Attribute<string?>(valueIsMissing, default);
+                 int size = 0;
+            
+                for (int i = 5; i >= 0; i--)
+                {
+                    size |= (dataBuffer.ReadBit() ? 1 : 0) << i;
+                }
+
+                byte[] valueBytes = dataBuffer.ReadBytes(size);
+                decodedString = Encoding.UTF8.GetString(valueBytes);
             }
             
-            int size = 0;
-            
-            for (int i = 5; i >= 0; i--)
-            {
-                size |= (dataBuffer.ReadBit() ? 1 : 0) << i;
-            }
-
-            byte[] valueBytes = dataBuffer.ReadBytes(size);
-            string decodedString = Encoding.UTF8.GetString(valueBytes);
-
             return new Attribute<string?>(valueIsMissing, decodedString);
         }
 

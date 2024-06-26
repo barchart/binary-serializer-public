@@ -35,15 +35,14 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<DateOnly> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+            DateOnly decodedValue = default;
 
-            if (valueIsMissing || valueIsNull)
+            if (!valueIsMissing && !valueIsNull)
             {
-                return new Attribute<DateOnly>(valueIsMissing, default);
+                byte[] valueBytes = dataBuffer.ReadBytes(sizeof(int));
+                int daysSinceEpoch = BitConverter.ToInt32(valueBytes);
+                decodedValue = DateOnly.MinValue.AddDays(daysSinceEpoch);
             }
-            
-            byte[] valueBytes = dataBuffer.ReadBytes(sizeof(int));
-            int daysSinceEpoch = BitConverter.ToInt32(valueBytes);
-            DateOnly decodedValue = DateOnly.MinValue.AddDays(daysSinceEpoch);
             
             return new Attribute<DateOnly>(valueIsMissing, decodedValue);
         }

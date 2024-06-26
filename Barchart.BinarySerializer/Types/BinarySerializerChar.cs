@@ -35,15 +35,14 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<char> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-            
-            if (valueIsMissing || valueIsNull)
+            char decodedValue = default;
+
+            if (!valueIsMissing && !valueIsNull)
             {
-                return new Attribute<char>(valueIsMissing, default);
+                byte[] valueBytes = dataBuffer.ReadBytes(sizeof(char));
+                decodedValue = BitConverter.ToChar(valueBytes);
             }
 
-            byte[] valueBytes = dataBuffer.ReadBytes(sizeof(char));
-            char decodedValue = BitConverter.ToChar(valueBytes);
-                
             return new Attribute<char>(valueIsMissing, decodedValue);
         }
 

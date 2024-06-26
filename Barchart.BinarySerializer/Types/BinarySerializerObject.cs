@@ -56,13 +56,12 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<TContainer?> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-
-            if (valueIsMissing || valueIsNull)
+            TContainer? deserializedObject = default;
+            
+            if (!valueIsMissing && !valueIsNull)
             {
-                return new Attribute<TContainer?>(valueIsMissing, default);
+                deserializedObject = Schema.Deserialize(dataBuffer);
             }
-
-            TContainer? deserializedObject = Schema.Deserialize(dataBuffer);
 
             return new Attribute<TContainer?>(valueIsMissing, deserializedObject);
         }
@@ -71,13 +70,12 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<TContainer?> Decode(IDataBufferReader dataBuffer, TContainer? existing)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-
-            if (valueIsMissing || valueIsNull)
+            TContainer? deserializedObject= default;
+            
+            if (!valueIsMissing && !valueIsNull)
             {
-                return new Attribute<TContainer?>(valueIsMissing, default);
+                deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
             }
-
-            TContainer? deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
 
             return new Attribute<TContainer?>(valueIsMissing, deserializedObject);
         }

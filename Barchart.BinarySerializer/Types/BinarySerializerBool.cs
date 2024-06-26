@@ -35,13 +35,12 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<bool> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-            
-            if (valueIsMissing || valueIsNull)
+            bool decodedValue = default;
+
+            if (!valueIsMissing && !valueIsNull)
             {
-                return new Attribute<bool>(valueIsMissing, default);
+                decodedValue = dataBuffer.ReadBit();
             }
-            
-            bool decodedValue = dataBuffer.ReadBit();
 
             return new Attribute<bool>(valueIsMissing, decodedValue);
         }
