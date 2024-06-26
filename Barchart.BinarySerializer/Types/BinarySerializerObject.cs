@@ -12,7 +12,7 @@ namespace Barchart.BinarySerializer.Types
     ///     Represents a binary serializer for objects of type <typeparamref name="TContainer"/> using a specified schema.
     /// </summary>
     /// <typeparam name="TContainer">The type of objects to be serialized.</typeparam>
-    public class BinarySerializerObject<TContainer> : IBinaryTypeObjectSerializer<TContainer> where TContainer : new()
+    public class BinarySerializerObject<TContainer> : IBinaryTypeObjectSerializer<TContainer?> where TContainer : new()
     {
         #region Properties
         public Schema<TContainer> Schema { get; }
@@ -53,33 +53,33 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public Attribute<TContainer> Decode(IDataBufferReader dataBuffer)
+        public Attribute<TContainer?> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
 
             if (valueIsMissing || valueIsNull)
             {
-                return new Attribute<TContainer>(valueIsMissing, default);
+                return new Attribute<TContainer?>(valueIsMissing, default);
             }
 
             TContainer? deserializedObject = Schema.Deserialize(dataBuffer);
 
-            return new Attribute<TContainer>(valueIsMissing, deserializedObject);
+            return new Attribute<TContainer?>(valueIsMissing, deserializedObject);
         }
 
         /// <inheritdoc />
-        public Attribute<TContainer> Decode(IDataBufferReader dataBuffer, TContainer existing)
+        public Attribute<TContainer?> Decode(IDataBufferReader dataBuffer, TContainer? existing)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
 
             if (valueIsMissing || valueIsNull)
             {
-                return new Attribute<TContainer>(valueIsMissing, default);
+                return new Attribute<TContainer?>(valueIsMissing, default);
             }
 
             TContainer? deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
 
-            return new Attribute<TContainer>(valueIsMissing, deserializedObject);
+            return new Attribute<TContainer?>(valueIsMissing, deserializedObject);
         }
 
         /// <inheritdoc cref="ISchema.GetLengthInBits(object)" path="/Schemas/ISchema"/>
@@ -89,8 +89,13 @@ namespace Barchart.BinarySerializer.Types
         }
     
         /// <inheritdoc cref="ISchema.GetLengthInBits(object)" path="/Schemas/ISchema"/>
-        public int GetLengthInBits(TContainer value)
+        public int GetLengthInBits(TContainer? value)
         {
+            if (value == null)
+            {
+                return 0;
+            }
+
             return Schema.GetLengthInBits(value);
         }
 
