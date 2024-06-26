@@ -6,7 +6,7 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Tests.Buffers
 {
-    public class DataBufferTests
+    public class DataBufferReaderTests
     {
         #region Fields
 
@@ -16,7 +16,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
 
         #region Constructor(s)
 
-        public DataBufferTests(ITestOutputHelper testOutputHelper)
+        public DataBufferReaderTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
