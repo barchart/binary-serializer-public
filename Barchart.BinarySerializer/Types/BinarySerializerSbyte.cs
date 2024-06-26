@@ -2,26 +2,39 @@
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerSbyte : BinarySerializerNumeric<sbyte>
+    public class BinarySerializerSbyte : IBinaryTypeSerializer<sbyte>
     {
-        #region Properties
-
-        public override int Size => sizeof(sbyte);
-
+        #region Constants
+        
+        private const int ENCODED_HEADER_LENGTH_BITS = 2;
+        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(sbyte) * 8;
+        
+        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        
         #endregion
 
         #region Methods
 
-        protected override void EncodeValue(IDataBuffer dataBuffer, sbyte value)
+        /// <inheritdoc />
+        public void Encode(IDataBuffer dataBuffer, sbyte value)
         {
-            dataBuffer.WriteBytes( new byte[] { (byte)value });
+            Header.WriteToBuffer(dataBuffer, false, false);
+            
+            dataBuffer.WriteByte((byte)value);
         }
 
-        protected override sbyte DecodeBytes(byte[] bytes)
+        /// <inheritdoc />
+        public Attribute<sbyte> Decode(IDataBuffer dataBuffer)
         {
-            return (sbyte)bytes[0];
+            return new Attribute<sbyte>(Header.ReadFromBuffer(dataBuffer), (sbyte)dataBuffer.ReadByte());
         }
-        
+
+        /// <inheritdoc />
+        public int GetLengthInBits(sbyte value)
+        {
+            return ENCODED_LENGTH_BITS;
+        }
+
         #endregion
     }
 }

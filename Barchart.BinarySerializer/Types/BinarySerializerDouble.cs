@@ -1,25 +1,48 @@
-﻿using Barchart.BinarySerializer.Buffers;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Buffers;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerDouble : BinarySerializerNumeric<double>
+    /// <summary>
+    ///     Reads (and writes) double values to (and from) a binary data source.
+    /// </summary>
+    public class BinarySerializerDouble : IBinaryTypeSerializer<double>
     {
-        #region Properties
+        #region Constants
         
-        public override int Size => sizeof(double);
-
+        private const int ENCODED_HEADER_LENGTH_BITS = 2;
+        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(double) * 8;
+        
+        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        
         #endregion
 
         #region Methods
 
-        protected override void EncodeValue(IDataBuffer dataBuffer, double value)
+        /// <inheritdoc />
+        public void Encode(IDataBuffer dataBuffer, double value)
         {
+            Header.WriteToBuffer(dataBuffer, false, false);
             dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
-        protected override double DecodeBytes(byte[] bytes)
+        /// <inheritdoc />
+        public Attribute<double> Decode(IDataBuffer dataBuffer)
         {
-            return BitConverter.ToDouble(bytes);
+            Header header = Header.ReadFromBuffer(dataBuffer);
+            byte[] valueBytes = dataBuffer.ReadBytes(sizeof(double));
+            double decodedValue = BitConverter.ToDouble(valueBytes);
+            return new Attribute<double>(header, decodedValue);
+        }
+
+        /// <inheritdoc />
+        public int GetLengthInBits(double value)
+        {
+            return ENCODED_LENGTH_BITS;
         }
 
         #endregion

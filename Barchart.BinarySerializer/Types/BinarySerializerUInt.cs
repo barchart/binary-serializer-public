@@ -2,24 +2,41 @@
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerUInt : BinarySerializerNumeric<uint>
+    public class BinarySerializerUInt : IBinaryTypeSerializer<uint>
     {
-        #region Properties
-
-        public override int Size => sizeof(uint);
-
+        #region Constants
+        
+        private const int ENCODED_HEADER_LENGTH_BITS = 2;
+        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(uint) * 8;
+        
+        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        
         #endregion
 
         #region Methods
 
-        protected override void EncodeValue(IDataBuffer dataBuffer, uint value)
+        /// <inheritdoc />
+        public void Encode(IDataBuffer dataBuffer, uint value)
         {
+            Header.WriteToBuffer(dataBuffer, false, false);
+            
             dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
-        protected override uint DecodeBytes(byte[] bytes)
+        /// <inheritdoc />
+        public Attribute<char> Decode(IDataBuffer dataBuffer)
         {
-            return BitConverter.ToUInt32(bytes);
+            Header header = Header.ReadFromBuffer(dataBuffer);
+            byte[] valueBytes = dataBuffer.ReadBytes(sizeof(uint));
+            uint decodedValue = BitConverter.ToUInt32(valueBytes);
+                
+            return new Attribute<uint>(header, decodedValue);
+        }
+
+        /// <inheritdoc />
+        public int GetLengthInBits(uint value)
+        {
+            return ENCODED_LENGTH_BITS;
         }
 
         #endregion

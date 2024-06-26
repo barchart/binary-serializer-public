@@ -2,25 +2,41 @@
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerULong : BinarySerializerNumeric<ulong>
+    public class BinarySerializerULong : IBinaryTypeSerializer<ulong>
     {
-        #region Properties
-
-        public override int Size => sizeof(ulong);
-
+        #region Constants
+        
+        private const int ENCODED_HEADER_LENGTH_BITS = 2;
+        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(ulong) * 8;
+        
+        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        
         #endregion
 
         #region Methods
 
-        protected override void EncodeValue(IDataBuffer dataBuffer, ulong value)
+        /// <inheritdoc />
+        public void Encode(IDataBuffer dataBuffer, ulong value)
         {
+            Header.WriteToBuffer(dataBuffer, false, false);
+            
             dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
-
-        protected override ulong DecodeBytes(byte[] bytes)
+        /// <inheritdoc />
+        public Attribute<char> Decode(IDataBuffer dataBuffer)
         {
-            return BitConverter.ToUInt64(bytes);
+            Header header = Header.ReadFromBuffer(dataBuffer);
+            byte[] valueBytes = dataBuffer.ReadBytes(sizeof(ulong));
+            ulong decodedValue = BitConverter.ToUInt64(valueBytes);
+                
+            return new Attribute<ulong>(header, decodedValue);
+        }
+
+        /// <inheritdoc />
+        public int GetLengthInBits(ulong value)
+        {
+            return ENCODED_LENGTH_BITS;
         }
 
         #endregion

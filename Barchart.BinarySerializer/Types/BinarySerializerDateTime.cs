@@ -1,31 +1,54 @@
-﻿using Barchart.BinarySerializer.Buffers;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Buffers;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerDateTime : BinarySerializerNumeric<DateTime>
+    /// <summary>
+    ///     Reads (and writes) DateTime values to (and from) a binary data source.
+    /// </summary>
+    public class BinarySerializerDateTime : IBinaryTypeSerializer<DateTime>
     {
-        #region Properties
-
-        public override int Size => sizeof(long);
-
+        #region Constants
+        
+        private const int ENCODED_HEADER_LENGTH_BITS = 2;
+        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(long) * 8;
+        
+        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        
         #endregion
 
         #region Methods
-
-        protected override void EncodeValue(IDataBuffer dataBuffer, DateTime value)
+        
+        /// <inheritdoc />
+        public void Encode(IDataBuffer dataBuffer, DateTime value)
         {
+            Header.WriteToBuffer(dataBuffer, false, false);
             TimeSpan unixTimeSpan = value - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             long unixTime = (long)unixTimeSpan.TotalMilliseconds;
 
             dataBuffer.WriteBytes(BitConverter.GetBytes(unixTime));
         }
 
-        protected override DateTime DecodeBytes(byte[] bytes)
+        /// <inheritdoc />
+        public Attribute<DateTime> Decode(IDataBuffer dataBuffer)
         {
-            long ticksPerMillisecond = TimeSpan.TicksPerMillisecond;
-            long milliSeconds = BitConverter.ToInt64(bytes, 0);
+            Header header = Header.ReadFromBuffer(dataBuffer);
+            byte[] valueBytes = dataBuffer.ReadBytes(sizeof(long));
+            long milliSeconds = BitConverter.ToInt64(valueBytes, 0);
             DateTime epoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return epoch.AddTicks(milliSeconds * ticksPerMillisecond);
+            DateTime decodedValue = epoch.AddMilliseconds(milliSeconds);
+
+            return new Attribute<DateTime>(header, decodedValue);
+        }
+
+        /// <inheritdoc />
+        public int GetLengthInBits(DateTime value)
+        {
+            return ENCODED_LENGTH_BITS;
         }
 
         #endregion

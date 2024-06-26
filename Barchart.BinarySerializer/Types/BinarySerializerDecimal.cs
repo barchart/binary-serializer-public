@@ -1,19 +1,34 @@
-﻿using Barchart.BinarySerializer.Buffers;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Buffers;
+using System.IO;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
-    public class BinarySerializerDecimal : BinarySerializerNumeric<decimal>
+    /// <summary>
+    ///     Reads (and writes) decimal values to (and from) a binary data source.
+    /// </summary>
+    public class BinarySerializerDecimal : IBinaryTypeSerializer<decimal>
     {
-        #region Properties
-
-        public override int Size => sizeof(decimal);
-
+        #region Constants
+        
+        private const int ENCODED_HEADER_LENGTH_BITS = 2;
+        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(decimal) * 8;
+        
+        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        
         #endregion
 
         #region Methods
 
-        protected override void EncodeValue(IDataBuffer dataBuffer, decimal value)
+        /// <inheritdoc />
+        public void Encode(IDataBuffer dataBuffer, decimal value)
         {
+            Header.WriteToBuffer(dataBuffer, false, false);
+            
             using MemoryStream stream = new();
             using BinaryWriter writer = new(stream);
             writer.Write(value);
@@ -21,12 +36,23 @@ namespace Barchart.BinarySerializer.Types
             dataBuffer.WriteBytes(stream.ToArray());
         }
 
-        protected override decimal DecodeBytes(byte[] bytes)
+        /// <inheritdoc />
+        public Attribute<decimal> Decode(IDataBuffer dataBuffer)
         {
-            using MemoryStream stream = new(bytes);
+            Header header = Header.ReadFromBuffer(dataBuffer);
+            byte[] valueBytes = dataBuffer.ReadBytes(sizeof(decimal));
+            
+            using MemoryStream stream = new(valueBytes);
             using BinaryReader reader = new(stream);
+            decimal decodedValue = reader.ReadDecimal();
 
-            return reader.ReadDecimal();
+            return new Attribute<decimal>(header, decodedValue);
+        }
+
+        /// <inheritdoc />
+        public int GetLengthInBits(decimal value)
+        {
+            return ENCODED_LENGTH_BITS;
         }
 
         #endregion
