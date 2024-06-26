@@ -31,9 +31,7 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBufferWriter dataBuffer, DateTime value)
         {
-            long millisecondsSinceEpoch = GetMillisecondsSinceEpoch(value);
-            
-            _binarySerializerLong.Encode(dataBuffer, millisecondsSinceEpoch);
+            _binarySerializerLong.Encode(dataBuffer, GetMillisecondsSinceEpoch(value));
         }
 
         /// <inheritdoc />
