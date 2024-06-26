@@ -24,7 +24,18 @@ namespace Barchart.BinarySerializer.Types
             {
                 byte[] valueBytes = Encoding.UTF8.GetBytes(value);
 
-                dataBuffer.WriteBytes(BitConverter.GetBytes(valueBytes.Length));
+                if (valueBytes.Length > 0x3F)
+                {
+                    throw new InvalidOperationException("String length exceeds 6-bit encoding capacity.");
+                }
+
+                int lengthIn6Bits = valueBytes.Length & 0x3F; 
+
+                for (int i = 5; i >= 0; i--)
+                {
+                    dataBuffer.WriteBit((lengthIn6Bits >> i) & 1);
+                }
+
                 dataBuffer.WriteBytes(valueBytes);
             }
         }
@@ -39,7 +50,12 @@ namespace Barchart.BinarySerializer.Types
                 return new Attribute<string?>(header, default);
             }
             
-            int size = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
+            int size = 0;
+            
+            for (int i = 5; i >= 0; i--)
+            {
+                size |= (dataBuffer.ReadBit() ? 1 : 0) << i;
+            }
 
             byte[] valueBytes = dataBuffer.ReadBytes(size);
             string decodedString = Encoding.UTF8.GetString(valueBytes);
