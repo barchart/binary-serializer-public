@@ -38,7 +38,7 @@ namespace Barchart.BinarySerializer.Types
         /// <returns>
         ///     The value.
         /// </returns>
-        public Attribute<T> Decode(IDataBufferReader dataBuffer);
+        public T Decode(IDataBufferReader dataBuffer);
 
         /// <summary>
         ///     Calculates the number of bits needed to encode a value (or the

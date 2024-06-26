@@ -1,7 +1,7 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Common;
 
 #endregion
 
@@ -14,10 +14,8 @@ namespace Barchart.BinarySerializer.Types
     {
         #region Constants
         
-        private const int ENCODED_HEADER_LENGTH_BITS = 2;
-        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(double) * 8;
-        
-        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        private const int ENCODED_LENGTH_IN_BYTES = sizeof(double);
+        private const int ENCODED_LENGTH_IN_BITS = ENCODED_LENGTH_IN_BYTES * Constants.BITS_PER_BYTE;
         
         #endregion
 
@@ -26,29 +24,19 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBufferWriter dataBuffer, double value)
         {
-            Header.WriteToBuffer(dataBuffer, false, false);
             dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         /// <inheritdoc />
-        public Attribute<double> Decode(IDataBufferReader dataBuffer)
+        public double Decode(IDataBufferReader dataBuffer)
         {
-            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-            double decodedValue  = default;
-            
-            if (!valueIsMissing && !valueIsNull)
-            {
-                byte[] valueBytes = dataBuffer.ReadBytes(sizeof(double));
-                decodedValue = BitConverter.ToDouble(valueBytes);
-            }
-
-            return new Attribute<double>(valueIsMissing, decodedValue);
+            return BitConverter.ToDouble(dataBuffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
         }
 
         /// <inheritdoc />
         public int GetLengthInBits(double value)
         {
-            return ENCODED_LENGTH_BITS;
+            return ENCODED_LENGTH_IN_BITS;
         }
 
         #endregion

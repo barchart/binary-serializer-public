@@ -1,5 +1,9 @@
-﻿using Barchart.BinarySerializer.Attributes;
+﻿#region Using Statements
+
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Common;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -7,10 +11,8 @@ namespace Barchart.BinarySerializer.Types
     {
         #region Constants
         
-        private const int ENCODED_HEADER_LENGTH_BITS = 2;
-        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(int) * 8;
-        
-        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        private const int ENCODED_LENGTH_IN_BYTES = sizeof(int);
+        private const int ENCODED_LENGTH_IN_BITS = ENCODED_LENGTH_IN_BYTES * Constants.BITS_PER_BYTE;
         
         #endregion
 
@@ -19,29 +21,19 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBufferWriter dataBuffer, int value)
         {
-            Header.WriteToBuffer(dataBuffer, false, false);
             dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         /// <inheritdoc />
-        public Attribute<int> Decode(IDataBufferReader dataBuffer)
+        public int Decode(IDataBufferReader dataBuffer)
         {
-            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-            int decodedValue = default;
-            
-            if (!valueIsMissing && !valueIsNull)
-            {
-                byte[] valueBytes = dataBuffer.ReadBytes(sizeof(int));
-                decodedValue = BitConverter.ToInt32(valueBytes);
-            }
-
-            return new Attribute<int>(valueIsMissing, decodedValue);
+            return BitConverter.ToInt32(dataBuffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
         }
 
         /// <inheritdoc />
         public int GetLengthInBits(int value)
         {
-            return ENCODED_LENGTH_BITS;
+            return ENCODED_LENGTH_IN_BITS;
         }
 
         #endregion

@@ -1,7 +1,7 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Common;
 
 #endregion
 
@@ -11,10 +11,8 @@ namespace Barchart.BinarySerializer.Types
     {
         #region Constants
         
-        private const int ENCODED_HEADER_LENGTH_BITS = 2;
-        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(short) * 8;
-        
-        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        private const int ENCODED_LENGTH_IN_BYTES = sizeof(short);
+        private const int ENCODED_LENGTH_IN_BITS = ENCODED_LENGTH_IN_BYTES * Constants.BITS_PER_BYTE;
         
         #endregion
 
@@ -23,30 +21,19 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBufferWriter dataBuffer, short value)
         {
-            Header.WriteToBuffer(dataBuffer, false, false);
-            
             dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         /// <inheritdoc />
-        public Attribute<short> Decode(IDataBufferReader dataBuffer)
+        public short Decode(IDataBufferReader dataBuffer)
         {
-            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-            short decodedValue = default;
-
-            if (!valueIsMissing && !valueIsNull)
-            {
-                byte[] valueBytes = dataBuffer.ReadBytes(sizeof(short));
-                decodedValue = BitConverter.ToInt16(valueBytes);
-            }
-
-            return new Attribute<short>(valueIsMissing, decodedValue);
+            return BitConverter.ToInt16(dataBuffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
         }
 
         /// <inheritdoc />
         public int GetLengthInBits(short value)
         {
-            return ENCODED_LENGTH_BITS;
+            return ENCODED_LENGTH_IN_BITS;
         }
 
         #endregion
