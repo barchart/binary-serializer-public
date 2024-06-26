@@ -18,21 +18,6 @@ namespace Barchart.BinarySerializer.Attributes
         public const int NumberOfHeaderBitsString = 8;
         
         #endregion
-        
-        #region Properties
-        
-        /// <summary>
-        ///     Indicates if the value of the attribute is included in serialized output (either
-        ///     as a null flag in the header or as binary data following the header).
-        /// </summary>
-        public bool IsMissing { get; init; }
-        
-        /// <summary>
-        ///     If true, the attribute's value is null.
-        /// </summary>
-        public bool IsNull { get; init; }
-        
-        #endregion
 
         #region Constructor(s)
 
@@ -44,20 +29,6 @@ namespace Barchart.BinarySerializer.Attributes
         #endregion
         
         #region Methods
-
-        /// <summary>
-        ///     Writes header data to a data buffer.
-        /// </summary>
-        /// <param name="dataBuffer">
-        ///     The data buffer to write to.
-        /// </param>
-        /// <param name="header">
-        ///     The header to write.
-        /// </param>
-        public static void WriteToBuffer(IDataBuffer dataBuffer, Header header)
-        {
-            WriteToBuffer(dataBuffer, header.IsMissing, header.IsNull);
-        }
         
         /// <summary>
         ///     Writes header data to a data buffer.
@@ -72,7 +43,7 @@ namespace Barchart.BinarySerializer.Attributes
         /// <param name="valueIsNull">
         ///     Indicates if the value of the attribute is null.
         /// </param>
-        public static void WriteToBuffer(IDataBuffer dataBuffer, bool valueIsMissing, bool valueIsNull)
+        public static void WriteToBuffer(IDataBufferWriter dataBuffer, bool valueIsMissing, bool valueIsNull, byte length = 0)
         {
             dataBuffer.WriteBit(valueIsMissing);
 
@@ -80,22 +51,15 @@ namespace Barchart.BinarySerializer.Attributes
             {
                 dataBuffer.WriteBit(valueIsNull);
             }
-        }
-        
-        /// <summary>
-        ///     Reads a header from the data buffer.
-        /// </summary>
-        /// <param name="dataBuffer">
-        ///     The data buffer to read from.
-        /// </param>
-        /// <returns>
-        ///     A header consisting of the next one (or two) bits from the data buffer.
-        /// </returns>
-        public static Header ReadFromBuffer(IDataBuffer dataBuffer)
-        {
-            ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-            
-            return new() { IsMissing = valueIsMissing, IsNull = valueIsNull };
+
+            if (length > 0)
+            {
+                for (int i = 5; i >= 0; i--)
+                {
+                    bool bit = ((length >> i) & 1) == 1;
+                    dataBuffer.WriteBit(bit);
+                }
+            }
         }
 
         /// <summary>
@@ -111,7 +75,7 @@ namespace Barchart.BinarySerializer.Attributes
         /// <param name="valueIsNull">
         ///     Indicates if the value of the attribute is null.
         /// </param>
-        public static void ReadFromBuffer(IDataBuffer dataBuffer, out bool valueIsMissing, out bool valueIsNull)
+        public static void ReadFromBuffer(IDataBufferReader dataBuffer, out bool valueIsMissing, out bool valueIsNull)
         {
             valueIsMissing = dataBuffer.ReadBit();
             valueIsNull = !valueIsMissing && dataBuffer.ReadBit();
