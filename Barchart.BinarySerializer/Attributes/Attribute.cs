@@ -8,17 +8,17 @@
     {
         #region Properties
 
-        public Header Header { get; }
+        public bool IsValueMissing { get; }
 
-        public T? Value { get; }
+        public T Value { get; }
 
         #endregion
         
         #region Constructor(s)
 
-        public Attribute(Header header, T? value)
+        public Attribute(bool isValueMissing, T value)
         {
-            Header = header;
+            IsValueMissing = isValueMissing;
             Value = value;
         }
 

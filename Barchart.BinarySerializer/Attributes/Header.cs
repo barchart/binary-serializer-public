@@ -9,7 +9,7 @@ namespace Barchart.BinarySerializer.Attributes
     /// <summary>
     ///     Metadata regarding an attribute.
     /// </summary>
-    public readonly class Header
+    public class Header
     {
         #region Fields
 
