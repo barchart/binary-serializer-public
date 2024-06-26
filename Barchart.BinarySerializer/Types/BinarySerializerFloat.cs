@@ -24,19 +24,20 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, float value)
+        public void Encode(IDataBufferWriter dataBuffer, float value)
         {
             Header.WriteToBuffer(dataBuffer, false, false);
             dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         /// <inheritdoc />
-        public Attribute<float> Decode(IDataBuffer dataBuffer)
+        public Attribute<float> Decode(IDataBufferReader dataBuffer)
         {
-            Header header = Header.ReadFromBuffer(dataBuffer);
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(float));
             float decodedValue = BitConverter.ToSingle(valueBytes);
-            return new Attribute<float>(header, decodedValue);
+            
+            return new Attribute<float>(valueIsMissing, decodedValue);
         }
 
         /// <inheritdoc />

@@ -28,7 +28,7 @@ namespace Barchart.BinarySerializer.Schemas
         #region Methods
 
         /// <inheritdoc />
-        public override void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBuffer buffer)
+        public override void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBufferWriter buffer)
         {
             T oldValue = GetDelegate(oldObject);
             T newValue = GetDelegate(newObject);
@@ -46,7 +46,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public override void Decode(TContainer existing, IDataBuffer buffer)
+        public override void Decode(TContainer existing, IDataBufferReader buffer)
         {
             Attribute<T> attribute;
 
@@ -61,7 +61,7 @@ namespace Barchart.BinarySerializer.Schemas
                 attribute = ((IBinaryTypeObjectSerializer<T>)BinarySerializer).Decode(buffer, currentObject);
             }
 
-            if (attribute.Header.IsMissing)
+            if (attribute.IsValueMissing)
             {
                 return;
             }

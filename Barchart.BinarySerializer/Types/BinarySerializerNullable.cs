@@ -31,7 +31,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, T? value)
+        public void Encode(IDataBufferWriter dataBuffer, T? value)
         {
             if (value != null)
             {
@@ -39,21 +39,16 @@ namespace Barchart.BinarySerializer.Types
             }
             else
             {
-                Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = true });
+                Header.WriteToBuffer(dataBuffer, false, true);
             }
         }
 
         /// <inheritdoc />
-        public Attribute<T?> Decode(IDataBuffer dataBuffer)
+        public Attribute<T?> Decode(IDataBufferReader dataBuffer)
         {
             Attribute<T> attribute = _serializer.Decode(dataBuffer);
 
-            if (attribute.Header.IsMissing || attribute.Header.IsNull)
-            {
-                return new Attribute<T?>(attribute.Header, null);
-            }
-
-            return new Attribute<T?>(attribute.Header, attribute.Value);
+            return new Attribute<T?>(attribute.IsValueMissing, attribute.Value);
         }
 
         /// <inheritdoc />

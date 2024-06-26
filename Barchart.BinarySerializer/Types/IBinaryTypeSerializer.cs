@@ -27,7 +27,7 @@ namespace Barchart.BinarySerializer.Types
         /// <param name="value">
         ///     The value to write.
         /// </param>
-        public void Encode(IDataBuffer dataBuffer, T value);
+        public void Encode(IDataBufferWriter dataBuffer, T value);
 
         /// <summary>
         ///     Reads a value from a binary data source.
@@ -38,7 +38,7 @@ namespace Barchart.BinarySerializer.Types
         /// <returns>
         ///     The value.
         /// </returns>
-        public Attribute<T> Decode(IDataBuffer dataBuffer);
+        public Attribute<T> Decode(IDataBufferReader dataBuffer);
 
         /// <summary>
         ///     Calculates the number of bits needed to encode a value (or the

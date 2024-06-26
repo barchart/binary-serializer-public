@@ -34,7 +34,7 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Fact]
         public void Encode_True_WritesToDataBuffer()
         {
-            var mock = new Mock<IDataBuffer>();
+            var mock = new Mock<IDataBufferWriter>();
 
             var bitsWritten = new List<bool>();
             var bytesWritten = new List<byte[]>();
@@ -53,7 +53,7 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Fact]
         public void Encode_False_WritesToDataBuffer()
         {
-            var mock = new Mock<IDataBuffer>();
+            var mock = new Mock<IDataBufferWriter>();
 
             var bitsWritten = new List<bool>();
             var bytesWritten = new List<byte[]>();
@@ -77,12 +77,11 @@ namespace Barchart.BinarySerializer.Tests.Types
         public void Decode_DataBufferWithSerializedtrueValue_ReturnsHeaderWithDecodedValue()
         {
             var byteArray = BitsToBytes(new bool[] { false, false, true }) ;
-            var header = new Header() { IsMissing = false, IsNull = false };
-            var dataBuffer = new DataBuffer(byteArray);
+            IDataBufferReader dataBuffer = new DataBufferReader(byteArray);
             
             Attribute<bool> attribute = _serializer.Decode(dataBuffer);
             
-            Assert.Equal(header, attribute.Header);
+            Assert.False(attribute.IsValueMissing);
             Assert.True(attribute.Value);
         }
         
@@ -90,12 +89,11 @@ namespace Barchart.BinarySerializer.Tests.Types
         public void Decode_DataBufferWithSerializedFalseValue_ReturnsHeaderWithDecodedValue()
         {
             var byteArray = BitsToBytes(new bool[] { false, false, false }) ;
-            var header = new Header() { IsMissing = false, IsNull = false };
-            var dataBuffer = new DataBuffer(byteArray);
+            IDataBufferReader dataBuffer = new DataBufferReader(byteArray);
 
             Attribute<bool> attribute = _serializer.Decode(dataBuffer);
 
-            Assert.Equal(header, attribute.Header);
+            Assert.False(attribute.IsValueMissing);
             Assert.False(attribute.Value);
         }
 

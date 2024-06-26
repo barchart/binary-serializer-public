@@ -24,7 +24,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
         
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, byte value)
+        public void Encode(IDataBufferWriter dataBuffer, byte value)
         {
             Header.WriteToBuffer(dataBuffer, false, false);
             
@@ -32,9 +32,12 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public Attribute<byte> Decode(IDataBuffer dataBuffer)
+        public Attribute<byte> Decode(IDataBufferReader dataBuffer)
         {
-            return new Attribute<byte>(Header.ReadFromBuffer(dataBuffer), dataBuffer.ReadByte());
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+            byte decodedValue = dataBuffer.ReadByte();
+
+            return new Attribute<byte>(valueIsMissing, decodedValue);
         }
 
         /// <inheritdoc />

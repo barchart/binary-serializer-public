@@ -24,7 +24,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
         
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, DateOnly value)
+        public void Encode(IDataBufferWriter dataBuffer, DateOnly value)
         {
             Header.WriteToBuffer(dataBuffer, false, false);
             int daysSinceEpoch = value.DayNumber - DateOnly.MinValue.DayNumber;
@@ -32,14 +32,14 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public Attribute<DateOnly> Decode(IDataBuffer dataBuffer)
+        public Attribute<DateOnly> Decode(IDataBufferReader dataBuffer)
         {
-            Header header = Header.ReadFromBuffer(dataBuffer);
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(int));
             int daysSinceEpoch = BitConverter.ToInt32(valueBytes);
             DateOnly decodedValue = DateOnly.MinValue.AddDays(daysSinceEpoch);
             
-            return new Attribute<DateOnly>(header, decodedValue);
+            return new Attribute<DateOnly>(valueIsMissing, decodedValue);
         }
 
         /// <inheritdoc />

@@ -32,9 +32,9 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, TContainer? value)
+        public void Encode(IDataBufferWriter dataBuffer, TContainer? value)
         {
-            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
+            Header.WriteToBuffer(dataBuffer, false,  value == null);
 
             if (value != null)
             {
@@ -50,9 +50,9 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, TContainer? oldValue, TContainer? newValue)
+        public void Encode(IDataBufferWriter dataBuffer, TContainer? oldValue, TContainer? newValue)
         {
-            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = newValue == null });
+            Header.WriteToBuffer(dataBuffer, false, newValue == null);
 
             if (newValue != null)
             {
@@ -75,37 +75,37 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public Attribute<TContainer?> Decode(IDataBuffer dataBuffer, TContainer? existing)
+        public Attribute<TContainer?> Decode(IDataBufferReader dataBuffer, TContainer? existing)
         {
-            Header header = Header.ReadFromBuffer(dataBuffer);
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
 
-            if (header.IsMissing || header.IsNull)
+            if (valueIsMissing || valueIsNull)
             {
-                return new Attribute<TContainer?>(header, default);
+                return new Attribute<TContainer?>(valueIsMissing, default);
             }
 
             int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
             
             TContainer list = ReadList(dataBuffer, length, existing);
 
-            return new Attribute<TContainer?>(header, list);
+            return new Attribute<TContainer?>(valueIsMissing, list);
         }
 
         /// <inheritdoc />
-        public Attribute<TContainer?> Decode(IDataBuffer dataBuffer)
+        public Attribute<TContainer?> Decode(IDataBufferReader dataBuffer)
         {
-            Header header = Header.ReadFromBuffer(dataBuffer);
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
 
-            if (header.IsMissing || header.IsNull)
+            if (valueIsMissing || valueIsNull)
             {
-                return new Attribute<TContainer?>(header, default);
+                return new Attribute<TContainer?>(valueIsMissing, default);
             }
 
             int length = BitConverter.ToInt32(dataBuffer.ReadBytes(sizeof(int)));
             
             TContainer list = ReadList(dataBuffer, length, default);
 
-            return new Attribute<TContainer?>(header, list);
+            return new Attribute<TContainer?>(valueIsMissing, list);
         }
 
         /// <inheritdoc />
@@ -131,17 +131,16 @@ namespace Barchart.BinarySerializer.Types
             return length;
         }
 
-        protected TContainer ReadList(IDataBuffer dataBuffer, int length, TContainer? existing)
+        protected TContainer ReadList(IDataBufferReader dataBuffer, int length, TContainer? existing)
         {
             TContainer list = new();
 
             for (int i = 0; i < length; i++)
             {
-                var headerWithValue = _serializer.Decode(dataBuffer);
-                var value = headerWithValue.Value;
-                var header = headerWithValue.Header;
+                var attribute = _serializer.Decode(dataBuffer);
+                var value = attribute.Value;
 
-                if (!header.IsMissing && value != null)
+                if (!attribute.IsValueMissing && value != null)
                 {
                     list.Add(value);
                 }

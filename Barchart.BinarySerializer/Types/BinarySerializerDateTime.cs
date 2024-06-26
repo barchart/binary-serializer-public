@@ -24,7 +24,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
         
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, DateTime value)
+        public void Encode(IDataBufferWriter dataBuffer, DateTime value)
         {
             Header.WriteToBuffer(dataBuffer, false, false);
             TimeSpan unixTimeSpan = value - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -34,15 +34,15 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public Attribute<DateTime> Decode(IDataBuffer dataBuffer)
+        public Attribute<DateTime> Decode(IDataBufferReader dataBuffer)
         {
-            Header header = Header.ReadFromBuffer(dataBuffer);
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(long));
             long milliSeconds = BitConverter.ToInt64(valueBytes, 0);
             DateTime epoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             DateTime decodedValue = epoch.AddMilliseconds(milliSeconds);
 
-            return new Attribute<DateTime>(header, decodedValue);
+            return new Attribute<DateTime>(valueIsMissing, decodedValue);
         }
 
         /// <inheritdoc />

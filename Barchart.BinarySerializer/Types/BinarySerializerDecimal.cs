@@ -2,7 +2,6 @@
 
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
-using System.IO;
 
 #endregion
 
@@ -25,7 +24,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, decimal value)
+        public void Encode(IDataBufferWriter dataBuffer, decimal value)
         {
             Header.WriteToBuffer(dataBuffer, false, false);
             
@@ -37,16 +36,16 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public Attribute<decimal> Decode(IDataBuffer dataBuffer)
+        public Attribute<decimal> Decode(IDataBufferReader dataBuffer)
         {
-            Header header = Header.ReadFromBuffer(dataBuffer);
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(decimal));
             
             using MemoryStream stream = new(valueBytes);
             using BinaryReader reader = new(stream);
             decimal decodedValue = reader.ReadDecimal();
 
-            return new Attribute<decimal>(header, decodedValue);
+            return new Attribute<decimal>(valueIsMissing, decodedValue);
         }
 
         /// <inheritdoc />

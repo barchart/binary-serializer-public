@@ -1,4 +1,5 @@
-﻿using Barchart.BinarySerializer.Buffers;
+﻿using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Types
 {
@@ -16,19 +17,20 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, int value)
+        public void Encode(IDataBufferWriter dataBuffer, int value)
         {
             Header.WriteToBuffer(dataBuffer, false, false);
             dataBuffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         /// <inheritdoc />
-        public Attribute<int> Decode(IDataBuffer dataBuffer)
+        public Attribute<int> Decode(IDataBufferReader dataBuffer)
         {
-            Header header = Header.ReadFromBuffer(dataBuffer);
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(int));
-            float decodedValue = BitConverter.ToInt32(valueBytes);
-            return new Attribute<int>(header, decodedValue);
+            int decodedValue = BitConverter.ToInt32(valueBytes);
+
+            return new Attribute<int>(valueIsMissing, decodedValue);
         }
 
         /// <inheritdoc />

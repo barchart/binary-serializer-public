@@ -30,40 +30,10 @@ namespace Barchart.BinarySerializer.Types
 
         #region Methods
 
-        /// <inheritdoc />
-        public Attribute<TContainer> Decode(IDataBuffer dataBuffer)
+         /// <inheritdoc />
+        public void Encode(IDataBufferWriter dataBuffer, TContainer? value)
         {
-            Header header = Header.ReadFromBuffer(dataBuffer);
-
-            if (header.IsMissing || header.IsNull)
-            {
-                return new Attribute<TContainer>(header, default);
-            }
-
-            TContainer? deserializedObject = Schema.Deserialize(dataBuffer);
-
-            return new Attribute<TContainer>(header, deserializedObject);
-        }
-
-        /// <inheritdoc />
-        public Attribute<TContainer> Decode(IDataBuffer dataBuffer, TContainer existing)
-        {
-            Header header = Header.ReadFromBuffer(dataBuffer);
-
-            if (header.IsMissing || header.IsNull)
-            {
-                return new Attribute<TContainer>(header, default);
-            }
-
-            TContainer? deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
-
-            return new Attribute<TContainer>(header, deserializedObject);
-        }
-
-        /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, TContainer? value)
-        {
-            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = value == null });
+            Header.WriteToBuffer(dataBuffer, false, value == null);
 
             if (value != null)
             {
@@ -72,14 +42,44 @@ namespace Barchart.BinarySerializer.Types
         }
 
         /// <inheritdoc />
-        public void Encode(IDataBuffer dataBuffer, TContainer? oldObject, TContainer? newObject)
+        public void Encode(IDataBufferWriter dataBuffer, TContainer? oldObject, TContainer? newObject)
         {
-            Header.WriteToBuffer(dataBuffer, new() { IsMissing = false, IsNull = newObject == null });
+            Header.WriteToBuffer(dataBuffer, false, newObject == null);
 
             if (newObject != null)
             {
                 Schema.Serialize(oldObject!, newObject!, dataBuffer);
             }
+        }
+
+        /// <inheritdoc />
+        public Attribute<TContainer> Decode(IDataBufferReader dataBuffer)
+        {
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+
+            if (valueIsMissing || valueIsNull)
+            {
+                return new Attribute<TContainer>(valueIsMissing, default);
+            }
+
+            TContainer? deserializedObject = Schema.Deserialize(dataBuffer);
+
+            return new Attribute<TContainer>(valueIsMissing, deserializedObject);
+        }
+
+        /// <inheritdoc />
+        public Attribute<TContainer> Decode(IDataBufferReader dataBuffer, TContainer existing)
+        {
+            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+
+            if (valueIsMissing || valueIsNull)
+            {
+                return new Attribute<TContainer>(valueIsMissing, default);
+            }
+
+            TContainer? deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
+
+            return new Attribute<TContainer>(valueIsMissing, deserializedObject);
         }
 
         /// <inheritdoc cref="ISchema.GetLengthInBits(object)" path="/Schemas/ISchema"/>

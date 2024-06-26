@@ -61,13 +61,13 @@ namespace Barchart.BinarySerializer.Schemas
         #region Methods
         
         /// <inheritdoc />
-        public void Encode(TContainer value, IDataBuffer dataBuffer) {
+        public void Encode(TContainer value, IDataBufferWriter dataBuffer) {
             T member = GetDelegate(value);
             BinarySerializer.Encode(dataBuffer, member);
         }
 
         /// <inheritdoc />
-        public virtual void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBuffer dataBuffer) {
+        public virtual void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBufferWriter dataBuffer) {
             T oldValue = GetDelegate(oldObject);
             T newValue = GetDelegate(newObject);
 
@@ -84,11 +84,11 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public virtual void Decode(TContainer existing, IDataBuffer dataBuffer) {
+        public virtual void Decode(TContainer existing, IDataBufferReader dataBuffer) {
             Attribute<T> attribute;
             attribute = BinarySerializer.Decode(dataBuffer);
            
-            if (attribute.Header.IsMissing)
+            if (attribute.IsValueMissing)
             {
                 return;
             }

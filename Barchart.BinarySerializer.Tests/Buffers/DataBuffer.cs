@@ -31,7 +31,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
             byte first;
 
             var byteArray = new[] { first = 250 };
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferReader(byteArray);
 
             byte readFirst = dataBuffer.ReadByte();
 
@@ -45,7 +45,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
             byte second;
 
             var byteArray = new[] { first = 250, second = 175 };
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferReader(byteArray);
 
             byte readFirst = dataBuffer.ReadByte();
             byte readSecond = dataBuffer.ReadByte();
@@ -62,7 +62,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
         public void WriteBit_True_ModifiesBuffer()
         {
             var byteArray = new byte[1];
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferWriter(byteArray);
 
             dataBuffer.WriteBit(true);
 
@@ -73,7 +73,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
         public void WriteBit_False_ModifiesBuffer()
         {
             var byteArray = new byte[1];
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferWriter(byteArray);
 
             dataBuffer.WriteBit(false);
 
@@ -90,7 +90,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
         public void WriteBit_Multiple_ModifiesBuffer(bool[] bits)
         {
             var byteArray = new byte[1];
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferWriter(byteArray);
 
             for (int i = 0; i < bits.Length; i++)
             {
@@ -113,7 +113,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
         public void ToBytes_WhenZeroBitsAreWritten_ReturnsEmptyArray()
         {
             var byteArray = new byte[2];
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferWriter(byteArray);
 
             var bytes = dataBuffer.ToBytes();
 
@@ -124,7 +124,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
         public void ToBytes_WhenOneBitIsWritten_ReturnsOneByteArray()
         {
             var byteArray = new byte[2];
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferWriter(byteArray);
 
             for (int i = 0; i < 1; i++)
             {
@@ -140,7 +140,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
         public void ToBytes_WhenOneByteIsWritten_ReturnsOneByteArray()
         {
             var byteArray = new byte[2];
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferWriter(byteArray);
 
             for (int i = 0; i < 8; i++)
             {
@@ -156,7 +156,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
         public void ToBytes_WhenTwelveBitsAreWritten_ReturnsTwoBytesArray()
         {
             var byteArray = new byte[2];
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferWriter(byteArray);
 
             for (int i = 0; i < 12; i++)
             {
@@ -172,7 +172,7 @@ namespace Barchart.BinarySerializer.Tests.Buffers
         public void ToBytes_WhenTwoBytesAreWritten_ReturnsTwoBytesArray()
         {
             var byteArray = new byte[2];
-            var dataBuffer = new DataBuffer(byteArray);
+            var dataBuffer = new DataBufferWriter(byteArray);
 
             for (int i = 0; i < 16; i++)
             {
