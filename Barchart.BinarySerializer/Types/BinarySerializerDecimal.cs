@@ -1,7 +1,8 @@
 ﻿#region Using Statements
 
-using Barchart.BinarySerializer.Attributes;
+using System.Runtime.CompilerServices;
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Common;
 
 #endregion
 
@@ -14,49 +15,57 @@ namespace Barchart.BinarySerializer.Types
     {
         #region Constants
         
-        private const int ENCODED_HEADER_LENGTH_BITS = 2;
-        private const int ENCODED_VALUE_LENGTH_BITS = sizeof(decimal) * 8;
+        private const int ENCODED_LENGTH_IN_BYTES = sizeof(decimal);
+        private const int ENCODED_LENGTH_IN_BITS = ENCODED_LENGTH_IN_BYTES * Constants.BITS_PER_BYTE;
         
-        private const int ENCODED_LENGTH_BITS = ENCODED_HEADER_LENGTH_BITS + ENCODED_VALUE_LENGTH_BITS;
+        #endregion
+        
+        #region Fields
+
+        private readonly BinarySerializerInt binarySerialzierInt;
         
         #endregion
 
+        #region Constructors
+
+        public BinarySerializerDecimal()
+        {
+            binarySerialzierInt = new BinarySerializerInt();
+        }
+        
+        #endregion
+        
+        
         #region Methods
 
         /// <inheritdoc />
         public void Encode(IDataBufferWriter dataBuffer, decimal value)
         {
-            Header.WriteToBuffer(dataBuffer, false, false);
+            int[] components = Decimal.GetBits(value);
             
-            using MemoryStream stream = new();
-            using BinaryWriter writer = new(stream);
-            writer.Write(value);
-
-            dataBuffer.WriteBytes(stream.ToArray());
+            binarySerialzierInt.Encode(dataBuffer, components[0]);
+            binarySerialzierInt.Encode(dataBuffer, components[1]);
+            binarySerialzierInt.Encode(dataBuffer, components[2]);
+            binarySerialzierInt.Encode(dataBuffer, components[3]);
         }
 
         /// <inheritdoc />
-        public Attribute<decimal> Decode(IDataBufferReader dataBuffer)
+        public decimal Decode(IDataBufferReader dataBuffer)
         {
-            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-            decimal decodedValue = default;
+            int[] components = {
+                binarySerialzierInt.Decode(dataBuffer),
+                binarySerialzierInt.Decode(dataBuffer),
+                binarySerialzierInt.Decode(dataBuffer),
+                binarySerialzierInt.Decode(dataBuffer)
+            };
 
-            if (!valueIsMissing && !valueIsNull)
-            {
-                  byte[] valueBytes = dataBuffer.ReadBytes(sizeof(decimal));
-            
-                using MemoryStream stream = new(valueBytes);
-                using BinaryReader reader = new(stream);
-                decodedValue = reader.ReadDecimal();
-            }
-
-            return new Attribute<decimal>(valueIsMissing, decodedValue);
+            return new decimal(components);
         }
 
         /// <inheritdoc />
         public int GetLengthInBits(decimal value)
         {
-            return ENCODED_LENGTH_BITS;
+            return ENCODED_LENGTH_IN_BITS;
         }
 
         #endregion
