@@ -32,6 +32,12 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<uint> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+            
+            if (valueIsMissing || valueIsNull)
+            {
+                return new Attribute<uint>(valueIsMissing, default);
+            }
+
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(uint));
             uint decodedValue = BitConverter.ToUInt32(valueBytes);
                 

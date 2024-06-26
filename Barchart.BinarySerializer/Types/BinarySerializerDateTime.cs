@@ -37,6 +37,12 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<DateTime> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+
+            if (valueIsMissing || valueIsNull)
+            {
+                return new Attribute<DateTime>(valueIsMissing, default);
+            }
+
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(long));
             long milliSeconds = BitConverter.ToInt64(valueBytes, 0);
             DateTime epoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

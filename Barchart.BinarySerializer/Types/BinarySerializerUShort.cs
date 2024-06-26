@@ -32,6 +32,12 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<ushort> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+
+            if (valueIsMissing || valueIsNull)
+            {
+                return new Attribute<ushort>(valueIsMissing, default);
+            }
+
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(ushort));
             ushort decodedValue = BitConverter.ToUInt16(valueBytes);
                 

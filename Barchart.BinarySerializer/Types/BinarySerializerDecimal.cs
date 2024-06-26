@@ -39,6 +39,12 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<decimal> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+
+            if (valueIsMissing || valueIsNull)
+            {
+                return new Attribute<decimal>(valueIsMissing, default);
+            }
+
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(decimal));
             
             using MemoryStream stream = new(valueBytes);

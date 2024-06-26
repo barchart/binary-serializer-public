@@ -32,6 +32,12 @@ namespace Barchart.BinarySerializer.Types
         public Attribute<ulong> Decode(IDataBufferReader dataBuffer)
         {
             Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+           
+            if (valueIsMissing || valueIsNull)
+            {
+                return new Attribute<ulong>(valueIsMissing, default);
+            }
+
             byte[] valueBytes = dataBuffer.ReadBytes(sizeof(ulong));
             ulong decodedValue = BitConverter.ToUInt64(valueBytes);
                 
