@@ -18,9 +18,11 @@ namespace Barchart.BinarySerializer.Types
         /// <inheritdoc />
         public void Encode(IDataBufferWriter dataBuffer, string? value)
         {
-            Header.WriteToBuffer(dataBuffer, false, value == null);
-
-            if (value != null)
+            if (value == null)
+            {
+                Header.WriteToBuffer(dataBuffer, false, true);
+            }
+            else 
             {
                 byte[] valueBytes = Encoding.UTF8.GetBytes(value);
 
@@ -30,11 +32,7 @@ namespace Barchart.BinarySerializer.Types
                 }
 
                 int lengthIn6Bits = valueBytes.Length & 0x3F; 
-
-                for (int i = 5; i >= 0; i--)
-                {
-                    dataBuffer.WriteBit(((lengthIn6Bits >> i) & 1) == 1);
-                }
+                Header.WriteToBuffer(dataBuffer, false, false, lengthIn6Bits);
 
                 dataBuffer.WriteBytes(valueBytes);
             }

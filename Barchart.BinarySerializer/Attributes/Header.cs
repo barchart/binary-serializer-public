@@ -43,7 +43,7 @@ namespace Barchart.BinarySerializer.Attributes
         /// <param name="valueIsNull">
         ///     Indicates if the value of the attribute is null.
         /// </param>
-        public static void WriteToBuffer(IDataBufferWriter dataBuffer, bool valueIsMissing, bool valueIsNull, byte length = 0)
+        public static void WriteToBuffer(IDataBufferWriter dataBuffer, bool valueIsMissing, bool valueIsNull, int length = 0)
         {
             dataBuffer.WriteBit(valueIsMissing);
 
