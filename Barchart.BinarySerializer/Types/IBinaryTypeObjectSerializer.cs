@@ -21,7 +21,7 @@ namespace Barchart.BinarySerializer.Types
         /// <summary>
         ///     Encodes the specified oldValue and newValue to the given DataBuffer.
         /// </summary>
-        /// <param name="dataBuffer">
+        /// <param name="buffer">
         ///     The DataBuffer to which the values will be encoded.
         /// </param>
         /// <param name="oldValue">
@@ -30,12 +30,12 @@ namespace Barchart.BinarySerializer.Types
         /// <param name="newValue">
         ///     The new value to be encoded.
         /// </param>
-        public void Encode(IDataBufferWriter dataBuffer, T oldValue, T newValue);
+        public void Encode(IDataBufferWriter buffer, T oldValue, T newValue);
 
         /// <summary>
         ///     Decodes the specified existing value from the given DataBuffer.
         /// </summary>
-        /// <param name="dataBuffer">
+        /// <param name="buffer">
         ///     The DataBuffer from which the value will be decoded.
         /// </param>
         /// <param name="existing">
@@ -44,7 +44,7 @@ namespace Barchart.BinarySerializer.Types
         /// <returns>
         ///     An attribute containing the decoded value and its header information.
         /// </returns>
-        public Attribute<T> Decode(IDataBufferReader dataBuffer, T existing);
+        public Attribute<T> Decode(IDataBufferReader buffer, T existing);
 
         #endregion
     }

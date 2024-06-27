@@ -32,25 +32,25 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, T? value)
+        public void Encode(IDataBufferWriter buffer, T? value)
         {
-            dataBuffer.WriteBit(!value.HasValue);
+            buffer.WriteBit(!value.HasValue);
             
             if (value.HasValue)
             {
-                _typeSerializer.Encode(dataBuffer, value.Value);
+                _typeSerializer.Encode(buffer, value.Value);
             }
         }
 
         /// <inheritdoc />
-        public T? Decode(IDataBufferReader dataBuffer)
+        public T? Decode(IDataBufferReader buffer)
         {
-            if (dataBuffer.ReadBit())
+            if (buffer.ReadBit())
             {
                 return null;
             }
 
-            return _typeSerializer.Decode(dataBuffer);
+            return _typeSerializer.Decode(buffer);
         }
 
         /// <inheritdoc />

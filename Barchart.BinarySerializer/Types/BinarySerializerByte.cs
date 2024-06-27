@@ -21,15 +21,15 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
         
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, byte value)
+        public void Encode(IDataBufferWriter buffer, byte value)
         {
-            dataBuffer.WriteByte(value);
+            buffer.WriteByte(value);
         }
 
         /// <inheritdoc />
-        public byte Decode(IDataBufferReader dataBuffer)
+        public byte Decode(IDataBufferReader buffer)
         {
-            return dataBuffer.ReadByte();
+            return buffer.ReadByte();
         }
 
         /// <inheritdoc />

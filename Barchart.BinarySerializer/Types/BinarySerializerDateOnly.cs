@@ -29,15 +29,15 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
         
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, DateOnly value)
+        public void Encode(IDataBufferWriter buffer, DateOnly value)
         {
-            _binarySerializerInt.Encode(dataBuffer, GetDaysSinceEpoch(value));
+            _binarySerializerInt.Encode(buffer, GetDaysSinceEpoch(value));
         }
 
         /// <inheritdoc />
-        public DateOnly Decode(IDataBufferReader dataBuffer)
+        public DateOnly Decode(IDataBufferReader buffer)
         {
-            int daysSinceEpoch = _binarySerializerInt.Decode(dataBuffer);
+            int daysSinceEpoch = _binarySerializerInt.Decode(buffer);
             
             return DateOnly.MinValue.AddDays(daysSinceEpoch);
         }

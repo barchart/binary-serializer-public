@@ -37,24 +37,24 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, decimal value)
+        public void Encode(IDataBufferWriter buffer, decimal value)
         {
             int[] components = Decimal.GetBits(value);
             
-            _binarySerializerInt.Encode(dataBuffer, components[0]);
-            _binarySerializerInt.Encode(dataBuffer, components[1]);
-            _binarySerializerInt.Encode(dataBuffer, components[2]);
-            _binarySerializerInt.Encode(dataBuffer, components[3]);
+            _binarySerializerInt.Encode(buffer, components[0]);
+            _binarySerializerInt.Encode(buffer, components[1]);
+            _binarySerializerInt.Encode(buffer, components[2]);
+            _binarySerializerInt.Encode(buffer, components[3]);
         }
 
         /// <inheritdoc />
-        public decimal Decode(IDataBufferReader dataBuffer)
+        public decimal Decode(IDataBufferReader buffer)
         {
             int[] components = {
-                _binarySerializerInt.Decode(dataBuffer),
-                _binarySerializerInt.Decode(dataBuffer),
-                _binarySerializerInt.Decode(dataBuffer),
-                _binarySerializerInt.Decode(dataBuffer)
+                _binarySerializerInt.Decode(buffer),
+                _binarySerializerInt.Decode(buffer),
+                _binarySerializerInt.Decode(buffer),
+                _binarySerializerInt.Decode(buffer)
             };
 
             return new decimal(components);

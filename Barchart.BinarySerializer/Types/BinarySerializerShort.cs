@@ -19,15 +19,15 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, short value)
+        public void Encode(IDataBufferWriter buffer, short value)
         {
-            dataBuffer.WriteBytes(BitConverter.GetBytes(value));
+            buffer.WriteBytes(BitConverter.GetBytes(value));
         }
 
         /// <inheritdoc />
-        public short Decode(IDataBufferReader dataBuffer)
+        public short Decode(IDataBufferReader buffer)
         {
-            return BitConverter.ToInt16(dataBuffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
+            return BitConverter.ToInt16(buffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
         }
 
         /// <inheritdoc />

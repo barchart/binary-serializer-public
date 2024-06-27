@@ -32,50 +32,50 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
          /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, TContainer? value)
+        public void Encode(IDataBufferWriter buffer, TContainer? value)
         {
-            Header.WriteToBuffer(dataBuffer, false, value == null);
+            Header.WriteToBuffer(buffer, false, value == null);
 
             if (value != null)
             {
-                Schema.Serialize(value, dataBuffer);
+                Schema.Serialize(value, buffer);
             }
         }
 
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, TContainer? oldObject, TContainer? newObject)
+        public void Encode(IDataBufferWriter buffer, TContainer? oldObject, TContainer? newObject)
         {
-            Header.WriteToBuffer(dataBuffer, false, newObject == null);
+            Header.WriteToBuffer(buffer, false, newObject == null);
 
             if (newObject != null)
             {
-                Schema.Serialize(oldObject!, newObject!, dataBuffer);
+                Schema.Serialize(oldObject!, newObject!, buffer);
             }
         }
 
         /// <inheritdoc />
-        public Attribute<TContainer?> Decode(IDataBufferReader dataBuffer)
+        public Attribute<TContainer?> Decode(IDataBufferReader buffer)
         {
-            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+            Header.ReadFromBuffer(buffer, out bool valueIsMissing, out bool valueIsNull);
             TContainer? deserializedObject = default;
             
             if (!valueIsMissing && !valueIsNull)
             {
-                deserializedObject = Schema.Deserialize(dataBuffer);
+                deserializedObject = Schema.Deserialize(buffer);
             }
 
             return new Attribute<TContainer?>(valueIsMissing, deserializedObject);
         }
 
         /// <inheritdoc />
-        public Attribute<TContainer?> Decode(IDataBufferReader dataBuffer, TContainer? existing)
+        public Attribute<TContainer?> Decode(IDataBufferReader buffer, TContainer? existing)
         {
-            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
+            Header.ReadFromBuffer(buffer, out bool valueIsMissing, out bool valueIsNull);
             TContainer? deserializedObject= default;
             
             if (!valueIsMissing && !valueIsNull)
             {
-                deserializedObject = existing != null ? Schema.Deserialize(existing, dataBuffer) : default;
+                deserializedObject = existing != null ? Schema.Deserialize(existing, buffer) : default;
             }
 
             return new Attribute<TContainer?>(valueIsMissing, deserializedObject);

@@ -21,24 +21,24 @@ namespace Barchart.BinarySerializer.Types
         /// <summary>
         ///     Writes a value to a binary data source.
         /// </summary>
-        /// <param name="dataBuffer">
+        /// <param name="buffer">
         ///     The write target.
         /// </param>
         /// <param name="value">
         ///     The value to write.
         /// </param>
-        public void Encode(IDataBufferWriter dataBuffer, T value);
+        public void Encode(IDataBufferWriter buffer, T value);
 
         /// <summary>
         ///     Reads a value from a binary data source.
         /// </summary>
-        /// <param name="dataBuffer">
+        /// <param name="buffer">
         ///     The binary data source.
         /// </param>
         /// <returns>
         ///     The value.
         /// </returns>
-        public T Decode(IDataBufferReader dataBuffer);
+        public T Decode(IDataBufferReader buffer);
 
         /// <summary>
         ///     Calculates the number of bits needed to encode a value (or the

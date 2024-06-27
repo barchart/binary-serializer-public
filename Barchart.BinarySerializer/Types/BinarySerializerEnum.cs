@@ -32,15 +32,15 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, T value)
+        public void Encode(IDataBufferWriter buffer, T value)
         {
-            _binarySerializerInt.Encode(dataBuffer, Convert.ToInt32(value));
+            _binarySerializerInt.Encode(buffer, Convert.ToInt32(value));
         }
 
         /// <inheritdoc />
-        public T Decode(IDataBufferReader dataBuffer)
+        public T Decode(IDataBufferReader buffer)
         {
-            return (T)Enum.Parse(typeof(T), _binarySerializerInt.Decode(dataBuffer).ToString(), true);
+            return (T)Enum.Parse(typeof(T), _binarySerializerInt.Decode(buffer).ToString(), true);
         }
 
         public bool GetEquals(T a, T b)

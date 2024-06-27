@@ -48,7 +48,7 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, string value)
+        public void Encode(IDataBufferWriter buffer, string value)
         {
             byte[] bytes = _encoding.GetBytes(value);
 
@@ -57,15 +57,15 @@ namespace Barchart.BinarySerializer.Types
                 throw new ArgumentException($"Unable to serialize string. Serialized string would require {bytes.Length} bytes; however, the maximum size of a serialized string is {MAXIMUM_STRING_LENGTH_IN_BYTES}", nameof(value));
             }
             
-            _binarySerializerUShort.Encode(dataBuffer, Convert.ToUInt16(bytes.Length));
+            _binarySerializerUShort.Encode(buffer, Convert.ToUInt16(bytes.Length));
             
-            dataBuffer.WriteBytes(bytes);
+            buffer.WriteBytes(bytes);
         }
 
         /// <inheritdoc />
-        public string Decode(IDataBufferReader dataBuffer)
+        public string Decode(IDataBufferReader buffer)
         {
-            return _encoding.GetString(dataBuffer.ReadBytes(_binarySerializerUShort.Decode(dataBuffer)));
+            return _encoding.GetString(buffer.ReadBytes(_binarySerializerUShort.Decode(buffer)));
         }
 
         /// <inheritdoc />

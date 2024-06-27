@@ -29,15 +29,15 @@ namespace Barchart.BinarySerializer.Types
         #region Methods
         
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, DateTime value)
+        public void Encode(IDataBufferWriter buffer, DateTime value)
         {
-            _binarySerializerLong.Encode(dataBuffer, GetMillisecondsSinceEpoch(value));
+            _binarySerializerLong.Encode(buffer, GetMillisecondsSinceEpoch(value));
         }
 
         /// <inheritdoc />
-        public DateTime Decode(IDataBufferReader dataBuffer)
+        public DateTime Decode(IDataBufferReader buffer)
         {
-            long millisecondsSinceEpoch = _binarySerializerLong.Decode(dataBuffer);
+            long millisecondsSinceEpoch = _binarySerializerLong.Decode(buffer);
             
             return DateTime.UnixEpoch.AddMilliseconds(millisecondsSinceEpoch);
         }
