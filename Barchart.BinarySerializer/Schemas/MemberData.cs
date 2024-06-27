@@ -62,8 +62,7 @@ namespace Barchart.BinarySerializer.Schemas
         
         /// <inheritdoc />
         public void Encode(TContainer value, IDataBufferWriter dataBuffer) {
-            T member = GetDelegate(value);
-            BinarySerializer.Encode(dataBuffer, member);
+            BinarySerializer.Encode(dataBuffer, GetDelegate(value));
         }
 
         /// <inheritdoc />
