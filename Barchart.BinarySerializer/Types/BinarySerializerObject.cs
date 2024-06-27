@@ -1,4 +1,5 @@
-﻿#region Using Statements
+﻿/*
+#region Using Statements
 
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
@@ -106,3 +107,4 @@ namespace Barchart.BinarySerializer.Types
         #endregion
     }
 }
+*/

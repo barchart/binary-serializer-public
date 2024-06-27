@@ -155,6 +155,7 @@ namespace Barchart.BinarySerializer.Schemas
             }
         }
 
+        /*
         /// <summary>
         ///     Gets a serializer for a Complex type <typeparamref name="T"/>.
         /// </summary>
@@ -166,7 +167,9 @@ namespace Barchart.BinarySerializer.Schemas
             
             return new BinarySerializerObject<T>(schema);
         }
+        */
 
+        /*
         /// <summary>
         ///     Gets a serializer for a list type <typeparamref name="TList"/> containing elements of type <typeparamref name="T"/>.
         /// </summary>
@@ -184,6 +187,7 @@ namespace Barchart.BinarySerializer.Schemas
             
             return new BinarySerializerIList<TList, T>(serializer);
         }
+        */
 
         /// <summary>
         ///     Gets a serializer for an enum type <typeparamref name="T"/>.

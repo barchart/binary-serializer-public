@@ -1,4 +1,5 @@
-﻿#region Using Statements
+﻿/*
+#region Using Statements
 
 using System.Reflection;
 
@@ -90,3 +91,4 @@ namespace Barchart.BinarySerializer.Schemas
         #endregion
     }
 }
+*/
