@@ -21,6 +21,8 @@
             _key = key;
             _include = include;
         }
+        
+        #endregion
 
         #region Properties
 
@@ -39,8 +41,6 @@
         /// </summary>
         public bool Include => _include;
 
-        #endregion
-        
         #endregion
     }
 }
