@@ -21,7 +21,7 @@ namespace Barchart.BinarySerializer.Types
         ///     Writes a value to a binary data source.
         /// </summary>
         /// <param name="buffer">
-        ///     The write target.
+        ///     The binary data source.
         /// </param>
         /// <param name="value">
         ///     The value to write.
