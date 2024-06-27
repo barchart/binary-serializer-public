@@ -10,7 +10,7 @@ namespace Barchart.BinarySerializer.Schemas
     ///     Represents a schema for serializing and deserializing objects of type <typeparamref name="TContainer"/>.
     /// </summary>
     /// <typeparam name="TContainer">The type of objects serialized and deserialized by this schema.</typeparam>
-    public class Schema<TContainer> : ISchema where TContainer : new()
+    public class Schema<TContainer> where TContainer : new()
     {
         #region Fields
 
