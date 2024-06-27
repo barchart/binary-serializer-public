@@ -9,22 +9,13 @@ namespace Barchart.BinarySerializer.Attributes
     /// <summary>
     ///     Metadata regarding an attribute.
     /// </summary>
-    public class Header
+    public static class Header
     {
         #region Constants
 
         public const int NUMBER_OF_BITS_IS_MISSING = 1;
         public const int NUMBER_OF_HEADER_BITS_NON_STRING = 2;
         public const int NUMBER_OF_HEADER_BITS_STRING = 8;
-        
-        #endregion
-
-        #region Constructor(s)
-
-        private Header()
-        {
-
-        }
         
         #endregion
         
