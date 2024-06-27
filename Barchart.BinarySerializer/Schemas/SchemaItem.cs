@@ -56,14 +56,14 @@ namespace Barchart.BinarySerializer.Schemas
 
         #region Methods
         
-        public void Encode(IDataBufferWriter dataBuffer, TContainer source) 
+        public void Encode(IDataBufferWriter buffer, TContainer source) 
         {
-            _serializer.Encode(dataBuffer, _getter(source));
+            _serializer.Encode(buffer, _getter(source));
         }
         
-        public void Decode(IDataBufferReader dataBuffer, TContainer target)
+        public void Decode(IDataBufferReader buffer, TContainer target)
         {
-            _setter(target, _serializer.Decode(dataBuffer));
+            _setter(target, _serializer.De`code(buffer));
         }
 
         public bool GetEquals(TContainer a, TContainer b)
