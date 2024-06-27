@@ -15,7 +15,6 @@ namespace Barchart.BinarySerializer.Attributes
 
         public const int NUMBER_OF_BITS_IS_MISSING = 1;
         public const int NUMBER_OF_HEADER_BITS_NON_STRING = 2;
-        public const int NUMBER_OF_HEADER_BITS_STRING = 8;
         
         #endregion
         
