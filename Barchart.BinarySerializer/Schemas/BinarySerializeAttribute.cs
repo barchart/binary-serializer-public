@@ -19,7 +19,7 @@
         public BinarySerializeAttribute(bool key = false, bool include = true)
         {
             _key = key;
-            _include = include;
+            _include = key || include;
         }
         
         #endregion
@@ -30,7 +30,8 @@
         ///     Indicates whether the property is a key. Typically, each type
         ///     has one key property. Although, multiple properties can be
         ///     defined as keys (when multiple properties are required to
-        ///     define uniqueness).
+        ///     define uniqueness). Key properties are always included
+        ///     when serializing.
         /// </summary>
         public bool Key => _key;
 
