@@ -16,7 +16,7 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="TValue">
     ///     The type of the field (or property).
     /// </typeparam>
-    public class MemberData<TContainer, TValue>
+    public class SchemaItem<TContainer, TValue>
     {
         #region Fields
 
@@ -33,7 +33,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         #region Constructor(s)
 
-        public MemberData(string name, bool key, Func<TContainer, TValue> getter, Action<TContainer, TValue> setter, IBinaryTypeSerializer<TValue> serializer)
+        public SchemaItem(string name, bool key, Func<TContainer, TValue> getter, Action<TContainer, TValue> setter, IBinaryTypeSerializer<TValue> serializer)
         {
             _name = name;
             _key = key;
