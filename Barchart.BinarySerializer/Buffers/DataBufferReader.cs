@@ -1,7 +1,8 @@
 namespace Barchart.BinarySerializer.Buffers
 {
     /// <summary>
-    ///     A data buffer which uses a fixed-length byte array to read data.
+    ///     A data buffer reader which uses a fixed-length byte array
+    ///     for internal storage.
     /// </summary>
     public class DataBufferReader : IDataBufferReader
     {

@@ -1,7 +1,7 @@
 namespace Barchart.BinarySerializer.Buffers;
 
 /// <summary>
-///     A utility for writing binary data to a byte array.
+///     A utility for writing binary data.
 /// </summary>
 public interface IDataBufferWriter
 {

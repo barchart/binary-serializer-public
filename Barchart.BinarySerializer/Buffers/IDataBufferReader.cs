@@ -1,7 +1,7 @@
 namespace Barchart.BinarySerializer.Buffers;
 
 /// <summary>
-///     A utility for reading binary data from a byte array.
+///     A utility for reading binary data.
 /// </summary>
 public interface IDataBufferReader
 {
