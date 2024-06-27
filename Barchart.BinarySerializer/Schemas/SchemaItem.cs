@@ -16,7 +16,7 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="TValue">
     ///     The type of the field (or property).
     /// </typeparam>
-    public class SchemaItem<TContainer, TValue>
+    public class SchemaItem<TContainer, TValue> where TContainer : new()
     {
         #region Fields
 
