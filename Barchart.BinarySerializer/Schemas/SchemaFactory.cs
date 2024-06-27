@@ -10,7 +10,7 @@ using Barchart.BinarySerializer.Types;
 namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    ///     Factory class for generating schemas for binary serialization.
+    ///     Factory for generating schemas.
     /// </summary>
     public static class SchemaFactory
     {
