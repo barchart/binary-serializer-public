@@ -65,7 +65,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public virtual void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBufferWriter dataBuffer) {
+        public void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBufferWriter dataBuffer) {
             T oldValue = GetDelegate(oldObject);
             T newValue = GetDelegate(newObject);
 
@@ -120,7 +120,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public virtual int GetLengthInBits(TContainer oldObject, TContainer newObject)
+        public int GetLengthInBits(TContainer oldObject, TContainer newObject)
         {
             var oldValue = GetDelegate(oldObject);
             var newValue = GetDelegate(newObject);
