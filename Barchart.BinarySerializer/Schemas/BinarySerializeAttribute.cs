@@ -1,27 +1,16 @@
 ﻿namespace Barchart.BinarySerializer.Schemas
 {
     /// <summary>
-    ///     An attribute which can be used to define properties of a class (or struct)
-    ///     which should be serialized.
+    ///     An attribute which can be used to define properties (or fields) of
+    ///     a class (or struct) which should be serialized.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class BinarySerializeAttribute : Attribute
     {
-        #region Properties
+        #region Fields
 
-        /// <summary>
-        ///     Indicates whether the property or field is a key.
-        ///     A key property or field is used to uniquely identify an object instance.
-        /// </summary>
-        public bool Key { get; }
-
-        /// <summary>
-        ///     Indicates whether the property or field should be included in serialization.
-        ///     If set to true, the property or field will be included in the serialized output.
-        ///     If set to false, the property or field will be excluded from the serialized output.
-        ///     Default value is true.
-        /// </summary>
-        public bool Include { get; }
+        private readonly bool _key;
+        private readonly bool _include;
 
         #endregion
 
@@ -29,10 +18,29 @@
 
         public BinarySerializeAttribute(bool key = false, bool include = true)
         {
-            Key = key;
-            Include = include;
+            _key = key;
+            _include = include;
         }
 
+        #region Properties
+
+        /// <summary>
+        ///     Indicates whether the property is a key. Typically, each type
+        ///     has one key property. Although, multiple properties can be
+        ///     defined as keys (when multiple properties are required to
+        ///     define uniqueness).
+        /// </summary>
+        public bool Key => _key;
+
+        /// <summary>
+        ///     Indicates whether the property should be included in serialization.
+        ///     When false, the property will be excluded from serialization (and
+        ///     ignored completely by this library).
+        /// </summary>
+        public bool Include => _include;
+
+        #endregion
+        
         #endregion
     }
 }
