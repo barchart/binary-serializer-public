@@ -30,14 +30,11 @@ namespace Barchart.BinarySerializer.Schemas
 
         /// <inheritdoc />
         public MemberInfo MemberInfo { get; }
-
-        /// <inheritdoc />
+        
         public Func<TContainer, T> GetDelegate { get; }
-
-        /// <inheritdoc />
+        
         public Action<TContainer, T?>? SetDelegate { get; }
         
-        /// <inheritdoc />
         public IBinaryTypeSerializer<T> BinarySerializer { get; }
 
         #endregion
