@@ -10,13 +10,16 @@ namespace Barchart.BinarySerializer.Schemas
     /// <summary>
     ///     Represents metadata about a member of a class or structure with encoding/decoding functionality.
     /// </summary>
-    /// <typeparam name="TContainer">
-    ///     The type which contains the field (or property).
+    /// <typeparam name="TSource">
+    ///     The type which contains the field (or property) being serialized. In other words,
+    ///     this is the source of data being serialized (or the assignment target of data
+    ///     being deserialized).
     /// </typeparam>
     /// <typeparam name="TValue">
-    ///     The type of the field (or property).
+    ///     The type of data being serialized (which is read from the source object) or
+    ///     deserialized (which assigned to the source object).
     /// </typeparam>
-    public class SchemaItem<TContainer, TValue> where TContainer : new()
+    public class SchemaItem<TSource, TValue> where TSource : new()
     {
         #region Fields
 
@@ -24,8 +27,8 @@ namespace Barchart.BinarySerializer.Schemas
         
         private readonly bool _key;
 
-        private readonly Func<TContainer, TValue> _getter;
-        private readonly Action<TContainer, TValue> _setter;
+        private readonly Func<TSource, TValue> _getter;
+        private readonly Action<TSource, TValue> _setter;
 
         private readonly IBinaryTypeSerializer<TValue> _serializer;
         
@@ -33,7 +36,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         #region Constructor(s)
 
-        public SchemaItem(string name, bool key, Func<TContainer, TValue> getter, Action<TContainer, TValue> setter, IBinaryTypeSerializer<TValue> serializer)
+        public SchemaItem(string name, bool key, Func<TSource, TValue> getter, Action<TSource, TValue> setter, IBinaryTypeSerializer<TValue> serializer)
         {
             _name = name;
             _key = key;
@@ -56,17 +59,17 @@ namespace Barchart.BinarySerializer.Schemas
 
         #region Methods
         
-        public void Encode(IDataBufferWriter buffer, TContainer source) 
+        public void Encode(IDataBufferWriter buffer, TSource source) 
         {
             _serializer.Encode(buffer, _getter(source));
         }
         
-        public void Decode(IDataBufferReader buffer, TContainer target)
+        public void Decode(IDataBufferReader buffer, TSource target)
         {
             _setter(target, _serializer.Decode(buffer));
         }
 
-        public bool GetEquals(TContainer a, TContainer b)
+        public bool GetEquals(TSource a, TSource b)
         {
             return _serializer.GetEquals(_getter(a), _getter(b));
         }
