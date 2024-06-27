@@ -44,8 +44,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         #region Constructor(s)
 
-        public MemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo,
-            Func<TContainer, T> getDelegate, Action<TContainer, T?>? setDelegate, IBinaryTypeSerializer<T> binarySerializer)
+        public MemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo, Func<TContainer, T> getDelegate, Action<TContainer, T?>? setDelegate, IBinaryTypeSerializer<T> binarySerializer)
         {
             Type = type;
             Name = name;
