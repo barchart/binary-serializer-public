@@ -63,7 +63,7 @@ namespace Barchart.BinarySerializer.Schemas
         
         public void Decode(IDataBufferReader buffer, TContainer target)
         {
-            _setter(target, _serializer.De`code(buffer));
+            _setter(target, _serializer.Decode(buffer));
         }
 
         public bool GetEquals(TContainer a, TContainer b)
