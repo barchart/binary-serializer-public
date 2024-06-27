@@ -51,6 +51,20 @@ namespace Barchart.BinarySerializer.Types
         /// </returns>
         public int GetLengthInBits(T value);
 
+        /// <summary>
+        ///     Indicates whether or not two values are equal. Presence of this
+        ///     method prevents the need for boxing since the type parameter
+        ///     is not constrained to <see cref="IEquatable{T}" />.
+        /// </summary>
+        /// <param name="a">
+        ///     The first value.
+        /// </param>
+        /// <param name="b">
+        ///     The second value.
+        /// </param>
+        /// <returns>
+        ///     True if the two values are equal; otherwise false.
+        /// </returns>
         public bool GetEquals(T a, T b);
 
         #endregion
