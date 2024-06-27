@@ -52,6 +52,12 @@ namespace Barchart.BinarySerializer.Types
         {
             return value.DayNumber - DateOnly.MinValue.DayNumber;
         }
+        
+        /// <inheritdoc />
+        public bool GetEquals(DateOnly a, DateOnly b)
+        {
+            return a.Equals(b);
+        }
 
         #endregion
     }

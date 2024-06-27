@@ -52,6 +52,8 @@ namespace Barchart.BinarySerializer.Types
         /// </returns>
         public int GetLengthInBits(T value);
 
+        public bool GetEquals(T a, T b);
+
         #endregion
     }
 }

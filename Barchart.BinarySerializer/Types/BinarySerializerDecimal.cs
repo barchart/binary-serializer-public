@@ -59,6 +59,12 @@ namespace Barchart.BinarySerializer.Types
 
             return new decimal(components);
         }
+        
+        /// <inheritdoc />
+        public bool GetEquals(decimal a, decimal b)
+        {
+            return a.Equals(b);
+        }
 
         /// <inheritdoc />
         public int GetLengthInBits(decimal value)

@@ -73,6 +73,11 @@ namespace Barchart.BinarySerializer.Types
         {
             return sizeof(ushort) + _encoding.GetByteCount(value);
         }
+        
+        public bool GetEquals(string a, string b)
+        {
+            return a.Equals(b);
+        }
 
         #endregion
     }

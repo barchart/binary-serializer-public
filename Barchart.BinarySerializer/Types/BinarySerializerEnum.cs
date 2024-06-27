@@ -43,6 +43,11 @@ namespace Barchart.BinarySerializer.Types
             return (T)Enum.Parse(typeof(T), _binarySerializerInt.Decode(dataBuffer).ToString(), true);
         }
 
+        public bool GetEquals(T a, T b)
+        {
+            return _binarySerializerInt.GetEquals(Convert.ToInt32(a), Convert.ToInt32(b));
+        }
+        
         /// <inheritdoc />
         public int GetLengthInBits(T value)
         {

@@ -35,6 +35,11 @@ namespace Barchart.BinarySerializer.Types
         {
             return ENCODED_LENGTH_IN_BITS;
         }
+        
+        public bool GetEquals(sbyte a, sbyte b)
+        {
+            return a.Equals(b);
+        }
 
         #endregion
     }

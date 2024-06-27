@@ -47,6 +47,12 @@ namespace Barchart.BinarySerializer.Types
         {
             return _binarySerializerLong.GetLengthInBits(GetMillisecondsSinceEpoch(value));
         }
+        
+        /// <inheritdoc />
+        public bool GetEquals(DateTime a, DateTime b)
+        {
+            return a.Equals(b);
+        }
 
         private static long GetMillisecondsSinceEpoch(DateTime value)
         {

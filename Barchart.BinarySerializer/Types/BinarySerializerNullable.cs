@@ -65,7 +65,13 @@ namespace Barchart.BinarySerializer.Types
 
             return length;
         }
-
+        
+        /// <inheritdoc />
+        public bool GetEquals(T? a, T? b)
+        {
+            return (!a.HasValue && !a.HasValue) || (a.HasValue && b.HasValue && _typeSerializer.GetEquals(a.Value, b.Value));
+        }
+        
         #endregion
     }
 }
