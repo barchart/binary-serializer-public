@@ -1,8 +1,5 @@
 ﻿#region Using Statements
 
-using System.Reflection;
-
-using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Types;
 
@@ -13,125 +10,65 @@ namespace Barchart.BinarySerializer.Schemas
     /// <summary>
     ///     Represents metadata about a member of a class or structure with encoding/decoding functionality.
     /// </summary>
-    /// <typeparam name="TContainer">The type of the class or structure.</typeparam>
-    /// <typeparam name="T">The type of the member.</typeparam>
-    public class MemberData<TContainer, T> : IMemberData<TContainer>
+    /// <typeparam name="TContainer">
+    ///     The type which contains the field (or property).
+    /// </typeparam>
+    /// <typeparam name="TValue">
+    ///     The type of the field (or property).
+    /// </typeparam>
+    public class MemberData<TContainer, TValue>
     {
-        #region Properties
+        #region Fields
 
-        /// <inheritdoc />
-        public Type Type { get; }
-
-        /// <inheritdoc />
-        public string Name { get; }
-
-        /// <inheritdoc />
-        public bool IsKeyAttribute { get; }
-
-        /// <inheritdoc />
-        public MemberInfo MemberInfo { get; }
+        private readonly string _name;
         
-        public Func<TContainer, T> GetDelegate { get; }
-        
-        public Action<TContainer, T?>? SetDelegate { get; }
-        
-        public IBinaryTypeSerializer<T> BinarySerializer { get; }
+        private readonly bool _key;
 
+        private readonly Func<TContainer, TValue> _getter;
+        private readonly Action<TContainer, TValue> _setter;
+
+        private readonly IBinaryTypeSerializer<TValue> _serializer;
+        
         #endregion
 
         #region Constructor(s)
 
-        public MemberData(Type type, string name, bool isKeyAttribute, MemberInfo memberInfo, Func<TContainer, T> getDelegate, Action<TContainer, T?>? setDelegate, IBinaryTypeSerializer<T> binarySerializer)
+        public MemberData(string name, bool key, Func<TContainer, TValue> getter, Action<TContainer, TValue> setter, IBinaryTypeSerializer<TValue> serializer)
         {
-            Type = type;
-            Name = name;
-            IsKeyAttribute = isKeyAttribute;
-            MemberInfo = memberInfo;
-            GetDelegate = getDelegate;
-            SetDelegate = setDelegate;
-            BinarySerializer = binarySerializer;
+            _name = name;
+            _key = key;
+
+            _getter = getter;
+            _setter = setter;
+            
+            _serializer = serializer;
         }
 
+        #endregion
+        
+        #region Properties
+        
+        public string Name => _name;
+
+        public bool Key => _key;
+        
         #endregion
 
         #region Methods
         
-        /// <inheritdoc />
-        public void Encode(TContainer value, IDataBufferWriter dataBuffer) {
-            BinarySerializer.Encode(dataBuffer, GetDelegate(value));
-        }
-
-        /// <inheritdoc />
-        public void EncodeCompare(TContainer newObject, TContainer oldObject, IDataBufferWriter dataBuffer) {
-            T oldValue = GetDelegate(oldObject);
-            T newValue = GetDelegate(newObject);
-
-            bool valuesEqual = Equals(oldValue, newValue);
-
-            if (!valuesEqual || IsKeyAttribute)
-            {
-                 BinarySerializer.Encode(dataBuffer, newValue);        
-            }
-            else
-            {
-                dataBuffer.WriteBit(true); // missing ...
-            }
-        }
-
-        /// <inheritdoc />
-        public void Decode(TContainer existing, IDataBufferReader dataBuffer)
+        public void Encode(IDataBufferWriter dataBuffer, TContainer source) 
         {
-            bool missing = dataBuffer.ReadBit();
-
-            if (missing)
-            {
-                return;
-            }
-
-            SetDelegate?.Invoke(existing, BinarySerializer.Decode(dataBuffer));
+            _serializer.Encode(dataBuffer, _getter(source));
         }
         
-        /// <inheritdoc />
-        public bool CompareObjects(TContainer firstObject, TContainer secondObject)
+        public void Decode(IDataBufferReader dataBuffer, TContainer target)
         {
-            T oldValue = GetDelegate(firstObject);
-            T newValue = GetDelegate(secondObject);
-
-            return Equals(oldValue, newValue);
+            _setter(target, _serializer.Decode(dataBuffer));
         }
 
-        /// <inheritdoc />
-        public void CompareAndUpdateObject(TContainer firstObject, TContainer secondObject)
+        public bool GetEquals(TContainer a, TContainer b)
         {
-            T oldValue = GetDelegate(firstObject);
-            T newValue = GetDelegate(secondObject);
-
-            if (newValue != null && !Equals(oldValue,newValue) && SetDelegate != null) SetDelegate(firstObject, newValue);
-        }
-
-        /// <inheritdoc />
-        public int GetLengthInBits(TContainer schemaObject)
-        {
-            var value = GetDelegate(schemaObject);
-            return BinarySerializer.GetLengthInBits(value);
-        }
-
-        /// <inheritdoc />
-        public int GetLengthInBits(TContainer oldObject, TContainer newObject)
-        {
-            var oldValue = GetDelegate(oldObject);
-            var newValue = GetDelegate(newObject);
-
-            bool valuesEqual = Equals(oldValue, newValue);
-
-            if (!valuesEqual || IsKeyAttribute)
-            {
-                return BinarySerializer.GetLengthInBits(newValue);              
-            }
-            else
-            {
-                return Header.NUMBER_OF_BITS_IS_MISSING;
-            }
+            return _serializer.GetEquals(_getter(a), _getter(b));
         }
         
         #endregion
