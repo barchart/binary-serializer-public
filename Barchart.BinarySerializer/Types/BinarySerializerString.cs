@@ -1,7 +1,7 @@
 ﻿#region Using Statements
 
 using System.Text;
-using Barchart.BinarySerializer.Attributes;
+
 using Barchart.BinarySerializer.Buffers;
 
 #endregion
@@ -9,73 +9,69 @@ using Barchart.BinarySerializer.Buffers;
 namespace Barchart.BinarySerializer.Types
 {
     /// <summary>
-    ///     Provides binary serialization functionality for string types.
+    ///     Provides binary serialization functionality for strings.
     /// </summary>
-    public class BinarySerializerString : IBinaryTypeSerializer<string?>
+    public class BinarySerializerString : IBinaryTypeSerializer<string>
     {
         #region Constants
+        
+        private const int MAXIMUM_STRING_LENGTH_IN_BYTES = UInt16.MaxValue;
+        
+        private static readonly Encoding DEFAULT_ENCODING = Encoding.UTF8;
+        
+        #endregion
+        
+        #region Fields
 
-        private const int MAX_STRING_LENGTH = 0x3F;
+        private readonly BinarySerializerUShort _binarySerializerUShort;
+        
+        private readonly Encoding _encoding;
+        
+        #endregion
+        
+        #region Constructor(s)
 
+        public BinarySerializerString() : this(DEFAULT_ENCODING)
+        {
+            
+        }
+        
+        public BinarySerializerString(Encoding encoding)
+        {
+            _binarySerializerUShort = new BinarySerializerUShort();
+            
+            _encoding = encoding;
+        }
+        
         #endregion
 
         #region Methods
 
         /// <inheritdoc />
-        public void Encode(IDataBufferWriter dataBuffer, string? value)
+        public void Encode(IDataBufferWriter dataBuffer, string value)
         {
-            if (value == null)
+            byte[] bytes = _encoding.GetBytes(value);
+
+            if (bytes.Length > MAXIMUM_STRING_LENGTH_IN_BYTES)
             {
-                Header.WriteToBuffer(dataBuffer, false, true);
+                throw new ArgumentException($"Unable to serialize string. Serialized string would require {bytes.Length} bytes; however, the maximum size of a serialized string is {MAXIMUM_STRING_LENGTH_IN_BYTES}", nameof(value));
             }
-            else 
-            {
-                byte[] valueBytes = Encoding.UTF8.GetBytes(value);
-
-                if (valueBytes.Length > MAX_STRING_LENGTH)
-                {
-                    throw new InvalidOperationException("String length exceeds 6-bit encoding capacity.");
-                }
-
-                int lengthIn6Bits = valueBytes.Length & 0x3F; 
-                Header.WriteToBuffer(dataBuffer, false, false, lengthIn6Bits);
-
-                dataBuffer.WriteBytes(valueBytes);
-            }
+            
+            _binarySerializerUShort.Encode(dataBuffer, Convert.ToUInt16(bytes.Length));
+            
+            dataBuffer.WriteBytes(bytes);
         }
 
         /// <inheritdoc />
-        public Attribute<string?> Decode(IDataBufferReader dataBuffer)
+        public string Decode(IDataBufferReader dataBuffer)
         {
-            Header.ReadFromBuffer(dataBuffer, out bool valueIsMissing, out bool valueIsNull);
-            string? decodedString = default;
-            
-            if (!valueIsMissing && !valueIsNull)
-            {
-                 int size = 0;
-            
-                for (int i = 5; i >= 0; i--)
-                {
-                    size |= (dataBuffer.ReadBit() ? 1 : 0) << i;
-                }
-
-                byte[] valueBytes = dataBuffer.ReadBytes(size);
-                decodedString = Encoding.UTF8.GetString(valueBytes);
-            }
-            
-            return new Attribute<string?>(valueIsMissing, decodedString);
+            return _encoding.GetString(dataBuffer.ReadBytes(_binarySerializerUShort.Decode(dataBuffer)));
         }
 
         /// <inheritdoc />
-        public int GetLengthInBits(string? value)
+        public int GetLengthInBits(string value)
         {
-            if (value == null)
-            {
-                return Header.NUMBER_OF_HEADER_BITS_NON_STRING;
-            }
-
-            int valueLength = Encoding.UTF8.GetByteCount(value);
-            return valueLength * 8 + Header.NUMBER_OF_HEADER_BITS_STRING;
+            return sizeof(ushort) + _encoding.GetByteCount(value);
         }
 
         #endregion

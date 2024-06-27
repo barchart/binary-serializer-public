@@ -15,7 +15,7 @@ namespace Barchart.BinarySerializer.Types
         private const int ENCODED_LENGTH_IN_BITS = ENCODED_LENGTH_IN_BYTES * Constants.BITS_PER_BYTE;
         
         #endregion
-
+        
         #region Methods
 
         /// <inheritdoc />
