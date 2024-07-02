@@ -1,7 +1,6 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Buffers.Factories;
 
 #endregion
 
@@ -69,7 +68,7 @@ namespace Barchart.BinarySerializer.Schemas
         {
             return reader.ReadBit();
         }
-        
+    
         private static void WriteMissingFlag(IDataBufferWriter writer, bool missing)
         {
             writer.WriteBit(missing);
