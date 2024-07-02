@@ -4,13 +4,9 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barchart.BinarySerializer", "Barchart.BinarySerializer\Barchart.BinarySerializer.csproj", "{B9CCA039-4A78-4218-94FF-3AE16956ABB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barchart.SerializationData", "Barchart.SerializationData\Barchart.SerializationData.csproj", "{7EBC6F29-FAFA-495C-884F-56659E0D7310}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barchart.Examples.WebsocketSerialization", "Barchart.Examples.WebsocketSerialization\Barchart.Examples.WebsocketSerialization.csproj", "{745D8A59-3B22-48F0-8351-B4C2B6B46EC0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barchart.Examples.WebsocketDifferenceSerialization", "Barchart.Examples.WebsocketDifferenceSerialization\Barchart.Examples.WebsocketDifferenceSerialization.csproj", "{CFE78FC7-B8B2-46FC-A4EF-4968E599363A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barchart.BinarySerializer.Tests", "Barchart.BinarySerializer.Tests\Barchart.BinarySerializer.Tests.csproj", "{571A64CC-B6A3-44BE-98E4-0EB809AE5CA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barchart.BinarySerializer.Examples", "Barchart.BinarySerializer.Examples\Barchart.BinarySerializer.Examples.csproj", "{ACDE3FC2-F705-4CA8-A71F-29273F96A9C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,22 +18,14 @@ Global
 		{B9CCA039-4A78-4218-94FF-3AE16956ABB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9CCA039-4A78-4218-94FF-3AE16956ABB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9CCA039-4A78-4218-94FF-3AE16956ABB1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7EBC6F29-FAFA-495C-884F-56659E0D7310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7EBC6F29-FAFA-495C-884F-56659E0D7310}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7EBC6F29-FAFA-495C-884F-56659E0D7310}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7EBC6F29-FAFA-495C-884F-56659E0D7310}.Release|Any CPU.Build.0 = Release|Any CPU
-		{745D8A59-3B22-48F0-8351-B4C2B6B46EC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{745D8A59-3B22-48F0-8351-B4C2B6B46EC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{745D8A59-3B22-48F0-8351-B4C2B6B46EC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{745D8A59-3B22-48F0-8351-B4C2B6B46EC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CFE78FC7-B8B2-46FC-A4EF-4968E599363A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFE78FC7-B8B2-46FC-A4EF-4968E599363A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFE78FC7-B8B2-46FC-A4EF-4968E599363A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFE78FC7-B8B2-46FC-A4EF-4968E599363A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{571A64CC-B6A3-44BE-98E4-0EB809AE5CA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{571A64CC-B6A3-44BE-98E4-0EB809AE5CA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{571A64CC-B6A3-44BE-98E4-0EB809AE5CA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{571A64CC-B6A3-44BE-98E4-0EB809AE5CA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACDE3FC2-F705-4CA8-A71F-29273F96A9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACDE3FC2-F705-4CA8-A71F-29273F96A9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACDE3FC2-F705-4CA8-A71F-29273F96A9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACDE3FC2-F705-4CA8-A71F-29273F96A9C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

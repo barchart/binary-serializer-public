@@ -4,74 +4,60 @@ using Barchart.BinarySerializer.Buffers;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Types
+namespace Barchart.BinarySerializer.Types;
+
+/// <summary>
+///     Provides binary serialization functionality for value types (that are nullable).
+/// </summary>
+/// <typeparam name="T">
+///     The value type to serialize.
+/// </typeparam>
+public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : struct
 {
-    /// <summary>
-    ///     Provides binary serialization functionality for value types (that are nullable).
-    /// </summary>
-    /// <typeparam name="T">
-    ///     The value type to serialize.
-    /// </typeparam>
-    public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : struct
-	{
-        #region Fields
+    #region Fields
 
-        private readonly IBinaryTypeSerializer<T> _typeSerializer;
+    private readonly IBinaryTypeSerializer<T> _typeSerializer;
 
-        #endregion
+    #endregion
 
-        #region Constructor(s)
+    #region Constructor(s)
 
-        public BinarySerializerNullable(IBinaryTypeSerializer<T> typeSerializer)
-        {
-            _typeSerializer = typeSerializer;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <inheritdoc />
-        public void Encode(IDataBufferWriter buffer, T? value)
-        {
-            buffer.WriteBit(!value.HasValue);
-            
-            if (value.HasValue)
-            {
-                _typeSerializer.Encode(buffer, value.Value);
-            }
-        }
-
-        /// <inheritdoc />
-        public T? Decode(IDataBufferReader buffer)
-        {
-            if (buffer.ReadBit())
-            {
-                return null;
-            }
-
-            return _typeSerializer.Decode(buffer);
-        }
-
-        /// <inheritdoc />
-        public int GetLengthInBits(T? value)
-        {
-            int length = 1;
-            
-            if (value.HasValue)
-            {
-                length += _typeSerializer.GetLengthInBits(value.Value);
-            }
-
-            return length;
-        }
-        
-        /// <inheritdoc />
-        public bool GetEquals(T? a, T? b)
-        {
-            return (!a.HasValue && !a.HasValue) || (a.HasValue && b.HasValue && _typeSerializer.GetEquals(a.Value, b.Value));
-        }
-        
-        #endregion
+    public BinarySerializerNullable(IBinaryTypeSerializer<T> typeSerializer)
+    {
+        _typeSerializer = typeSerializer;
     }
+
+    #endregion
+
+    #region Methods
+
+    /// <inheritdoc />
+    public void Encode(IDataBufferWriter buffer, T? value)
+    {
+        buffer.WriteBit(!value.HasValue);
+
+        if (value.HasValue)
+        {
+            _typeSerializer.Encode(buffer, value.Value);
+        }
+    }
+
+    /// <inheritdoc />
+    public T? Decode(IDataBufferReader buffer)
+    {
+        if (buffer.ReadBit())
+        {
+            return null;
+        }
+
+        return _typeSerializer.Decode(buffer);
+    }
+
+    /// <inheritdoc />
+    public bool GetEquals(T? a, T? b)
+    {
+        return (!a.HasValue && !a.HasValue) || (a.HasValue && b.HasValue && _typeSerializer.GetEquals(a.Value, b.Value));
+    }
+
+    #endregion
 }

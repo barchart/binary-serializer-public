@@ -1,4 +1,5 @@
-﻿using Barchart.BinarySerializer.Schemas;
+﻿using Barchart.BinarySerializer.Attributes;
+
 using Org.Openfeed;
 using static Org.Openfeed.InstrumentDefinition.Types;
 using static Org.Openfeed.MarketSummary.Types;
@@ -8,438 +9,438 @@ namespace Barchart.SerializationData;
 
 public class MarketData
 {
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public SubscriptionResponse? SubscriptionResponse { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public InstrumentDefinition? InstrumentDefinition { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public MarketState? MarketState { get; set; }
 }
 
 public class SubscriptionResponse
 {
-    [BinarySerialize(key: true)]
+    [Serialize(key: true)]
     public string? Symbol { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? CorrelationId { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Status? Status { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? MarketId { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? Exchange { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? ChannelId { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? NumberOfDefinitions { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public SubscriptionType? SubscriptionType { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? Unsubscribe { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? SnapshotIntervalSeconds { get; set; }
 }
 
 public class InstrumentDefinition
 {
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? MarketId { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public InstrumentType? InstrumentType { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public List<BookType>? SupportBookTypes { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? BookDepth { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? VendorId { get; set; }
 
-    [BinarySerialize(key: true)]
+    [Serialize(key: true)]
     public string? Symbol { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? Description { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? CfiCode { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? CurrencyCode { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? ExchangeCode { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public float? MinimumPriceIncrement { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public float? ContractPointValue { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Schedule? Schedule { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Calendar? Calendar { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? RecordCreateTime { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? RecordUpdateTime { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? TimeZoneName { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? InstrumentGroup { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public MaturityDate? SymbolExpiration { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public State? State { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? Channel { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? UnderlyingMarketId { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public PriceFormat? PriceFormat { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public PriceFormat? OptionStrikePriceFormat { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? PriceDenominator { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? QuantityDenominator { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? IsTradable { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? TransactionTime { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? AuxiliaryData { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public List<Symbol>? Symbols { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? OptionStrike { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public OptionType? OptionType { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public OptionStyle? OptionStyle { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? OptionStrikeDenominator { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? SpreadCode { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public List<SpreadLeg>? SpreadLeg { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? UserDefinedSpread { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? MarketTier { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? FinancialStatusIndicator { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? Isin { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public CurrencyPair? CurrencyPair { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? ExchangeSendsVolume { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? ExchangeSendsHigh { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? ExchangeSendsLow { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? ExchangeSendsOpen { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? ConsolidatedFeedInstrument { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? OpenOutcryInstrument { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? SyntheticAmericanOptionInstrument { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? BarchartExchangeCode { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? BarchartBaseCode { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? VolumeDenominator { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? BidOfferQuantityDenominator { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? PrimaryListingMarketParticipantId { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? SubscriptionSymbol { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public MaturityDate? ContractMaturity { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? Underlying { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? Commodity { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? UnderlyingOpenfeedMarketId { get; set; }
 }
 
 public class MarketState
 {
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? TradeDate { get; set; }
 
-    [BinarySerialize(key: true)]
+    [Serialize(key: true)]
     public string? Symbol { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? PriceDenominator { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public InstrumentStatus? InstrumentStatus { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public BestBidOffer? BBO { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public IndexValue? Index { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Open? Open { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public High? High { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Low? Low { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Close? Close { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public PrevClose? PrevClose { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Last? Last { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public YearHigh? YearHigh { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public YearLow? YearLow { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Volume? Volume { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Vwap? Vwap { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public NumberOfTrades? NumberOfTrades { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public MarketSession? PreviousSession { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public MarketSession? TSession { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public VolumeAtPrice? VolumeAtPrice { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public HighRolling? HighRolling { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public LowRolling? LowRolling { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public MarketSession? ZSession { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public MarketSession? Session { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public MarketSummary? MarketSummary { get; set; }
 
-    [BinarySerialize(key: false, include: false)]
+    [Serialize(key: false)]
     public long? TransactionTime { get; set; }
 }
 
 public class BestBidOffer {
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? TransactionTime { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? BidPrice { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? BidQuantity { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? BidOrderCount { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? BidOriginator { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? BidQuoteCondition { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? OfferPrice { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? OfferQuantity { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? OfferOrderCount { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? OfferOriginator { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? OfferQuoteCondition { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? QuoteCondition { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? Regional { get; set; }
 
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? Transient { get; set; }
 }
 
 public class VolumeAtPrice {
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? MarketId { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? Symbol { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? TransactionTime { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? LastPrice { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? LastQuantity { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? LastCumulativeVolume { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? TradeDate { get; set; } 
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public List<PriceLevelVolume>? PriceVolumes { get; set; }
 }
 
 public class MarketSummary {
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public long? TransactionTime { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public int? TradingDate { get; set; } 
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? StartOfDay { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? EndOfDay { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public ClearSet? Clear { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public InstrumentStatus? InstrumentStatus { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public BestBidOffer? Bbo { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Open? Open { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public High? High { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Low? Low { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Close? Close { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public PrevClose? PrevClose { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Last? Last { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Volume? Volume { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Settlement? Settlement { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public OpenInterest? OpenInterest { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Vwap? Vwap { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public string? Session { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public SummaryType? SummaryType { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public Volume? PrevVolume { get; set; }
     
-    [BinarySerialize(key: false)]
+    [Serialize(key: false)]
     public bool? Transient { get; set; }
 }
