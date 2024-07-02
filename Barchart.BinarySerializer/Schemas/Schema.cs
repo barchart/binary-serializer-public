@@ -52,7 +52,7 @@ namespace Barchart.BinarySerializer.Schemas
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Decode(target, reader, true);
-            }`
+            }
             
             foreach (ISchemaItem<TEntity> item in _valueItems)
             {
