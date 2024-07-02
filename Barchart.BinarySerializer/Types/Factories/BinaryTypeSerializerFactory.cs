@@ -18,7 +18,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         AddStructSerializer(new BinarySerializerFloat());
         AddStructSerializer(new BinarySerializerInt());
         AddStructSerializer(new BinarySerializerLong());
-        AddStructSerializer(new BinarySerializerSbyte());
+        AddStructSerializer(new BinarySerializerSByte());
         AddStructSerializer(new BinarySerializerShort());
         AddStructSerializer(new BinarySerializerUInt());
         AddStructSerializer(new BinarySerializerULong());

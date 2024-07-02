@@ -6,7 +6,7 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Types;
 
-public class BinarySerializerSbyte : IBinaryTypeSerializer<sbyte>
+public class BinarySerializerSByte : IBinaryTypeSerializer<sbyte>
 {
     #region Methods
 
