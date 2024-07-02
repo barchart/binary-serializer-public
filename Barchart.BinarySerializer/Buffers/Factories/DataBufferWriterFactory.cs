@@ -38,7 +38,7 @@ public class DataBufferWriterFactory : IDataBufferWriterFactory
 
     #region Methods
 
-    public IDataBufferWriter GetDataBufferWriter()
+    public IDataBufferWriter GetDataBufferWriter<TEntity>(TEntity source)
     {
         if (_byteArray == null)
         {

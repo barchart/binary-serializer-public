@@ -8,5 +8,8 @@ public interface IDataBufferWriterFactory
     /// <summary>
     ///     Creates a <see cref="IDataBufferWriter" /> instance.
     /// </summary>
-    IDataBufferWriter GetDataBufferWriter();
+    /// <param name="entity">
+    ///     The entity being serialized.
+    /// </param>
+    IDataBufferWriter GetDataBufferWriter<TEntity>(TEntity entity);
 }
