@@ -75,22 +75,24 @@ public class BinarySerializerBoolTests
     [Fact]
     public void Decode_SerializedTrueValue_ReturnsTrue()
     {
-        byte[] byteArray = BitsToBytes(new[] { true });
-        IDataBufferReader dataBuffer = new DataBufferReader(byteArray);
-            
-        bool deserialized = _serializer.Decode(dataBuffer);
-            
+        Mock<IDataBufferReader> mock = new Mock<IDataBufferReader>();
+
+        mock.Setup(m => m.ReadBit()).Returns(true);
+
+        bool deserialized = _serializer.Decode(mock.Object);
+        
         Assert.True(deserialized);
     }
         
     [Fact]
     public void Decode_SerializedFalseValue_ReturnsFalse()
     {
-        byte[] byteArray = BitsToBytes(new[] { false });
-        IDataBufferReader dataBuffer = new DataBufferReader(byteArray);
-            
-        bool deserialized = _serializer.Decode(dataBuffer);
-            
+        Mock<IDataBufferReader> mock = new Mock<IDataBufferReader>();
+
+        mock.Setup(m => m.ReadBit()).Returns(false);
+
+        bool deserialized = _serializer.Decode(mock.Object);
+        
         Assert.False(deserialized);
     }
 
