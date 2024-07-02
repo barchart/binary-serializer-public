@@ -36,9 +36,11 @@ public class BinarySerializerBoolTests
         var mock = new Mock<IDataBufferWriter>();
 
         var bitsWritten = new List<bool>();
+        var byteWritten = new List<byte>();
         var bytesWritten = new List<byte[]>();
             
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
+        mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
         mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
             
         _serializer.Encode(mock.Object, true);
@@ -46,6 +48,7 @@ public class BinarySerializerBoolTests
         Assert.Single(bitsWritten);
         Assert.True(bitsWritten[0]);
             
+        Assert.Empty(byteWritten);
         Assert.Empty(bytesWritten);
     }
         
@@ -55,9 +58,11 @@ public class BinarySerializerBoolTests
         var mock = new Mock<IDataBufferWriter>();
 
         var bitsWritten = new List<bool>();
+        var byteWritten = new List<byte>();
         var bytesWritten = new List<byte[]>();
             
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
+        mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
         mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
             
         _serializer.Encode(mock.Object, false);
@@ -65,6 +70,7 @@ public class BinarySerializerBoolTests
         Assert.Single(bitsWritten);
         Assert.False(bitsWritten[0]);
             
+        Assert.Empty(byteWritten);
         Assert.Empty(bytesWritten);
     }
 
