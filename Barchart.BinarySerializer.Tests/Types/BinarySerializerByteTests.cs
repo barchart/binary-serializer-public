@@ -30,11 +30,13 @@ public class BinarySerializerByteTests
 
     #region Test Methods (Encode)
         
-    [Fact]
-    public void Encode_MaxValue_WritesToDataBuffer()
+    [Theory]
+    [InlineData(Byte.MaxValue)]
+    [InlineData(Byte.MinValue)]
+    [InlineData((byte)127)]
+    [InlineData((byte)128)]
+    public void Encode_MaxValue_WritesToDataBuffer(byte value)
     {
-        var value = Byte.MaxValue;
-        
         var mock = new Mock<IDataBufferWriter>();
 
         var bitsWritten = new List<bool>();
@@ -59,11 +61,13 @@ public class BinarySerializerByteTests
 
     #region Test Methods (Decode)
 
-    [Fact]
-    public void Decode_MaxValue_ReturnsMaxValue()
+    [Theory]
+    [InlineData(Byte.MaxValue)]
+    [InlineData(Byte.MinValue)]
+    [InlineData((byte)127)]
+    [InlineData((byte)128)]
+    public void Decode_MaxValue_ReturnsMaxValue(byte value)
     {
-        var value = Byte.MaxValue;
-        
         Mock<IDataBufferReader> mock = new Mock<IDataBufferReader>();
 
         mock.Setup(m => m.ReadByte()).Returns(value);
