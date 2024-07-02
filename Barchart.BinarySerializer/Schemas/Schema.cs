@@ -1,6 +1,7 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Buffers.Factories;
 
 #endregion
 
@@ -21,12 +22,6 @@ namespace Barchart.BinarySerializer.Schemas
         {
             _keyItems = items.Where(i => i.Key).ToArray();
             _valueItems = items.Where(i => !i.Key).ToArray();
-        }
-        
-        public Schema(ISchemaItem<TEntity>[] keyItems, ISchemaItem<TEntity>[] valueItems)
-        {
-            _keyItems = keyItems;
-            _valueItems = valueItems;
         }
         
         #endregion
@@ -57,7 +52,7 @@ namespace Barchart.BinarySerializer.Schemas
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Decode(target, reader, true);
-            }
+            }`
             
             foreach (ISchemaItem<TEntity> item in _valueItems)
             {
