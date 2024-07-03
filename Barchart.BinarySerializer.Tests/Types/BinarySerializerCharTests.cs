@@ -10,8 +10,11 @@ namespace Barchart.BinarySerializer.Tests.Types;
 public class BinarySerializerCharTests
 {
     #region Fields
+    
     private readonly ITestOutputHelper _testOutputHelper;
+    
     private readonly BinarySerializerChar _serializer;
+    
     #endregion
 
     #region Constructor(s)
@@ -101,6 +104,7 @@ public class BinarySerializerCharTests
     {
         var actual = _serializer.GetEquals(chars[0], chars[1]);
         var expected = chars[0].Equals(chars[1]);
+        
         Assert.Equal(expected, actual);
     }
 
