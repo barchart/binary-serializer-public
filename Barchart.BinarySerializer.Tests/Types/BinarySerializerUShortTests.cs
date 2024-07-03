@@ -12,6 +12,7 @@ namespace Barchart.BinarySerializer.Tests.Types
         #region Fields
 
         private readonly ITestOutputHelper _testOutputHelper;
+        
         private readonly BinarySerializerUShort _serializer;
 
         #endregion
@@ -21,6 +22,7 @@ namespace Barchart.BinarySerializer.Tests.Types
         public BinarySerializerUShortTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
+            
             _serializer = new BinarySerializerUShort();
         }
 
