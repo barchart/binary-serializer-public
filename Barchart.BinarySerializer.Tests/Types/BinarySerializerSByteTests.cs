@@ -49,11 +49,10 @@ namespace Barchart.BinarySerializer.Tests.Types
             _serializer.Encode(mock.Object, value);
 
             Assert.Empty(bitsWritten);
-            
+            Assert.Empty(bytesWritten);
+
             Assert.Single(byteWritten);
             Assert.Equal((byte)value, byteWritten[0]);
-
-            Assert.Empty(bytesWritten);
         }
 
         #endregion
