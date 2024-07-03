@@ -31,7 +31,7 @@ public class BinarySerializerDecimal : IBinaryTypeSerializer<decimal>
     /// <inheritdoc />
     public void Encode(IDataBufferWriter buffer, decimal value)
     {
-        int[] components = Decimal.GetBits(value);
+        int[] components = decimal.GetBits(value);
 
         _binarySerializerInt.Encode(buffer, components[0]);
         _binarySerializerInt.Encode(buffer, components[1]);
