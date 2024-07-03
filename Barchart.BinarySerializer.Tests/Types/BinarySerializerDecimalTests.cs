@@ -1,6 +1,7 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Tests.Common;
 using Barchart.BinarySerializer.Types;
 
 #endregion
@@ -12,9 +13,9 @@ public class BinarySerializerDecimalTests
     #region Fields
     
     private readonly ITestOutputHelper _testOutputHelper;
-        
     private readonly BinarySerializerDecimal _serializer;
-        
+    private readonly Mock<IBinaryTypeSerializer<int>> _mockIntSerializer;
+    
     #endregion
         
     #region Constructor(s)
@@ -22,7 +23,7 @@ public class BinarySerializerDecimalTests
     public BinarySerializerDecimalTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
-
+        _mockIntSerializer = new Mock<IBinaryTypeSerializer<int>>();
         _serializer = new BinarySerializerDecimal();
     }
     
@@ -43,13 +44,39 @@ public class BinarySerializerDecimalTests
         decimal value = decimal.Parse(valueString);
         Mock<IDataBufferWriter> mock = new();
 
+        List<bool> bitsWritten = new();
+        List<byte> byteWritten = new();
+        List<byte[]> bytesWritten = new();
+            
+        mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
+        mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
+        mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
+        
         _serializer.Encode(mock.Object, value);
             
-        int[] bits = decimal.GetBits(value);
-        byte[] expectedBytes = new byte[16];
-        Buffer.BlockCopy(bits, 0, expectedBytes, 0, 16);
+        Assert.Empty(bitsWritten);
+        Assert.Empty(byteWritten);
         
-        mock.Verify(m => m.WriteBytes(It.Is<byte[]>(b => b.SequenceEqual(expectedBytes))), Times.Once);
+        int[] components = decimal.GetBits(value);
+        byte[] expectedBytes = new byte[16];
+        
+        for (int i = 0; i < 4; i++)
+        {
+            BitConverter.GetBytes(components[i]).CopyTo(expectedBytes, i * 4);
+        }
+        
+        Assert.Equal(4, bytesWritten.Count);
+
+        byte[] bytes = Helpers.CombineFourByteArrays(bytesWritten);
+        Assert.Equal(expectedBytes.Length, bytes.Length);
+        
+        for (int i = 0; i < expectedBytes.Length; i++)
+        {
+            var expectedByte = expectedBytes[i];
+            var actualByte = bytes[i];
+            
+            Assert.Equal(expectedByte, actualByte);
+        }
     }
 
     #endregion
@@ -66,18 +93,19 @@ public class BinarySerializerDecimalTests
     [InlineData("3.14159265359")]
     public void Decode_VariousEncoded_ReturnsExpectedValue(string expectedString)
     {
-        decimal expected = decimal.Parse(expectedString);
-        Mock<IDataBufferReader> mock = new();
-        
-        int[] bits = decimal.GetBits(expected);
-        byte[] bytes = new byte[16];
-        Buffer.BlockCopy(bits, 0, bytes, 0, 16);
-        
-        mock.Setup(m => m.ReadBytes(16)).Returns(bytes);
+        decimal expectedValue = decimal.Parse(expectedString);
+        int[] components = decimal.GetBits(expectedValue);
 
-        var actual = _serializer.Decode(mock.Object);
-        
-        Assert.Equal(expected, actual);
+        Mock<IDataBufferReader> mock = new();
+        mock.SetupSequence(m => m.ReadBytes(4))
+            .Returns(BitConverter.GetBytes(components[0]))
+            .Returns(BitConverter.GetBytes(components[1]))
+            .Returns(BitConverter.GetBytes(components[2]))
+            .Returns(BitConverter.GetBytes(components[3]));
+
+        decimal actualValue = _serializer.Decode(mock.Object);
+
+        Assert.Equal(expectedValue, actualValue);
     }
 
     #endregion
@@ -85,21 +113,20 @@ public class BinarySerializerDecimalTests
     #region Test Methods (GetEquals)
     
     [Theory]
-    [InlineData("0", "0")]
-    [InlineData("1", "1")]
-    [InlineData("-1", "-1")]
-    [InlineData("79228162514264337593543950335", "79228162514264337593543950335")]
-    [InlineData("-79228162514264337593543950335", "-79228162514264337593543950335")]
-    [InlineData("0.0000000000000000000000000001", "0.0000000000000000000000000001")]
-    [InlineData("3.14159265359", "3.14159265359")]
-    [InlineData("1", "-1")]
-    [InlineData("0.1", "0.2")]
-    public void GetEquals_Various_MatchesIEquatableOutput(string a, string b)
+    [InlineData("0", "0", true)]
+    [InlineData("1", "1", true)]
+    [InlineData("-1", "-1", true)]
+    [InlineData("79228162514264337593543950335", "79228162514264337593543950335", true)]
+    [InlineData("-79228162514264337593543950335", "-79228162514264337593543950335", true)]
+    [InlineData("0.0000000000000000000000000001", "0.0000000000000000000000000001", true)]
+    [InlineData("3.14159265359", "3.14159265359", true)]
+    [InlineData("1", "-1", false)]
+    [InlineData("0.1", "0.2", false)]
+    public void GetEquals_Various_ReturnsExpectedResult(string aString, string bString, bool expected)
     {
-        decimal first = decimal.Parse(a);
-        decimal second = decimal.Parse(b);
-        var actual = _serializer.GetEquals(first, second);
-        var expected = a.Equals(b);
+        decimal a = decimal.Parse(aString);
+        decimal b = decimal.Parse(bString);
+        var actual = _serializer.GetEquals(a, b);
         
         Assert.Equal(expected, actual);
     }
