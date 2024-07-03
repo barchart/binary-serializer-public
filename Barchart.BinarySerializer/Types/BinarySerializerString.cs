@@ -15,7 +15,7 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
 {
     #region Constants
 
-    private const int MAXIMUM_STRING_LENGTH_IN_BYTES = UInt16.MaxValue;
+    private const int MAXIMUM_STRING_LENGTH_IN_BYTES = ushort.MaxValue;
 
     private static readonly Encoding DEFAULT_ENCODING = Encoding.UTF8;
 
