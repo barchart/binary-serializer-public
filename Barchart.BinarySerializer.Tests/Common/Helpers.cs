@@ -2,6 +2,13 @@ namespace Barchart.BinarySerializer.Tests.Common;
 
 public static class Helpers
 {
+    public enum TestEnum
+    {
+        Value1,
+        Value2,
+        Value3
+        }
+
     public static byte[] ConvertToBytes(bool[] bits)
     {
         int byteCount = (int)Math.Ceiling(bits.Length / 8.0); 

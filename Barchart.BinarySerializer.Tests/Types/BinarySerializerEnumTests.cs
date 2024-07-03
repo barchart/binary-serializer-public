@@ -2,7 +2,7 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Types;
-using Moq;
+using static Barchart.BinarySerializer.Tests.Common.Helpers;
 
 #endregion
 
@@ -10,6 +10,8 @@ namespace Barchart.BinarySerializer.Tests.Types
 {
     public class BinarySerializerEnumTests
     {
+      
+
         #region Fields
     
         private readonly ITestOutputHelper _testOutputHelper;
@@ -22,7 +24,7 @@ namespace Barchart.BinarySerializer.Tests.Types
         public BinarySerializerEnumTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
-            
+
             _serializer = new BinarySerializerEnum<TestEnum>(new BinarySerializerInt());
         }
     
@@ -105,12 +107,5 @@ namespace Barchart.BinarySerializer.Tests.Types
         }
     
         #endregion
-    }
-
-    public enum TestEnum
-    {
-        Value1,
-        Value2,
-        Value3
     }
 }
