@@ -54,8 +54,8 @@ public class BinarySerializerDateTimeTests
         Assert.Empty(bitsWritten);
         Assert.Empty(byteWritten);
         
-        long ticks = value.Ticks;
-        byte[] expectedBytes = BitConverter.GetBytes(ticks);
+        long expectedMilliseconds = (long)(value - DateTime.UnixEpoch).TotalMilliseconds;
+        byte[] expectedBytes = BitConverter.GetBytes(expectedMilliseconds);
         
         Assert.Single(bytesWritten);
         Assert.Equal(expectedBytes.Length, bytesWritten[0].Length);
@@ -84,7 +84,7 @@ public class BinarySerializerDateTimeTests
         Mock<IDataBufferReader> mock = new();
         
         DateTime value = new(year, month, day, hour, minute, second, DateTimeKind.Utc);
-        mock.Setup(m => m.ReadBytes(8)).Returns(BitConverter.GetBytes(value.Ticks));
+        mock.Setup(m => m.ReadBytes(8)).Returns(BitConverter.GetBytes((long)(value - DateTime.UnixEpoch).TotalMilliseconds));
 
         var deserialized = _serializer.Decode(mock.Object);
         
