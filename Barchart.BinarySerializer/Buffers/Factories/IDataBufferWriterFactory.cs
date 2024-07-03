@@ -11,5 +11,5 @@ public interface IDataBufferWriterFactory
     /// <param name="entity">
     ///     The entity being serialized.
     /// </param>
-    IDataBufferWriter GetDataBufferWriter<TEntity>(TEntity entity);
+    IDataBufferWriter Make<TEntity>(TEntity entity);
 }
