@@ -2,8 +2,6 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Types;
-using Moq;
-using Xunit;
 
 #endregion
 
@@ -31,9 +29,9 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Theory]
         [InlineData(sbyte.MaxValue)]
         [InlineData(sbyte.MinValue)]
-        [InlineData(0)]
-        [InlineData(-1)]
-        [InlineData(1)]
+        [InlineData((sbyte)0)]
+        [InlineData((sbyte)-1)]
+        [InlineData((sbyte)1)]
         public void Encode_Various_WritesExpectedBytes(sbyte value)
         {
             Mock<IDataBufferWriter> mock = new();
@@ -62,9 +60,9 @@ namespace Barchart.BinarySerializer.Tests.Types
         [Theory]
         [InlineData(sbyte.MaxValue)]
         [InlineData(sbyte.MinValue)]
-        [InlineData(0)]
-        [InlineData(-1)]
-        [InlineData(1)]
+        [InlineData((sbyte)0)]
+        [InlineData((sbyte)-1)]
+        [InlineData((sbyte)1)]
         public void Decode_VariousEncoded_ReturnsExpectedValue(sbyte value)
         {
             Mock<IDataBufferReader> mock = new();
