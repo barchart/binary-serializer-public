@@ -72,7 +72,7 @@ public class BinarySerializerByteTests
 
         mock.Setup(m => m.ReadByte()).Returns(value);
 
-        byte deserialized = _serializer.Decode(mock.Object);
+        var deserialized = _serializer.Decode(mock.Object);
         
         Assert.Equal(value, deserialized);
     }
@@ -90,8 +90,8 @@ public class BinarySerializerByteTests
     [InlineData(new[] { (byte)128, (byte)127 })]
     public void GetEquals_Various_MatchesIEquatableOutput(byte[] bytes)
     {
-        bool actual = _serializer.GetEquals(bytes[0], bytes[1]);
-        bool expected = bytes[0].Equals(bytes[1]);
+        var actual = _serializer.GetEquals(bytes[0], bytes[1]);
+        var expected = bytes[0].Equals(bytes[1]);
         
         Assert.Equal(expected, actual);
     }
