@@ -79,7 +79,7 @@ public class BinarySerializerIntTests
     [InlineData(1)]
     public void Decode_VariousEncoded_ReturnsExpectedValue(int value)
     {
-        Mock<IDataBufferReader> mock = new Mock<IDataBufferReader>();
+        Mock<IDataBufferReader> mock = new();
         
         mock.Setup(m => m.ReadBytes(4)).Returns(BitConverter.GetBytes(value));
 

@@ -33,11 +33,11 @@ public class BinarySerializerBoolTests
     [Fact]
     public void Encode_True_WritesToDataBuffer()
     {
-        var mock = new Mock<IDataBufferWriter>();
+        Mock<IDataBufferWriter> mock = new();
 
-        var bitsWritten = new List<bool>();
-        var byteWritten = new List<byte>();
-        var bytesWritten = new List<byte[]>();
+        List<bool> bitsWritten = new();
+        List<byte> byteWritten = new();
+        List<byte[]> bytesWritten = new();
             
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
         mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
@@ -47,7 +47,7 @@ public class BinarySerializerBoolTests
             
         Assert.Single(bitsWritten);
         Assert.True(bitsWritten[0]);
-            
+
         Assert.Empty(byteWritten);
         Assert.Empty(bytesWritten);
     }
@@ -55,11 +55,11 @@ public class BinarySerializerBoolTests
     [Fact]
     public void Encode_False_WritesToDataBuffer()
     {
-        var mock = new Mock<IDataBufferWriter>();
+        Mock<IDataBufferWriter> mock = new();
 
-        var bitsWritten = new List<bool>();
-        var byteWritten = new List<byte>();
-        var bytesWritten = new List<byte[]>();
+        List<bool> bitsWritten = new();
+        List<byte> byteWritten = new();
+        List<byte[]> bytesWritten = new();
             
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
         mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
@@ -69,7 +69,7 @@ public class BinarySerializerBoolTests
             
         Assert.Single(bitsWritten);
         Assert.False(bitsWritten[0]);
-            
+        
         Assert.Empty(byteWritten);
         Assert.Empty(bytesWritten);
     }
@@ -81,7 +81,7 @@ public class BinarySerializerBoolTests
     [Fact]
     public void Decode_SerializedTrueValue_ReturnsTrue()
     {
-        Mock<IDataBufferReader> mock = new Mock<IDataBufferReader>();
+        Mock<IDataBufferReader> mock = new();
 
         mock.Setup(m => m.ReadBit()).Returns(true);
 
@@ -93,7 +93,7 @@ public class BinarySerializerBoolTests
     [Fact]
     public void Decode_SerializedFalseValue_ReturnsFalse()
     {
-        Mock<IDataBufferReader> mock = new Mock<IDataBufferReader>();
+        Mock<IDataBufferReader> mock = new();
 
         mock.Setup(m => m.ReadBit()).Returns(false);
 

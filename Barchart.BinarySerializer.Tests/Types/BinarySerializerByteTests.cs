@@ -39,9 +39,9 @@ public class BinarySerializerByteTests
     {
         var mock = new Mock<IDataBufferWriter>();
 
-        var bitsWritten = new List<bool>();
-        var byteWritten = new List<byte>();
-        var bytesWritten = new List<byte[]>();
+        List<bool> bitsWritten = new();
+        List<byte> byteWritten = new();
+        List<byte[]> bytesWritten = new();
             
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
         mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
@@ -68,7 +68,7 @@ public class BinarySerializerByteTests
     [InlineData((byte)128)]
     public void Decode_VariousEncoded_ReturnsExpectedValue(byte value)
     {
-        Mock<IDataBufferReader> mock = new Mock<IDataBufferReader>();
+        Mock<IDataBufferReader> mock = new();
 
         mock.Setup(m => m.ReadByte()).Returns(value);
 
