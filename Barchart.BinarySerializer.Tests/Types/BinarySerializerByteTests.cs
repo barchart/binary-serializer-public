@@ -37,7 +37,7 @@ public class BinarySerializerByteTests
     [InlineData((byte)128)]
     public void Encode_Various_WritesExpectedBytes(byte value)
     {
-        var mock = new Mock<IDataBufferWriter>();
+        Mock<IDataBufferWriter> mock = new();
 
         List<bool> bitsWritten = new();
         List<byte> byteWritten = new();
