@@ -34,6 +34,8 @@ public class SchemaFactory : ISchemaFactory
 
         ISchemaItem<TEntity>[] schemaItems = properties.Select(MakeSchemaItem<TEntity>).ToArray();
 
+        Array.Sort(schemaItems, CompareSchemaItems);
+        
         return new Schema<TEntity>(schemaItems);
     }
 
@@ -137,5 +139,17 @@ public class SchemaFactory : ISchemaFactory
     private static Func<MethodInfo, bool> GetMakeSchemaItemPredicate(Type[] typeParameters)
     {
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItem) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
+    }
+
+    private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: new()
+    {
+        int comparison = a.Key.CompareTo(b.Key);
+
+        if (comparison == 0)
+        {
+            comparison = String.Compare(a.Name, b.Name, StringComparison.Ordinal);
+        }
+
+        return comparison;
     }
 }
