@@ -48,7 +48,7 @@ public class BinarySerializerDateOnlyTests
         mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
         mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
         
-        DateOnly value = new DateOnly(year, month, day);
+        DateOnly value = new(year, month, day);
         _serializer.Encode(mock.Object, value);
             
         Assert.Empty(bitsWritten);
@@ -83,7 +83,7 @@ public class BinarySerializerDateOnlyTests
     {
         Mock<IDataBufferReader> mock = new();
         
-        DateOnly value = new DateOnly(year, month, day);
+        DateOnly value = new(year, month, day);
         int daysSinceEpoch = value.DayNumber - DateOnly.MinValue.DayNumber;
         mock.Setup(m => m.ReadBytes(4)).Returns(BitConverter.GetBytes(daysSinceEpoch));
 
