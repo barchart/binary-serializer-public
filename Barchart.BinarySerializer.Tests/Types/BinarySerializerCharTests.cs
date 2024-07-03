@@ -18,6 +18,7 @@ public class BinarySerializerCharTests
     public BinarySerializerCharTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
+        
         _serializer = new BinarySerializerChar();
     }
     
@@ -75,7 +76,7 @@ public class BinarySerializerCharTests
 
         Assert.Equal(value, deserialized);
     }
-    
+
     #endregion
 
     #region Test Methods (GetEquals)

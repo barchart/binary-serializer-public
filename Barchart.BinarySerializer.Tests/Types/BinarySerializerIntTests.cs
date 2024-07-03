@@ -38,11 +38,11 @@ public class BinarySerializerIntTests
     [InlineData(1)]
     public void Encode_Various_WritesExpectedBytes(int value)
     {
-        var mock = new Mock<IDataBufferWriter>();
+        Mock<IDataBufferWriter> mock = new();
 
-        var bitsWritten = new List<bool>();
-        var byteWritten = new List<byte>();
-        var bytesWritten = new List<byte[]>();
+        List<bool> bitsWritten = new();
+        List<byte> byteWritten = new();
+        List<byte[]> bytesWritten = new();
             
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
         mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
