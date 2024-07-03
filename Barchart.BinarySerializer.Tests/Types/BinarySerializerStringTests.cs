@@ -27,7 +27,27 @@ namespace Barchart.BinarySerializer.Tests.Types
 
         #region Test Methods (Encode)
 
-      
+        [Theory]
+        [InlineData("Testing Encoding & Decoding methods")]
+        [InlineData("")]
+        [InlineData("Binary Serialization")]
+        public void Encode_VariousStringsToUTF8_WritesExpectedBytes(string value)
+        {
+            Mock<IDataBufferWriter> mock = new();
+
+            List<byte[]> bytesWritten = new();
+            mock.Setup(m => m.WriteBytes(It.IsAny<byte[]>())).Callback<byte[]>(b => bytesWritten.Add(b));
+
+            _serializer.Encode(mock.Object, value);
+
+            Assert.Equal(2, bytesWritten.Count);
+            
+            byte[] expectedLengthBytes = BitConverter.GetBytes((short)value.Length);
+            Assert.Equal(expectedLengthBytes, bytesWritten[0]);
+
+            byte[] expectedContentBytes = Encoding.UTF8.GetBytes(value);
+            Assert.Equal(expectedContentBytes, bytesWritten[1]);
+        }
 
         #endregion
 
@@ -37,12 +57,12 @@ namespace Barchart.BinarySerializer.Tests.Types
         [InlineData("Testing Encoding & Decoding methods")]
         [InlineData("")]
         [InlineData("Binary Serialization")]
-        public void Decode_VariousEncodedInUTF8_ReturnsExpectedValue(string value)
+        public void Decode_UTF8EncodedStrings_ReturnsExpectedValue(string value)
         {
             Mock<IDataBufferReader> mock = new();
 
             byte[] encodedBytes = new byte[2];
-            mock.Setup(m => m.ReadBytes(2)).Returns(BitConverter.GetBytes(value.Length));
+            mock.Setup(m => m.ReadBytes(2)).Returns(BitConverter.GetBytes((short)value.Length));
             mock.Setup(m => m.ReadBytes(value.Length)).Returns(Encoding.UTF8.GetBytes(value));
 
             var deserialized = _serializer.Decode(mock.Object);
