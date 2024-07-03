@@ -18,7 +18,7 @@ public class BinarySerializerCharTests
     public BinarySerializerCharTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
-        
+
         _serializer = new BinarySerializerChar();
     }
     
@@ -49,9 +49,20 @@ public class BinarySerializerCharTests
         _serializer.Encode(mock.Object, value);
 
         Assert.Empty(bitsWritten);
-        Assert.Single(byteWritten);
-        Assert.Equal((byte)value, byteWritten[0]);
-        Assert.Empty(bytesWritten);
+        Assert.Empty(byteWritten);
+
+        byte[] expectedBytes = BitConverter.GetBytes(value);
+
+        Assert.Single(bytesWritten);
+        Assert.Equal(expectedBytes.Length, bytesWritten[0].Length);
+
+        for (int i = 0; i < expectedBytes.Length; i++)
+        {
+            var expectedByte = expectedBytes[i];
+            var actualByte = bytesWritten[0][i];
+            
+            Assert.Equal(expectedByte, actualByte);
+        }
     }
 
     #endregion
@@ -70,7 +81,7 @@ public class BinarySerializerCharTests
     {
         Mock<IDataBufferReader> mock = new();
 
-        mock.Setup(m => m.ReadByte()).Returns((byte)value);
+        mock.Setup(m => m.ReadBytes(2)).Returns(BitConverter.GetBytes(value));
 
         var deserialized = _serializer.Decode(mock.Object);
 
