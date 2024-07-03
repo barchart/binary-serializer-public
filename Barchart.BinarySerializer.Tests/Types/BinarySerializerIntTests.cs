@@ -31,8 +31,8 @@ public class BinarySerializerIntTests
     #region Test Methods (Encode)
         
     [Theory]
-    [InlineData(Int32.MaxValue)]
-    [InlineData(Int32.MinValue)]
+    [InlineData(int.MaxValue)]
+    [InlineData(int.MinValue)]
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(1)]
@@ -72,8 +72,8 @@ public class BinarySerializerIntTests
     #region Test Methods (Decode)
 
     [Theory]
-    [InlineData(Int32.MaxValue)]
-    [InlineData(Int32.MinValue)]
+    [InlineData(int.MaxValue)]
+    [InlineData(int.MinValue)]
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(1)]
@@ -93,11 +93,11 @@ public class BinarySerializerIntTests
     #region Test Methods (GetEquals)
     
     [Theory]
-    [InlineData(new[] { Int32.MaxValue, Int32.MaxValue })]
-    [InlineData(new[] { Int32.MinValue, Int32.MinValue })]
+    [InlineData(new[] { int.MaxValue, int.MaxValue })]
+    [InlineData(new[] { int.MinValue, int.MinValue })]
     [InlineData(new[] { 0, 0 })]
-    [InlineData(new[] { Int32.MaxValue, Int32.MinValue })]
-    [InlineData(new[] { Int32.MinValue, Int32.MaxValue })]
+    [InlineData(new[] { int.MaxValue, int.MinValue })]
+    [InlineData(new[] { int.MinValue, int.MaxValue })]
     [InlineData(new[] { 1, -1 })]
     public void GetEquals_Various_MatchesIEquatableOutput(int[] integers)
     {

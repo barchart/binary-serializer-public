@@ -31,8 +31,8 @@ public class BinarySerializerByteTests
     #region Test Methods (Encode)
         
     [Theory]
-    [InlineData(Byte.MaxValue)]
-    [InlineData(Byte.MinValue)]
+    [InlineData(byte.MaxValue)]
+    [InlineData(byte.MinValue)]
     [InlineData((byte)127)]
     [InlineData((byte)128)]
     public void Encode_Various_WritesExpectedBytes(byte value)
@@ -62,8 +62,8 @@ public class BinarySerializerByteTests
     #region Test Methods (Decode)
 
     [Theory]
-    [InlineData(Byte.MaxValue)]
-    [InlineData(Byte.MinValue)]
+    [InlineData(byte.MaxValue)]
+    [InlineData(byte.MinValue)]
     [InlineData((byte)127)]
     [InlineData((byte)128)]
     public void Decode_VariousEncoded_ReturnsExpectedValue(byte value)
@@ -82,11 +82,11 @@ public class BinarySerializerByteTests
     #region Test Methods (GetEquals)
     
     [Theory]
-    [InlineData(new[] { Byte.MaxValue, Byte.MaxValue })]
-    [InlineData(new[] { Byte.MinValue, Byte.MinValue })]
+    [InlineData(new[] { byte.MaxValue, byte.MaxValue })]
+    [InlineData(new[] { byte.MinValue, byte.MinValue })]
     [InlineData(new[] { (byte)128, (byte)128 })]
-    [InlineData(new[] { Byte.MaxValue, Byte.MinValue })]
-    [InlineData(new[] { Byte.MinValue, Byte.MaxValue })]
+    [InlineData(new[] { byte.MaxValue, byte.MinValue })]
+    [InlineData(new[] { byte.MinValue, byte.MaxValue })]
     [InlineData(new[] { (byte)128, (byte)127 })]
     public void GetEquals_Various_MatchesIEquatableOutput(byte[] bytes)
     {
