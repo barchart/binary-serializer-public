@@ -113,21 +113,23 @@ public class BinarySerializerDecimalTests
     #region Test Methods (GetEquals)
     
     [Theory]
-    [InlineData("0", "0", true)]
-    [InlineData("1", "1", true)]
-    [InlineData("-1", "-1", true)]
-    [InlineData("79228162514264337593543950335", "79228162514264337593543950335", true)]
-    [InlineData("-79228162514264337593543950335", "-79228162514264337593543950335", true)]
-    [InlineData("0.0000000000000000000000000001", "0.0000000000000000000000000001", true)]
-    [InlineData("3.14159265359", "3.14159265359", true)]
-    [InlineData("1", "-1", false)]
-    [InlineData("0.1", "0.2", false)]
-    public void GetEquals_Various_ReturnsExpectedResult(string aString, string bString, bool expected)
+    [InlineData("0", "0")]
+    [InlineData("1", "1")]
+    [InlineData("-1", "-1")]
+    [InlineData("79228162514264337593543950335", "79228162514264337593543950335")]
+    [InlineData("-79228162514264337593543950335", "-79228162514264337593543950335")]
+    [InlineData("0.0000000000000000000000000001", "0.0000000000000000000000000001")]
+    [InlineData("3.14159265359", "3.14159265359")]
+    [InlineData("1", "-1")]
+    [InlineData("0.1", "0.2")]
+    public void GetEquals_Various_ReturnsExpectedResult(string first, string second)
     {
-        decimal a = decimal.Parse(aString);
-        decimal b = decimal.Parse(bString);
+        decimal a = decimal.Parse(first);
+        decimal b = decimal.Parse(second);
+
         var actual = _serializer.GetEquals(a, b);
-        
+        var expected = first.Equals(second);
+
         Assert.Equal(expected, actual);
     }
     
