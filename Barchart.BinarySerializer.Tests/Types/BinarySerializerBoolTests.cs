@@ -111,7 +111,7 @@ public class BinarySerializerBoolTests
     [InlineData(new[] { false, false })]
     [InlineData(new[] { false, true })]
     [InlineData(new[] { true, false })]
-    public void GetEquals_Multiple_MatchesIEquatableResult(bool[] bits)
+    public void GetEquals_Various_MatchesIEquatableOutput(bool[] bits)
     {
         bool actual = _serializer.GetEquals(bits[0], bits[1]);
         bool expected = bits[0].Equals(bits[1]);

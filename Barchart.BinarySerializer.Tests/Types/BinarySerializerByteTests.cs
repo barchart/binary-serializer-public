@@ -35,7 +35,7 @@ public class BinarySerializerByteTests
     [InlineData(Byte.MinValue)]
     [InlineData((byte)127)]
     [InlineData((byte)128)]
-    public void Encode_MaxValue_WritesToDataBuffer(byte value)
+    public void Encode_Various_WritesExpectedBytes(byte value)
     {
         var mock = new Mock<IDataBufferWriter>();
 
@@ -66,7 +66,7 @@ public class BinarySerializerByteTests
     [InlineData(Byte.MinValue)]
     [InlineData((byte)127)]
     [InlineData((byte)128)]
-    public void Decode_MaxValue_ReturnsMaxValue(byte value)
+    public void Decode_VariousEncoded_ReturnsExpectedValue(byte value)
     {
         Mock<IDataBufferReader> mock = new Mock<IDataBufferReader>();
 
@@ -88,7 +88,7 @@ public class BinarySerializerByteTests
     [InlineData(new[] { Byte.MaxValue, Byte.MinValue })]
     [InlineData(new[] { Byte.MinValue, Byte.MaxValue })]
     [InlineData(new[] { (byte)128, (byte)127 })]
-    public void GetEquals_Multiple_MatchesIEquatableResult(byte[] bytes)
+    public void GetEquals_Various_MatchesIEquatableOutput(byte[] bytes)
     {
         bool actual = _serializer.GetEquals(bytes[0], bytes[1]);
         bool expected = bytes[0].Equals(bytes[1]);
