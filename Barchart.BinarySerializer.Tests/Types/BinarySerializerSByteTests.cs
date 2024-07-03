@@ -11,14 +11,18 @@ namespace Barchart.BinarySerializer.Tests.Types
     {
         #region Fields
 
+        private readonly ITestOutputHelper _testOutputHelper;
+        
         private readonly BinarySerializerSByte _serializer;
 
         #endregion
 
         #region Constructor(s)
 
-        public BinarySerializerSByteTests()
+        public BinarySerializerSByteTests(ITestOutputHelper testOutputHelper)
         {
+            _testOutputHelper = testOutputHelper;
+            
             _serializer = new BinarySerializerSByte();
         }
 

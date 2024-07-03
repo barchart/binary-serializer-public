@@ -110,8 +110,7 @@ public class BinarySerializerDateTimeTests
         var expected = date1.Equals(date2);
             
         Assert.Equal(expected, actual);
-}
-
+    }
     
     #endregion
 }

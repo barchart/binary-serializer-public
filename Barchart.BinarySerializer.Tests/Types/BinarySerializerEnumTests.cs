@@ -2,7 +2,6 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Types;
-using static Barchart.BinarySerializer.Tests.Common.Helpers;
 
 #endregion
 
@@ -10,11 +9,10 @@ namespace Barchart.BinarySerializer.Tests.Types
 {
     public class BinarySerializerEnumTests
     {
-      
-
         #region Fields
     
         private readonly ITestOutputHelper _testOutputHelper;
+        
         private readonly BinarySerializerEnum<TestEnum> _serializer;
     
         #endregion
@@ -107,6 +105,17 @@ namespace Barchart.BinarySerializer.Tests.Types
             Assert.Equal(expected, actual);
         }
     
+        #endregion
+        
+        #region Nested Types
+        
+        public enum TestEnum
+        {
+            Value1,
+            Value2,
+            Value3
+        }
+        
         #endregion
     }
 }
