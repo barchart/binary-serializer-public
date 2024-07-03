@@ -96,22 +96,22 @@ public class BinarySerializerDateTimeTests
     #region Test Methods (GetEquals)
     
     [Theory]
-    [InlineData(2023, 1, 1, 12, 0, 0, 2023, 1, 1, 12, 0, 0)]
-    [InlineData(1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0)]
-    [InlineData(9999, 12, 31, 23, 59, 59, 9999, 12, 31, 23, 59, 59)]
-    [InlineData(2000, 2, 29, 15, 30, 45, 2000, 2, 29, 15, 30, 45)]
-    [InlineData(1970, 1, 1, 0, 0, 0, 1970, 1, 1, 0, 0, 1)]
-    public void GetEquals_Various_MatchesIEquatableOutput(int year1, int month1, int day1, int hour1, int minute1, int second1, 
-        int year2, int month2, int day2, int hour2, int minute2, int second2)
+    [InlineData(new[] { 2023, 1, 1, 12, 0, 0, 2023, 1, 1, 12, 0, 0 })]
+    [InlineData(new[] { 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0 })]
+    [InlineData(new[] { 9999, 12, 31, 23, 59, 59, 9999, 12, 31, 23, 59, 59 })]
+    [InlineData(new[] { 2000, 2, 29, 15, 30, 45, 2000, 2, 29, 15, 30, 45 })]
+    [InlineData(new[] { 1970, 1, 1, 0, 0, 0, 1970, 1, 1, 0, 0, 1 })]
+    public void GetEquals_Various_MatchesIEquatableOutput(int[] dateTimes)
     {
-        DateTime date1 = new DateTime(year1, month1, day1, hour1, minute1, second1, DateTimeKind.Utc);
-        DateTime date2 = new DateTime(year2, month2, day2, hour2, minute2, second2, DateTimeKind.Utc);
-        
+        DateTime date1 = new(dateTimes[0], dateTimes[1], dateTimes[2], dateTimes[3], dateTimes[4], dateTimes[5], DateTimeKind.Utc);
+        DateTime date2 = new(dateTimes[6], dateTimes[7], dateTimes[8], dateTimes[9], dateTimes[10], dateTimes[11], DateTimeKind.Utc);
+            
         var actual = _serializer.GetEquals(date1, date2);
         var expected = date1.Equals(date2);
-        
+            
         Assert.Equal(expected, actual);
-    }
+}
+
     
     #endregion
 }

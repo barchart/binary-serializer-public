@@ -97,21 +97,21 @@ public class BinarySerializerDateOnlyTests
     #region Test Methods (GetEquals)
     
     [Theory]
-    [InlineData(2023, 1, 1, 2023, 1, 1)]
-    [InlineData(2023, 1, 1, 2023, 1, 2)]
-    [InlineData(1, 1, 1, 9999, 12, 31)]
-    [InlineData(2000, 2, 29, 2000, 2, 29)]
-    [InlineData(1970, 1, 1, 1970, 1, 1)]
-    public void GetEquals_Various_MatchesIEquatableOutput(int year1, int month1, int day1, int year2, int month2, int day2)
+    [InlineData(new[] { 2023, 1, 1, 2023, 1, 1 })]
+    [InlineData(new[] { 2023, 1, 1, 2023, 1, 2 })]
+    [InlineData(new[] { 1, 1, 1, 9999, 12, 31 })]
+    [InlineData(new[] { 2000, 2, 29, 2000, 2, 29 })]
+    [InlineData(new[] { 1970, 1, 1, 1970, 1, 1 })]
+    public void GetEquals_Various_MatchesIEquatableOutput(int[] dates)
     {
-        DateOnly date1 = new(year1, month1, day1);
-        DateOnly date2 = new(year2, month2, day2);
+        DateOnly date1 = new(dates[0], dates[1], dates[2]);
+        DateOnly date2 = new(dates[3], dates[4], dates[5]);
         
         var actual = _serializer.GetEquals(date1, date2);
         var expected = date1.Equals(date2);
         
         Assert.Equal(expected, actual);
     }
-    
+
     #endregion
 }
