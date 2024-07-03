@@ -14,7 +14,6 @@ public class BinarySerializerDecimalTests
     
     private readonly ITestOutputHelper _testOutputHelper;
     private readonly BinarySerializerDecimal _serializer;
-    private readonly Mock<IBinaryTypeSerializer<int>> _mockIntSerializer;
     
     #endregion
         
@@ -23,7 +22,7 @@ public class BinarySerializerDecimalTests
     public BinarySerializerDecimalTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
-        _mockIntSerializer = new Mock<IBinaryTypeSerializer<int>>();
+
         _serializer = new BinarySerializerDecimal();
     }
     
