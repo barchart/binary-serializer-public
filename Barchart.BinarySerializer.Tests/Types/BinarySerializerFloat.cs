@@ -2,9 +2,6 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Types;
-using System;
-using Xunit;
-using Moq;
 
 #endregion
 
@@ -67,6 +64,9 @@ public class BinarySerializerFloatTests
     [InlineData(float.MinValue)]
     [InlineData(float.Epsilon)]
     [InlineData((float)Math.PI)]
+    [InlineData(float.PositiveInfinity)]
+    [InlineData(float.NegativeInfinity)]
+    [InlineData(float.NaN)]
     public void Decode_VariousEncoded_ReturnsExpectedValue(float expected)
     {
         Mock<IDataBufferReader> mock = new();
@@ -78,33 +78,6 @@ public class BinarySerializerFloatTests
         var actual = _serializer.Decode(mock.Object);
         
         Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public void Decode_PositiveInfinity_ReturnsPositiveInfinity()
-    {
-        Mock<IDataBufferReader> mock = new();
-        mock.Setup(m => m.ReadBytes(4)).Returns(BitConverter.GetBytes(float.PositiveInfinity));
-        var result = _serializer.Decode(mock.Object);
-        Assert.Equal(float.PositiveInfinity, result);
-    }
-
-    [Fact]
-    public void Decode_NegativeInfinity_ReturnsNegativeInfinity()
-    {
-        Mock<IDataBufferReader> mock = new();
-        mock.Setup(m => m.ReadBytes(4)).Returns(BitConverter.GetBytes(float.NegativeInfinity));
-        var result = _serializer.Decode(mock.Object);
-        Assert.Equal(float.NegativeInfinity, result);
-    }
-
-    [Fact]
-    public void Decode_NaN_ReturnsNaN()
-    {
-        Mock<IDataBufferReader> mock = new();
-        mock.Setup(m => m.ReadBytes(4)).Returns(BitConverter.GetBytes(float.NaN));
-        var result = _serializer.Decode(mock.Object);
-        Assert.True(float.IsNaN(result));
     }
 
     #endregion
