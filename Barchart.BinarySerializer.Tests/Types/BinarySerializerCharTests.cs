@@ -95,11 +95,11 @@ public class BinarySerializerCharTests
 
     #region Test Methods (GetEquals)
     [Theory]
-    [InlineData(new[] {'a', 'a'})]
-    [InlineData(new[] {'b', 'b'})]
-    [InlineData(new[] {'A', 'A'})]
-    [InlineData(new[] {'a', 'b'})]
-    [InlineData(new[] {'A', 'B'})]
+    [InlineData(new[] { 'a', 'a' })]
+    [InlineData(new[] { 'b', 'b' })]
+    [InlineData(new[] { 'A', 'A' })]
+    [InlineData(new[] { 'a', 'b' })]
+    [InlineData(new[] { 'A', 'B' })]
     public void GetEquals_Various_MatchesIEquatableOutput(char[] chars)
     {
         var actual = _serializer.GetEquals(chars[0], chars[1]);

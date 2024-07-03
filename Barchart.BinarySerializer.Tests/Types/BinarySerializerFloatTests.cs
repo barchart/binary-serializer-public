@@ -85,19 +85,19 @@ public class BinarySerializerFloatTests
     #region Test Methods (GetEquals)
     
     [Theory]
-    [InlineData(0f, 0f)]
-    [InlineData(1f, 1f)]
-    [InlineData(-1f, -1f)]
-    [InlineData(float.MaxValue, float.MaxValue)]
-    [InlineData(float.MinValue, float.MinValue)]
-    [InlineData(float.Epsilon, float.Epsilon)]
-    [InlineData((float)Math.PI, (float)Math.PI)]
-    [InlineData(1f, -1f)]
-    [InlineData(0.1f, 0.2f)]
-    public void GetEquals_Various_MatchesIEquatableOutput(float a, float b)
+    [InlineData(new[] { 0f, 0f })]
+    [InlineData(new[] { 1f, 1f } )]
+    [InlineData(new[] { -1f, -1f } )]
+    [InlineData(new[] { float.MaxValue, float.MaxValue })]
+    [InlineData(new[] { float.MinValue, float.MinValue })]
+    [InlineData(new[] { float.Epsilon, float.Epsilon })]
+    [InlineData(new[] { (float)Math.PI, (float)Math.PI })]
+    [InlineData(new[] { 1f, -1f })]
+    [InlineData(new[] { 0.1f, 0.2f })]
+    public void GetEquals_Various_MatchesIEquatableOutput(float[] floats)
     {
-        var actual = _serializer.GetEquals(a, b);
-        var expected = a.Equals(b);
+        var actual = _serializer.GetEquals(floats[0], floats[1]);
+        var expected = floats[0].Equals(floats[1]);
         
         Assert.Equal(expected, actual);
     }

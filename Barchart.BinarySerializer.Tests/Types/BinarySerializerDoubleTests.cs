@@ -85,19 +85,19 @@ public class BinarySerializerDoubleTests
     #region Test Methods (GetEquals)
     
     [Theory]
-    [InlineData(0, 0)]
-    [InlineData(1, 1)]
-    [InlineData(-1, -1)]
-    [InlineData(double.MaxValue, double.MaxValue)]
-    [InlineData(double.MinValue, double.MinValue)]
-    [InlineData(double.Epsilon, double.Epsilon)]
-    [InlineData(Math.PI, Math.PI)]
-    [InlineData(1, -1)]
-    [InlineData(0.1, 0.2)]
-    public void GetEquals_Various_MatchesIEquatableOutput(double a, double b)
+    [InlineData(new[] { 0d, 0 })]
+    [InlineData(new[] { 1d, 1 })]
+    [InlineData(new[] { -1d, -1 })]
+    [InlineData(new[] { double.MaxValue, double.MaxValue })]
+    [InlineData(new[] { double.MinValue, double.MinValue })]
+    [InlineData(new[] { double.Epsilon, double.Epsilon })]
+    [InlineData(new[] { Math.PI, Math.PI })]
+    [InlineData(new[] { 1d, -1 })]
+    [InlineData(new[] { 0.1, 0.2 })]
+    public void GetEquals_Various_MatchesIEquatableOutput(double[] doubles)
     {
-        var actual = _serializer.GetEquals(a, b);
-        var expected = a.Equals(b);
+        var actual = _serializer.GetEquals(doubles[0], doubles[1]);
+        var expected = doubles[0].Equals(doubles[1]);
         
         Assert.Equal(expected, actual);
     }

@@ -93,12 +93,12 @@ namespace Barchart.BinarySerializer.Tests.Types
         #region Test Methods (GetEquals)
     
         [Theory]
-        [InlineData(new[] { TestEnum.Value1, TestEnum.Value1})]
-        [InlineData(new[] { TestEnum.Value2, TestEnum.Value2})]
-        [InlineData(new[] { TestEnum.Value3, TestEnum.Value3})]
-        [InlineData(new[] { TestEnum.Value1, TestEnum.Value2})]
-        [InlineData(new[] { TestEnum.Value2, TestEnum.Value3})]
-        [InlineData(new[] { TestEnum.Value1, TestEnum.Value3})]
+        [InlineData(new[] { TestEnum.Value1, TestEnum.Value1 })]
+        [InlineData(new[] { TestEnum.Value2, TestEnum.Value2 })]
+        [InlineData(new[] { TestEnum.Value3, TestEnum.Value3 })]
+        [InlineData(new[] { TestEnum.Value1, TestEnum.Value2 })]
+        [InlineData(new[] { TestEnum.Value2, TestEnum.Value3 })]
+        [InlineData(new[] { TestEnum.Value1, TestEnum.Value3 })]
         public void GetEquals_Various_ReturnsExpectedResult(TestEnum[] testEnums)
         {
             var actual = _serializer.GetEquals(testEnums[0], testEnums[1]);
