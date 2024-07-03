@@ -2,9 +2,6 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Types;
-using Moq;
-using Xunit;
-using Xunit.Abstractions;
 
 #endregion
 
