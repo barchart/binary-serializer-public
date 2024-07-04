@@ -42,6 +42,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     
     #region Methods
 
+    /// <inheritdoc />
     public virtual IBinaryTypeSerializer<T> Make<T>()
     {
         IBinaryTypeSerializer serializer = _serializers[typeof(T)];

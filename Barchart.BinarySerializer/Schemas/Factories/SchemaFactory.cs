@@ -86,7 +86,7 @@ public class SchemaFactory : ISchemaFactory
         return new SchemaItem<TEntity, TProperty>(name, key, getter, setter, serializer);
     }
     
-    private Func<TEntity, TProperty> MakePropertyGetter<TEntity, TProperty>(MemberInfo propertyInfo)
+    private static Func<TEntity, TProperty> MakePropertyGetter<TEntity, TProperty>(MemberInfo propertyInfo)
     {
         ParameterExpression[] typeParameterExpressions = {
             Expression.Parameter(typeof(TEntity))
@@ -97,7 +97,7 @@ public class SchemaFactory : ISchemaFactory
         return Expression.Lambda<Func<TEntity, TProperty>>(propertyAccessExpression, typeParameterExpressions).Compile();
     }
     
-    private Action<TEntity, TProperty> MakePropertySetter<TEntity, TProperty>(PropertyInfo propertyInfo)
+    private static Action<TEntity, TProperty> MakePropertySetter<TEntity, TProperty>(PropertyInfo propertyInfo)
     {
         ParameterExpression[] typeParameterExpressions = {
             Expression.Parameter(typeof(TEntity)),
