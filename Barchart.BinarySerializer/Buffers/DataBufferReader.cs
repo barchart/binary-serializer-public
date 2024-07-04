@@ -83,6 +83,13 @@ namespace Barchart.BinarySerializer.Buffers
             return bytes;
         }
 
+        /// <inheritdoc />
+        public void Reset()
+        {
+            _positionByte = 0;
+            _positionBit = 0;
+        }
+
         private void AdvanceBit()
         {
             if (_positionBit == 7)

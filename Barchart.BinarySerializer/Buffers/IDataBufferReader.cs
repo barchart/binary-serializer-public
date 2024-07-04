@@ -43,5 +43,11 @@ public interface IDataBufferReader
     /// </exception>
     byte[] ReadBytes(int size);
 
+    /// <summary>
+    ///     Resets the position for the next read operation to the
+    ///     beginning of the underlying data source.
+    /// </summary>
+    void Reset();
+
     #endregion
 }
