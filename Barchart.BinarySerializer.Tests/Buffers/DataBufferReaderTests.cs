@@ -55,4 +55,30 @@ public class DataBufferReaderTests
     }
 
     #endregion
+    
+    #region Test Methods (Reset)
+    
+    [Fact]
+    public void ReadByte_AfterReset_ReturnsFirstByte()
+    {
+        byte first;
+        byte second;
+
+        var byteArray = new[] { first = 250, second = 175 };
+        var dataBuffer = new DataBufferReader(byteArray);
+
+        byte readFirst = dataBuffer.ReadByte();
+        byte readSecond = dataBuffer.ReadByte();
+
+        Assert.Equal(first, readFirst);
+        Assert.Equal(second, readSecond);
+        
+        dataBuffer.Reset();
+        
+        byte readThird = dataBuffer.ReadByte();
+        
+        Assert.Equal(first, readThird);
+    }
+    
+    #endregion
 }
