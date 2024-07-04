@@ -158,7 +158,7 @@ public class SchemaFactory : ISchemaFactory
 
         if (comparison == 0)
         {
-            comparison = String.Compare(a.Name, b.Name, StringComparison.Ordinal);
+            comparison = string.Compare(a.Name, b.Name, StringComparison.Ordinal);
         }
 
         return comparison;
