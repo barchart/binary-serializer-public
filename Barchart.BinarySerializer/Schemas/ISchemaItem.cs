@@ -8,7 +8,7 @@ namespace Barchart.BinarySerializer.Schemas;
 
 /// <summary>
 ///     An interface that describes how to read a data point, usually
-///     from an instance property, serialize the data point, and then
+///     from an instance property, serialize that data point, and then
 ///     write the serialized data to binary data storage (and vice versa).
 /// </summary>
 /// <typeparam name="TEntity">
@@ -27,8 +27,8 @@ public interface ISchemaItem<TEntity> where TEntity: new()
     
     /// <summary>
     ///     The name of the member (property, field, etc) from which data is
-    ///     read (or to which deserialized data). This name is used for
-    ///     display purposes only.
+    ///     read (or to which deserialized data is assigned). This name is used
+    ///     for display purposes only.
     /// </summary>
     string Name { get; }
 
