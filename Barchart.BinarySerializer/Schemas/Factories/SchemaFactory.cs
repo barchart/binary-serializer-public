@@ -19,7 +19,7 @@ public class SchemaFactory : ISchemaFactory
 
     #endregion
     
-    #region  Constructor(s)
+    #region Constructor(s)
 
     public SchemaFactory(IBinaryTypeSerializerFactory binarySerializerFactory)
     {
