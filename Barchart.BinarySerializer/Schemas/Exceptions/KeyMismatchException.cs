@@ -1,8 +1,10 @@
 namespace Barchart.BinarySerializer.Schemas.Exceptions;
 
 /// <summary>
-///     Thrown when an attempt is made alter the key of an
-///     existing entity (during deserialization). 
+///     Thrown when attempting to change an entity's key value
+///     (during deserialization) or when attempting to compare
+///     two entities which have different key values (during
+///     serialization).
 /// </summary>
 public class KeyMismatchException : InvalidOperationException
 {
@@ -24,8 +26,7 @@ public class KeyMismatchException : InvalidOperationException
     #region Properties
 
     /// <summary>
-    ///     The name of the key which would have been altered
-    ///     during a deserialization operation.
+    ///     The name of the key.
     /// </summary>
     public string KeyName => _keyName;
 
