@@ -1,3 +1,8 @@
+/*
+    usage example:
+    dotnet script test.csx
+*/
+
 using System;
 using System.Diagnostics;
 
