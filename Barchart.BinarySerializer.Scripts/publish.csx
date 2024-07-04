@@ -1,6 +1,6 @@
 /*
     usage example:
-    dotnet script publish.csx -- --api-key "YourApiKey"
+    dotnet script Publish.csx -- --api-key "YourApiKey"
 */
 
 #r "nuget: Newtonsoft.Json, 13.0.1"

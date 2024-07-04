@@ -1,6 +1,6 @@
 /*
     usage example:
-    dotnet script test.csx
+    dotnet script Test.csx
 */
 
 using System;
