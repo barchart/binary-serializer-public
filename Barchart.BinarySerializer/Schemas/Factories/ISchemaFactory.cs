@@ -9,6 +9,8 @@ namespace Barchart.BinarySerializer.Schemas.Factories;
 /// </summary>
 public interface ISchemaFactory
 {
+    #region Methods
+    
     /// <summary>
     ///     Creates a schema for the specified entity type.
     /// </summary>
@@ -24,4 +26,6 @@ public interface ISchemaFactory
     ///     for binary serialization and deserialization of the entity.
     /// </remarks>
     ISchema<TEntity> Make<TEntity>() where TEntity: new();
+
+    #endregion
 }
