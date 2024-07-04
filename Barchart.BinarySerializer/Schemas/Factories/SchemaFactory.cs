@@ -79,8 +79,8 @@ public class SchemaFactory : ISchemaFactory
         IBinaryTypeSerializer<TProperty> serializer = _binaryTypeSerializerFactory.Make<TProperty>();
         
         SerializeAttribute attribute = GetSerializeAttribute(propertyInfo);
-        
-        String name = propertyInfo.Name;
+
+        string name = propertyInfo.Name;
         bool key = attribute.Key;
         
         return new SchemaItem<TEntity, TProperty>(name, key, getter, setter, serializer);
