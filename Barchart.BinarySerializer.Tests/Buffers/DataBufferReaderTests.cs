@@ -53,6 +53,18 @@ public class DataBufferReaderTests
         Assert.Equal(first, readFirst);
         Assert.Equal(second, readSecond);
     }
+    
+    [Fact]
+    public void ReadByte_ExceedingArrayLength_ThrowsError()
+    {
+        var byteArray = new[] { (byte)250, (byte)175 };
+        var dataBuffer = new DataBufferReader(byteArray);
+
+        dataBuffer.ReadByte();
+        dataBuffer.ReadByte();
+        
+        Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadByte());
+    }
 
     #endregion
     
