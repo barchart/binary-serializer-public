@@ -5,7 +5,7 @@ using static Org.Openfeed.InstrumentDefinition.Types;
 using static Org.Openfeed.MarketSummary.Types;
 using static Org.Openfeed.VolumeAtPrice.Types;
 
-namespace Barchart.SerializationData;
+namespace Barchart.BinarySerializer.Examples.Data;
 
 public class MarketData
 {
