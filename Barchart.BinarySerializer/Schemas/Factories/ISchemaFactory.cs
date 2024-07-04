@@ -1,4 +1,8 @@
+#region Using Statements
+
 namespace Barchart.BinarySerializer.Schemas.Factories;
+
+#endregion
 
 /// <summary>
 ///     Defines a factory for creating schemas for entities.
