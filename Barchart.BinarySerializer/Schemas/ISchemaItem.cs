@@ -37,7 +37,7 @@ public interface ISchemaItem<TEntity> where TEntity: new()
     #region Methods
 
     /// <summary>
-    ///     Reads data from the source object, serializes the data to binary,
+    ///     Reads data from the source object, serializes that data to binary,
     ///     and writes the serialized data to the binary data storage.
     /// </summary>
     /// <param name="source">
@@ -49,8 +49,8 @@ public interface ISchemaItem<TEntity> where TEntity: new()
     void Encode(TEntity source, IDataBufferWriter writer);
     
     /// <summary>
-    ///     Reads data from the binary data storage, deserializes the data,
-    ///     and assigns the deserialized to the source (target) object.
+    ///     Reads data from the binary data storage, deserializes that data,
+    ///     and assigns the deserialized data to the source (target) object.
     /// </summary>
     /// <param name="target">
     ///     The object to assign data to.
