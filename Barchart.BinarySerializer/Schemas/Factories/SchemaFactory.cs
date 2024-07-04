@@ -9,7 +9,7 @@ using Barchart.BinarySerializer.Types.Factories;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Schemas;
+namespace Barchart.BinarySerializer.Schemas.Factories;
 
 public class SchemaFactory : ISchemaFactory
 {

@@ -1,4 +1,4 @@
-namespace Barchart.BinarySerializer.Schemas;
+namespace Barchart.BinarySerializer.Schemas.Factories;
 
 public interface ISchemaFactory
 {
