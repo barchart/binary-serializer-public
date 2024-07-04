@@ -1,14 +1,20 @@
-﻿using Barchart.BinarySerializer.Attributes;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Attributes;
 
 using Org.Openfeed;
 using static Org.Openfeed.InstrumentDefinition.Types;
 using static Org.Openfeed.MarketSummary.Types;
 using static Org.Openfeed.VolumeAtPrice.Types;
 
+#endregion
+
 namespace Barchart.BinarySerializer.Examples.Data;
 
 public class MarketData
 {
+    #region Properties
+
     [Serialize(key: false)]
     public SubscriptionResponse? SubscriptionResponse { get; set; }
 
@@ -17,10 +23,14 @@ public class MarketData
 
     [Serialize(key: false)]
     public MarketState? MarketState { get; set; }
+
+    #endregion
 }
 
 public class SubscriptionResponse
 {
+    #region Properties
+
     [Serialize(key: true)]
     public string? Symbol { get; set; }
 
@@ -50,10 +60,14 @@ public class SubscriptionResponse
 
     [Serialize(key: false)]
     public int? SnapshotIntervalSeconds { get; set; }
+
+    #endregion
 }
 
 public class InstrumentDefinition
 {
+    #region Properties
+
     [Serialize(key: false)]
     public long? MarketId { get; set; }
 
@@ -227,10 +241,14 @@ public class InstrumentDefinition
 
     [Serialize(key: false)]
     public long? UnderlyingOpenfeedMarketId { get; set; }
+
+    #endregion
 }
 
 public class MarketState
 {
+    #region Properties
+
     [Serialize(key: false)]
     public int? TradeDate { get; set; }
 
@@ -308,9 +326,14 @@ public class MarketState
 
     [Serialize(key: false)]
     public long? TransactionTime { get; set; }
+
+    #endregion
 }
 
 public class BestBidOffer {
+
+    #region Properties
+
     [Serialize(key: false)]
     public long? TransactionTime { get; set; }
 
@@ -352,9 +375,14 @@ public class BestBidOffer {
 
     [Serialize(key: false)]
     public bool? Transient { get; set; }
+
+    #endregion
 }
 
 public class VolumeAtPrice {
+
+    #region Properties
+
     [Serialize(key: false)]
     public long? MarketId { get; set; }
     
@@ -378,9 +406,14 @@ public class VolumeAtPrice {
     
     [Serialize(key: false)]
     public List<PriceLevelVolume>? PriceVolumes { get; set; }
+    
+    #endregion
 }
 
 public class MarketSummary {
+
+    #region Properties
+
     [Serialize(key: false)]
     public long? TransactionTime { get; set; }
     
@@ -443,4 +476,6 @@ public class MarketSummary {
     
     [Serialize(key: false)]
     public bool? Transient { get; set; }
+
+    #endregion
 }
