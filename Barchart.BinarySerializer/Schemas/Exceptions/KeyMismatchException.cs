@@ -14,7 +14,7 @@ public class KeyMismatchException : InvalidOperationException
     
     #region Constructor(s)
     
-    public KeyMismatchException(string keyName) : base($"An attempt was made to alter the {keyName} during deserialization")
+    public KeyMismatchException(string keyName, bool serializing) : base(serializing ? $"An attempt was made to serialize the difference between two entities with different key values ({keyName})." : $"An attempt was made to alter the a key property during deserialization ({keyName}).")
     {
         _keyName = keyName;
     }

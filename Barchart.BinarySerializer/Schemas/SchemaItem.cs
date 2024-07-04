@@ -78,7 +78,7 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity
         {
             if (!_serializer.GetEquals(current, _getter(target)))
             {
-                throw new KeyMismatchException(_name);
+                throw new KeyMismatchException(_name, false);
             }
         }
         else

@@ -1,17 +1,12 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
 
 namespace Barchart.BinarySerializer.Schemas
 {
-    /// <summary>
-    ///     Implements a schema for serialization and deserialization of entities.
-    /// </summary>
-    /// <typeparam name="TEntity">
-    ///     The type of entity this schema is for.
-    /// </typeparam>
     public class Schema<TEntity> : ISchema<TEntity> where TEntity: new()
     {
         #region Fields
@@ -33,13 +28,10 @@ namespace Barchart.BinarySerializer.Schemas
         
         #region Methods
         
-        /// <inheritdoc />
-        public byte[] Serialize(TEntity source, IDataBufferWriter writer)
+        public byte[] Serialize(IDataBufferWriter writer, TEntity source)
         {
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
-                WriteMissingFlag(writer, false);
-                    
                 item.Encode(source, writer);
             }
             
@@ -52,26 +44,56 @@ namespace Barchart.BinarySerializer.Schemas
 
             return writer.ToBytes();
         }
-
-        /// <inheritdoc />
-        public void Deserialize(TEntity target, IDataBufferReader reader)
+        
+        public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
-                item.Decode(target, reader, true);
+                bool keysAreEqual = item.GetEquals(current, previous);
+
+                if (keysAreEqual)
+                {
+                    item.Encode(current, writer);
+                }
+                else
+                {
+                    throw new KeyMismatchException(item.Name, true);
+                }
+            }
+            
+            return writer.ToBytes();
+        }
+
+        public TEntity Deserialize(IDataBufferReader reader)
+        {
+            return Deserialize(reader, new TEntity(), false);
+        }
+
+        public TEntity Deserialize(IDataBufferReader reader, TEntity target)
+        {
+            return Deserialize(reader, target, true);
+        }
+
+        private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
+        {
+            foreach (ISchemaItem<TEntity> item in _keyItems)
+            {
+                item.Decode(target, reader, existing);
             }
             
             foreach (ISchemaItem<TEntity> item in _valueItems)
             {
-                if (ReadMissingFlag(reader))
+                if (ReadMissingFlag(reader)) 
                 {
                     continue;
                 }
                 
-                item.Decode(target, reader, true);
+                item.Decode(target, reader, existing);
             }
-        }
 
+            return target;
+        }
+        
         private static bool ReadMissingFlag(IDataBufferReader reader)
         {
             return reader.ReadBit();
