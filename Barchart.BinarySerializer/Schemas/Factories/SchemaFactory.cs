@@ -13,13 +13,23 @@ namespace Barchart.BinarySerializer.Schemas.Factories;
 
 public class SchemaFactory : ISchemaFactory
 {
+    #region Fields
+
     private readonly IBinaryTypeSerializerFactory _binaryTypeSerializerFactory;
+
+    #endregion
     
+    #region  Constructor(s)
+
     public SchemaFactory(IBinaryTypeSerializerFactory binarySerializerFactory)
     {
         _binaryTypeSerializerFactory = binarySerializerFactory;
     }
     
+    #endregion
+    
+    #region Methods
+
     /// <inheritdoc />
     public ISchema<TEntity> Make<TEntity>() where TEntity: new()
     {
@@ -153,4 +163,6 @@ public class SchemaFactory : ISchemaFactory
 
         return comparison;
     }
+
+    #endregion
 }

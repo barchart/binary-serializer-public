@@ -17,6 +17,8 @@ namespace Barchart.BinarySerializer.Schemas;
 /// </typeparam>
 public interface ISchemaItem<TEntity> where TEntity: new()
 {
+    #region Properties
+
     /// <summary>
     ///     Indicates if the data point is the primary key of the
     ///     source object (or a member of a composite key).
@@ -29,7 +31,11 @@ public interface ISchemaItem<TEntity> where TEntity: new()
     ///     display purposes only.
     /// </summary>
     string Name { get; }
+
+    #endregion
     
+    #region Methods
+
     /// <summary>
     ///     Reads data from the source object, serializes the data to binary,
     ///     and writes the serialized data to the binary data storage.
@@ -70,4 +76,6 @@ public interface ISchemaItem<TEntity> where TEntity: new()
     ///     True if the two data points are equal; otherwise false.
     /// </returns>
     bool GetEquals(TEntity a, TEntity b);
+
+    #endregion
 }

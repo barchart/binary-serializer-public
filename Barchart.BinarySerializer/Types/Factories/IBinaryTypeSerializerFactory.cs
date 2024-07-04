@@ -9,6 +9,8 @@ namespace Barchart.BinarySerializer.Types.Factories;
 /// </summary>
 public interface IBinaryTypeSerializerFactory
 {
+    #region Methods
+
     /// <summary>
     ///     Creates a binary type serializer for the specified type.
     /// </summary>
@@ -24,4 +26,6 @@ public interface IBinaryTypeSerializerFactory
     ///     larger serialization schema.
     /// </remarks>
     IBinaryTypeSerializer<T> Make<T>();
+
+    #endregion
 } 

@@ -2,7 +2,13 @@ namespace Barchart.BinarySerializer.Types.Factories;
 
 public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
 {
+    #region Fields
+
     private static readonly IDictionary<Type, IBinaryTypeSerializer> _serializers;
+
+    #endregion
+
+    #region Constructor(s)
     
     static BinaryTypeSerializerFactory()
     {
@@ -31,7 +37,11 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     {
         
     }
+
+    #endregion
     
+    #region Methods
+
     public virtual IBinaryTypeSerializer<T> Make<T>()
     {
         IBinaryTypeSerializer serializer = _serializers[typeof(T)];
@@ -49,4 +59,6 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         AddSerializer(serializer);
         AddSerializer(new BinarySerializerNullable<T>(serializer));
     }
+
+    #endregion
 }

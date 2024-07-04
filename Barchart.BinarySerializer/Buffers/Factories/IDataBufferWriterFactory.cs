@@ -5,6 +5,8 @@ namespace Barchart.BinarySerializer.Buffers.Factories;
 /// </summary>
 public interface IDataBufferWriterFactory
 {
+    #region Methods
+
     /// <summary>
     ///     Creates a <see cref="IDataBufferWriter" /> instance.
     /// </summary>
@@ -12,4 +14,6 @@ public interface IDataBufferWriterFactory
     ///     The entity being serialized.
     /// </param>
     IDataBufferWriter Make<TEntity>(TEntity entity);
+
+    #endregion
 }

@@ -14,6 +14,8 @@ namespace Barchart.BinarySerializer.Schemas;
 /// </typeparam>
 public interface ISchema<TEntity> where TEntity: new()
 {
+    #region Methods
+
     /// <summary>
     ///     Serializes the given entity into a byte array.
     /// </summary>
@@ -38,4 +40,6 @@ public interface ISchema<TEntity> where TEntity: new()
     ///     The buffer reader to use for deserialization.
     /// </param>
     void Deserialize(TEntity target, IDataBufferReader reader);
+
+    #endregion
 }

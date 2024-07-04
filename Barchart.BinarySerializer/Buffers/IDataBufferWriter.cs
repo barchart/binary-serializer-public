@@ -5,6 +5,8 @@ namespace Barchart.BinarySerializer.Buffers;
 /// </summary>
 public interface IDataBufferWriter
 {
+    #region Methods
+
     /// <summary>
     ///     Writes a single bit to the internal storage.
     /// </summary>
@@ -46,4 +48,6 @@ public interface IDataBufferWriter
     ///     A byte array containing the data up to the current offset.
     /// </returns>
     byte[] ToBytes();
+
+    #endregion
 }

@@ -5,6 +5,8 @@ namespace Barchart.BinarySerializer.Buffers;
 /// </summary>
 public interface IDataBufferReader
 {
+    #region Methods
+    
     /// <summary>
     ///     Reads a single bit from the internal storage.
     /// </summary>
@@ -40,4 +42,6 @@ public interface IDataBufferReader
     ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
     /// </exception>
     byte[] ReadBytes(int size);
+
+    #endregion
 }
