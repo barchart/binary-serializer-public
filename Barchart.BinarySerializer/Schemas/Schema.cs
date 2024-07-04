@@ -6,6 +6,12 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Schemas
 {
+    /// <summary>
+    ///     Implements a schema for serialization and deserialization of entities.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    ///     The type of entity this schema is for.
+    /// </typeparam>
     public class Schema<TEntity> : ISchema<TEntity> where TEntity: new()
     {
         #region Fields

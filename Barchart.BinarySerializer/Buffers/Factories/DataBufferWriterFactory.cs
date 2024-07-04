@@ -38,6 +38,7 @@ public class DataBufferWriterFactory : IDataBufferWriterFactory
 
     #region Methods
 
+    /// <inheritdoc />
     public IDataBufferWriter Make<TEntity>(TEntity source)
     {
         if (_byteArray == null)

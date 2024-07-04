@@ -20,6 +20,7 @@ public class SchemaFactory : ISchemaFactory
         _binaryTypeSerializerFactory = binarySerializerFactory;
     }
     
+    /// <inheritdoc />
     public ISchema<TEntity> Make<TEntity>() where TEntity: new()
     {
         Type entityType = typeof(TEntity);
