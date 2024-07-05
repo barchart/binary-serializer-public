@@ -7,6 +7,13 @@ using Barchart.BinarySerializer.Schemas.Exceptions;
 
 namespace Barchart.BinarySerializer.Schemas
 {
+    /// <summary>
+    ///     Represents a schema for serializing and deserializing entities of type <typeparamref name="TEntity"/>.
+    ///     This class includes functionality for converting an entity to a binary format via serialization and for converting from a binary format back to an entity through deserialization.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    ///     The type of the entity this schema is for. The entity must have a parameterless constructor.
+    /// </typeparam>
     public class Schema<TEntity> : ISchema<TEntity> where TEntity: new()
     {
         #region Fields
