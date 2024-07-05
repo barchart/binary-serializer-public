@@ -31,9 +31,9 @@ public class BinarySerializerNullableTests
     public void Encode_Value_WritesExpectedBitsAndBytes<T>(IBinaryTypeSerializer<T> innerSerializer, T? value) where T : struct
     {
         BinarySerializerNullable<T> serializer = new(innerSerializer);
-        var mock = new Mock<IDataBufferWriter>();
-        var bitsWritten = new List<bool>();
-        var bytesWritten = new List<byte>();
+        Mock<IDataBufferWriter> mock = new();
+        List<bool> bitsWritten = new();
+        List<byte> bytesWritten = new();
 
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
         mock.Setup(m => m.WriteByte(Capture.In(bytesWritten)));
@@ -62,6 +62,64 @@ public class BinarySerializerNullableTests
         }
     }
 
+    #endregion
+
+    #region Test Methods (Decode)
+
+    [Theory]
+    [MemberData(nameof(GetDecodeTestData))]
+    public void Decode_Value_ReadsExpectedBitsAndBytes<T>(IBinaryTypeSerializer<T> innerSerializer, T? expectedValue) where T : struct
+    {
+        BinarySerializerNullable<T> serializer = new(innerSerializer);
+        Mock<IDataBufferReader> mock = new();
+        
+        List<bool> bitsToRead = new();
+        byte byteToRead = new();
+        List<byte> bytesToRead = new();
+
+        if (expectedValue.HasValue)
+        {
+            bitsToRead.Add(false);
+
+            var buffer = new List<byte>();
+            var bufferWriterMock = new Mock<IDataBufferWriter>();
+
+            bufferWriterMock.Setup(m => m.WriteBit(It.IsAny<bool>())).Callback<bool>(b => bitsToRead.Add(b));
+            bufferWriterMock.Setup(m => m.WriteByte(It.IsAny<byte>())).Callback<byte>(b => byteToRead = b);
+            bufferWriterMock.Setup(m => m.WriteBytes(It.IsAny<byte[]>())).Callback<byte[]>(b => buffer.AddRange(b));
+
+            innerSerializer.Encode(bufferWriterMock.Object, expectedValue.Value);
+            bytesToRead.AddRange(buffer);
+        }
+        else
+        {
+            bitsToRead.Add(true);
+        }
+
+        mock.Setup(m => m.ReadBit()).Returns(() =>
+        {
+            bool bit = bitsToRead.Count > 0 && bitsToRead[0];
+            bitsToRead.RemoveAt(0);
+            return bit;
+        });
+
+        mock.Setup(m => m.ReadByte()).Returns(() => 
+        {
+            return byteToRead;
+        });
+
+        mock.Setup(m => m.ReadBytes(It.IsAny<int>())).Returns<int>(count => 
+        {
+            var result = bytesToRead.Take(count).ToArray();
+            bytesToRead.RemoveRange(0, Math.Min(count, bytesToRead.Count));
+            return result;
+        });
+
+        var decodedValue = serializer.Decode(mock.Object);
+
+        Assert.Equal(expectedValue, decodedValue);
+    }
+    
     #endregion
 
     #region Test Methods (GetEquals)
@@ -105,10 +163,10 @@ public class BinarySerializerNullableTests
         yield return new object[] { new BinarySerializerChar(), (char?)'A' };
         
         yield return new object[] { new BinarySerializerDateOnly(), null! };
-        yield return new object[] { new BinarySerializerDateOnly(), (DateOnly?)DateOnly.FromDateTime(DateTime.Now) };
+        yield return new object[] { new BinarySerializerDateOnly(), (DateOnly?) new DateOnly(2000, 2, 29) };
         
         yield return new object[] { new BinarySerializerDateTime(), null! };
-        yield return new object[] { new BinarySerializerDateTime(), (DateTime?)DateTime.Now };
+        yield return new object[] { new BinarySerializerDateTime(), (DateTime?) new DateTime(2023, 1, 1, 12, 0, 0)};
         
         yield return new object[] { new BinarySerializerDecimal(), null! };
         yield return new object[] { new BinarySerializerDecimal(), (decimal?)123.45m };
@@ -146,7 +204,7 @@ public class BinarySerializerNullableTests
 
     public static IEnumerable<object[]> GetDecodeTestData()
     {
-        yield return new object[] { new BinarySerializerBool(), null! };
+         yield return new object[] { new BinarySerializerBool(), null! };
         yield return new object[] { new BinarySerializerBool(), (bool?)true };
         
         yield return new object[] { new BinarySerializerByte(), null! };
@@ -156,10 +214,10 @@ public class BinarySerializerNullableTests
         yield return new object[] { new BinarySerializerChar(), (char?)'A' };
         
         yield return new object[] { new BinarySerializerDateOnly(), null! };
-        yield return new object[] { new BinarySerializerDateOnly(), (DateOnly?)DateOnly.FromDateTime(DateTime.Now) };
+        yield return new object[] { new BinarySerializerDateOnly(), (DateOnly?) new DateOnly(2000, 2, 29) };
         
         yield return new object[] { new BinarySerializerDateTime(), null! };
-        yield return new object[] { new BinarySerializerDateTime(), (DateTime?)DateTime.Now };
+        yield return new object[] { new BinarySerializerDateTime(), (DateTime?) new DateTime(2023, 1, 1, 12, 0, 0) };
         
         yield return new object[] { new BinarySerializerDecimal(), null! };
         yield return new object[] { new BinarySerializerDecimal(), (decimal?)123.45m };
@@ -220,7 +278,7 @@ public class BinarySerializerNullableTests
         yield return new object[] { new BinarySerializerDateTime(), (DateTime?)DateTime.Now, (DateTime?)DateTime.Now };
         yield return new object[] { new BinarySerializerDateTime(), null!, null! };
         yield return new object[] { new BinarySerializerDateTime(), (DateTime?)DateTime.Now, null! };
-        yield return new object[] { new BinarySerializerDateTime(), null!, (DateTime?)DateTime.Now };
+        yield return new object[] { new BinarySerializerDateTime(), null!, (DateTime?)new DateTime(2023, 1, 1, 12, 0, 0) };
 
         yield return new object[] { new BinarySerializerDecimal(), (decimal?)123.45m, (decimal?)123.45m };
         yield return new object[] { new BinarySerializerDecimal(), null!, null! };
