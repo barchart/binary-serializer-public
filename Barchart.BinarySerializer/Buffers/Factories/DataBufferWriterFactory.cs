@@ -18,7 +18,7 @@ public class DataBufferWriterFactory : IDataBufferWriterFactory
     [ThreadStatic]
     private static byte[]? _byteArray;
 
-    private int _byteArrayLength;
+    private readonly int _byteArrayLength;
     
     #endregion
     
