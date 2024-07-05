@@ -103,6 +103,28 @@ public class DataBufferWriterTests
 
     #region Test Methods (WriteBytes)
 
+    [Fact]
+    public void WriteBytes_WritesMultipleBytesCorrectly()
+    {
+        var byteArray = new byte[3];
+        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
+
+        dataBuffer.WriteBytes(valuesToWrite);
+
+        Assert.Equal(valuesToWrite, byteArray);
+    }
+
+    [Fact]
+    public void WriteBytes_ExceedingArrayLength_ThrowsError()
+    {
+        var byteArray = new byte[2];
+        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
+
+        Assert.Throws<InvalidOperationException>(() => dataBuffer.WriteBytes(valuesToWrite));
+    }
+
     #endregion
 
     #region Test Methods (ToBytes)
