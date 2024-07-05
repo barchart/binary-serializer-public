@@ -28,8 +28,8 @@ public class DataBufferWriterTests
     [Fact]
     public void WriteBit_True_ModifiesBuffer()
     {
-        var byteArray = new byte[1];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[1];
+        DataBufferWriter dataBuffer = new(byteArray);
 
         dataBuffer.WriteBit(true);
 
@@ -39,8 +39,8 @@ public class DataBufferWriterTests
     [Fact]
     public void WriteBit_False_ModifiesBuffer()
     {
-        var byteArray = new byte[1];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[1];
+        DataBufferWriter dataBuffer = new(byteArray);
 
         dataBuffer.WriteBit(false);
 
@@ -56,8 +56,8 @@ public class DataBufferWriterTests
     [InlineData(new[] { false, true, false, true, false, true, false, true })]
     public void WriteBit_Multiple_ModifiesBuffer(bool[] bits)
     {
-        var byteArray = new byte[1];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[1];
+        DataBufferWriter dataBuffer = new(byteArray);
 
         for (int i = 0; i < bits.Length; i++)
         {
@@ -79,8 +79,8 @@ public class DataBufferWriterTests
     [Fact]
     public void WriteByte_WritesSingleByteCorrectly()
     {
-        var byteArray = new byte[1];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[1];
+        DataBufferWriter dataBuffer = new(byteArray);
         byte valueToWrite = 0xAC;
 
         dataBuffer.WriteByte(valueToWrite);
@@ -91,8 +91,8 @@ public class DataBufferWriterTests
     [Fact]
     public void WriteByte_ExceedingArrayLength_ThrowsError()
     {
-        var byteArray = new byte[1];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[1];
+        DataBufferWriter dataBuffer = new(byteArray);
 
         dataBuffer.WriteByte(0xFF);
 
@@ -106,8 +106,8 @@ public class DataBufferWriterTests
     [Fact]
     public void WriteBytes_WritesMultipleBytesCorrectly()
     {
-        var byteArray = new byte[3];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[3];
+        DataBufferWriter dataBuffer = new(byteArray);
         byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
 
         dataBuffer.WriteBytes(valuesToWrite);
@@ -118,8 +118,8 @@ public class DataBufferWriterTests
     [Fact]
     public void WriteBytes_ExceedingArrayLength_ThrowsError()
     {
-        var byteArray = new byte[2];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
         byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
 
         Assert.Throws<InvalidOperationException>(() => dataBuffer.WriteBytes(valuesToWrite));
@@ -132,8 +132,8 @@ public class DataBufferWriterTests
     [Fact]
     public void ToBytes_WhenZeroBitsAreWritten_ReturnsEmptyArray()
     {
-        var byteArray = new byte[2];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
 
         var bytes = dataBuffer.ToBytes();
 
@@ -143,8 +143,8 @@ public class DataBufferWriterTests
     [Fact]
     public void ToBytes_WhenOneBitIsWritten_ReturnsOneByteArray()
     {
-        var byteArray = new byte[2];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
 
         for (int i = 0; i < 1; i++)
         {
@@ -159,8 +159,8 @@ public class DataBufferWriterTests
     [Fact]
     public void ToBytes_WhenOneByteIsWritten_ReturnsOneByteArray()
     {
-        var byteArray = new byte[2];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
 
         for (int i = 0; i < 8; i++)
         {
@@ -175,8 +175,8 @@ public class DataBufferWriterTests
     [Fact]
     public void ToBytes_WhenTwelveBitsAreWritten_ReturnsTwoBytesArray()
     {
-        var byteArray = new byte[2];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
 
         for (int i = 0; i < 12; i++)
         {
@@ -191,8 +191,8 @@ public class DataBufferWriterTests
     [Fact]
     public void ToBytes_WhenTwoBytesAreWritten_ReturnsTwoBytesArray()
     {
-        var byteArray = new byte[2];
-        var dataBuffer = new DataBufferWriter(byteArray);
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
 
         for (int i = 0; i < 16; i++)
         {
