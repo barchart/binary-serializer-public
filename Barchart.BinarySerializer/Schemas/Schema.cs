@@ -28,6 +28,7 @@ namespace Barchart.BinarySerializer.Schemas
         
         #region Methods
         
+        /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity source)
         {
             foreach (ISchemaItem<TEntity> item in _keyItems)
@@ -45,6 +46,7 @@ namespace Barchart.BinarySerializer.Schemas
             return writer.ToBytes();
         }
         
+        /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
             foreach (ISchemaItem<TEntity> item in _keyItems)
@@ -64,11 +66,13 @@ namespace Barchart.BinarySerializer.Schemas
             return writer.ToBytes();
         }
 
+        /// <inheritdoc />
         public TEntity Deserialize(IDataBufferReader reader)
         {
             return Deserialize(reader, new TEntity(), false);
         }
 
+        /// <inheritdoc />
         public TEntity Deserialize(IDataBufferReader reader, TEntity target)
         {
             return Deserialize(reader, target, true);
