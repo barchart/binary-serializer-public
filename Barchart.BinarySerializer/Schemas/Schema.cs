@@ -69,6 +69,22 @@ namespace Barchart.BinarySerializer.Schemas
                     throw new KeyMismatchException(item.Name, true);
                 }
             }
+
+            foreach (ISchemaItem<TEntity> item in _valueItems)
+            {
+                bool valueAreEqual = item.GetEquals(current, previous);
+                
+                if (valueAreEqual)
+                {
+                    WriteMissingFlag(writer, true);
+                }
+                else 
+                {
+                    WriteMissingFlag(writer, false);
+
+                    item.Encode(current, writer);
+                }
+            }
             
             return writer.ToBytes();
         }
