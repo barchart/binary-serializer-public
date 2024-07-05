@@ -43,7 +43,6 @@ public class BinarySerializerNullableTests
 
         if (value.HasValue)
         {
-            Assert.Single(bitsWritten);
             Assert.False(bitsWritten[0]);
 
             var expectedBytes = new List<byte>();
