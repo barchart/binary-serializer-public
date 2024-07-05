@@ -204,7 +204,7 @@ public class BinarySerializerNullableTests
 
     public static IEnumerable<object[]> GetDecodeTestData()
     {
-         yield return new object[] { new BinarySerializerBool(), null! };
+        yield return new object[] { new BinarySerializerBool(), null! };
         yield return new object[] { new BinarySerializerBool(), (bool?)true };
         
         yield return new object[] { new BinarySerializerByte(), null! };
