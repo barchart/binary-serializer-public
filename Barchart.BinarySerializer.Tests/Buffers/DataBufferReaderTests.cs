@@ -25,6 +25,43 @@ public class DataBufferReaderTests
 
     #region Test Methods (ReadBit)
 
+    [Fact]
+    public void ReadBit_Once_ReturnsFirstBitOfFirstByte()
+    {
+        var byteArray = new byte[] { 0b10101100, 0b11010010 };
+        var dataBuffer = new DataBufferReader(byteArray);
+
+        bool firstBit = dataBuffer.ReadBit();
+
+        Assert.True(firstBit);
+    }
+
+    [Fact]
+    public void ReadBit_Twice_ReturnsSecondBitOfFirstByte()
+    {
+        var byteArray = new byte[] { 0b10101100, 0b11010010 };
+        var dataBuffer = new DataBufferReader(byteArray);
+
+        dataBuffer.ReadBit();
+        bool secondBit = dataBuffer.ReadBit();
+
+        Assert.False(secondBit);
+    }
+
+    [Fact]
+    public void ReadBit_ExceedingArrayLength_ThrowsError()
+    {
+        var byteArray = new byte[] { 0b10101100 };
+        var dataBuffer = new DataBufferReader(byteArray);
+
+        for (int i = 0; i < 8; i++)
+        {
+            dataBuffer.ReadBit();
+        }
+
+        Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadBit());
+    }
+
     #endregion
     
     #region Test Methods (ReadByte)
