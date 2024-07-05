@@ -111,6 +111,38 @@ public class DataBufferReaderTests
 
     #region Test Methods (ReadBytes)
 
+    [Fact]
+    public void ReadBytes_WithExactArrayLength_ReturnsCompleteArray()
+    {
+        var byteArray = new byte[] { 250, 175, 100 };
+        var dataBuffer = new DataBufferReader(byteArray);
+
+        var readBytes = dataBuffer.ReadBytes(byteArray.Length);
+
+        Assert.Equal(byteArray, readBytes);
+    }
+
+    [Fact]
+    public void ReadBytes_WithPartialLength_ReturnsPartialArray()
+    {
+        var byteArray = new byte[] { 250, 175, 100 };
+        var dataBuffer = new DataBufferReader(byteArray);
+
+        var expectedBytes = new byte[] { 250, 175 };
+        var readBytes = dataBuffer.ReadBytes(2);
+
+        Assert.Equal(expectedBytes, readBytes);
+    }
+
+    [Fact]
+    public void ReadBytes_ExceedingArrayLength_ThrowsError()
+    {
+        var byteArray = new byte[] { 250, 175 };
+        var dataBuffer = new DataBufferReader(byteArray);
+
+        Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadBytes(3));
+    }
+
     #endregion
     
     #region Test Methods (Reset)
