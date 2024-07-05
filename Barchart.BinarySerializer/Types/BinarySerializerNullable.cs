@@ -56,7 +56,7 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
     /// <inheritdoc />
     public bool GetEquals(T? a, T? b)
     {
-        return (!a.HasValue && !a.HasValue) || (a.HasValue && b.HasValue && _typeSerializer.GetEquals(a.Value, b.Value));
+        return (!a.HasValue && !b.HasValue) || (a.HasValue && b.HasValue && _typeSerializer.GetEquals(a.Value, b.Value));
     }
 
     #endregion
