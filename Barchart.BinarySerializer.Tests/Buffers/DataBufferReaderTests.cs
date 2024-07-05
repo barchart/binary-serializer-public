@@ -26,7 +26,7 @@ public class DataBufferReaderTests
     #region Test Methods (ReadBit)
 
     [Fact]
-    public void ReadBit_Once_ReturnsFirstBitOfFirstByte()
+    public void ReadBit_Once_ReturnsFirstBitFromFirstByte()
     {
         byte[] byteArray = { 0b10101100, 0b11010010 };
         DataBufferReader dataBuffer = new(byteArray);
@@ -37,14 +37,15 @@ public class DataBufferReaderTests
     }
 
     [Fact]
-    public void ReadBit_Twice_ReturnsSecondBitOfFirstByte()
+    public void ReadBit_Twice_ReturnsSecondBitFromFirstByte()
     {
         byte[] byteArray = { 0b10101100, 0b11010010 };
         DataBufferReader dataBuffer = new(byteArray);
 
-        dataBuffer.ReadBit();
+        bool firstBit = dataBuffer.ReadBit();
         bool secondBit = dataBuffer.ReadBit();
 
+        Assert.True(firstBit);
         Assert.False(secondBit);
     }
 
@@ -112,35 +113,43 @@ public class DataBufferReaderTests
     #region Test Methods (ReadBytes)
 
     [Fact]
-    public void ReadBytes_WithExactArrayLength_ReturnsCompleteArray()
+    public void ReadBytes_SameAsArrayLength_ReturnsCompleteArray()
     {
-        byte[]  byteArray = { 250, 175, 100 };
+        byte first;
+        byte second;
+        byte third;
+        
+        byte[]  byteArray = { first = 250, second = 175, third = 100 };
         DataBufferReader dataBuffer = new(byteArray);
 
-        var readBytes = dataBuffer.ReadBytes(byteArray.Length);
+        var expectedBytes = new byte[] { first, second, third };
+        var readBytes = dataBuffer.ReadBytes(3);
 
-        Assert.Equal(byteArray, readBytes);
+        Assert.Equal(expectedBytes, readBytes);
     }
 
     [Fact]
-    public void ReadBytes_WithPartialLength_ReturnsPartialArray()
+    public void ReadBytes_LessThanArrayLength_ReturnsPartialArray()
     {
-        byte[] byteArray = { 250, 175, 100 };
+        byte first;
+        byte second;
+        
+        byte[]  byteArray = { first = 250, second = 175, 100 };
         DataBufferReader dataBuffer = new(byteArray);
 
-        var expectedBytes = new byte[] { 250, 175 };
+        var expectedBytes = new byte[] { first, second };
         var readBytes = dataBuffer.ReadBytes(2);
 
         Assert.Equal(expectedBytes, readBytes);
     }
 
     [Fact]
-    public void ReadBytes_ExceedingArrayLength_ThrowsError()
+    public void ReadBytes_EMoreThanArrayLength_ThrowsError()
     {
         byte[] byteArray = { 250, 175 };
         DataBufferReader dataBuffer = new(byteArray);
 
-        Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadBytes(3));
+        Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadBytes(byteArray.Length + 1));
     }
 
     #endregion
