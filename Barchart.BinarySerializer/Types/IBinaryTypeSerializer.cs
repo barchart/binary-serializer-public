@@ -15,7 +15,7 @@ namespace Barchart.BinarySerializer.Types
     }
     
     /// <summary>
-    ///     Writes (and reads) values of type <typeparam name="T" /> to (and from)
+    ///     Writes (and reads) values of type <typeparamref name="T" /> to (and from)
     ///     a binary data source.
     /// </summary>
     /// <typeparam name="T">

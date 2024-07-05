@@ -7,7 +7,7 @@ using Barchart.BinarySerializer.Buffers;
 namespace Barchart.BinarySerializer.Schemas;
 
 /// <summary>
-///     Represents a schema for serializing and deserializing objects of type <typeparam name="TEntity" />.
+///     Represents a schema for serializing and deserializing objects of type <typeparamref name="TEntity" />.
 /// </summary>
 /// <typeparam name="TEntity">
 ///     The type of the object to be serialized and deserialized.
