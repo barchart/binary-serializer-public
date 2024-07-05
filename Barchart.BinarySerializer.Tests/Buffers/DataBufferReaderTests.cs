@@ -28,8 +28,8 @@ public class DataBufferReaderTests
     [Fact]
     public void ReadBit_Once_ReturnsFirstBitOfFirstByte()
     {
-        var byteArray = new byte[] { 0b10101100, 0b11010010 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[] byteArray = { 0b10101100, 0b11010010 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         bool firstBit = dataBuffer.ReadBit();
 
@@ -39,8 +39,8 @@ public class DataBufferReaderTests
     [Fact]
     public void ReadBit_Twice_ReturnsSecondBitOfFirstByte()
     {
-        var byteArray = new byte[] { 0b10101100, 0b11010010 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[] byteArray = { 0b10101100, 0b11010010 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         dataBuffer.ReadBit();
         bool secondBit = dataBuffer.ReadBit();
@@ -51,8 +51,8 @@ public class DataBufferReaderTests
     [Fact]
     public void ReadBit_ExceedingArrayLength_ThrowsError()
     {
-        var byteArray = new byte[] { 0b10101100 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[] byteArray = { 0b10101100 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         for (int i = 0; i < 8; i++)
         {
