@@ -71,8 +71,8 @@ public class DataBufferReaderTests
     {
         byte first;
 
-        var byteArray = new[] { first = 250 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[] byteArray = { first = 250 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         byte readFirst = dataBuffer.ReadByte();
 
@@ -85,8 +85,8 @@ public class DataBufferReaderTests
         byte first;
         byte second;
 
-        var byteArray = new[] { first = 250, second = 175 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[] byteArray = { first = 250, second = 175 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         byte readFirst = dataBuffer.ReadByte();
         byte readSecond = dataBuffer.ReadByte();
@@ -98,8 +98,8 @@ public class DataBufferReaderTests
     [Fact]
     public void ReadByte_ExceedingArrayLength_ThrowsError()
     {
-        var byteArray = new[] { (byte)250, (byte)175 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[] byteArray = { 250, 75 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         dataBuffer.ReadByte();
         dataBuffer.ReadByte();
@@ -114,8 +114,8 @@ public class DataBufferReaderTests
     [Fact]
     public void ReadBytes_WithExactArrayLength_ReturnsCompleteArray()
     {
-        var byteArray = new byte[] { 250, 175, 100 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[]  byteArray = { 250, 175, 100 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         var readBytes = dataBuffer.ReadBytes(byteArray.Length);
 
@@ -125,8 +125,8 @@ public class DataBufferReaderTests
     [Fact]
     public void ReadBytes_WithPartialLength_ReturnsPartialArray()
     {
-        var byteArray = new byte[] { 250, 175, 100 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[] byteArray = { 250, 175, 100 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         var expectedBytes = new byte[] { 250, 175 };
         var readBytes = dataBuffer.ReadBytes(2);
@@ -137,8 +137,8 @@ public class DataBufferReaderTests
     [Fact]
     public void ReadBytes_ExceedingArrayLength_ThrowsError()
     {
-        var byteArray = new byte[] { 250, 175 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[] byteArray = { 250, 175 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadBytes(3));
     }
@@ -153,8 +153,8 @@ public class DataBufferReaderTests
         byte first;
         byte second;
 
-        var byteArray = new[] { first = 250, second = 175 };
-        var dataBuffer = new DataBufferReader(byteArray);
+        byte[] byteArray = { first = 250, second = 175 };
+        DataBufferReader dataBuffer = new(byteArray);
 
         byte readFirst = dataBuffer.ReadByte();
         byte readSecond = dataBuffer.ReadByte();
