@@ -107,6 +107,22 @@ public class BinarySerializerNullableTests
     
     #endregion
 
+    #region Test Methods (GetEquals)
+
+    [Theory]
+    [MemberData(nameof(GetEqualsTestData))]
+    public void Equals_GivenValues_ExpectCorrectResult<T>(IBinaryTypeSerializer<T> innerSerializer, T? value1, T? value2) where T : struct
+    {
+        BinarySerializerNullable<T> serializer = new(innerSerializer);
+        
+        var expected = value1.Equals(value2);
+        var actual = serializer.GetEquals(value1, value2);
+        
+        Assert.Equal(expected, actual);
+    }
+    
+    #endregion
+
     #region Nested Types
         
     public enum TestEnum
@@ -138,6 +154,18 @@ public class BinarySerializerNullableTests
         yield return new object[] { new BinarySerializerFloat(), (float?)3.14f };
         yield return new object[] { new BinarySerializerDouble(), null! };
         yield return new object[] { new BinarySerializerDouble(), (double?)2.71828 };
+    }
+
+    public static IEnumerable<object[]> GetEqualsTestData()
+    {
+        yield return new object[] { new BinarySerializerInt(), (int?)42, (int?)42 };
+        yield return new object[] { new BinarySerializerInt(), null!, null! };
+        yield return new object[] { new BinarySerializerInt(), (int?)42, null! };
+        yield return new object[] { new BinarySerializerInt(), null!, (int?)42 };
+        yield return new object[] { new BinarySerializerFloat(), (float?)3.14f, (float?)3.14f };
+        yield return new object[] { new BinarySerializerFloat(), null!, null! };
+        yield return new object[] { new BinarySerializerFloat(), (float?)3.14f, null! };
+        yield return new object[] { new BinarySerializerFloat(), null!, (float?)3.14f };
     }
 
     #endregion
