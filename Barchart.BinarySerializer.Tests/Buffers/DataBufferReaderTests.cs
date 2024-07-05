@@ -23,6 +23,10 @@ public class DataBufferReaderTests
 
     #endregion
 
+    #region Test Methods (ReadBit)
+
+    #endregion
+    
     #region Test Methods (ReadByte)
 
     [Fact]
@@ -65,6 +69,10 @@ public class DataBufferReaderTests
         
         Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadByte());
     }
+
+    #endregion
+
+    #region Test Methods (ReadBytes)
 
     #endregion
     

@@ -74,6 +74,14 @@ public class DataBufferWriterTests
 
     #endregion
 
+    #region Test Methods (WriteByte)
+
+    #endregion
+
+    #region Test Methods (WriteBytes)
+
+    #endregion
+
     #region Test Methods (ToBytes)
 
     [Fact]
