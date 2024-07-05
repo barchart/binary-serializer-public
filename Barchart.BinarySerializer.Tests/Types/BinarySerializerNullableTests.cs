@@ -66,6 +66,47 @@ public class BinarySerializerNullableTests
 
     #endregion
 
+    #region Test Methods (Decode)
+
+    [Theory]
+    [MemberData(nameof(GetDecodeTestData))]
+    public void Decode_Value_ReadsExpectedBitsAndBytes<T>(IBinaryTypeSerializer<T> innerSerializer, T? expectedValue) where T : struct
+    {
+        BinarySerializerNullable<T> serializer = new(innerSerializer);
+        var mock = new Mock<IDataBufferReader>();
+        var bitsRead = new Queue<bool>();
+        var bytesToRead = new Queue<byte>();
+
+        if (expectedValue.HasValue)
+        {
+            bitsRead.Enqueue(false);
+
+            var expectedBytes = new List<byte>();
+            var innerMock = new Mock<IDataBufferWriter>();
+            innerMock.Setup(m => m.WriteByte(It.IsAny<byte>())).Callback<byte>(b => expectedBytes.Add(b));
+            innerSerializer.Encode(innerMock.Object, expectedValue.Value);
+
+            foreach (var b in expectedBytes)
+            {
+                bytesToRead.Enqueue(b);
+            }
+        }
+        else
+        {
+            bitsRead.Enqueue(true);
+        }
+
+        mock.Setup(m => m.ReadBit()).Returns(() => bitsRead.Dequeue());
+        mock.Setup(m => m.ReadByte()).Returns(() => bytesToRead.Dequeue());
+
+        var result = serializer.Decode(mock.Object);
+
+        Assert.Equal(expectedValue, result);
+    }
+   
+    
+    #endregion
+
     #region Nested Types
         
     public enum TestEnum
@@ -80,6 +121,16 @@ public class BinarySerializerNullableTests
     #region Test Data
 
     public static IEnumerable<object[]> GetEncodeTestData()
+    {
+        yield return new object[] { new BinarySerializerInt(), null! };
+        yield return new object[] { new BinarySerializerInt(), (int?)42 };
+        yield return new object[] { new BinarySerializerFloat(), null! };
+        yield return new object[] { new BinarySerializerFloat(), (float?)3.14f };
+        yield return new object[] { new BinarySerializerDouble(), null! };
+        yield return new object[] { new BinarySerializerDouble(), (double?)2.71828 };
+    }
+
+    public static IEnumerable<object[]> GetDecodeTestData()
     {
         yield return new object[] { new BinarySerializerInt(), null! };
         yield return new object[] { new BinarySerializerInt(), (int?)42 };
