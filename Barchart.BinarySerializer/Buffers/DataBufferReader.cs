@@ -63,7 +63,7 @@ namespace Barchart.BinarySerializer.Buffers
 
                 if (bit)
                 {
-                    value = (byte)(value | TRUE << j);
+                    value = (byte)(value | (TRUE << j));
                 }
             }
 
