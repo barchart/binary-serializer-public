@@ -17,15 +17,15 @@ public class BinarySerializerUShort : IBinaryTypeSerializer<ushort>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, ushort value)
+    public void Encode(IDataBufferWriter writer, ushort value)
     {
-        buffer.WriteBytes(BitConverter.GetBytes(value));
+        writer.WriteBytes(BitConverter.GetBytes(value));
     }
 
     /// <inheritdoc />
-    public ushort Decode(IDataBufferReader buffer)
+    public ushort Decode(IDataBufferReader reader)
     {
-        return BitConverter.ToUInt16(buffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
+        return BitConverter.ToUInt16(reader.ReadBytes(ENCODED_LENGTH_IN_BYTES));
     }
         
     /// <inheritdoc />

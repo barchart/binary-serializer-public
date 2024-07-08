@@ -32,15 +32,15 @@ public class BinarySerializerEnum<T> : IBinaryTypeSerializer<T> where T : Enum
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, T value)
+    public void Encode(IDataBufferWriter writer, T value)
     {
-        _binarySerializerInt.Encode(buffer, Convert.ToInt32(value));
+        _binarySerializerInt.Encode(writer, Convert.ToInt32(value));
     }
 
     /// <inheritdoc />
-    public T Decode(IDataBufferReader buffer)
+    public T Decode(IDataBufferReader reader)
     {
-        return (T)Enum.Parse(typeof(T), _binarySerializerInt.Decode(buffer).ToString(), true);
+        return (T)Enum.Parse(typeof(T), _binarySerializerInt.Decode(reader).ToString(), true);
     }
 
     /// <inheritdoc />

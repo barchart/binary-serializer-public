@@ -14,15 +14,15 @@ public class BinarySerializerBool : IBinaryTypeSerializer<bool>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, bool value)
+    public void Encode(IDataBufferWriter writer, bool value)
     {
-        buffer.WriteBit(value);
+        writer.WriteBit(value);
     }
 
     /// <inheritdoc />
-    public bool Decode(IDataBufferReader buffer)
+    public bool Decode(IDataBufferReader reader)
     {
-        return buffer.ReadBit();
+        return reader.ReadBit();
     }
 
     /// <inheritdoc />

@@ -28,24 +28,24 @@ namespace Barchart.BinarySerializer.Types
         /// <summary>
         ///     Writes a value to a binary data source.
         /// </summary>
-        /// <param name="buffer">
+        /// <param name="writer">
         ///     The binary data source.
         /// </param>
         /// <param name="value">
         ///     The value to write.
         /// </param>
-        public void Encode(IDataBufferWriter buffer, T value);
+        public void Encode(IDataBufferWriter writer, T value);
 
         /// <summary>
         ///     Reads a value from a binary data source.
         /// </summary>
-        /// <param name="buffer">
+        /// <param name="reader">
         ///     The binary data source.
         /// </param>
         /// <returns>
         ///     The value.
         /// </returns>
-        public T Decode(IDataBufferReader buffer);
+        public T Decode(IDataBufferReader reader);
 
         /// <summary>
         ///     Indicates whether two values are equal. Presence of this

@@ -20,15 +20,15 @@ public class BinarySerializerDouble : IBinaryTypeSerializer<double>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, double value)
+    public void Encode(IDataBufferWriter writer, double value)
     {
-        buffer.WriteBytes(BitConverter.GetBytes(value));
+        writer.WriteBytes(BitConverter.GetBytes(value));
     }
 
     /// <inheritdoc />
-    public double Decode(IDataBufferReader buffer)
+    public double Decode(IDataBufferReader reader)
     {
-        return BitConverter.ToDouble(buffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
+        return BitConverter.ToDouble(reader.ReadBytes(ENCODED_LENGTH_IN_BYTES));
     }
 
     /// <inheritdoc />

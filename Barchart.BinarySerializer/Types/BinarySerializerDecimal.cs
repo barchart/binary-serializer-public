@@ -29,25 +29,25 @@ public class BinarySerializerDecimal : IBinaryTypeSerializer<decimal>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, decimal value)
+    public void Encode(IDataBufferWriter writer, decimal value)
     {
         int[] components = decimal.GetBits(value);
 
-        _binarySerializerInt.Encode(buffer, components[0]);
-        _binarySerializerInt.Encode(buffer, components[1]);
-        _binarySerializerInt.Encode(buffer, components[2]);
-        _binarySerializerInt.Encode(buffer, components[3]);
+        _binarySerializerInt.Encode(writer, components[0]);
+        _binarySerializerInt.Encode(writer, components[1]);
+        _binarySerializerInt.Encode(writer, components[2]);
+        _binarySerializerInt.Encode(writer, components[3]);
     }
 
     /// <inheritdoc />
-    public decimal Decode(IDataBufferReader buffer)
+    public decimal Decode(IDataBufferReader reader)
     {
         int[] components =
         {
-            _binarySerializerInt.Decode(buffer),
-            _binarySerializerInt.Decode(buffer),
-            _binarySerializerInt.Decode(buffer),
-            _binarySerializerInt.Decode(buffer)
+            _binarySerializerInt.Decode(reader),
+            _binarySerializerInt.Decode(reader),
+            _binarySerializerInt.Decode(reader),
+            _binarySerializerInt.Decode(reader)
         };
 
         return new decimal(components);

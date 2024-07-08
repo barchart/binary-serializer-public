@@ -17,15 +17,15 @@ public class BinarySerializerInt : IBinaryTypeSerializer<int>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, int value)
+    public void Encode(IDataBufferWriter writer, int value)
     {
-        buffer.WriteBytes(BitConverter.GetBytes(value));
+        writer.WriteBytes(BitConverter.GetBytes(value));
     }
 
     /// <inheritdoc />
-    public int Decode(IDataBufferReader buffer)
+    public int Decode(IDataBufferReader reader)
     {
-        return BitConverter.ToInt32(buffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
+        return BitConverter.ToInt32(reader.ReadBytes(ENCODED_LENGTH_IN_BYTES));
     }
 
     /// <inheritdoc />

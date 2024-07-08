@@ -11,15 +11,15 @@ public class BinarySerializerSByte : IBinaryTypeSerializer<sbyte>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, sbyte value)
+    public void Encode(IDataBufferWriter writer, sbyte value)
     {
-        buffer.WriteByte((byte)value);
+        writer.WriteByte((byte)value);
     }
 
     /// <inheritdoc />
-    public sbyte Decode(IDataBufferReader buffer)
+    public sbyte Decode(IDataBufferReader reader)
     {
-        return (sbyte)buffer.ReadByte();
+        return (sbyte)reader.ReadByte();
     }
 
     /// <inheritdoc />

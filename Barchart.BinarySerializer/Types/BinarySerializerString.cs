@@ -48,26 +48,24 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, string value)
+    public void Encode(IDataBufferWriter writer, string value)
     {
         byte[] bytes = _encoding.GetBytes(value);
 
         if (bytes.Length > MAXIMUM_STRING_LENGTH_IN_BYTES)
         {
-            throw new ArgumentException(
-                $"Unable to serialize string. Serialized string would require {bytes.Length} bytes; however, the maximum size of a serialized string is {MAXIMUM_STRING_LENGTH_IN_BYTES}",
-                nameof(value));
+            throw new ArgumentException( $"Unable to serialize string. Serialized string would require {bytes.Length} bytes; however, the maximum size of a serialized string is {MAXIMUM_STRING_LENGTH_IN_BYTES}", nameof(value));
         }
 
-        _binarySerializerUShort.Encode(buffer, Convert.ToUInt16(bytes.Length));
+        _binarySerializerUShort.Encode(writer, Convert.ToUInt16(bytes.Length));
 
-        buffer.WriteBytes(bytes);
+        writer.WriteBytes(bytes);
     }
 
     /// <inheritdoc />
-    public string Decode(IDataBufferReader buffer)
+    public string Decode(IDataBufferReader reader)
     {
-        return _encoding.GetString(buffer.ReadBytes(_binarySerializerUShort.Decode(buffer)));
+        return _encoding.GetString(reader.ReadBytes(_binarySerializerUShort.Decode(reader)));
     }
 
     /// <inheritdoc />

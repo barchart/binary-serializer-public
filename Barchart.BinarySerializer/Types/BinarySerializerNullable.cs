@@ -32,25 +32,25 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, T? value)
+    public void Encode(IDataBufferWriter writer, T? value)
     {
-        WriteNullFlag(buffer, !value.HasValue);
+        WriteNullFlag(writer, !value.HasValue);
 
         if (value.HasValue)
         {
-            _typeSerializer.Encode(buffer, value.Value);
+            _typeSerializer.Encode(writer, value.Value);
         }
     }
 
     /// <inheritdoc />
-    public T? Decode(IDataBufferReader buffer)
+    public T? Decode(IDataBufferReader reader)
     {
-        if (ReadNullFlag(buffer))
+        if (ReadNullFlag(reader))
         {
             return null;
         }
 
-        return _typeSerializer.Decode(buffer);
+        return _typeSerializer.Decode(reader);
     }
 
     /// <inheritdoc />

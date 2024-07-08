@@ -20,15 +20,15 @@ public class BinarySerializerFloat : IBinaryTypeSerializer<float>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, float value)
+    public void Encode(IDataBufferWriter writer, float value)
     {
-        buffer.WriteBytes(BitConverter.GetBytes(value));
+        writer.WriteBytes(BitConverter.GetBytes(value));
     }
 
     /// <inheritdoc />
-    public float Decode(IDataBufferReader buffer)
+    public float Decode(IDataBufferReader reader)
     {
-        return BitConverter.ToSingle(buffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
+        return BitConverter.ToSingle(reader.ReadBytes(ENCODED_LENGTH_IN_BYTES));
     }
 
     /// <inheritdoc />

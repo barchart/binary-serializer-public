@@ -14,15 +14,15 @@ public class BinarySerializerByte : IBinaryTypeSerializer<byte>
     #region Methods
     
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, byte value)
+    public void Encode(IDataBufferWriter writer, byte value)
     {
-        buffer.WriteByte(value);
+        writer.WriteByte(value);
     }
 
     /// <inheritdoc />
-    public byte Decode(IDataBufferReader buffer)
+    public byte Decode(IDataBufferReader reader)
     {
-        return buffer.ReadByte();
+        return reader.ReadByte();
     }
     
     /// <inheritdoc />

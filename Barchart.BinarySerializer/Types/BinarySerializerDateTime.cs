@@ -29,15 +29,15 @@ public class BinarySerializerDateTime : IBinaryTypeSerializer<DateTime>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, DateTime value)
+    public void Encode(IDataBufferWriter writer, DateTime value)
     {
-        _binarySerializerLong.Encode(buffer, GetMillisecondsSinceEpoch(value));
+        _binarySerializerLong.Encode(writer, GetMillisecondsSinceEpoch(value));
     }
 
     /// <inheritdoc />
-    public DateTime Decode(IDataBufferReader buffer)
+    public DateTime Decode(IDataBufferReader reader)
     {
-        long millisecondsSinceEpoch = _binarySerializerLong.Decode(buffer);
+        long millisecondsSinceEpoch = _binarySerializerLong.Decode(reader);
 
         return DateTime.UnixEpoch.AddMilliseconds(millisecondsSinceEpoch);
     }

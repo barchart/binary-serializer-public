@@ -29,15 +29,15 @@ public class BinarySerializerDateOnly : IBinaryTypeSerializer<DateOnly>
     #region Methods
     
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, DateOnly value)
+    public void Encode(IDataBufferWriter writer, DateOnly value)
     {
-        _binarySerializerInt.Encode(buffer, GetDaysSinceEpoch(value));
+        _binarySerializerInt.Encode(writer, GetDaysSinceEpoch(value));
     }
 
     /// <inheritdoc />
-    public DateOnly Decode(IDataBufferReader buffer)
+    public DateOnly Decode(IDataBufferReader reader)
     {
-        int daysSinceEpoch = _binarySerializerInt.Decode(buffer);
+        int daysSinceEpoch = _binarySerializerInt.Decode(reader);
         
         return DateOnly.MinValue.AddDays(daysSinceEpoch);
     }

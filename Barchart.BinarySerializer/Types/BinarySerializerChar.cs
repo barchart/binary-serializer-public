@@ -20,15 +20,15 @@ public class BinarySerializerChar : IBinaryTypeSerializer<char>
     #region Methods
     
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter buffer, char value) 
+    public void Encode(IDataBufferWriter writer, char value) 
     {
-        buffer.WriteBytes(BitConverter.GetBytes(value));
+        writer.WriteBytes(BitConverter.GetBytes(value));
     }
 
     /// <inheritdoc />
-    public char Decode(IDataBufferReader buffer)
+    public char Decode(IDataBufferReader reader)
     {
-        return BitConverter.ToChar(buffer.ReadBytes(ENCODED_LENGTH_IN_BYTES));
+        return BitConverter.ToChar(reader.ReadBytes(ENCODED_LENGTH_IN_BYTES));
     }
     
     /// <inheritdoc />
