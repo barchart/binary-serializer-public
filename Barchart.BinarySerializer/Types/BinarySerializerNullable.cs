@@ -34,7 +34,7 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
     /// <inheritdoc />
     public void Encode(IDataBufferWriter buffer, T? value)
     {
-        buffer.WriteBit(!value.HasValue);
+        WriteNullFlag(buffer, !value.HasValue);
 
         if (value.HasValue)
         {
@@ -45,7 +45,7 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
     /// <inheritdoc />
     public T? Decode(IDataBufferReader buffer)
     {
-        if (buffer.ReadBit())
+        if (ReadNullFlag(buffer))
         {
             return null;
         }
@@ -57,6 +57,16 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
     public bool GetEquals(T? a, T? b)
     {
         return (!a.HasValue && !b.HasValue) || (a.HasValue && b.HasValue && _typeSerializer.GetEquals(a.Value, b.Value));
+    }
+    
+    private static bool ReadNullFlag(IDataBufferReader reader)
+    {
+        return reader.ReadBit();
+    }
+    
+    private static void WriteNullFlag(IDataBufferWriter writer, bool missing)
+    {
+        writer.WriteBit(missing);
     }
 
     #endregion
