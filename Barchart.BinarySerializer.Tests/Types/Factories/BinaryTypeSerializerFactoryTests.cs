@@ -1,6 +1,7 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Types;
+using Barchart.BinarySerializer.Types.Exceptions;
 using Barchart.BinarySerializer.Types.Factories;
 
 #endregion
@@ -166,6 +167,13 @@ public class BinaryTypeSerializerFactoryTests
         Assert.IsAssignableFrom<IBinaryTypeSerializer<UInt16>>(serializer);
     }
     
+    [Fact]
+    public void Make_TestClass_ThrowsUnsupportedTypeException()
+    {
+        Assert.Throws<UnsupportedTypeException>(() => _factory.Make<TestClass>());
+    }
+
+    
     #endregion
     
     #region Nested Types
@@ -175,6 +183,11 @@ public class BinaryTypeSerializerFactoryTests
         Value1,
         Value2,
         Value3
+    }
+
+    private class TestClass
+    {
+        
     }
         
     #endregion
