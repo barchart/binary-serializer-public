@@ -15,7 +15,7 @@ namespace Barchart.BinarySerializer.Schemas;
 ///     The source of the data point (when serializing) and the assignment
 ///     target (when deserializing).
 /// </typeparam>
-public interface ISchemaItem<TEntity> where TEntity: new()
+public interface ISchemaItem<TEntity> where TEntity: class, new()
 {
     #region Properties
 
@@ -40,42 +40,44 @@ public interface ISchemaItem<TEntity> where TEntity: new()
     ///     Reads data from the source object, serializes that data to binary,
     ///     and writes the serialized data to the binary data storage.
     /// </summary>
-    /// <param name="source">
-    ///     The object to read data from.
-    /// </param>
     /// <param name="writer">
     ///     Writable binary data storage.
     /// </param>
-    void Encode(TEntity source, IDataBufferWriter writer);
+    /// <param name="source">
+    ///     The object to read data from.
+    /// </param>
+    void Encode(IDataBufferWriter writer, TEntity source);
+
+    void Encode(IDataBufferWriter writer, TEntity current, TEntity previous);
     
     /// <summary>
     ///     Reads data from the binary data storage, deserializes that data,
     ///     and assigns the deserialized data to the source (target) object.
     /// </summary>
+    /// <param name="reader">
+    ///     Readable binary data storage.
+    /// </param>
     /// <param name="target">
     ///     The object to assign data to.
-    /// </param>
-    /// <param name="reader">
-    ///     Writable binary data storage.
     /// </param>
     /// <param name="existing">
     ///     Indicates if the <paramref name="target" /> is an existing object.
     /// </param>
-    void Decode(TEntity target, IDataBufferReader reader, bool existing = false);
-    
+    void Decode(IDataBufferReader reader, TEntity target, bool existing = false);
+
     /// <summary>
-    ///     Indicates whether two data points are equal.
+    ///     Indicates whether two data points, read from the entities, are equal.
     /// </summary>
     /// <param name="a">
-    ///     The first data point.
+    ///     The first entity (containing the first data point).
     /// </param>
     /// <param name="b">
-    ///     The second data point.
+    ///     The second entity (containing the second data point).
     /// </param>
     /// <returns>
     ///     True if the two data points are equal; otherwise false.
     /// </returns>
     bool GetEquals(TEntity a, TEntity b);
-
+    
     #endregion
 }

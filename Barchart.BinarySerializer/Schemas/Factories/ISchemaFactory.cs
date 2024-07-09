@@ -25,7 +25,7 @@ public interface ISchemaFactory
     ///     properties marked with the [Serialize] attribute. The resulting schema can be used
     ///     for binary serialization and deserialization of the entity.
     /// </remarks>
-    ISchema<TEntity> Make<TEntity>() where TEntity: new();
+    ISchema<TEntity> Make<TEntity>() where TEntity: class, new();
 
     #endregion
 }

@@ -64,9 +64,9 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
         return reader.ReadBit();
     }
     
-    private static void WriteNullFlag(IDataBufferWriter writer, bool missing)
+    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
     {
-        writer.WriteBit(missing);
+        writer.WriteBit(flag);
     }
 
     #endregion

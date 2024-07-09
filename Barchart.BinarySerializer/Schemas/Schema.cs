@@ -1,7 +1,6 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
 
@@ -14,7 +13,7 @@ namespace Barchart.BinarySerializer.Schemas
     /// <typeparam name="TEntity">
     ///     The type of the entity this schema is for. The entity must have a parameterless constructor.
     /// </typeparam>
-    public class Schema<TEntity> : ISchema<TEntity> where TEntity: new()
+    public class Schema<TEntity> : ISchema<TEntity> where TEntity: class, new()
     {
         #region Fields
 
@@ -40,14 +39,12 @@ namespace Barchart.BinarySerializer.Schemas
         {
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
-                item.Encode(source, writer);
+                item.Encode(writer, source);
             }
             
             foreach (ISchemaItem<TEntity> item in _valueItems)
             {
-                WriteMissingFlag(writer, false);
-                    
-                item.Encode(source, writer);
+                item.Encode(writer, source);
             }
 
             return writer.ToBytes();
@@ -58,32 +55,12 @@ namespace Barchart.BinarySerializer.Schemas
         {
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
-                bool keysAreEqual = item.GetEquals(current, previous);
-
-                if (keysAreEqual)
-                {
-                    item.Encode(current, writer);
-                }
-                else
-                {
-                    throw new KeyMismatchException(item.Name, true);
-                }
+                item.Encode(writer, current, previous);
             }
 
             foreach (ISchemaItem<TEntity> item in _valueItems)
             {
-                bool valueAreEqual = item.GetEquals(current, previous);
-                
-                if (valueAreEqual)
-                {
-                    WriteMissingFlag(writer, true);
-                }
-                else 
-                {
-                    WriteMissingFlag(writer, false);
-
-                    item.Encode(current, writer);
-                }
+                item.Encode(writer, current, previous);
             }
             
             return writer.ToBytes();
@@ -105,30 +82,30 @@ namespace Barchart.BinarySerializer.Schemas
         {
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
-                item.Decode(target, reader, existing);
+                item.Decode(reader, target, existing);
             }
             
             foreach (ISchemaItem<TEntity> item in _valueItems)
             {
-                if (ReadMissingFlag(reader)) 
-                {
-                    continue;
-                }
-                
-                item.Decode(target, reader, existing);
+                item.Decode(reader, target, existing);
             }
 
             return target;
         }
         
-        private static bool ReadMissingFlag(IDataBufferReader reader)
+        public bool GetEquals(TEntity a, TEntity b)
         {
-            return reader.ReadBit();
-        }
-    
-        private static void WriteMissingFlag(IDataBufferWriter writer, bool missing)
-        {
-            writer.WriteBit(missing);
+            if (a == null && b == null)
+            {
+                return true;
+            }
+
+            if (a != null && b != null)
+            {
+                return _keyItems.All(si => si.GetEquals(a, b)) && _valueItems.All(si => si.GetEquals(a, b));
+            }
+
+            return false;
         }
         
         #endregion

@@ -21,7 +21,7 @@ namespace Barchart.BinarySerializer.Schemas;
 ///     The type of data being serialized (which is read from the source
 ///     object) or deserialized (which assigned to the source object).
 /// </typeparam>
-public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity: new()
+public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity: class, new()
 {
     #region Fields
 
@@ -33,16 +33,6 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity
     private readonly Action<TEntity, TProperty> _setter;
 
     private readonly IBinaryTypeSerializer<TProperty> _serializer;
-    
-    #endregion
-    
-    #region Properties
-    
-    /// <inheritdoc />
-    public string Name => _name;
-
-    /// <inheritdoc />
-    public bool Key => _key;
     
     #endregion
 
@@ -61,20 +51,71 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity
 
     #endregion
 
+    #region Properties
+    
+    /// <inheritdoc />
+    public string Name => _name;
+
+    /// <inheritdoc />
+    public bool Key => _key;
+    
+    #endregion
+    
     #region Methods
     
     /// <inheritdoc />
-    public void Encode(TEntity source, IDataBufferWriter writer) 
+    public void Encode(IDataBufferWriter writer, TEntity source) 
     {
+        if (!Key)
+        {
+            WriteMissingFlag(writer, false);
+        }
+
         _serializer.Encode(writer, _getter(source));
     }
-    
+
     /// <inheritdoc />
-    public void Decode(TEntity target, IDataBufferReader reader, bool existing = false)
+    public void Encode(IDataBufferWriter writer, TEntity current, TEntity previous)
     {
+        bool valuesAreEqual = GetEquals(current, previous);
+        
+        if (Key && !valuesAreEqual)
+        {
+            throw new KeyMismatchException(Name, true);
+        }
+        
+        if (Key || !valuesAreEqual)
+        {
+            Encode(writer, current);
+        }
+        else
+        {
+            WriteMissingFlag(writer, true); 
+        }
+    }
+
+    /// <inheritdoc />
+    public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
+    {
+        bool missing;
+
+        if (Key)
+        {
+            missing = false;
+        }
+        else
+        {
+            missing = ReadMissingFlag(reader);
+        }
+
+        if (missing)
+        {
+            return;
+        }
+        
         TProperty current = _serializer.Decode(reader);
 
-        if (_key && existing)
+        if (Key && existing)
         {
             if (!_serializer.GetEquals(current, _getter(target)))
             {
@@ -91,6 +132,16 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity
     public bool GetEquals(TEntity a, TEntity b)
     {
         return _serializer.GetEquals(_getter(a), _getter(b));
+    }
+    
+    private static bool ReadMissingFlag(IDataBufferReader reader)
+    {
+        return reader.ReadBit();
+    }
+    
+    private static void WriteMissingFlag(IDataBufferWriter writer, bool flag)
+    {
+        writer.WriteBit(flag);
     }
     
     #endregion

@@ -31,7 +31,7 @@ public class SchemaFactory : ISchemaFactory
     #region Methods
 
     /// <inheritdoc />
-    public ISchema<TEntity> Make<TEntity>() where TEntity: new()
+    public ISchema<TEntity> Make<TEntity>() where TEntity: class, new()
     {
         Type entityType = typeof(TEntity);
 
@@ -50,7 +50,7 @@ public class SchemaFactory : ISchemaFactory
         return new Schema<TEntity>(schemaItems);
     }
 
-    private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(PropertyInfo propertyInfo) where TEntity: new()
+    private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(PropertyInfo propertyInfo) where TEntity: class, new()
     {
         Type[] typeParameters = { typeof(TEntity), propertyInfo.PropertyType };
 
@@ -71,7 +71,7 @@ public class SchemaFactory : ISchemaFactory
         return (ISchemaItem<TEntity>)schemaItem;
     }
     
-    private ISchemaItem<TEntity> MakeSchemaItem<TEntity, TProperty>(PropertyInfo propertyInfo) where TEntity: new()
+    private ISchemaItem<TEntity> MakeSchemaItem<TEntity, TProperty>(PropertyInfo propertyInfo) where TEntity: class, new()
     {
         Func<TEntity, TProperty> getter = MakePropertyGetter<TEntity, TProperty>(propertyInfo);
         Action<TEntity, TProperty> setter = MakePropertySetter<TEntity, TProperty>(propertyInfo);
@@ -152,7 +152,7 @@ public class SchemaFactory : ISchemaFactory
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItem) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
-    private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: new()
+    private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: class, new()
     {
         int comparison = a.Key.CompareTo(b.Key);
 
