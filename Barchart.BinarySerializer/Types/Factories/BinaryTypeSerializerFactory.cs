@@ -1,3 +1,9 @@
+#region Using Statements
+
+using Barchart.BinarySerializer.Types.Exceptions;
+
+#endregion
+
 namespace Barchart.BinarySerializer.Types.Factories;
 
 public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
@@ -41,12 +47,30 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     #endregion
     
     #region Methods
-
+    
     /// <inheritdoc />
     public virtual IBinaryTypeSerializer<T> Make<T>()
     {
-        IBinaryTypeSerializer serializer = _serializers[typeof(T)];
+        Type type = typeof(T);
 
+        IBinaryTypeSerializer serializer;
+        
+        if (_serializers.ContainsKey(type))
+        {
+            serializer = _serializers[typeof(T)];
+        } 
+        else if (type.IsEnum)
+        {
+            Type genericType = typeof(BinarySerializerEnum<>);
+            Type boundType = genericType.MakeGenericType(new Type[] { type });
+            
+            serializer = (IBinaryTypeSerializer)Activator.CreateInstance(boundType, _serializers[typeof(Int32)])!;
+        }
+        else
+        {
+            throw new UnsupportedTypeException(type);
+        }
+        
         return (IBinaryTypeSerializer<T>)serializer;
     }
 

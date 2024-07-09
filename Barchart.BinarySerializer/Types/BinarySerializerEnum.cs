@@ -16,13 +16,13 @@ public class BinarySerializerEnum<T> : IBinaryTypeSerializer<T> where T : Enum
 {
     #region Fields
 
-    private readonly BinarySerializerInt _binarySerializerInt;
+    private readonly IBinaryTypeSerializer<Int32> _binarySerializerInt;
 
     #endregion
 
     #region Constructor(s)
 
-    public BinarySerializerEnum(BinarySerializerInt binarySerializerInt)
+    public BinarySerializerEnum(IBinaryTypeSerializer<Int32> binarySerializerInt)
     {
         _binarySerializerInt = binarySerializerInt;
     }

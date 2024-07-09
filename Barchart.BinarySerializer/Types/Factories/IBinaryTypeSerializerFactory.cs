@@ -1,8 +1,10 @@
 #region Using Statements
 
-namespace Barchart.BinarySerializer.Types.Factories;
+using Barchart.BinarySerializer.Types.Exceptions;
 
 #endregion
+
+namespace Barchart.BinarySerializer.Types.Factories;
 
 /// <summary>
 ///     Defines a factory for creating binary type serializers.
@@ -17,14 +19,12 @@ public interface IBinaryTypeSerializerFactory
     /// <typeparam name="T">
     ///     The type for which to create a serializer.
     /// </typeparam>
+    /// <exception cref="UnsupportedTypeException">
+    ///     Thrown when the factory is unable to create a serializer for the specified type.
+    /// </exception>
     /// <returns>
     ///     An <see cref="IBinaryTypeSerializer{T}"/> for the specified type.
     /// </returns>
-    /// <remarks>
-    ///     This method returns a serializer capable of encoding and decoding values of type <typeparam name="T" />
-    ///     to and from a binary format. The returned serializer is typically used within a 
-    ///     larger serialization schema.
-    /// </remarks>
     IBinaryTypeSerializer<T> Make<T>();
 
     #endregion
