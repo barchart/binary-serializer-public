@@ -172,7 +172,6 @@ public class BinaryTypeSerializerFactoryTests
     {
         Assert.Throws<UnsupportedTypeException>(() => _factory.Make<TestClass>());
     }
-
     
     #endregion
     
