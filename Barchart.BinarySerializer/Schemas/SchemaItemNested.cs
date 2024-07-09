@@ -82,22 +82,25 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
             return;
         }
 
+        TProperty nested = _getter(target);
+        
         if (ReadNullFlag(reader))
         {
-            _setter(target, null!);
+            if (nested != null)
+            {
+                _setter(target, null!);
+            }
+
+            return;
+        }
+        
+        if (nested == null)
+        {
+            _setter(target, _schema.Deserialize(reader));
         }
         else
         {
-            TProperty current = _getter(target);
-            
-            if (current == null)
-            {
-                _setter(target, _schema.Deserialize(reader));
-            }
-            else
-            {
-                _schema.Deserialize(reader, current);
-            }
+            _schema.Deserialize(reader, nested);
         }
     }
 
