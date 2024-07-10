@@ -55,19 +55,34 @@ public class DataBufferReader : IDataBufferReader
     /// <inheritdoc />
     public byte ReadByte()
     {
-        byte value = 0;
-
-        for (int j = 7; j >= 0; j--)
+        if (IsBufferFull())
         {
-            bool bit = ReadBit();
-
-            if (bit)
-            {
-                value = (byte)(value | (TRUE << j));
-            }
+            throw new InvalidOperationException("Buffer is full.");
         }
 
-        return value;
+        byte result;
+
+        if (_positionBit == 0)
+        {
+            result = _byteArray[_positionByte++];
+        }
+        else
+        {
+            int firstPartLength = 8 - _positionBit;
+            byte firstPart = (byte)(_byteArray[_positionByte] >> _positionBit);
+
+            byte secondPart = 0;
+            if (_positionByte + 1 < _byteArray.Length)
+            {
+                secondPart = (byte)(_byteArray[_positionByte + 1] & ((1 << _positionBit) - 1));
+                secondPart = (byte)(secondPart << firstPartLength);
+            }
+
+            result = (byte)(firstPart | secondPart);
+            _positionByte++;
+        }
+
+        return result;
     }
 
     /// <inheritdoc />
