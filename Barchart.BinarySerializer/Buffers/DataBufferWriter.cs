@@ -70,7 +70,9 @@ public class DataBufferWriter : IDataBufferWriter
     public void WriteByte(byte value)
     {
         if (IsBufferFull())
+        {
             throw new InvalidOperationException("Buffer is full.");
+        }
 
         if (_positionBit == 0)
         {
