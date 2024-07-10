@@ -111,8 +111,8 @@ public class DataBufferWriterTests
         DataBufferWriter dataBuffer = new(byteArray);
         
         byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
-
-        dataBuffer.WriteBytes(valuesToWrite);
+        
+        dataBuffer.WriteBytes(valuesToWrite.ToArray());
 
         Assert.Equal(valuesToWrite, byteArray);
     }
