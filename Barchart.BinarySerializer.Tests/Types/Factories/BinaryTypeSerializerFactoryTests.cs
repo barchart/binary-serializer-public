@@ -34,25 +34,25 @@ public class BinaryTypeSerializerFactoryTests
     [Fact]
     public void Make_Boolean_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<Boolean>();
+        var serializer = _factory.Make<bool>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<Boolean>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<bool>>(serializer);
     }
     
     [Fact]
     public void Make_Byte_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<Byte>();
+        var serializer = _factory.Make<byte>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<Byte>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<byte>>(serializer);
     }
     
     [Fact]
     public void Make_Char_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<Char>();
+        var serializer = _factory.Make<char>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<Char>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<char>>(serializer);
     }
     
     [Fact]
@@ -74,17 +74,17 @@ public class BinaryTypeSerializerFactoryTests
     [Fact]
     public void Make_Decimal_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<Decimal>();
+        var serializer = _factory.Make<decimal>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<Decimal>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<decimal>>(serializer);
     }
     
     [Fact]
     public void Make_Double_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<Double>();
+        var serializer = _factory.Make<double>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<Double>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<double>>(serializer);
     }
     
     [Fact]
@@ -98,73 +98,73 @@ public class BinaryTypeSerializerFactoryTests
     [Fact]
     public void Make_Single_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<Single>();
+        var serializer = _factory.Make<float>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<Single>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<float>>(serializer);
     }
     
     [Fact]
     public void Make_Int32_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<Int32>();
+        var serializer = _factory.Make<int>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<Int32>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<int>>(serializer);
     }
     
     [Fact]
     public void Make_Int64_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<Int64>();
+        var serializer = _factory.Make<long>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<Int64>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<long>>(serializer);
     }
     
     [Fact]
     public void Make_SByte_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<SByte>();
+        var serializer = _factory.Make<sbyte>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<SByte>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<sbyte>>(serializer);
     }
     
     [Fact]
     public void Make_Int16_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<Int16>();
+        var serializer = _factory.Make<short>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<Int16>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<short>>(serializer);
     }
     
     [Fact]
     public void Make_String_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<String>();
+        var serializer = _factory.Make<string>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<String>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<string>>(serializer);
     }
     
     [Fact]
     public void Make_UInt32_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<UInt32>();
+        var serializer = _factory.Make<uint>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<UInt32>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<uint>>(serializer);
     }
     
     [Fact]
     public void Make_UInt64_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<UInt64>();
+        var serializer = _factory.Make<ulong>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<UInt64>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<ulong>>(serializer);
     }
     
     [Fact]
     public void Make_UInt16_ReturnsTypedSerializer()
     {
-        var serializer = _factory.Make<UInt16>();
+        var serializer = _factory.Make<ushort>();
 
-        Assert.IsAssignableFrom<IBinaryTypeSerializer<UInt16>>(serializer);
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<ushort>>(serializer);
     }
     
     [Fact]
