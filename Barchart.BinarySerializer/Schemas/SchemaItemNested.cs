@@ -15,6 +15,8 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
     
     #endregion
 
+    #region Constructor(s)
+
     public SchemaItemNested(string name, Func<TEntity, TProperty> getter, Action<TEntity, TProperty> setter, ISchema<TProperty> schema)
     {
         _name = name;
@@ -24,6 +26,8 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
 
         _schema = schema;
     }
+
+    #endregion
     
     #region Properties
     
