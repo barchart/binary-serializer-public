@@ -69,9 +69,33 @@ public class DataBufferWriter : IDataBufferWriter
     /// <inheritdoc />
     public void WriteByte(byte value)
     {
-        for (int j = 7; j >= 0; j--)
+        if (IsBufferFull())
+            throw new InvalidOperationException("Buffer is full.");
+
+        if (_positionBit == 0)
         {
-            WriteBit(((value >> j) & 1) == 1);
+            _byteArray[_positionByte] = value;
+            _positionByte++;
+        }
+        else
+        {
+            int firstPartLength = 8 - _positionBit;
+            byte firstPart = (byte)(value >> _positionBit);
+            _byteArray[_positionByte] |= firstPart;
+
+            if (_positionByte + 1 < _byteArray.Length)
+            {
+                byte secondPart = (byte)(value << firstPartLength);
+                _byteArray[_positionByte + 1] = secondPart;
+            }
+
+            _positionByte++;
+        }
+
+        if (_positionBit + 8 >= 8)
+        {
+            _positionBit = (_positionBit + 8) % 8;
+            if (_positionBit != 0) _positionByte++;
         }
     }
 
