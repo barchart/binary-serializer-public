@@ -119,7 +119,7 @@ public class DataBufferReaderTests
         byte second;
         byte third;
         
-        byte[]  byteArray = { first = 250, second = 175, third = 100 };
+        byte[] byteArray = { first = 250, second = 175, third = 100 };
         DataBufferReader dataBuffer = new(byteArray);
 
         var expectedBytes = new byte[] { first, second, third };
@@ -134,7 +134,7 @@ public class DataBufferReaderTests
         byte first;
         byte second;
         
-        byte[]  byteArray = { first = 250, second = 175, 100 };
+        byte[] byteArray = { first = 250, second = 175, 100 };
         DataBufferReader dataBuffer = new(byteArray);
 
         var expectedBytes = new byte[] { first, second };
