@@ -93,12 +93,6 @@ public class DataBufferWriter : IDataBufferWriter
 
             _positionByte++;
         }
-
-        if (_positionBit + 8 >= 8)
-        {
-            _positionBit = (_positionBit + 8) % 8;
-            if (_positionBit != 0) _positionByte++;
-        }
     }
 
     /// <inheritdoc />
