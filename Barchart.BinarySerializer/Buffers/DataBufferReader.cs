@@ -55,7 +55,7 @@ public class DataBufferReader : IDataBufferReader
     /// <inheritdoc />
     public byte ReadByte()
     {
-        if (IsBufferFull())
+         if (IsBufferFull())
         {
             throw new InvalidOperationException("Buffer is full.");
         }
@@ -69,13 +69,13 @@ public class DataBufferReader : IDataBufferReader
         else
         {
             int firstPartLength = 8 - _positionBit;
-            byte firstPart = (byte)(_byteArray[_positionByte] >> _positionBit);
+            byte firstPart = (byte)(_byteArray[_positionByte] & ((1 << firstPartLength) - 1));
+            firstPart = (byte)(firstPart << _positionBit);
 
             byte secondPart = 0;
             if (_positionByte + 1 < _byteArray.Length)
             {
-                secondPart = (byte)(_byteArray[_positionByte + 1] & ((1 << _positionBit) - 1));
-                secondPart = (byte)(secondPart << firstPartLength);
+                secondPart = (byte)(_byteArray[_positionByte + 1] >> firstPartLength);
             }
 
             result = (byte)(firstPart | secondPart);
