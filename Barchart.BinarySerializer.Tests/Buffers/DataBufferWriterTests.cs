@@ -77,10 +77,11 @@ public class DataBufferWriterTests
     #region Test Methods (WriteByte)
 
     [Fact]
-    public void WriteByte_WritesSingleByteCorrectly()
+    public void WriteByte_OneByte_ModifiesBuffer()
     {
         byte[] byteArray = new byte[1];
         DataBufferWriter dataBuffer = new(byteArray);
+        
         byte valueToWrite = 0xAC;
 
         dataBuffer.WriteByte(valueToWrite);
@@ -104,10 +105,11 @@ public class DataBufferWriterTests
     #region Test Methods (WriteBytes)
 
     [Fact]
-    public void WriteBytes_WritesMultipleBytesCorrectly()
+    public void WriteBytes_ThreeBytes_ModifiesBuffer()
     {
         byte[] byteArray = new byte[3];
         DataBufferWriter dataBuffer = new(byteArray);
+        
         byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
 
         dataBuffer.WriteBytes(valuesToWrite);
@@ -120,6 +122,7 @@ public class DataBufferWriterTests
     {
         byte[] byteArray = new byte[2];
         DataBufferWriter dataBuffer = new(byteArray);
+        
         byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
 
         Assert.Throws<InvalidOperationException>(() => dataBuffer.WriteBytes(valuesToWrite));
