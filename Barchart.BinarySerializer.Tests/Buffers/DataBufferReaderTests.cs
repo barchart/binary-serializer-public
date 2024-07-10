@@ -144,7 +144,7 @@ public class DataBufferReaderTests
     }
 
     [Fact]
-    public void ReadBytes_EMoreThanArrayLength_ThrowsError()
+    public void ReadBytes_ExceedingArrayLength_ThrowsError()
     {
         byte[] byteArray = { 250, 175 };
         DataBufferReader dataBuffer = new(byteArray);
