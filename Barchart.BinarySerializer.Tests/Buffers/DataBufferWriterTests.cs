@@ -130,7 +130,7 @@ public class DataBufferWriterTests
     #region Test Methods (ToBytes)
 
     [Fact]
-    public void ToBytes_WhenZeroBitsAreWritten_ReturnsEmptyArray()
+    public void ToBytes_NoDataHasBeenWritten_ReturnsEmptyArray()
     {
         byte[] byteArray = new byte[2];
         DataBufferWriter dataBuffer = new(byteArray);
@@ -141,7 +141,7 @@ public class DataBufferWriterTests
     }
 
     [Fact]
-    public void ToBytes_WhenOneBitIsWritten_ReturnsOneByteArray()
+    public void ToBytes_OneBitHasBeenWritten_ReturnsOneByteArray()
     {
         byte[] byteArray = new byte[2];
         DataBufferWriter dataBuffer = new(byteArray);
@@ -157,7 +157,7 @@ public class DataBufferWriterTests
     }
 
     [Fact]
-    public void ToBytes_WhenOneByteIsWritten_ReturnsOneByteArray()
+    public void ToBytes_EightBitsHaveBeenWritten_ReturnsOneByteArray()
     {
         byte[] byteArray = new byte[2];
         DataBufferWriter dataBuffer = new(byteArray);
@@ -173,7 +173,7 @@ public class DataBufferWriterTests
     }
 
     [Fact]
-    public void ToBytes_WhenTwelveBitsAreWritten_ReturnsTwoBytesArray()
+    public void ToBytes_TwelveBitsHaveBeenWritten_ReturnsTwoBytesArray()
     {
         byte[] byteArray = new byte[2];
         DataBufferWriter dataBuffer = new(byteArray);
@@ -189,7 +189,7 @@ public class DataBufferWriterTests
     }
 
     [Fact]
-    public void ToBytes_WhenTwoBytesAreWritten_ReturnsTwoBytesArray()
+    public void ToBytes_SixteenBitsHaveBeenWritten_ReturnsTwoBytesArray()
     {
         byte[] byteArray = new byte[2];
         DataBufferWriter dataBuffer = new(byteArray);
