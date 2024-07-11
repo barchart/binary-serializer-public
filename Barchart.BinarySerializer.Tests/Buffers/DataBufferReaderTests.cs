@@ -236,7 +236,7 @@ public class DataBufferReaderTests
     }
     
     public void Read_OneBitThreeByteArray_ReturnsCorrectData()
-    {`
+    {
         byte[] byteArray = new byte[4] { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
