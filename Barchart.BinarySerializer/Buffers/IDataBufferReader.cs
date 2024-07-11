@@ -49,13 +49,5 @@ public interface IDataBufferReader
     /// </summary>
     void Reset();
 
-     /// <summary>
-    ///     Gets the total number of bytes written to the buffer.
-    /// </summary>
-    /// <returns>
-    ///     The total number of bytes written.
-    /// </returns>
-    int BytesWritten();
-
     #endregion
 }

@@ -152,7 +152,7 @@ public class DataBufferWriter : IDataBufferWriter
     /// <inheritdoc />
     public int BytesWritten()
     {
-        return _byteArray.Length;
+        return _positionBit == 0 ? _positionByte : _positionByte + 1;
     }
 
     private void AdvanceBit()
