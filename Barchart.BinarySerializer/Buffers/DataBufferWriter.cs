@@ -149,6 +149,12 @@ public class DataBufferWriter : IDataBufferWriter
         return _byteArray.Take(byteCount).ToArray();
     }
 
+    /// <inheritdoc />
+    public int BytesWritten()
+    {
+        return _byteArray.Length;
+    }
+
     private void AdvanceBit()
     {
         if (_positionBit == 7)
