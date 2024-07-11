@@ -2,6 +2,8 @@
 
 using Barchart.BinarySerializer.Buffers;
 
+using Barchart.BinarySerializer.Tests.Common;
+
 #endregion
 
 namespace Barchart.BinarySerializer.Tests.Buffers;
@@ -130,6 +132,68 @@ public class DataBufferWriterTests
 
     #endregion
 
+    #region Test Methods (Multiple - WriteBit + WriteByte)
+    
+    [Fact]
+    public void Write_OneBitOneByte_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteByte(0b11111111);
+        
+        Assert.Equal(0b01111111, byteArray[0]);
+        Assert.Equal(0b10000000, byteArray[1]);
+    }
+    
+    [Fact]
+    public void Write_TwoBitsOneByte_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteByte(0b11111111);
+        
+        Assert.Equal(0b00111111, byteArray[0]);
+        Assert.Equal(0b11000000, byteArray[1]);
+    }
+    
+    [Fact]
+    public void Write_OneBitTwoBytes_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[3];
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteByte(0b11111111);
+        dataBuffer.WriteByte(0b11111111);
+        
+        Assert.Equal(0b01111111, byteArray[0]);
+        Assert.Equal(0b11111111, byteArray[1]);
+        Assert.Equal(0b10000000, byteArray[2]);
+    }
+    
+    [Fact]
+    public void Write_OneBitOneByteOneBitOneByte_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[3];
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteByte(0b11111111);
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteByte(0b11111111);
+        
+        Assert.Equal(0b01111111, byteArray[0]);
+        Assert.Equal(0b10111111, byteArray[1]);
+        Assert.Equal(0b11000000, byteArray[2]);
+    }
+    
+    #endregion
+    
     #region Test Methods (ToBytes)
 
     [Fact]
@@ -226,7 +290,7 @@ public class DataBufferWriterTests
         return ((b >> (7 - index)) & 1) == 1;
     }
 
-    private static string PrintBits(byte b)
+    private static string PrintBits(int b)
     {
         return Convert.ToString(b, 2).PadLeft(8, '0');
     }
