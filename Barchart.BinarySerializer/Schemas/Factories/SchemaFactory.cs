@@ -175,5 +175,11 @@ public class SchemaFactory : ISchemaFactory
             _ => throw new ArgumentException("Unsupported member type")
         };
     }
+
+    private static bool IsPrimitiveOrBuiltInType(Type type)
+    {
+        return type.IsPrimitive || type == typeof(string) || type == typeof(decimal) || type.IsEnum;
+    }
+
     #endregion
 }
