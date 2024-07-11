@@ -89,6 +89,11 @@ public class DataBufferReader : IDataBufferReader
     public byte[] ReadBytes(int size)
     {
         if (size == 0) return Array.Empty<byte>();
+        
+        if (size > _byteArray.Length)
+        {
+            throw new InvalidOperationException("Unable to read bytes. Request exceeds available buffer size");
+        }
 
         byte[] bytes = new byte[size];
         int byteReadPosition = _positionByte;
