@@ -1,14 +1,12 @@
 #region Using Statements
 
-using System.Collections;
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Types;
 
 #endregion
 
 namespace Barchart.BinarySerializer.Schemas;
 
-public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new()
+public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new() where TItem : class, new()
 {
     #region Fields
  
@@ -17,20 +15,20 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
     private readonly Func<TEntity, List<TItem>> _getter;
     private readonly Action<TEntity, List<TItem>> _setter;
 
-    private readonly IBinaryTypeSerializer<TItem> _elementSerializer;
+    private readonly ISchema<TItem> _itemSchema;
     
     #endregion
 
     #region Constructor(s)
 
-    public SchemaItemList(string name, Func<TEntity, List<TItem>> getter, Action<TEntity, List<TItem>> setter, IBinaryTypeSerializer<TItem> elementSerializer)
+    public SchemaItemListObject(string name, Func<TEntity, List<TItem>> getter, Action<TEntity, List<TItem>> setter, ISchema<TItem> itemSchema)
     {
         _name = name;
 
         _getter = getter;
         _setter = setter;
 
-        _elementSerializer = elementSerializer;
+        _itemSchema = itemSchema;
     }
 
     #endregion
@@ -47,7 +45,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
     #region Methods
 
-   /// <inheritdoc />
+    /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
         List<TItem> items = _getter(source);
@@ -55,7 +53,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
         foreach (var item in items)
         {
-            _elementSerializer.Encode(writer, item);
+            _itemSchema.Serialize(writer, item);
         }
     }
 
@@ -66,17 +64,17 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
         var previousItems = _getter(previous);
 
         var differentItems = currentItems.Where((item, index) => 
-            previousItems.Count <= index || !_elementSerializer.GetEquals(item, previousItems[index])).ToList();
+            previousItems.Count <= index || !_itemSchema.GetEquals(item, previousItems[index])).ToList();
 
         writer.WriteBytes(BitConverter.GetBytes(differentItems.Count));
 
         foreach (var item in differentItems)
         {
-            _elementSerializer.Encode(writer, item);
+            _itemSchema.Serialize(writer, item);
         }
     }
 
-     /// <inheritdoc />
+    /// <inheritdoc />
     public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
     {
         int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
@@ -86,7 +84,9 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
         for (int i = 0; i < count; i++)
         {
-            items.Add(_elementSerializer.Decode(reader));
+            var item = new TItem();
+            _itemSchema.Deserialize(reader, item);
+            items.Add(item);
         }
 
         _setter(target, items);
@@ -102,7 +102,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
         for (int i = 0; i < listA.Count; i++)
         {
-            if (!_elementSerializer.GetEquals(listA[i], listB[i])) return false;
+            if (!_itemSchema.GetEquals(listA[i], listB[i])) return false;
         }
 
         return true;

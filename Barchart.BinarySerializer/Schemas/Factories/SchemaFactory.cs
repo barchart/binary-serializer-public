@@ -67,7 +67,14 @@ public class SchemaFactory : ISchemaFactory
             Type itemType = memberType.GetGenericArguments()[0];
             typeParameters = new Type[] { typeof(TEntity), itemType};
 
-            unboundMethod = methods.Single(GetMakeSchemaItemListPredicate(typeParameters));
+            if (IsPrimitiveOrBuiltInType(itemType))
+            {
+                unboundMethod = methods.Single(GetMakeSchemaItemListPrimitivePredicate(typeParameters));
+            }
+            else
+            {
+                unboundMethod = methods.Single(GetMakeSchemaItemListObjectPredicate(typeParameters));
+            }
         }
         else
         {
@@ -117,30 +124,29 @@ public class SchemaFactory : ISchemaFactory
         return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
     }
 
-    private ISchemaItem<TEntity> MakeSchemaItemList<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
+     private ISchemaItem<TEntity> MakeSchemaItemListPrimitive<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
     {
         string name = memberInfo.Name;
 
         Func<TEntity, List<TItem>> getter = MakeMemberGetter<TEntity, List<TItem>>(memberInfo);
         Action<TEntity, List<TItem>> setter = MakeMemberSetter<TEntity, List<TItem>>(memberInfo);
 
-        var itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
-
-        return new SchemaItemList<TEntity, TItem>(name, getter, setter, itemSerializer);
+        IBinaryTypeSerializer<TItem> itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
+        
+        return new SchemaItemListPrimitive<TEntity, TItem>(name, getter, setter, itemSerializer);
     }
 
-    // private ISchemaItem<TEntity> MakeSchemaItemList<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
-    // {
-    //     string name = memberInfo.Name;
+    private ISchemaItem<TEntity> MakeSchemaItemListObject<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new() where TItem : class, new()
+    {
+        string name = memberInfo.Name;
 
-    //     Func<TEntity, TItem> getter = MakeMemberGetter<TEntity, TItem>(memberInfo);
-    //     Action<TEntity, TItem> setter = MakeMemberSetter<TEntity, TItem>(memberInfo);
+        Func<TEntity, List<TItem>> getter = MakeMemberGetter<TEntity, List<TItem>>(memberInfo);
+        Action<TEntity, List<TItem>> setter = MakeMemberSetter<TEntity, List<TItem>>(memberInfo);
 
-    //     var itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
+        ISchema<TItem> itemSchema = Make<TItem>();
 
-    //     return new SchemaItemList<TEntity, TItem>(name, getter, setter, itemSerializer);
-    // }
-
+        return new SchemaItemListObject<TEntity, TItem>(name, getter, setter, itemSchema);
+    }
     private static Func<TEntity, TMember> MakeMemberGetter<TEntity, TMember>(MemberInfo memberInfo)
     {
         ParameterExpression[] typeParameterExpressions = {
@@ -207,9 +213,14 @@ public class SchemaFactory : ISchemaFactory
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItem) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
-    private static Func<MethodInfo, bool> GetMakeSchemaItemListPredicate(Type[] typeParameters)
+   private static Func<MethodInfo, bool> GetMakeSchemaItemListPrimitivePredicate(Type[] typeParameters)
     {
-        return methodInfo => methodInfo.Name == nameof (MakeSchemaItemList) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
+        return methodInfo => methodInfo.Name == nameof (MakeSchemaItemListPrimitive) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
+    }
+
+    private static Func<MethodInfo, bool> GetMakeSchemaItemListObjectPredicate(Type[] typeParameters)
+    {
+        return methodInfo => methodInfo.Name == nameof(MakeSchemaItemListObject) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
     private static Func<MethodInfo, bool> GetMakeSchemaItemNestedPredicate(Type[] typeParameters)
