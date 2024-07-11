@@ -205,15 +205,14 @@ public class SchemaFactory : ISchemaFactory
 
     private static IEnumerable<MemberInfo> GetMembersForType(Type entityType)
     {
-        IEnumerable<MemberInfo> fields = entityType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+        IEnumerable<MemberInfo> fields = entityType
+            .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
             .Where(FieldHasSerializeAttribute)
-            .Where(FieldCanBeWritten)
-            .Cast<MemberInfo>();
+            .Where(FieldCanBeWritten);
 
         IEnumerable<MemberInfo> properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .Where(PropertyHasSerializeAttribute)
-            .Where(PropertyCanBeWritten)
-            .Cast<MemberInfo>();
+            .Where(PropertyCanBeWritten);
 
         return fields.Concat(properties);
     }
