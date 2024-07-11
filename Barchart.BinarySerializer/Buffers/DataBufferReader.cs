@@ -88,7 +88,7 @@ public class DataBufferReader : IDataBufferReader
     /// <inheritdoc />
     public byte[] ReadBytes(int size)
     {
-        if (size == 0) return new byte[0];
+        if (size == 0) return Array.Empty<byte>();
 
         byte[] bytes = new byte[size];
         int byteReadPosition = _positionByte;
