@@ -88,19 +88,6 @@ public class DataBufferReader : IDataBufferReader
     /// <inheritdoc />
     public byte[] ReadBytes(int size)
     {
-        byte[] bytes = new byte[size];
-
-        for (int i = 0; i < size; i++)
-        {
-            bytes[i] = ReadByte();
-        }
-
-        return bytes;
-    }
-
-    /// <inheritdoc />
-    public byte[] ReadBytes2(int size)
-    {
         if (size == 0) return new byte[0];
 
         byte[] bytes = new byte[size];
@@ -137,7 +124,7 @@ public class DataBufferReader : IDataBufferReader
                 }
             }
         }
-        
+
         return bytes;
     }
 
