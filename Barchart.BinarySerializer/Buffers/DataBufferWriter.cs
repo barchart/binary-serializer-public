@@ -98,9 +98,41 @@ public class DataBufferWriter : IDataBufferWriter
     /// <inheritdoc />
     public void WriteBytes(byte[] value)
     {
-        for (int i = 0; i < value.Length; i++)
+        if (value.Length == 0) return;
+
+        if (_positionBit != 0)
         {
-            WriteByte(value[i]);
+            byte modifiedFirstByte = (byte)(value[0] >> _positionBit);
+
+            _byteArray[_positionByte] |= modifiedFirstByte;
+            _positionByte++;
+            
+            if (value.Length > 1)
+            {
+                for (int i = 1; i < value.Length; i++)
+                {
+                    byte nextBytePart = (byte)(value[i - 1] << (8 - _positionBit));
+                    byte currentBytePart = (byte)(value[i] >> _positionBit);
+
+                    _byteArray[_positionByte] = (byte)(nextBytePart | currentBytePart);
+                    _positionByte++;
+                }
+
+                byte lastBytePart = (byte)(value[value.Length - 1] << (8 - _positionBit));
+
+                if (_positionByte < _byteArray.Length)
+                {
+                    _byteArray[_positionByte] |= lastBytePart;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < value.Length; i++)
+            {
+                _byteArray[_positionByte] = value[i];
+                _positionByte++;
+            }
         }
     }
 
