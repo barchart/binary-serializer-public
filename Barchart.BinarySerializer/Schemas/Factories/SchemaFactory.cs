@@ -223,7 +223,7 @@ public class SchemaFactory : ISchemaFactory
         return type.IsPrimitive || type == typeof(string) || type == typeof(decimal) || type.IsEnum;
     }
 
-   private static IEnumerable<MemberInfo> GetMembersForType(Type entityType)
+    private static IEnumerable<MemberInfo> GetMembersForType(Type entityType)
     {
         IEnumerable<MemberInfo> fields = entityType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
             .Where(FieldHasSerializeAttribute)
