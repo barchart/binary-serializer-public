@@ -54,20 +54,7 @@ public class SchemaFactory : ISchemaFactory
 
     private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(MemberInfo memberInfo) where TEntity: class, new()
     {
-        Type[] typeParameters;
-
-        if (memberInfo is PropertyInfo propertyInfo)
-        {
-            typeParameters = new Type[] { typeof(TEntity), propertyInfo.PropertyType };
-        }
-        else if (memberInfo is FieldInfo fieldInfo)
-        {
-            typeParameters = new Type[] { typeof(TEntity), fieldInfo.FieldType };
-        }
-        else 
-        {
-            throw new Exception("Unsupported member type encountered. Only PropertyInfo and FieldInfo are supported.");
-        }
+        Type[] typeParameters = new Type[] { typeof(TEntity), GetMemberType(memberInfo) };
 
         MethodInfo[] methods = typeof(SchemaFactory).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -179,5 +166,14 @@ public class SchemaFactory : ISchemaFactory
         return comparison;
     }
 
+    private static Type GetMemberType(MemberInfo memberInfo)
+    {
+        return memberInfo switch
+        {
+            PropertyInfo pi => pi.PropertyType,
+            FieldInfo fi => fi.FieldType,
+            _ => throw new ArgumentException("Unsupported member type")
+        };
+    }
     #endregion
 }
