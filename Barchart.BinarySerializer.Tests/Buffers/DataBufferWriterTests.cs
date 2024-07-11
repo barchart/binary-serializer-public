@@ -290,7 +290,7 @@ public class DataBufferWriterTests
         return ((b >> (7 - index)) & 1) == 1;
     }
 
-    private static string PrintBits(int b)
+    private static string PrintBits(byte b)
     {
         return Convert.ToString(b, 2).PadLeft(8, '0');
     }

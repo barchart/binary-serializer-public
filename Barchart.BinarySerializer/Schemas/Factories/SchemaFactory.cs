@@ -25,6 +25,11 @@ public class SchemaFactory : ISchemaFactory
     {
         _binaryTypeSerializerFactory = binarySerializerFactory;
     }
+
+    public SchemaFactory() : this(new BinaryTypeSerializerFactory())
+    {
+        
+    }
     
     #endregion
     
