@@ -35,16 +35,9 @@ public class SchemaFactory : ISchemaFactory
     {
         Type entityType = typeof(TEntity);
 
-        IEnumerable<FieldInfo> fields = entityType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .Where(FieldHasSerializeAttribute)
-            .Where(FieldCanBeWritten);
-        
-        IEnumerable<PropertyInfo> properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(PropertyHasSerializeAttribute)
-            .Where(PropertyCanBeWritten);
+        IEnumerable<MemberInfo> members = GetMembersForType(entityType);
 
-        ISchemaItem<TEntity>[] schemaItems = fields.Select(MakeSchemaItem<TEntity>)
-            .Concat(properties.Select(MakeSchemaItem<TEntity>))
+        ISchemaItem<TEntity>[] schemaItems = members.Select(MakeSchemaItem<TEntity>)
             .ToArray();
 
         Array.Sort(schemaItems, CompareSchemaItems);
@@ -54,11 +47,22 @@ public class SchemaFactory : ISchemaFactory
 
     private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(MemberInfo memberInfo) where TEntity: class, new()
     {
+        Type memberType = GetMemberType(memberInfo);
         Type[] typeParameters = new Type[] { typeof(TEntity), GetMemberType(memberInfo) };
 
         MethodInfo[] methods = typeof(SchemaFactory).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
+        
+        MethodInfo unboundMethod;
+        
+        if (IsPrimitiveOrBuiltInType(memberType))
+        {
+            unboundMethod = methods.Single(GetMakeSchemaItemPredicate(typeParameters));
+        }
+        else
+        {
+            unboundMethod = methods.Single(GetMakeSchemaItemNestedPredicate(typeParameters));
+        }
 
-        MethodInfo unboundMethod = methods.Single(GetMakeSchemaItemPredicate(typeParameters));
         MethodInfo boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
 
         object[] methodParameters = { memberInfo };
@@ -67,28 +71,61 @@ public class SchemaFactory : ISchemaFactory
         
         if (schemaItem == null)
         {
-            throw new NullReferenceException("When called via reflection, the SchemaFactory.MakeSchemaItem<TEntity, TProperty> returned a null reference. This should not be possible.");
+            throw new NullReferenceException("When called via reflection, the SchemaFactory.MakeSchemaItem<TEntity, TMember> returned a null reference. This should not be possible.");
         }
-        
+
         return (ISchemaItem<TEntity>)schemaItem;
     }
     
-    private ISchemaItem<TEntity> MakeSchemaItem<TEntity, TProperty>(MemberInfo memberInfo) where TEntity: class, new()
+    private ISchemaItem<TEntity> MakeSchemaItem<TEntity, TMember>(MemberInfo memberInfo) where TEntity: class, new()
     {
-        Func<TEntity, TProperty> getter = MakeMemberGetter<TEntity, TProperty>(memberInfo);
-        Action<TEntity, TProperty> setter = MakeMemberSetter<TEntity, TProperty>(memberInfo);
+        Func<TEntity, TMember> getter = MakeMemberGetter<TEntity, TMember>(memberInfo);
+        Action<TEntity, TMember> setter = MakeMemberSetter<TEntity, TMember>(memberInfo);
 
-        IBinaryTypeSerializer<TProperty> serializer = _binaryTypeSerializerFactory.Make<TProperty>();
+        IBinaryTypeSerializer<TMember> serializer = _binaryTypeSerializerFactory.Make<TMember>();
         
         SerializeAttribute attribute = GetSerializeAttribute(memberInfo);
 
         string name = memberInfo.Name;
         bool key = attribute.Key;
         
-        return new SchemaItem<TEntity, TProperty>(name, key, getter, setter, serializer);
+        return new SchemaItem<TEntity, TMember>(name, key, getter, setter, serializer);
+    }
+
+    private ISchemaItem<TEntity> MakeSchemaItemNested<TEntity, TMember>(MemberInfo memberInfo) where TEntity: class, new() where TMember: class, new()
+    {
+        string name = memberInfo.Name;
+
+        Func<TEntity, TMember> getter = MakeMemberGetter<TEntity, TMember>(memberInfo);
+        Action<TEntity, TMember> setter = MakeMemberSetter<TEntity, TMember>(memberInfo);
+
+        ISchema<TMember> schema = GetSchema<TMember>();
+
+        return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
     }
     
-    private static Func<TEntity, TProperty> MakeMemberGetter<TEntity, TProperty>(MemberInfo memberInfo)
+    private ISchema<TMember> GetSchema<TMember>() where TMember : class, new()
+    {
+        Type type = typeof(TMember);
+        IEnumerable<MemberInfo> members = GetMembersForType(type);
+        List<ISchemaItem<TMember>> schemaItemContainer = new();
+
+        foreach (MemberInfo memberInfo in members)
+        {
+            ISchemaItem<TMember>? schemaItem = MakeSchemaItem<TMember>(memberInfo);
+            
+            if (schemaItem != null)
+            {
+                schemaItemContainer.Add(schemaItem);
+            }
+        }
+
+        Schema<TMember> schema = new(schemaItemContainer.ToArray());
+
+        return schema;
+    }
+
+    private static Func<TEntity, TMember> MakeMemberGetter<TEntity, TMember>(MemberInfo memberInfo)
     {
         ParameterExpression[] typeParameterExpressions = {
             Expression.Parameter(typeof(TEntity))
@@ -96,20 +133,20 @@ public class SchemaFactory : ISchemaFactory
         
         MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
         
-        return Expression.Lambda<Func<TEntity, TProperty>>(propertyAccessExpression, typeParameterExpressions).Compile();
+        return Expression.Lambda<Func<TEntity, TMember>>(propertyAccessExpression, typeParameterExpressions).Compile();
     }
     
-    private static Action<TEntity, TProperty> MakeMemberSetter<TEntity, TProperty>(MemberInfo memberInfo)
+    private static Action<TEntity, TMember> MakeMemberSetter<TEntity, TMember>(MemberInfo memberInfo)
     {
         ParameterExpression[] typeParameterExpressions = {
             Expression.Parameter(typeof(TEntity)),
-            Expression.Parameter(typeof(TProperty))
+            Expression.Parameter(typeof(TMember))
         };
         
         MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
         BinaryExpression propertyAssignmentExpression = Expression.Assign(propertyAccessExpression, typeParameterExpressions[1]);
 
-        return Expression.Lambda<Action<TEntity, TProperty>>(propertyAssignmentExpression, typeParameterExpressions).Compile();
+        return Expression.Lambda<Action<TEntity, TMember>>(propertyAssignmentExpression, typeParameterExpressions).Compile();
     }
     
     private static bool PropertyCanBeWritten(PropertyInfo memberInfo)
@@ -154,6 +191,11 @@ public class SchemaFactory : ISchemaFactory
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItem) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
+    private static Func<MethodInfo, bool> GetMakeSchemaItemNestedPredicate(Type[] typeParameters)
+    {
+        return methodInfo => methodInfo.Name == nameof(MakeSchemaItemNested) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
+    }
+
     private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: class, new()
     {
         int comparison = a.Key.CompareTo(b.Key);
@@ -179,6 +221,21 @@ public class SchemaFactory : ISchemaFactory
     private static bool IsPrimitiveOrBuiltInType(Type type)
     {
         return type.IsPrimitive || type == typeof(string) || type == typeof(decimal) || type.IsEnum;
+    }
+
+   private static IEnumerable<MemberInfo> GetMembersForType(Type entityType)
+    {
+        IEnumerable<MemberInfo> fields = entityType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            .Where(FieldHasSerializeAttribute)
+            .Where(FieldCanBeWritten)
+            .Cast<MemberInfo>();
+
+        IEnumerable<MemberInfo> properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .Where(PropertyHasSerializeAttribute)
+            .Where(PropertyCanBeWritten)
+            .Cast<MemberInfo>();
+
+        return fields.Concat(properties);
     }
 
     #endregion
