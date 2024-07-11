@@ -1,5 +1,6 @@
 ﻿#region Using Statements
 
+using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -48,7 +49,7 @@ public class SchemaFactory : ISchemaFactory
     private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(MemberInfo memberInfo) where TEntity: class, new()
     {
         Type memberType = GetMemberType(memberInfo);
-        Type[] typeParameters = new Type[] { typeof(TEntity), GetMemberType(memberInfo) };
+        Type[] typeParameters;
 
         MethodInfo[] methods = typeof(SchemaFactory).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
         
@@ -57,14 +58,25 @@ public class SchemaFactory : ISchemaFactory
         
         if (IsPrimitiveOrBuiltInType(memberType))
         {
+            typeParameters = new Type[] { typeof(TEntity), GetMemberType(memberInfo) };
+
             unboundMethod = methods.Single(GetMakeSchemaItemPredicate(typeParameters));
-            boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
+        }
+        else if (IsListType(memberType))
+        {
+            Type itemType = memberType.GetGenericArguments()[0];
+            typeParameters = new Type[] { typeof(TEntity), itemType};
+
+            unboundMethod = methods.Single(GetMakeSchemaItemListPredicate(typeParameters));
         }
         else
         {
+            typeParameters = new Type[] { typeof(TEntity), GetMemberType(memberInfo) };
+
             unboundMethod = methods.Single(GetMakeSchemaItemNestedPredicate(typeParameters));
-            boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
         }
+        
+        boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
 
         object[] methodParameters = { memberInfo };
         
@@ -104,6 +116,30 @@ public class SchemaFactory : ISchemaFactory
 
         return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
     }
+
+    private ISchemaItem<TEntity> MakeSchemaItemList<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
+    {
+        string name = memberInfo.Name;
+
+        Func<TEntity, List<TItem>> getter = MakeMemberGetter<TEntity, List<TItem>>(memberInfo);
+        Action<TEntity, List<TItem>> setter = MakeMemberSetter<TEntity, List<TItem>>(memberInfo);
+
+        var itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
+
+        return new SchemaItemList<TEntity, TItem>(name, getter, setter, itemSerializer);
+    }
+
+    // private ISchemaItem<TEntity> MakeSchemaItemList<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
+    // {
+    //     string name = memberInfo.Name;
+
+    //     Func<TEntity, TItem> getter = MakeMemberGetter<TEntity, TItem>(memberInfo);
+    //     Action<TEntity, TItem> setter = MakeMemberSetter<TEntity, TItem>(memberInfo);
+
+    //     var itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
+
+    //     return new SchemaItemList<TEntity, TItem>(name, getter, setter, itemSerializer);
+    // }
 
     private static Func<TEntity, TMember> MakeMemberGetter<TEntity, TMember>(MemberInfo memberInfo)
     {
@@ -171,6 +207,11 @@ public class SchemaFactory : ISchemaFactory
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItem) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
+    private static Func<MethodInfo, bool> GetMakeSchemaItemListPredicate(Type[] typeParameters)
+    {
+        return methodInfo => methodInfo.Name == nameof (MakeSchemaItemList) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
+    }
+
     private static Func<MethodInfo, bool> GetMakeSchemaItemNestedPredicate(Type[] typeParameters)
     {
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItemNested) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
@@ -215,6 +256,11 @@ public class SchemaFactory : ISchemaFactory
             .Where(PropertyCanBeWritten);
 
         return fields.Concat(properties);
+    }
+
+    private static bool IsListType(Type type)
+    {
+        return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
     }
 
     #endregion
