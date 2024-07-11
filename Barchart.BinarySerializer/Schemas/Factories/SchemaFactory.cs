@@ -53,17 +53,18 @@ public class SchemaFactory : ISchemaFactory
         MethodInfo[] methods = typeof(SchemaFactory).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
         
         MethodInfo unboundMethod;
+        MethodInfo boundMethod;
         
         if (IsPrimitiveOrBuiltInType(memberType))
         {
             unboundMethod = methods.Single(GetMakeSchemaItemPredicate(typeParameters));
+            boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
         }
         else
         {
             unboundMethod = methods.Single(GetMakeSchemaItemNestedPredicate(typeParameters));
+            boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
         }
-
-        MethodInfo boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
 
         object[] methodParameters = { memberInfo };
         
@@ -99,30 +100,9 @@ public class SchemaFactory : ISchemaFactory
         Func<TEntity, TMember> getter = MakeMemberGetter<TEntity, TMember>(memberInfo);
         Action<TEntity, TMember> setter = MakeMemberSetter<TEntity, TMember>(memberInfo);
 
-        ISchema<TMember> schema = GetSchema<TMember>();
+        ISchema<TMember> schema = Make<TMember>();
 
         return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
-    }
-    
-    private ISchema<TMember> GetSchema<TMember>() where TMember : class, new()
-    {
-        Type type = typeof(TMember);
-        IEnumerable<MemberInfo> members = GetMembersForType(type);
-        List<ISchemaItem<TMember>> schemaItemContainer = new();
-
-        foreach (MemberInfo memberInfo in members)
-        {
-            ISchemaItem<TMember>? schemaItem = MakeSchemaItem<TMember>(memberInfo);
-            
-            if (schemaItem != null)
-            {
-                schemaItemContainer.Add(schemaItem);
-            }
-        }
-
-        Schema<TMember> schema = new(schemaItemContainer.ToArray());
-
-        return schema;
     }
 
     private static Func<TEntity, TMember> MakeMemberGetter<TEntity, TMember>(MemberInfo memberInfo)
