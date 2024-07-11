@@ -13,8 +13,6 @@ public class DataBufferReader : IDataBufferReader
     private int _positionByte;
     private int _positionBit;
 
-    private const byte TRUE = 1;
-
     #endregion
 
     #region Constructor(s)
