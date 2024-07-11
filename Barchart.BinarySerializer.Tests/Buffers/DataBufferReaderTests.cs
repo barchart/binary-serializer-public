@@ -220,6 +220,7 @@ public class DataBufferReaderTests
         Assert.Equal(0b00000011, readBytes[0]);
     }
     
+    [Fact]
     public void Read_OneBitTwoByteArray_ReturnsCorrectData()
     {
         byte[] byteArray = new byte[3] { 0b10000001, 0b10000011, 0b11111111 };
@@ -235,6 +236,7 @@ public class DataBufferReaderTests
         Assert.Equal(0b00000111, readBytes[1]);
     }
     
+    [Fact]
     public void Read_OneBitThreeByteArray_ReturnsCorrectData()
     {
         byte[] byteArray = new byte[4] { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
