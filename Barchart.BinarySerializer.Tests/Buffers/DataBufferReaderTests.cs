@@ -203,6 +203,57 @@ public class DataBufferReaderTests
     
     #endregion
     
+    #region Test Methods (Multiple - ReadBit + ReadBytes)
+    
+    [Fact]
+    public void Read_OneBitOneByteArray_ReturnsCorrectData()
+    {
+        byte[] byteArray = new byte[2] { 0b10000001, 0b10000001 };
+        DataBufferReader dataBuffer = new(byteArray);
+
+        bool readBit = dataBuffer.ReadBit();
+        byte[] readBytes = dataBuffer.ReadBytes(1);
+        
+        Assert.True(readBit);
+        
+        Assert.Single(readBytes);
+        Assert.Equal(0b00000011, readBytes[0]);
+    }
+    
+    public void Read_OneBitTwoByteArray_ReturnsCorrectData()
+    {
+        byte[] byteArray = new byte[3] { 0b10000001, 0b10000011, 0b11111111 };
+        DataBufferReader dataBuffer = new(byteArray);
+
+        bool readBit = dataBuffer.ReadBit();
+        byte[] readBytes = dataBuffer.ReadBytes(2);
+        
+        Assert.True(readBit);
+        
+        Assert.Equal(2, readBytes.Length);
+        Assert.Equal(0b00000011, readBytes[0]);
+        Assert.Equal(0b00000111, readBytes[1]);
+    }
+    
+    public void Read_OneBitThreeByteArray_ReturnsCorrectData()
+    {`
+        byte[] byteArray = new byte[4] { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
+        DataBufferReader dataBuffer = new(byteArray);
+
+        bool readBit = dataBuffer.ReadBit();
+        byte[] readBytes = dataBuffer.ReadBytes(3);
+        
+        Assert.True(readBit);
+        
+        Assert.Equal(3, readBytes.Length);
+        Assert.Equal(0b00000011, readBytes[0]);
+        Assert.Equal(0b00000111, readBytes[1]);
+        Assert.Equal(0b11111110, readBytes[2]);
+    }
+    
+    #endregion
+    
+    
     #region Test Methods (Reset)
     
     [Fact]
