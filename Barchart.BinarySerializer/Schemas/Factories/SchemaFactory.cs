@@ -1,6 +1,5 @@
 ﻿#region Using Statements
 
-using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -124,7 +123,7 @@ public class SchemaFactory : ISchemaFactory
         return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
     }
 
-     private ISchemaItem<TEntity> MakeSchemaItemListPrimitive<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
+    private ISchemaItem<TEntity> MakeSchemaItemListPrimitive<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
     {
         string name = memberInfo.Name;
 
@@ -213,7 +212,7 @@ public class SchemaFactory : ISchemaFactory
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItem) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
-   private static Func<MethodInfo, bool> GetMakeSchemaItemListPrimitivePredicate(Type[] typeParameters)
+    private static Func<MethodInfo, bool> GetMakeSchemaItemListPrimitivePredicate(Type[] typeParameters)
     {
         return methodInfo => methodInfo.Name == nameof (MakeSchemaItemListPrimitive) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
