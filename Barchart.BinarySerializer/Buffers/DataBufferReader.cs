@@ -92,7 +92,7 @@ public class DataBufferReader : IDataBufferReader
         
         if (size > _byteArray.Length)
         {
-            throw new InvalidOperationException("Unable to read bytes. Request exceeds available buffer size");
+            throw new InvalidOperationException("Unable to read bytes. Request exceeds available buffer size.");
         }
 
         byte[] bytes = new byte[size];

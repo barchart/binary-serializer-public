@@ -100,6 +100,11 @@ public class DataBufferWriter : IDataBufferWriter
     {
         if (value.Length == 0) return;
 
+        if (value.Length > _byteArray.Length)
+        {
+            throw new InvalidOperationException("Unable to write bytes. Request exceeds available buffer size.");
+        }
+
         if (_positionBit != 0)
         {
             byte modifiedFirstByte = (byte)(value[0] >> _positionBit);
