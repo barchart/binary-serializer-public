@@ -132,6 +132,12 @@ public class DataBufferReader : IDataBufferReader
         _positionBit = 0;
     }
 
+    /// <inheritdoc />
+    public int BytesWritten()
+    {
+        return _byteArray.Length;
+    }
+
     private void AdvanceBit()
     {
         if (_positionBit == 7)
