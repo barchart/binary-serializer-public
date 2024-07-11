@@ -96,26 +96,31 @@ public class DataBufferReader : IDataBufferReader
         }
 
         byte[] bytes = new byte[size];
-        int byteReadPosition = _positionByte;
 
         if (_positionBit != 0)
         {
             for (int i = 0; i < size; i++)
             {
-                byte currentBytePart = (byte)(_byteArray[byteReadPosition] << _positionBit);
-                byteReadPosition++;
-
-                byte nextBytePart = (byte)(_byteArray[byteReadPosition] >> (8 - _positionBit));
-
-                bytes[i] = (byte)(currentBytePart | nextBytePart);
+                if (_positionByte + 1 < _byteArray.Length)
+                {
+                    byte currentBytePart = (byte)(_byteArray[_positionByte] << _positionBit);                
+                    byte nextBytePart = (byte)(_byteArray[_positionByte + 1] >> (8 - _positionBit));
+                    bytes[i] = (byte)(currentBytePart | nextBytePart);
+                }
+                else 
+                {
+                    bytes[i] = (byte)(_byteArray[_positionByte] << _positionBit);;
+                }
+                
+                _positionByte++;
             }
         }
         else
         {
             for (int i = 0; i < size; i++)
             {
-                bytes[i] = _byteArray[byteReadPosition];
-                byteReadPosition++;
+                bytes[i] = _byteArray[_positionByte];
+                _positionByte++;
             }
         }
 
