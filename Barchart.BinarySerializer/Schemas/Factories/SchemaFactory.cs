@@ -43,23 +43,38 @@ public class SchemaFactory : ISchemaFactory
             .Where(PropertyHasSerializeAttribute)
             .Where(PropertyCanBeWritten);
 
-        ISchemaItem<TEntity>[] schemaItems = properties.Select(MakeSchemaItem<TEntity>).ToArray();
+        ISchemaItem<TEntity>[] schemaItems = fields.Select(MakeSchemaItem<TEntity>)
+            .Concat(properties.Select(MakeSchemaItem<TEntity>))
+            .ToArray();
 
         Array.Sort(schemaItems, CompareSchemaItems);
         
         return new Schema<TEntity>(schemaItems);
     }
 
-    private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(PropertyInfo propertyInfo) where TEntity: class, new()
+    private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(MemberInfo memberInfo) where TEntity: class, new()
     {
-        Type[] typeParameters = { typeof(TEntity), propertyInfo.PropertyType };
+        Type[] typeParameters;
+
+        if (memberInfo is PropertyInfo propertyInfo)
+        {
+            typeParameters = new Type[] { typeof(TEntity), propertyInfo.PropertyType };
+        }
+        else if (memberInfo is FieldInfo fieldInfo)
+        {
+            typeParameters = new Type[] { typeof(TEntity), fieldInfo.FieldType };
+        }
+        else 
+        {
+            throw new Exception("Unsupported member type encountered. Only PropertyInfo and FieldInfo are supported.");
+        }
 
         MethodInfo[] methods = typeof(SchemaFactory).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
 
         MethodInfo unboundMethod = methods.Single(GetMakeSchemaItemPredicate(typeParameters));
         MethodInfo boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
 
-        object[] methodParameters = { propertyInfo };
+        object[] methodParameters = { memberInfo };
         
         object? schemaItem = boundMethod.Invoke(this, methodParameters);
         
@@ -71,53 +86,53 @@ public class SchemaFactory : ISchemaFactory
         return (ISchemaItem<TEntity>)schemaItem;
     }
     
-    private ISchemaItem<TEntity> MakeSchemaItem<TEntity, TProperty>(PropertyInfo propertyInfo) where TEntity: class, new()
+    private ISchemaItem<TEntity> MakeSchemaItem<TEntity, TProperty>(MemberInfo memberInfo) where TEntity: class, new()
     {
-        Func<TEntity, TProperty> getter = MakePropertyGetter<TEntity, TProperty>(propertyInfo);
-        Action<TEntity, TProperty> setter = MakePropertySetter<TEntity, TProperty>(propertyInfo);
+        Func<TEntity, TProperty> getter = MakeMemberGetter<TEntity, TProperty>(memberInfo);
+        Action<TEntity, TProperty> setter = MakeMemberSetter<TEntity, TProperty>(memberInfo);
 
         IBinaryTypeSerializer<TProperty> serializer = _binaryTypeSerializerFactory.Make<TProperty>();
         
-        SerializeAttribute attribute = GetSerializeAttribute(propertyInfo);
+        SerializeAttribute attribute = GetSerializeAttribute(memberInfo);
 
-        string name = propertyInfo.Name;
+        string name = memberInfo.Name;
         bool key = attribute.Key;
         
         return new SchemaItem<TEntity, TProperty>(name, key, getter, setter, serializer);
     }
     
-    private static Func<TEntity, TProperty> MakePropertyGetter<TEntity, TProperty>(MemberInfo propertyInfo)
+    private static Func<TEntity, TProperty> MakeMemberGetter<TEntity, TProperty>(MemberInfo memberInfo)
     {
         ParameterExpression[] typeParameterExpressions = {
             Expression.Parameter(typeof(TEntity))
         };
         
-        MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], propertyInfo);
+        MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
         
         return Expression.Lambda<Func<TEntity, TProperty>>(propertyAccessExpression, typeParameterExpressions).Compile();
     }
     
-    private static Action<TEntity, TProperty> MakePropertySetter<TEntity, TProperty>(PropertyInfo propertyInfo)
+    private static Action<TEntity, TProperty> MakeMemberSetter<TEntity, TProperty>(MemberInfo memberInfo)
     {
         ParameterExpression[] typeParameterExpressions = {
             Expression.Parameter(typeof(TEntity)),
             Expression.Parameter(typeof(TProperty))
         };
         
-        MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], propertyInfo);
+        MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
         BinaryExpression propertyAssignmentExpression = Expression.Assign(propertyAccessExpression, typeParameterExpressions[1]);
 
         return Expression.Lambda<Action<TEntity, TProperty>>(propertyAssignmentExpression, typeParameterExpressions).Compile();
     }
     
-    private static bool PropertyCanBeWritten(PropertyInfo propertyInfo)
+    private static bool PropertyCanBeWritten(PropertyInfo memberInfo)
     {
-        return propertyInfo.GetSetMethod() != null;
+        return memberInfo.GetSetMethod() != null;
     }
 
-    private static bool PropertyHasSerializeAttribute(PropertyInfo propertyInfo)
+    private static bool PropertyHasSerializeAttribute(PropertyInfo memberInfo)
     {
-        return MemberHasSerializeAttribute(propertyInfo);
+        return MemberHasSerializeAttribute(memberInfo);
     }
 
     private static bool FieldCanBeWritten(FieldInfo fieldInfo)
