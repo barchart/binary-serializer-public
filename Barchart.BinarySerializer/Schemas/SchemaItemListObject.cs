@@ -78,9 +78,8 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
     public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
     {
         int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
-        var items = existing ? _getter(target) : new List<TItem>();
-
-        items.Clear();
+        
+        var items = new List<TItem>();
 
         for (int i = 0; i < count; i++)
         {
