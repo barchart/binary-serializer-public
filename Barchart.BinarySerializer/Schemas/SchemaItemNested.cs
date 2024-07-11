@@ -74,6 +74,7 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
         TProperty nestedCurrent = _getter(current);
         TProperty nestedPrevious = _getter(previous);
 
+        WriteMissingFlag(writer, false);
         WriteNullFlag(writer, nestedCurrent == null);
 
         if (nestedCurrent != null)
