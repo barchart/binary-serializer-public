@@ -1,6 +1,7 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
 
@@ -60,7 +61,7 @@ public class DataBufferReaderTests
             dataBuffer.ReadBit();
         }
 
-        Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadBit());
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.ReadBit());
     }
 
     #endregion
@@ -105,7 +106,7 @@ public class DataBufferReaderTests
         dataBuffer.ReadByte();
         dataBuffer.ReadByte();
         
-        Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadByte());
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.ReadByte());
     }
 
     #endregion
@@ -149,7 +150,7 @@ public class DataBufferReaderTests
         byte[] byteArray = { 250, 175 };
         DataBufferReader dataBuffer = new(byteArray);
 
-        Assert.Throws<InvalidOperationException>(() => dataBuffer.ReadBytes(byteArray.Length + 1));
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.ReadBytes(byteArray.Length + 1));
     }
 
     #endregion

@@ -1,3 +1,5 @@
+using Barchart.BinarySerializer.Schemas.Exceptions;
+
 namespace Barchart.BinarySerializer.Buffers;
 
 /// <summary>
@@ -38,9 +40,9 @@ public class DataBufferReader : IDataBufferReader
     /// <inheritdoc />
     public bool ReadBit()
     {
-        if (IsBufferFull())
+        if (CapacityWouldBeExceeded(0))
         {
-            throw new InvalidOperationException("Unable to read bit. The buffer is currently positioned at the end of the internal byte array.");
+            throw new InsufficientCapacityException(false);
         }
 
         int bit = (_byteArray[_positionByte] >> (7 - _positionBit)) & 1;
@@ -53,9 +55,9 @@ public class DataBufferReader : IDataBufferReader
     /// <inheritdoc />
     public byte ReadByte()
     {
-        if (IsBufferFull())
+        if (CapacityWouldBeExceeded(_positionBit == 0 ? 0 : 1))
         {
-            throw new InvalidOperationException("Buffer is full.");
+            throw new InsufficientCapacityException(false);
         }
 
         byte result;
@@ -86,11 +88,14 @@ public class DataBufferReader : IDataBufferReader
     /// <inheritdoc />
     public byte[] ReadBytes(int size)
     {
-        if (size == 0) return Array.Empty<byte>();
-        
-        if (size > _byteArray.Length)
+        if (size == 0)
         {
-            throw new InvalidOperationException("Unable to read bytes. Request exceeds available buffer size.");
+            return Array.Empty<byte>();
+        }
+        
+        if (CapacityWouldBeExceeded(_positionBit == 0 ? size - 1 : size))
+        {
+            throw new InsufficientCapacityException(true);
         }
 
         byte[] bytes = new byte[size];
@@ -145,9 +150,9 @@ public class DataBufferReader : IDataBufferReader
         }
     }
 
-    private bool IsBufferFull()
+    private bool CapacityWouldBeExceeded(int additionalBytes)
     {
-        return _positionByte >= _byteArray.Length;
+        return _positionByte + additionalBytes >= _byteArray.Length;
     }
 
     #endregion
