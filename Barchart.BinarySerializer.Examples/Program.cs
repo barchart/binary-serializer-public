@@ -1,6 +1,8 @@
 ﻿using Barchart.BinarySerializer.Examples;
 using Barchart.BinarySerializer.Examples.Modes;
 
+using Console = Barchart.BinarySerializer.Examples.Common.Console;
+
 Console.WriteLine("Barchart.BinarySerializer.Examples Console Application");
 Console.WriteLine();
 
@@ -30,3 +32,5 @@ Console.WriteLine($"Starting [{script.Script}] script");
 Console.WriteLine();
 
 script.Execute();
+
+Console.WriteLine($"Finished [{script.Script}] script");

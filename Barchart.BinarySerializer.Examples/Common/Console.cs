@@ -4,6 +4,16 @@ namespace Barchart.BinarySerializer.Examples.Common;
 
 public static class Console
 {
+    public static void WriteLine()
+    {
+        System.Console.WriteLine();
+    }
+    
+    public static void WriteLine(string message)
+    {
+        System.Console.WriteLine(message);
+    }
+    
     public static void WriteStep(ref int counter, string message)
     {
         System.Console.WriteLine($"{counter++}. {message}");
