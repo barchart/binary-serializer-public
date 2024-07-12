@@ -255,6 +255,43 @@ public class DataBufferReaderTests
     
     #endregion
     
+    #region Test Methods (Multiple - ReadByte + ReadBytes)
+
+    [Fact]
+    public void Read_OneByteOneByteArray_ReturnsCorrectData()
+    {
+        byte[] byteArray = new byte[3] { 0b10000001, 0b10000011, 0b11111111 };
+        DataBufferReader dataBuffer = new(byteArray);
+
+        byte readByte = dataBuffer.ReadByte();
+        byte[] readBytes = dataBuffer.ReadBytes(2);
+
+        Assert.Equal(0b10000001, readByte);
+        Assert.Equal(2, readBytes.Length);
+        Assert.Equal(0b10000011, readBytes[0]);
+        Assert.Equal(0b11111111, readBytes[1]);
+    }
+
+    [Fact]
+    public void Read_TwoBytesOneByteArray_ReturnsCorrectData()
+    {
+        byte[] byteArray = new byte[4] { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
+        DataBufferReader dataBuffer = new(byteArray);
+
+        byte readByteOne = dataBuffer.ReadByte();
+        byte readByteTwo = dataBuffer.ReadByte();
+        byte[] readBytes = dataBuffer.ReadBytes(2);
+
+        Assert.Equal(0b10000001, readByteOne);
+        Assert.Equal(0b10000011, readByteTwo);
+        Assert.Equal(2, readBytes.Length);
+        Assert.Equal(0b11111111, readBytes[0]);
+        Assert.Equal(0b00000000, readBytes[1]);
+    }
+
+    #endregion
+
+    
     
     #region Test Methods (Reset)
     
