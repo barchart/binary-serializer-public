@@ -242,17 +242,32 @@ public class DataBufferWriterTests
     #region Test Methods (Multiple - WriteByte + WriteBytes)
 
     [Fact]
-    public void Writ_OneByteArrayTwoByteArray_ModifiesBuffer()
+    public void Write_OneByteTwoByteArray_ModifiesBuffer()
     {
         byte[] byteArray = new byte[4];
         DataBufferWriter dataBuffer = new(byteArray);
 
-        dataBuffer.WriteBytes(new byte[] { 0xAC });
+        dataBuffer.WriteByte(0xAC);
         dataBuffer.WriteBytes(new byte[] { 0xBD, 0xCE });
 
         Assert.Equal(0xAC, byteArray[0]);
         Assert.Equal(0xBD, byteArray[1]);
         Assert.Equal(0xCE, byteArray[2]);
+        Assert.Equal(0x00, byteArray[3]);
+    }
+
+     [Fact]
+    public void Write_TwoByteArrayOneByte_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[4];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBytes(new byte[] { 0xBD, 0xCE });
+        dataBuffer.WriteByte(0xAC);
+
+        Assert.Equal(0xBD, byteArray[0]);
+        Assert.Equal(0xCE, byteArray[1]);
+        Assert.Equal(0xAC, byteArray[2]);
         Assert.Equal(0x00, byteArray[3]);
     }
 
