@@ -107,7 +107,7 @@ public class DataBufferWriter : IDataBufferWriter
             return;
         }
 
-        if (CapacityWouldBeExceeded(value.Length))
+        if (CapacityWouldBeExceeded(_positionBit == 0 ? value.Length - 1 : value.Length))
         {
             throw new InsufficientCapacityException(true);
         }
