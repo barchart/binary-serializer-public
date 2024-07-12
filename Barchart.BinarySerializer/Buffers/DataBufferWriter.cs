@@ -107,9 +107,9 @@ public class DataBufferWriter : IDataBufferWriter
             return;
         }
 
-        if (value.Length > _byteArray.Length)
+        if (CapacityWouldBeExceeded(value.Length))
         {
-            throw new InvalidOperationException("Unable to write bytes. Request exceeds available buffer size.");
+            throw new InsufficientCapacityException(true);
         }
 
         if (_positionBit != 0)

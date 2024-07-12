@@ -140,7 +140,7 @@ public class DataBufferWriterTests
         
         byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
 
-        Assert.Throws<InvalidOperationException>(() => dataBuffer.WriteBytes(valuesToWrite));
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteBytes(valuesToWrite));
     }
 
     #endregion
@@ -293,6 +293,28 @@ public class DataBufferWriterTests
         Assert.Equal(0b10000011, byteArray[1]);
         Assert.Equal(0b11111111, byteArray[2]);
         Assert.Equal(0b00000000, byteArray[3]);
+    }
+    
+    [Fact]
+    public void Write_OneBitTwoByteArray_ThrowsError()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBit(true);
+        
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteBytes(new byte[] { 0b00000011, 0b00000111 }));
+    }
+    
+    [Fact]
+    public void Write_OneBitThreeByteArray_ThrowsError()
+    {
+        byte[] byteArray = new byte[3];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBit(true);
+
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteBytes(new byte[] { 0b00000011, 0b00000111, 0b11111110 }));
     }
 
     #endregion
