@@ -87,10 +87,12 @@ public class DataBufferWriter : IDataBufferWriter
             return;
         }
 
-        byte byteFirst = _byteArray[_positionByte];
+        byte byteExisting = _byteArray[_positionByte];
+        
         byte byteFirstMask = (byte)(value >> _positionBit);
+        byte byteFirst = (byte)(byteExisting | byteFirstMask);
 
-        _byteArray[_positionByte] = (byte)(byteFirst | byteFirstMask);
+        _byteArray[_positionByte] = byteFirst;
 
         int bitsAppendedToFirstByte = 8 - _positionBit;
         
