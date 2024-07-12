@@ -72,6 +72,20 @@ public class DataBufferWriterTests
             Assert.Equal(GetBit(byteArray[0], i), bits[i]);
         }
     }
+    
+    [Fact]
+    public void WriteBit_ExceedingArrayLength_ThrowsError()
+    {
+        byte[] byteArray = new byte[1];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        for (int i = 0; i < 8; i++)
+        {
+            dataBuffer.WriteBit(true);
+        }
+
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteBit(false));
+    }
 
     #endregion
 
