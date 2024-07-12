@@ -1,6 +1,6 @@
 namespace Barchart.BinarySerializer.Examples;
 
-public enum ProgramMode
+public enum Script
 {
     SIMPLE_SCHEMA_AUTOMATIC,
     SIMPLE_SCHEMA_MANUAL

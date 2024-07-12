@@ -5,6 +5,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +15,12 @@
     <ItemGroup>
       <PackageReference Include="binary-serialization-net" Version="1.0.75" />
       <PackageReference Include="openfeed.net" Version="1.0.18" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Program.cs">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Compile>
     </ItemGroup>
 
 </Project>

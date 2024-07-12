@@ -1,18 +1,21 @@
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Examples.Common;
 using Barchart.BinarySerializer.Examples.Data;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Types;
 
+using Console = Barchart.BinarySerializer.Examples.Common.Console;
+
 namespace Barchart.BinarySerializer.Examples.Modes;
 
-public class SimpleSchemaManual : IExecutable
+public class SimpleSchemaManual : IScript
 {
-    private int _step = 1;
+    public Script Script => Script.SIMPLE_SCHEMA_MANUAL;
     
     public void Execute()
     {
-        Helper.WriteStep(ref _step, "Generating a schema for [Person] class manually");
+        int step = 1;
+        
+        Console.WriteStep(ref step, "Generating a schema for [Person] class manually");
         
         var schema = new Schema<Person>(new ISchemaItem<Person>[]
         {
@@ -21,25 +24,25 @@ public class SimpleSchemaManual : IExecutable
             new SchemaItem<Person, bool>("IsProgrammer", false, (p) => p.IsProgrammer, (p, value) => p.IsProgrammer = value, new BinarySerializerBool())
         });
         
-        Helper.WriteStep(ref _step, "Constructing a sample instance of the [Person] class");
+        Console.WriteStep(ref step, "Constructing a sample instance of the [Person] class");
 
         var bryan = new Person { Name = "Bryan", Age = 49, IsProgrammer = true };
         
-        Helper.WriteDetails(bryan.ToString());
+        Console.WriteDetails(bryan.ToString());
         
-        Helper.WriteStep(ref _step, "Serializing the sample [Person] instance to binary");
+        Console.WriteStep(ref step, "Serializing the sample [Person] instance to binary");
 
         var writer = new DataBufferWriter(new byte[16]);
         var bytes = schema.Serialize(writer, bryan);
         
-        Helper.WriteDetails(bytes);
+        Console.WriteDetails(bytes);
         
-        Helper.WriteStep(ref _step, $"Deserializing binary data into new [Person] instance");
+        Console.WriteStep(ref step, $"Deserializing binary data into new [Person] instance");
 
         var reader = new DataBufferReader(bytes);
 
         var bryanToo = schema.Deserialize(reader);
         
-        Helper.WriteDetails(bryanToo.ToString());
+        Console.WriteDetails(bryanToo.ToString());
     }
 }

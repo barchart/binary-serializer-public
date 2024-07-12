@@ -1,6 +1,8 @@
 namespace Barchart.BinarySerializer.Examples.Modes;
 
-public interface IExecutable
+public interface IScript
 {
+    Script Script { get; }
+    
     void Execute();
 }

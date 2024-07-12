@@ -1,13 +1,12 @@
 using System.Text;
-using Microsoft.Extensions.Primitives;
 
 namespace Barchart.BinarySerializer.Examples.Common;
 
-public static class Helper
+public static class Console
 {
     public static void WriteStep(ref int counter, string message)
     {
-        Console.WriteLine($"{counter++}. {message}");
+        System.Console.WriteLine($"{counter++}. {message}");
     }
 
     public static void WriteDetails(string message)
@@ -19,7 +18,7 @@ public static class Helper
         builder.Append(message);
         builder.AppendLine();
         
-        Console.WriteLine(builder.ToString());
+        System.Console.WriteLine(builder.ToString());
     }
     
     public static void WriteDetails(byte[] bytes)
@@ -49,11 +48,6 @@ public static class Helper
         
         builder.AppendLine();
         
-        Console.WriteLine(builder.ToString());
-    }
-    
-    public static string PrintBits(byte b)
-    {
-        return Convert.ToString(b, 2).PadLeft(8, '0');
+        System.Console.WriteLine(builder.ToString());
     }
 }
