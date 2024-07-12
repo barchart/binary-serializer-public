@@ -115,7 +115,7 @@ public class SchemaItemTests
 
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity target = new TestEntity();
+        TestEntity target = new();
 
         schemaItem.Decode(readerMock.Object, target);
 
@@ -126,12 +126,13 @@ public class SchemaItemTests
     public void Decode_WithKeyAndExistingMismatch_ThrowsKeyMismatchException()
     {
         Mock<IDataBufferReader> readerMock = new();
+
         _serializerMock.Setup(s => s.Decode(readerMock.Object)).Returns("DecodedValue");
         _serializerMock.Setup(s => s.GetEquals(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
 
         SchemaItem<TestEntity, string> schemaItem = new("Name", true, _getter, _setter, _serializerMock.Object);
 
-        TestEntity target = new TestEntity { Name = "OriginalValue" };
+        TestEntity target = new() { Name = "OriginalValue" };
 
         Assert.Throws<KeyMismatchException>(() => schemaItem.Decode(readerMock.Object, target, true));
     }
@@ -140,13 +141,14 @@ public class SchemaItemTests
     public void Decode_WithKeyAndExistingMatch_SetsData()
     {
         Mock<IDataBufferReader> readerMock = new();
+        
         string decodedValue = "DecodedValue";
         _serializerMock.Setup(s => s.Decode(readerMock.Object)).Returns(decodedValue);
         _serializerMock.Setup(s => s.GetEquals(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
 
         SchemaItem<TestEntity, string> schemaItem = new("Name", true, _getter, _setter, _serializerMock.Object);
 
-        TestEntity target = new TestEntity { Name = decodedValue };
+        TestEntity target = new() { Name = decodedValue };
 
         schemaItem.Decode(readerMock.Object, target, true);
 
@@ -164,8 +166,8 @@ public class SchemaItemTests
 
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity a = new TestEntity { Name = "Value" };
-        TestEntity b = new TestEntity { Name = "Value" };
+        TestEntity a = new() { Name = "Value" };
+        TestEntity b = new() { Name = "Value" };
 
         bool result = schemaItem.GetEquals(a, b);
 
@@ -179,8 +181,8 @@ public class SchemaItemTests
 
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity a = new TestEntity { Name = "ValueA" };
-        TestEntity b = new TestEntity { Name = "ValueB" };
+        TestEntity a = new() { Name = "ValueA" };
+        TestEntity b = new() { Name = "ValueB" };
 
         bool result = schemaItem.GetEquals(a, b);
 
