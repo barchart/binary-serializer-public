@@ -90,7 +90,14 @@ public class SchemaItemNestedTests
     [Fact]
     public void Decode_WithNonNullNestedProperty_CallsSchemaDeserialize()
     {
-        TestEntity testEntity = new();
+        TestEntity testEntity = new()
+        {
+            NestedProperty = new TestProperty(){
+                PropertyName = "Test",
+                PropertyValue = 123
+            }
+        };
+
         _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()))
                 .Callback((IDataBufferReader reader, TestProperty property) =>
                 {
@@ -212,11 +219,16 @@ public class SchemaItemNestedTests
                 PropertyValue = 123
             }   
         };
-    
-        bool result = _schemaItemNested.GetEquals(testEntity1, testEntity2);
+
+        var mockSchema = new Mock<ISchema<TestProperty>>();
+        mockSchema.Setup(x => x.GetEquals(It.IsAny<TestProperty>(), It.IsAny<TestProperty>())).Returns((TestProperty a, TestProperty b) => a.PropertyName == b.PropertyName && a.PropertyValue == b.PropertyValue);
+
+        SchemaItemNested<TestEntity, TestProperty> schemaItemNested = new("NestedProperty", entity => entity.NestedProperty!, (entity, value) => entity.NestedProperty = value, mockSchema.Object);
+
+        bool result = schemaItemNested.GetEquals(testEntity1, testEntity2);
 
         Assert.True(result);
-    }
+}
 
     #endregion
 
