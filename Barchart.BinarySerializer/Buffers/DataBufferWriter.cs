@@ -112,7 +112,16 @@ public class DataBufferWriter : IDataBufferWriter
             _byteArray[_positionByte] |= modifiedFirstByte;
             _positionByte++;
             
-            if (value.Length > 1)
+            if (value.Length == 1)
+            {
+                byte nextBytePart = (byte)(value[0] << (8 - _positionBit));
+
+                if (_positionByte < _byteArray.Length)
+                {
+                    _byteArray[_positionByte] |= nextBytePart;
+                }
+            }
+            else if (value.Length > 1)
             {
                 for (int i = 1; i < value.Length; i++)
                 {
