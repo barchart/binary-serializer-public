@@ -193,6 +193,70 @@ public class DataBufferWriterTests
     }
     
     #endregion
+
+    #region Test Methods (Multiple - WriteBit + WriteBytes)
+
+    [Fact]
+    public void WriteBitAndWriteBytes_Combination_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[3];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBit(true);
+        dataBuffer.WriteBytes(new byte[] { 0xAC, 0xBD });
+
+        Assert.Equal(0b11010110, byteArray[0]);
+        Assert.Equal(0b01011110, byteArray[1]);
+        Assert.Equal(0b10000000, byteArray[2]);
+    }
+
+    [Fact]
+    public void WriteBytesAndWriteBit_Combination_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[3];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBytes(new byte[] { 0xAC, 0xBD });
+        dataBuffer.WriteBit(true);
+
+        Assert.Equal(0xAC, byteArray[0]);
+        Assert.Equal(0xBD, byteArray[1]);
+        Assert.Equal(0b10000000, byteArray[2]);
+    }
+
+    [Fact]
+    public void WriteMultipleBytes_Sequentially_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[4];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBytes(new byte[] { 0xAC });
+        dataBuffer.WriteBytes(new byte[] { 0xBD, 0xCE });
+
+        Assert.Equal(0xAC, byteArray[0]);
+        Assert.Equal(0xBD, byteArray[1]);
+        Assert.Equal(0xCE, byteArray[2]);
+        Assert.Equal(0x00, byteArray[3]);
+    }
+
+    [Fact]
+    public void WriteComplexCombination_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[4];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBit(true);
+        dataBuffer.WriteByte(0xFF);
+        dataBuffer.WriteBytes(new byte[] { 0xAC, 0xBD });
+        dataBuffer.WriteBit(false);
+
+        Assert.Equal(0b11111111, byteArray[0]);
+        Assert.Equal(0b11010110, byteArray[1]);
+        Assert.Equal(0b01011110, byteArray[2]);
+        Assert.Equal(0b10000000, byteArray[3]);
+    }
+
+    #endregion
     
     #region Test Methods (ToBytes)
 
