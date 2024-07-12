@@ -326,7 +326,37 @@ public class DataBufferReaderTests
 
     #endregion
     
+    #region Test Methods (Multiple - ReadByte + ReadBit)
 
+    [Fact]
+    public void Read_OneByteOneBit_ReturnsCorrectData()
+    {
+        byte[] byteArray = new byte[2] { 0b10000001, 0b00000001 };
+        DataBufferReader dataBuffer = new(byteArray);
+
+        byte readByte = dataBuffer.ReadByte();
+        bool readBit = dataBuffer.ReadBit();
+
+        Assert.Equal(0b10000001, readByte);
+        Assert.False(readBit);
+    }
+
+    [Fact]
+    public void Read_TwoBytesOneBit_ReturnsCorrectData()
+    {
+        byte[] byteArray = new byte[3] { 0b10000001, 0b10000011, 0b00000001 };
+        DataBufferReader dataBuffer = new(byteArray);
+
+        byte readByteOne = dataBuffer.ReadByte();
+        byte readByteTwo = dataBuffer.ReadByte();
+        bool readBit = dataBuffer.ReadBit();
+
+        Assert.Equal(0b10000001, readByteOne);
+        Assert.Equal(0b10000011, readByteTwo);
+        Assert.False(readBit);
+    }
+
+    #endregion
     
     #region Test Methods (Reset)
     
