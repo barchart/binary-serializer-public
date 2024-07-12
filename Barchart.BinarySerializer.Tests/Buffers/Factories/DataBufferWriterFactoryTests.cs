@@ -5,7 +5,7 @@ using Barchart.BinarySerializer.Buffers.Factories;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Tests.Schemas.Factories;
+namespace Barchart.BinarySerializer.Tests.Bufers.Factories;
 
 public class DataBufferWriterFactoryTests
 {
