@@ -210,31 +210,74 @@ public class DataBufferWriterTests
     #region Test Methods (Multiple - WriteBit + WriteBytes)
 
     [Fact]
+    public void Write_OneBitOneByteArray_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBit(true);
+        dataBuffer.WriteBytes(new byte[] { 0b00000011 });
+
+        Assert.Equal(0b10000001, byteArray[0]);
+        Assert.Equal(0b10000000, byteArray[1]);
+    }
+
+    [Fact]
     public void Write_OneBitTwoByteArray_ModifiesBuffer()
     {
         byte[] byteArray = new byte[3];
         DataBufferWriter dataBuffer = new(byteArray);
 
         dataBuffer.WriteBit(true);
-        dataBuffer.WriteBytes(new byte[] { 0xAC, 0xBD });
+        dataBuffer.WriteBytes(new byte[] { 0b00000011, 0b00000111 });
 
-        Assert.Equal(0b11010110, byteArray[0]);
-        Assert.Equal(0b01011110, byteArray[1]);
+        Assert.Equal(0b10000001, byteArray[0]);
+        Assert.Equal(0b10000011, byteArray[1]);
         Assert.Equal(0b10000000, byteArray[2]);
     }
 
     [Fact]
-    public void Write_TwpByteArrayOneBit_ModifiesBuffer()
+    public void Write_OneBitThreeByteArray_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[4];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBit(true);
+        dataBuffer.WriteBytes(new byte[] { 0b00000011, 0b00000111, 0b11111110 });
+
+        Assert.Equal(0b10000001, byteArray[0]);
+        Assert.Equal(0b10000011, byteArray[1]);
+        Assert.Equal(0b11111111, byteArray[2]);
+        Assert.Equal(0b00000000, byteArray[3]);
+    }
+
+    [Fact]
+    public void Write_OneByteArrayOneBit_ModifiesBuffer()
     {
         byte[] byteArray = new byte[3];
         DataBufferWriter dataBuffer = new(byteArray);
 
-        dataBuffer.WriteBytes(new byte[] { 0xAC, 0xBD });
+        dataBuffer.WriteBytes(new byte[] { 0b10000001, 0b10000011 });
         dataBuffer.WriteBit(true);
 
-        Assert.Equal(0xAC, byteArray[0]);
-        Assert.Equal(0xBD, byteArray[1]);
+        Assert.Equal(0b10000001, byteArray[0]);
+        Assert.Equal(0b10000011, byteArray[1]);
         Assert.Equal(0b10000000, byteArray[2]);
+    }
+
+    [Fact]
+    public void Write_TwoByteArrayOneBit_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[4];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteBytes(new byte[] { 0b10000001, 0b10000011, 0b11111111 });
+        dataBuffer.WriteBit(false);
+
+        Assert.Equal(0b10000001, byteArray[0]);
+        Assert.Equal(0b10000011, byteArray[1]);
+        Assert.Equal(0b11111111, byteArray[2]);
+        Assert.Equal(0b00000000, byteArray[3]);
     }
 
     #endregion
@@ -247,16 +290,16 @@ public class DataBufferWriterTests
         byte[] byteArray = new byte[4];
         DataBufferWriter dataBuffer = new(byteArray);
 
-        dataBuffer.WriteByte(0xAC);
-        dataBuffer.WriteBytes(new byte[] { 0xBD, 0xCE });
+        dataBuffer.WriteByte(0b10000001);
+        dataBuffer.WriteBytes(new byte[] { 0b10000011, 0b11111111 });
 
-        Assert.Equal(0xAC, byteArray[0]);
-        Assert.Equal(0xBD, byteArray[1]);
-        Assert.Equal(0xCE, byteArray[2]);
-        Assert.Equal(0x00, byteArray[3]);
+        Assert.Equal(0b10000001, byteArray[0]);
+        Assert.Equal(0b10000011, byteArray[1]);
+        Assert.Equal(0b11111111, byteArray[2]);
+        Assert.Equal(0b00000000, byteArray[3]);
     }
 
-     [Fact]
+    [Fact]
     public void Write_TwoByteArrayOneByte_ModifiesBuffer()
     {
         byte[] byteArray = new byte[4];
@@ -271,6 +314,22 @@ public class DataBufferWriterTests
         Assert.Equal(0x00, byteArray[3]);
     }
 
+    [Fact]
+    public void Write_TwoBytesOneByteArray_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[4];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        dataBuffer.WriteByte(0b10000001);
+        dataBuffer.WriteByte(0b10000011);
+        dataBuffer.WriteBytes(new byte[] { 0b11111111, 0b00000000 });
+
+        Assert.Equal(0b10000001, byteArray[0]);
+        Assert.Equal(0b10000011, byteArray[1]);
+        Assert.Equal(0b11111111, byteArray[2]);
+        Assert.Equal(0b00000000, byteArray[3]);
+    }
+
     #endregion
 
     #region Test Methods (Multiple - WriteBit + WriteByte + WriteBytes)
@@ -282,8 +341,8 @@ public class DataBufferWriterTests
         DataBufferWriter dataBuffer = new(byteArray);
 
         dataBuffer.WriteBit(true);
-        dataBuffer.WriteByte(0xFF);
-        dataBuffer.WriteBytes(new byte[] { 0xAC, 0xBD });
+        dataBuffer.WriteByte(0b11111111);
+        dataBuffer.WriteBytes(new byte[] { 0b10101100, 0b10111101 });
         dataBuffer.WriteBit(false);
 
         Assert.Equal(0b11111111, byteArray[0]);
