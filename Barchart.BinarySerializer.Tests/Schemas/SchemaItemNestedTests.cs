@@ -45,7 +45,7 @@ public class SchemaItemNestedTests
     {
         TestEntity testEntity = new()
         {
-            NestedProperty = new() 
+            NestedProperty = new TestProperty() 
             {
                 PropertyName = "Test", 
                 PropertyValue = 123 
@@ -88,18 +88,57 @@ public class SchemaItemNestedTests
     #region Test Methods (Decode)
 
     [Fact]
-    public void Decode_WithValidData_SetsData()
+    public void Decode_WithNonNullNestedProperty_CallsSchemaDeserialize()
     {
+        TestEntity testEntity = new();
+        _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()))
+                .Callback((IDataBufferReader reader, TestProperty property) =>
+                {
+                    property.PropertyName = "Test";
+                    property.PropertyValue = 123;
+                });
+
+        _writer.WriteBit(false);
+        _writer.WriteBit(false);
+
+        _schemaItemNested.Decode(_reader, testEntity);
+
+        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()), Times.Once);
+        Assert.NotNull(testEntity.NestedProperty);
+        Assert.Equal("Test", testEntity.NestedProperty.PropertyName);
+        Assert.Equal(123, testEntity.NestedProperty.PropertyValue);
     }
 
     [Fact]
-    public void Decode_WithKeyAndExistingMismatch_ThrowsKeyMismatchException()
+    public void Decode_WithNullNestedProperty_SetsPropertyToNull()
     {
+        TestEntity testEntity = new()
+        {
+            NestedProperty = new TestProperty()
+        };
+
+        _writer.WriteBit(false);
+        _writer.WriteBit(true); 
+
+        _schemaItemNested.Decode(_reader, testEntity);
+
+        Assert.Null(testEntity.NestedProperty);
     }
 
     [Fact]
-    public void Decode_WithKeyAndExistingMatch_SetsData()
+    public void Decode_WithMissingFlag_SkipsDeserialization()
     {
+        TestEntity testEntity = new()
+        {
+            NestedProperty = new TestProperty()
+        };
+
+        _writer.WriteBit(true);
+
+        _schemaItemNested.Decode(_reader, testEntity);
+
+        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()), Times.Never);
+        Assert.NotNull(testEntity.NestedProperty);
     }
 
     #endregion
@@ -107,13 +146,76 @@ public class SchemaItemNestedTests
     #region Test Methods (GetEquals)
 
     [Fact]
-    public void GetEquals_WithIdenticalValues_ReturnsTrue()
+    public void Equals_WithSameReference_ReturnsTrue()
     {
+        TestEntity testEntity = new();
+        TestEntity sameReference = testEntity;
+
+        bool result = _schemaItemNested.GetEquals(testEntity, sameReference);
+
+        Assert.True(result);
     }
 
     [Fact]
-    public void GetEquals_WithDifferentValues_ReturnsFalse()
+    public void Equals_WithNull_ReturnsFalse()
     {
+        TestEntity testEntity = new();
+
+        bool result = _schemaItemNested.GetEquals(testEntity, null!);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void Equals_WithDifferentValues_ReturnsFalse()
+    {
+        TestEntity testEntity1 = new()
+        {
+            NestedProperty = new TestProperty
+            {
+                PropertyName = "Name1",
+                PropertyValue = 123
+            }
+        };
+
+        TestEntity testEntity2 = new()
+        {
+            NestedProperty = new TestProperty
+            {
+                PropertyName = "Name2",
+                PropertyValue = 456
+            }
+        };
+
+        bool result = _schemaItemNested.GetEquals(testEntity1, testEntity2);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void Equals_WithSameValues_ReturnsTrue()
+    {
+        TestEntity testEntity1 = new()
+        {
+            NestedProperty = new TestProperty
+            {
+                PropertyName = "Name1",
+                PropertyValue = 123
+            }
+        };
+
+        TestEntity testEntity2 = new()
+        {
+            NestedProperty = new TestProperty
+            {
+                PropertyName = "Name1",
+                PropertyValue = 123
+            }   
+        };
+    
+        bool result = _schemaItemNested.GetEquals(testEntity1, testEntity2);
+
+        Assert.True(result);
     }
 
     #endregion
