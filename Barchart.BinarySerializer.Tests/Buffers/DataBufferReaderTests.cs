@@ -283,7 +283,6 @@ public class DataBufferReaderTests
         Assert.Equal(0b11111110, readBytes[2]);
     }
 
-
     [Fact]
     public void Read_OneByteArrayOneBit_ReturnsCorrectData()
     {
