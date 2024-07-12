@@ -87,16 +87,16 @@ public class DataBufferWriter : IDataBufferWriter
             return;
         }
 
-        byte byteCurrent = _byteArray[_positionByte];
-        byte byteCurrentMask = (byte)(value >> _positionBit);
+        byte byteFirst = _byteArray[_positionByte];
+        byte byteFirstMask = (byte)(value >> _positionBit);
 
-        _byteArray[_positionByte] = (byte)(byteCurrent | byteCurrentMask);
+        _byteArray[_positionByte] = (byte)(byteFirst | byteFirstMask);
 
-        int bitsAppendedToFCurrentByte = 8 - _positionBit;
+        int bitsAppendedToFirstByte = 8 - _positionBit;
         
-        byte byteNext = (byte)(value << bitsAppendedToFCurrentByte);
+        byte byteSecond = (byte)(value << bitsAppendedToFirstByte);
 
-        _byteArray[++_positionByte] = byteNext;
+        _byteArray[++_positionByte] = byteSecond;
     }
 
     /// <inheritdoc />
@@ -106,55 +106,49 @@ public class DataBufferWriter : IDataBufferWriter
         {
             return;
         }
+        
+        if (value.Length == 1)
+        {
+            WriteByte(value[0]);
+
+            return;
+        }
 
         if (CapacityWouldBeExceeded(_positionBit == 0 ? value.Length - 1 : value.Length))
         {
             throw new InsufficientCapacityException(true);
         }
 
-        if (_positionBit != 0)
-        {
-            byte modifiedFirstByte = (byte)(value[0] >> _positionBit);
-
-            _byteArray[_positionByte] |= modifiedFirstByte;
-            _positionByte++;
-            
-            if (value.Length == 1)
-            {
-                byte nextBytePart = (byte)(value[0] << (8 - _positionBit));
-
-                if (_positionByte < _byteArray.Length)
-                {
-                    _byteArray[_positionByte] |= nextBytePart;
-                }
-            }
-            else if (value.Length > 1)
-            {
-                for (int i = 1; i < value.Length; i++)
-                {
-                    byte nextBytePart = (byte)(value[i - 1] << (8 - _positionBit));
-                    byte currentBytePart = (byte)(value[i] >> _positionBit);
-
-                    _byteArray[_positionByte] = (byte)(nextBytePart | currentBytePart);
-                    _positionByte++;
-                }
-
-                byte lastBytePart = (byte)(value[value.Length - 1] << (8 - _positionBit));
-
-                if (_positionByte < _byteArray.Length)
-                {
-                    _byteArray[_positionByte] |= lastBytePart;
-                }
-            }
-        }
-        else
+        if (_positionBit == 0)
         {
             for (int i = 0; i < value.Length; i++)
             {
-                _byteArray[_positionByte] = value[i];
-                _positionByte++;
+                _byteArray[_positionByte++] = value[i];
             }
+
+            return;
         }
+        
+        byte byteFirst = _byteArray[_positionByte];
+        byte byteFirstMask = (byte)(value[0] >> _positionBit);
+
+        _byteArray[_positionByte++] = (byte)(byteFirst | byteFirstMask);
+
+        int bitsAppendedToFirstByte = 8 - _positionBit;
+        
+        for (int i = 1; i < value.Length; i++)
+        {
+            byte byteStart = (byte)(value[i - 1] << bitsAppendedToFirstByte);
+            byte byteEnd = (byte)(value[i] >> _positionBit);
+
+            byte byteMerged = (byte)(byteStart | byteEnd);
+            
+            _byteArray[_positionByte++] = byteMerged;
+        }
+
+        byte byteLast = (byte)(value[^1] << bitsAppendedToFirstByte);
+
+        _byteArray[_positionByte] = byteLast;
     }
 
     /// <inheritdoc />
