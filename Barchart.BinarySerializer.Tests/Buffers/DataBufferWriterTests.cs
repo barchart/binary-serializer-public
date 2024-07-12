@@ -189,13 +189,28 @@ public class DataBufferWriterTests
         Assert.Equal(0b10111111, byteArray[1]);
         Assert.Equal(0b11000000, byteArray[2]);
     }
+
+    [Fact]
+    public void Write_OneByteOneBitOneByte_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[3];
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteByte(0b11111111);
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteByte(0b11111111);
+        
+        Assert.Equal(0b11111111, byteArray[0]);
+        Assert.Equal(0b01111111, byteArray[1]);
+        Assert.Equal(0b10000000, byteArray[2]);
+    }
     
     #endregion
 
     #region Test Methods (Multiple - WriteBit + WriteBytes)
 
     [Fact]
-    public void WriteBitAndWriteBytes_Combination_ModifiesBuffer()
+    public void Write_OneBitTwoByteArray_ModifiesBuffer()
     {
         byte[] byteArray = new byte[3];
         DataBufferWriter dataBuffer = new(byteArray);
@@ -209,7 +224,7 @@ public class DataBufferWriterTests
     }
 
     [Fact]
-    public void WriteBytesAndWriteBit_Combination_ModifiesBuffer()
+    public void Write_TwpByteArrayOneBit_ModifiesBuffer()
     {
         byte[] byteArray = new byte[3];
         DataBufferWriter dataBuffer = new(byteArray);
@@ -222,8 +237,12 @@ public class DataBufferWriterTests
         Assert.Equal(0b10000000, byteArray[2]);
     }
 
+    #endregion
+    
+    #region Test Methods (Multiple - WriteByte + WriteBytes)
+
     [Fact]
-    public void WriteMultipleBytes_Sequentially_ModifiesBuffer()
+    public void Writ_OneByteArrayTwoByteArray_ModifiesBuffer()
     {
         byte[] byteArray = new byte[4];
         DataBufferWriter dataBuffer = new(byteArray);
@@ -237,8 +256,12 @@ public class DataBufferWriterTests
         Assert.Equal(0x00, byteArray[3]);
     }
 
+    #endregion
+
+    #region Test Methods (Multiple - WriteBit + WriteByte + WriteBytes)
+
     [Fact]
-    public void WriteComplexCombination_ModifiesBuffer()
+    public void Write_OneBitOneByteTwoByteArrayOneBit_ModifiesBuffer()
     {
         byte[] byteArray = new byte[4];
         DataBufferWriter dataBuffer = new(byteArray);
@@ -255,7 +278,7 @@ public class DataBufferWriterTests
     }
 
     #endregion
-    
+   
     #region Test Methods (ToBytes)
 
     [Fact]

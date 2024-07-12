@@ -258,7 +258,7 @@ public class DataBufferReaderTests
     #region Test Methods (Multiple - ReadByte + ReadBytes)
 
     [Fact]
-    public void Read_OneByteOneByteArray_ReturnsCorrectData()
+    public void Read_OneByteTwoByteArray_ReturnsCorrectData()
     {
         byte[] byteArray = new byte[3] { 0b10000001, 0b10000011, 0b11111111 };
         DataBufferReader dataBuffer = new(byteArray);
