@@ -102,7 +102,10 @@ public class DataBufferWriter : IDataBufferWriter
     /// <inheritdoc />
     public void WriteBytes(byte[] value)
     {
-        if (value.Length == 0) return;
+        if (value.Length == 0)
+        {
+            return;
+        }
 
         if (value.Length > _byteArray.Length)
         {
