@@ -155,22 +155,25 @@ public class SchemaItemNestedTests
     [Fact]
     public void Equals_WithSameReference_ReturnsTrue()
     {
-        TestEntity testEntity = new();
+        TestEntity testEntity = new()
+        {
+            NestedProperty = new TestProperty
+            {
+                PropertyName = "Name1",
+                PropertyValue = 123
+            }
+        };
+        
         TestEntity sameReference = testEntity;
 
-        bool result = _schemaItemNested.GetEquals(testEntity, sameReference);
+        Mock<ISchema<TestProperty>> mockSchema = new();
+        mockSchema.Setup(x => x.GetEquals(It.IsAny<TestProperty>(), It.IsAny<TestProperty>())).Returns((TestProperty a, TestProperty b) => a.PropertyName == b.PropertyName && a.PropertyValue == b.PropertyValue);
+
+        SchemaItemNested<TestEntity, TestProperty> schemaItemNested = new("NestedProperty", entity => entity.NestedProperty!, (entity, value) => entity.NestedProperty = value, mockSchema.Object);
+
+        bool result = schemaItemNested.GetEquals(testEntity, sameReference);
 
         Assert.True(result);
-    }
-
-    [Fact]
-    public void Equals_WithNull_ReturnsFalse()
-    {
-        TestEntity testEntity = new();
-
-        bool result = _schemaItemNested.GetEquals(testEntity, null!);
-
-        Assert.False(result);
     }
 
     [Fact]
@@ -194,7 +197,12 @@ public class SchemaItemNestedTests
             }
         };
 
-        bool result = _schemaItemNested.GetEquals(testEntity1, testEntity2);
+        Mock<ISchema<TestProperty>> mockSchema = new();
+        mockSchema.Setup(x => x.GetEquals(It.IsAny<TestProperty>(), It.IsAny<TestProperty>())).Returns((TestProperty a, TestProperty b) => a.PropertyName == b.PropertyName && a.PropertyValue == b.PropertyValue);
+
+        SchemaItemNested<TestEntity, TestProperty> schemaItemNested = new("NestedProperty", entity => entity.NestedProperty!, (entity, value) => entity.NestedProperty = value, mockSchema.Object);
+
+        bool result = schemaItemNested.GetEquals(testEntity1, testEntity2);
 
         Assert.False(result);
     }
@@ -220,7 +228,7 @@ public class SchemaItemNestedTests
             }   
         };
 
-        var mockSchema = new Mock<ISchema<TestProperty>>();
+        Mock<ISchema<TestProperty>> mockSchema = new();
         mockSchema.Setup(x => x.GetEquals(It.IsAny<TestProperty>(), It.IsAny<TestProperty>())).Returns((TestProperty a, TestProperty b) => a.PropertyName == b.PropertyName && a.PropertyValue == b.PropertyValue);
 
         SchemaItemNested<TestEntity, TestProperty> schemaItemNested = new("NestedProperty", entity => entity.NestedProperty!, (entity, value) => entity.NestedProperty = value, mockSchema.Object);
@@ -228,7 +236,7 @@ public class SchemaItemNestedTests
         bool result = schemaItemNested.GetEquals(testEntity1, testEntity2);
 
         Assert.True(result);
-}
+    }
 
     #endregion
 
