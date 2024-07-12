@@ -1,3 +1,9 @@
+#region Using Statements
+
+using Barchart.BinarySerializer.Schemas.Exceptions;
+
+#endregion
+
 namespace Barchart.BinarySerializer.Buffers;
 
 /// <summary>
@@ -40,9 +46,9 @@ public class DataBufferWriter : IDataBufferWriter
     /// <inheritdoc />
     public void WriteBit(bool value)
     {
-        if (IsBufferFull())
+        if (CapacityWouldBeExceeded(0))
         {
-            throw new InvalidOperationException("Unable to write bit. The buffer is currently positioned at the end of the internal byte array.");
+            throw new InsufficientCapacityException(true);
         }
 
         if (value)
@@ -69,30 +75,28 @@ public class DataBufferWriter : IDataBufferWriter
     /// <inheritdoc />
     public void WriteByte(byte value)
     {
-        if (IsBufferFull())
+        if (CapacityWouldBeExceeded(_positionBit == 0 ? 0 : 1))
         {
-            throw new InvalidOperationException("Buffer is full.");
+            throw new InsufficientCapacityException(true);
         }
 
         if (_positionBit == 0)
         {
-            _byteArray[_positionByte] = value;
-            _positionByte++;
-        }
-        else
-        {
-            int firstPartLength = 8 - _positionBit;
-            byte firstPart = (byte)(value >> _positionBit);
-            _byteArray[_positionByte] |= firstPart;
+            _byteArray[_positionByte++] = value;
 
-            if (_positionByte + 1 < _byteArray.Length)
-            {
-                byte secondPart = (byte)(value << firstPartLength);
-                _byteArray[_positionByte + 1] = secondPart;
-            }
-
-            _positionByte++;
+            return;
         }
+
+        byte byteCurrent = _byteArray[_positionByte];
+        byte byteCurrentMask = (byte)(value >> _positionBit);
+
+        _byteArray[_positionByte] = (byte)(byteCurrent | byteCurrentMask);
+
+        int bitsAppendedToFCurrentByte = 8 - _positionBit;
+        
+        byte byteNext = (byte)(value << bitsAppendedToFCurrentByte);
+
+        _byteArray[++_positionByte] = byteNext;
     }
 
     /// <inheritdoc />
@@ -177,9 +181,9 @@ public class DataBufferWriter : IDataBufferWriter
         }
     }
 
-    private bool IsBufferFull()
+    private bool CapacityWouldBeExceeded(int additionalBytes)
     {
-        return _positionByte >= _byteArray.Length;
+        return _positionByte + additionalBytes >= _byteArray.Length;
     }
 
     #endregion

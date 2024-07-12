@@ -1,6 +1,7 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
 
@@ -97,7 +98,7 @@ public class DataBufferWriterTests
 
         dataBuffer.WriteByte(0xFF);
 
-        Assert.Throws<InvalidOperationException>(() => dataBuffer.WriteByte(0xFF));
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteByte(0xFF));
     }
 
     #endregion
