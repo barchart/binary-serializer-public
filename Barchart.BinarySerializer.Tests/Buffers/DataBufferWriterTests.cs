@@ -2,8 +2,6 @@
 
 using Barchart.BinarySerializer.Buffers;
 
-using Barchart.BinarySerializer.Tests.Common;
-
 #endregion
 
 namespace Barchart.BinarySerializer.Tests.Buffers;
