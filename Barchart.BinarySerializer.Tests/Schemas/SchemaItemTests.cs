@@ -105,6 +105,90 @@ public class SchemaItemTests
 
     #endregion
 
+    #region Test Methods (Decode)
+
+    [Fact]
+    public void Decode_WithValidData_SetsData()
+    {
+        Mock<IDataBufferReader> readerMock = new();
+        _serializerMock.Setup(s => s.Decode(readerMock.Object)).Returns("DecodedValue");
+
+        SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
+
+        TestEntity target = new TestEntity();
+
+        schemaItem.Decode(readerMock.Object, target);
+
+        Assert.Equal("DecodedValue", target.Name);
+    }
+
+    [Fact]
+    public void Decode_WithKeyAndExistingMismatch_ThrowsKeyMismatchException()
+    {
+        Mock<IDataBufferReader> readerMock = new();
+        _serializerMock.Setup(s => s.Decode(readerMock.Object)).Returns("DecodedValue");
+        _serializerMock.Setup(s => s.GetEquals(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+
+        SchemaItem<TestEntity, string> schemaItem = new("Name", true, _getter, _setter, _serializerMock.Object);
+
+        TestEntity target = new TestEntity { Name = "OriginalValue" };
+
+        Assert.Throws<KeyMismatchException>(() => schemaItem.Decode(readerMock.Object, target, true));
+    }
+
+    [Fact]
+    public void Decode_WithKeyAndExistingMatch_SetsData()
+    {
+        Mock<IDataBufferReader> readerMock = new();
+        string decodedValue = "DecodedValue";
+        _serializerMock.Setup(s => s.Decode(readerMock.Object)).Returns(decodedValue);
+        _serializerMock.Setup(s => s.GetEquals(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+
+        SchemaItem<TestEntity, string> schemaItem = new("Name", true, _getter, _setter, _serializerMock.Object);
+
+        TestEntity target = new TestEntity { Name = decodedValue };
+
+        schemaItem.Decode(readerMock.Object, target, true);
+
+        Assert.Equal(decodedValue, target.Name);
+    }
+
+    #endregion
+
+    #region Test Methods (GetEquals)
+
+    [Fact]
+    public void GetEquals_WithIdenticalValues_ReturnsTrue()
+    {
+        _serializerMock.Setup(s => s.GetEquals(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+
+        SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
+
+        TestEntity a = new TestEntity { Name = "Value" };
+        TestEntity b = new TestEntity { Name = "Value" };
+
+        bool result = schemaItem.GetEquals(a, b);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void GetEquals_WithDifferentValues_ReturnsFalse()
+    {
+        _serializerMock.Setup(s => s.GetEquals(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+
+        SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
+
+        TestEntity a = new TestEntity { Name = "ValueA" };
+        TestEntity b = new TestEntity { Name = "ValueB" };
+
+        bool result = schemaItem.GetEquals(a, b);
+
+        Assert.False(result);
+    }
+
+    #endregion
+
     #region Nested Types
 
     public class TestEntity
