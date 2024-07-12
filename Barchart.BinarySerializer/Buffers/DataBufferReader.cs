@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.ComTypes;
 using Barchart.BinarySerializer.Schemas.Exceptions;
 
 namespace Barchart.BinarySerializer.Buffers;
@@ -60,29 +61,7 @@ public class DataBufferReader : IDataBufferReader
             throw new InsufficientCapacityException(false);
         }
 
-        byte result;
-
-        if (_positionBit == 0)
-        {
-            result = _byteArray[_positionByte++];
-        }
-        else
-        {
-            int firstPartLength = 8 - _positionBit;
-            byte firstPart = (byte)(_byteArray[_positionByte] & ((1 << firstPartLength) - 1));
-            firstPart = (byte)(firstPart << _positionBit);
-
-            byte secondPart = 0;
-            if (_positionByte + 1 < _byteArray.Length)
-            {
-                secondPart = (byte)(_byteArray[_positionByte + 1] >> firstPartLength);
-            }
-
-            result = (byte)(firstPart | secondPart);
-            _positionByte++;
-        }
-
-        return result;
+        return ReadByteUnchecked();
     }
 
     /// <inheritdoc />
@@ -99,35 +78,31 @@ public class DataBufferReader : IDataBufferReader
         }
 
         byte[] bytes = new byte[size];
-
-        if (_positionBit != 0)
+        
+        for (int i = 0; i < size; i++)
         {
-            for (int i = 0; i < size; i++)
-            {
-                if (_positionByte + 1 < _byteArray.Length)
-                {
-                    byte currentBytePart = (byte)(_byteArray[_positionByte] << _positionBit);                
-                    byte nextBytePart = (byte)(_byteArray[_positionByte + 1] >> (8 - _positionBit));
-                    bytes[i] = (byte)(currentBytePart | nextBytePart);
-                }
-                else 
-                {
-                    bytes[i] = (byte)(_byteArray[_positionByte] << _positionBit);;
-                }
-                
-                _positionByte++;
-            }
+            bytes[i] = ReadByteUnchecked();
         }
-        else
-        {
-            for (int i = 0; i < size; i++)
-            {
-                bytes[i] = _byteArray[_positionByte];
-                _positionByte++;
-            }
-        }
-
+        
         return bytes;
+    }
+
+    private byte ReadByteUnchecked()
+    {
+        if (_positionBit == 0)
+        {
+            return _byteArray[_positionByte++];
+        }
+
+        byte byteFirst = _byteArray[_positionByte];
+        byte byteSecond = _byteArray[++_positionByte];
+
+        byte byteStart = (byte)(byteFirst << _positionBit);
+        byte byteEnd = (byte)(byteSecond >> (8 - _positionBit));
+
+        byte byteMerged = (byte)(byteStart | byteEnd);
+        
+        return byteMerged;
     }
 
     /// <inheritdoc />
@@ -149,7 +124,7 @@ public class DataBufferReader : IDataBufferReader
             _positionBit++;
         }
     }
-
+    
     private bool CapacityWouldBeExceeded(int additionalBytes)
     {
         return _positionByte + additionalBytes >= _byteArray.Length;
