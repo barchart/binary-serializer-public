@@ -330,8 +330,8 @@ public class MarketState
     #endregion
 }
 
-public class BestBidOffer {
-
+public class BestBidOffer 
+{
     #region Properties
 
     [Serialize(key: false)]
@@ -379,8 +379,8 @@ public class BestBidOffer {
     #endregion
 }
 
-public class VolumeAtPrice {
-
+public class VolumeAtPrice 
+{
     #region Properties
 
     [Serialize(key: false)]
@@ -410,8 +410,8 @@ public class VolumeAtPrice {
     #endregion
 }
 
-public class MarketSummary {
-
+public class MarketSummary 
+{
     #region Properties
 
     [Serialize(key: false)]
