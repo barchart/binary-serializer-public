@@ -58,7 +58,6 @@ public class SchemaFactory : ISchemaFactory
         MethodInfo[] methods = typeof(SchemaFactory).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
         
         MethodInfo unboundMethod;
-        MethodInfo boundMethod;
         
         if (_binaryTypeSerializerFactory.Supports(memberType))
         {
@@ -87,7 +86,7 @@ public class SchemaFactory : ISchemaFactory
             unboundMethod = methods.Single(GetMakeSchemaItemNestedPredicate(typeParameters));
         }
         
-        boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
+        MethodInfo boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
 
         object[] methodParameters = { memberInfo };
         
