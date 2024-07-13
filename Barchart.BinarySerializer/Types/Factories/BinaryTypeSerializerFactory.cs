@@ -47,6 +47,14 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     #endregion
     
     #region Methods
+
+    /// <inheritdoc />
+    public virtual bool Supports<T>()
+    {
+        Type type = typeof(T);
+
+        return _serializers.ContainsKey(type) || type.IsEnum;
+    }
     
     /// <inheritdoc />
     public virtual IBinaryTypeSerializer<T> Make<T>()

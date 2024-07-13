@@ -29,7 +29,119 @@ public class BinaryTypeSerializerFactoryTests
     
     #endregion
     
-    #region Test Methods (Make)
+    #region Test Methods (Supports<T>)
+    
+    [Fact]
+    public void Supports_Bool_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<bool>());
+    }
+    
+    [Fact]
+    public void Supports_Byte_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<byte>());
+    }
+    
+    [Fact]
+    public void Supports_Char_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<char>());
+    }
+    
+    [Fact]
+    public void Supports_DateOnly_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<DateOnly>());
+    }
+    
+    [Fact]
+    public void Supports_DateTime_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<DateTime>());
+    }
+    
+    [Fact]
+    public void Supports_Decimal_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<decimal>());
+    }
+    
+    [Fact]
+    public void Supports_Double_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<double>());
+    }
+    
+    [Fact]
+    public void Supports_Enum_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<TestEnum>());
+    }
+    
+    [Fact]
+    public void Supports_Single_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<float>());
+    }
+    
+    [Fact]
+    public void Supports_Int32_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<int>());
+    }
+    
+    [Fact]
+    public void Supports_String_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<string>());
+    }
+    
+    [Fact]
+    public void Supports_UInt32_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<uint>());
+    }
+    
+    [Fact]
+    public void Supports_UInt64_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<ulong>());
+    }
+    
+    [Fact]
+    public void Supports_UInt16_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<ushort>());
+    }
+    
+    [Fact]
+    public void Supports_TestClass_ReturnsTrue()
+    {
+        Assert.False(_factory.Supports<TestClass>());
+    }
+    
+    [Fact]
+    public void Supports_Int64_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<long>());
+    } 
+    
+    [Fact]
+    public void Supports_SByte_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<sbyte>());
+    }
+    
+    [Fact]
+    public void Supports_Int16_ReturnsTrue()
+    {
+        Assert.True(_factory.Supports<short>());
+    }
+    
+    #endregion
+    
+    #region Test Methods (Make<T>)
         
     [Fact]
     public void Make_Boolean_ReturnsTypedSerializer()
@@ -88,7 +200,7 @@ public class BinaryTypeSerializerFactoryTests
     }
     
     [Fact]
-    public void Make_TestEnum_ReturnsTypedSerializer()
+    public void Make_Enum_ReturnsTypedSerializer()
     {
         var serializer = _factory.Make<TestEnum>();
 

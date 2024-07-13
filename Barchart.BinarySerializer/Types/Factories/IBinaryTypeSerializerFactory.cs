@@ -14,6 +14,19 @@ public interface IBinaryTypeSerializerFactory
     #region Methods
 
     /// <summary>
+    ///     Indicates if the factory can make an <see cref="IBinaryTypeSerializer{T}"/> for
+    ///     the specified type.
+    /// </summary>
+    /// <typeparam name="T">
+    ///     The type for which to test.
+    /// </typeparam>
+    /// <returns>
+    ///     True, if the factory can make an <see cref="IBinaryTypeSerializer{T}"/> for
+    ///     the specified type.
+    /// </returns>
+    bool Supports<T>();
+    
+    /// <summary>
     ///     Creates a binary type serializer for the specified type.
     /// </summary>
     /// <typeparam name="T">
