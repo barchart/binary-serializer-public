@@ -29,7 +29,7 @@ public class BinaryTypeSerializerFactoryTests
     
     #endregion
     
-    #region Test Methods (Encode)
+    #region Test Methods (Make)
         
     [Fact]
     public void Make_Boolean_ReturnsTypedSerializer()
