@@ -39,6 +39,8 @@ namespace Barchart.BinarySerializer.Tests.Schemas.Factories
         public void Make_WithValidType_ReturnsSchema()
         {
             var expectedType = typeof(TestEntity);
+                
+            _mockBinaryTypeSerializerFactory.Setup(f => f.Supports(typeof(int))).Returns(true);
             _mockBinaryTypeSerializerFactory.Setup(f => f.Make<int>()).Returns(Mock.Of<IBinaryTypeSerializer<int>>());
            
             var schema = _schemaFactory.Make<TestEntity>();

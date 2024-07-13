@@ -60,7 +60,7 @@ public class SchemaFactory : ISchemaFactory
         MethodInfo unboundMethod;
         MethodInfo boundMethod;
         
-        if (IsPrimitiveOrBuiltInType(memberType))
+        if (_binaryTypeSerializerFactory.Supports(memberType))
         {
             typeParameters = new Type[] { typeof(TEntity), GetMemberType(memberInfo) };
 
@@ -71,7 +71,7 @@ public class SchemaFactory : ISchemaFactory
             Type itemType = memberType.GetGenericArguments()[0];
             typeParameters = new Type[] { typeof(TEntity), itemType};
 
-            if (IsPrimitiveOrBuiltInType(itemType))
+            if (_binaryTypeSerializerFactory.Supports(itemType))
             {
                 unboundMethod = methods.Single(GetMakeSchemaItemListPrimitivePredicate(typeParameters));
             }
@@ -252,11 +252,6 @@ public class SchemaFactory : ISchemaFactory
             FieldInfo fi => fi.FieldType,
             _ => throw new ArgumentException("Unsupported member type")
         };
-    }
-
-    private static bool IsPrimitiveOrBuiltInType(Type type)
-    {
-        return type.IsPrimitive || type == typeof(string) || type == typeof(decimal) || type.IsEnum;
     }
 
     private static IEnumerable<MemberInfo> GetMembersForType(Type entityType)

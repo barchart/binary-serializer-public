@@ -17,8 +17,21 @@ public interface IBinaryTypeSerializerFactory
     ///     Indicates if the factory can make an <see cref="IBinaryTypeSerializer{T}"/> for
     ///     the specified type.
     /// </summary>
+    /// <param name="type">
+    ///     The type to test.
+    /// </param>
+    /// <returns>
+    ///     True, if the factory can make an <see cref="IBinaryTypeSerializer{T}"/> for
+    ///     the specified type.
+    /// </returns>
+    bool Supports(Type type);
+    
+    /// <summary>
+    ///     Indicates if the factory can make an <see cref="IBinaryTypeSerializer{T}"/> for
+    ///     the specified type.
+    /// </summary>
     /// <typeparam name="T">
-    ///     The type for which to test.
+    ///     The type to test.
     /// </typeparam>
     /// <returns>
     ///     True, if the factory can make an <see cref="IBinaryTypeSerializer{T}"/> for
