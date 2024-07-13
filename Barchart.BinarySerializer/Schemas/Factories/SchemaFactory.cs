@@ -61,14 +61,14 @@ public class SchemaFactory : ISchemaFactory
         
         if (_binaryTypeSerializerFactory.Supports(memberType))
         {
-            typeParameters = new Type[] { typeof(TEntity), GetMemberType(memberInfo) };
+            typeParameters = new [] { typeof(TEntity), GetMemberType(memberInfo) };
 
             unboundMethod = methods.Single(GetMakeSchemaItemPredicate(typeParameters));
         }
         else if (IsListType(memberType))
         {
             Type itemType = memberType.GetGenericArguments()[0];
-            typeParameters = new Type[] { typeof(TEntity), itemType};
+            typeParameters = new [] { typeof(TEntity), itemType };
 
             if (_binaryTypeSerializerFactory.Supports(itemType))
             {
@@ -81,7 +81,7 @@ public class SchemaFactory : ISchemaFactory
         }
         else
         {
-            typeParameters = new Type[] { typeof(TEntity), GetMemberType(memberInfo) };
+            typeParameters = new [] { typeof(TEntity), GetMemberType(memberInfo) };
 
             unboundMethod = methods.Single(GetMakeSchemaItemNestedPredicate(typeParameters));
         }
