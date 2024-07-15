@@ -62,6 +62,7 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     /// </param>
     /// <param name="existing">
     ///     Indicates if the <paramref name="target" /> is an existing object.
+    ///     When true, the values of key properties cannot be changed.
     /// </param>
     void Decode(IDataBufferReader reader, TEntity target, bool existing = false);
 
