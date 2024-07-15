@@ -1,6 +1,6 @@
 #region Using Statements
 
-using Barchart.BinarySerializer.Schemas.Exceptions;
+using Barchart.BinarySerializer.Buffers.Exceptions;
 
 #endregion
 

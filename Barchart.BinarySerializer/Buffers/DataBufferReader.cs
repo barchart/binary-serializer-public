@@ -1,6 +1,6 @@
 #region Using Directives
 
-using Barchart.BinarySerializer.Schemas.Exceptions;
+using Barchart.BinarySerializer.Buffers.Exceptions;
 
 #endregion
 

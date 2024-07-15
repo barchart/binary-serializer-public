@@ -1,4 +1,4 @@
-namespace Barchart.BinarySerializer.Schemas.Exceptions;
+namespace Barchart.BinarySerializer.Buffers.Exceptions;
 
 /// <summary>
 ///     Thrown when attempting to change an entity's key value
