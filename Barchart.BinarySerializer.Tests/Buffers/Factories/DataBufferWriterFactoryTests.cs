@@ -20,13 +20,33 @@ public class DataBufferWriterFactoryTests
         _factory = new DataBufferWriterFactory();
     }
 
+    #region Test Methods (Constructor)
+
     [Fact]
-    public void Make_WithDefaultConstructor_UsesDefaultByteArrayLength()
+    public void Instantiate_UsingZeroByteArraySize_ThrowsException()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new DataBufferWriterFactory(0));
+    }
+    
+    [Fact]
+    public void Instantiate_UsingNegativeByteArraySize_ThrowsException()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new DataBufferWriterFactory(-1));
+    }
+    
+    #endregion
+    
+    #region Test Methods (Make<T>)
+    
+    [Fact]
+    public void Make_WithDefaultFactory_ReturnsIDataBufferWriterInstance()
     {
         var writer = _factory.Make(new object());
 
         Assert.IsAssignableFrom<IDataBufferWriter>(writer);
     }
+    
+    #endregion
 
     [Theory]
     [InlineData(1024)]
@@ -38,15 +58,5 @@ public class DataBufferWriterFactoryTests
         var writer = customFactory.Make(new object());
 
         Assert.IsAssignableFrom<IDataBufferWriter>(writer);
-    }
-
-    [Fact]
-    public void Make_CalledMultipleTimes_ReusesThreadStaticByteArray()
-    {
-        var writer1 = _factory.Make(new object());
-        var writer2 = _factory.Make(new object());
-
-        Assert.IsAssignableFrom<IDataBufferWriter>(writer1);
-        Assert.IsAssignableFrom<IDataBufferWriter>(writer2);
     }
 }

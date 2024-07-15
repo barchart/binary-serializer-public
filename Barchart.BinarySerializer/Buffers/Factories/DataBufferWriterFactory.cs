@@ -31,6 +31,11 @@ public class DataBufferWriterFactory : IDataBufferWriterFactory
     
     public DataBufferWriterFactory(int byteArrayLength)
     {
+        if (byteArrayLength < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(byteArrayLength), byteArrayLength, "The byte array length must be positive.");
+        }
+        
         _byteArrayLength = byteArrayLength;
     }
     
