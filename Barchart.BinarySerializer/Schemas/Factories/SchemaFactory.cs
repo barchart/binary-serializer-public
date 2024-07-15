@@ -245,14 +245,14 @@ public class SchemaFactory : ISchemaFactory
 
     private static Type GetMemberType(MemberInfo memberInfo)
     {
-        if (memberInfo is PropertyInfo)
+        if (memberInfo is PropertyInfo propertyInfo)
         {
-            return ((PropertyInfo)memberInfo).PropertyType;
+            return propertyInfo.PropertyType;
         }
 
-        if (memberInfo is FieldInfo)
+        if (memberInfo is FieldInfo fieldInfo)
         {
-            return ((FieldInfo)memberInfo).FieldType;
+            return fieldInfo.FieldType;
         }
         
         throw new ArgumentException("When using reflection to build a Schema<T>, the serializable members must be fields or properties");
