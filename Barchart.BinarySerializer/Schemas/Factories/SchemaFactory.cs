@@ -61,7 +61,7 @@ public class SchemaFactory : ISchemaFactory
         
         if (_binaryTypeSerializerFactory.Supports(memberType))
         {
-            typeParameters = new [] { typeof(TEntity), GetMemberType(memberInfo) };
+            typeParameters = new [] { typeof(TEntity), memberType };
 
             unboundMethod = methods.Single(GetMakeSchemaItemPredicate(typeParameters));
         }
@@ -81,7 +81,7 @@ public class SchemaFactory : ISchemaFactory
         }
         else
         {
-            typeParameters = new [] { typeof(TEntity), GetMemberType(memberInfo) };
+            typeParameters = new [] { typeof(TEntity), memberType };
 
             unboundMethod = methods.Single(GetMakeSchemaItemNestedPredicate(typeParameters));
         }
@@ -245,12 +245,17 @@ public class SchemaFactory : ISchemaFactory
 
     private static Type GetMemberType(MemberInfo memberInfo)
     {
-        return memberInfo switch
+        if (memberInfo is PropertyInfo)
         {
-            PropertyInfo pi => pi.PropertyType,
-            FieldInfo fi => fi.FieldType,
-            _ => throw new ArgumentException("Unsupported member type")
-        };
+            return ((PropertyInfo)memberInfo).PropertyType;
+        }
+
+        if (memberInfo is FieldInfo)
+        {
+            return ((FieldInfo)memberInfo).FieldType;
+        }
+        
+        throw new ArgumentException("When using reflection to build a Schema<T>, the serializable members must be fields or properties");
     }
 
     private static IEnumerable<MemberInfo> GetMembersForType(Type entityType)
