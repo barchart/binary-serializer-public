@@ -67,6 +67,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         var differentItems = currentItems.Where((item, index) => 
             previousItems.Count <= index || !_elementSerializer.GetEquals(item, previousItems[index])).ToList();
 
+        // TODO: Luka ... missing header bit ... do not send list if all elements are equal (and in same order) ...
+        
         writer.WriteBytes(BitConverter.GetBytes(differentItems.Count));
 
         foreach (var item in differentItems)
