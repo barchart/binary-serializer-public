@@ -80,6 +80,8 @@ namespace Barchart.BinarySerializer.Schemas
 
         private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
         {
+            reader.Reset();
+            
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Decode(reader, target, existing);
@@ -89,6 +91,8 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 item.Decode(reader, target, existing);
             }
+            
+            reader.Reset();
 
             return target;
         }
