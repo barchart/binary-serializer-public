@@ -1,18 +1,12 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
 
 namespace Barchart.BinarySerializer.Schemas
 {
-    /// <summary>
-    ///     Represents a schema for serializing and deserializing entities of type <typeparamref name="TEntity"/>.
-    ///     This class includes functionality for converting an entity to a binary format via serialization and for converting from a binary format back to an entity through deserialization.
-    /// </summary>
-    /// <typeparam name="TEntity">
-    ///     The type of the entity this schema is for. The entity must have a parameterless constructor.
-    /// </typeparam>
     public class Schema<TEntity> : ISchema<TEntity> where TEntity: class, new()
     {
         #region Fields
@@ -33,6 +27,33 @@ namespace Barchart.BinarySerializer.Schemas
         #endregion
         
         #region Methods
+
+        public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name)
+        {
+            reader.Reset();
+
+            TEntity target = new TEntity();
+            
+            for (int i = 0; i < _keyItems.Length; i++)
+            {
+                ISchemaItem<TEntity> candidate = _keyItems[i];
+                
+                candidate.Decode(reader, target, false);
+                
+                if (candidate.Name == name && candidate is ISchemaItem<TEntity, TProperty> match)
+                {
+                    TProperty key = match.Read(target);
+                    
+                    reader.Reset();
+
+                    return key;
+                }
+            }
+
+            reader.Reset();
+            
+            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TProperty));
+        }
         
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity source)
@@ -81,7 +102,7 @@ namespace Barchart.BinarySerializer.Schemas
         private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
         {
             reader.Reset();
-            
+
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Decode(reader, target, existing);

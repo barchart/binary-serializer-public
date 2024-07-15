@@ -21,7 +21,7 @@ namespace Barchart.BinarySerializer.Schemas;
 ///     The type of data being serialized (which is read from the source
 ///     object) or deserialized (which assigned to the source object).
 /// </typeparam>
-public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity: class, new()
+public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> where TEntity: class, new()
 {
     #region Fields
 
@@ -81,7 +81,7 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity
         
         if (Key && !valuesAreEqual)
         {
-            throw new KeyMismatchException(Name, true);
+            throw new KeyMismatchException(typeof(TEntity), Name, true);
         }
         
         if (Key || !valuesAreEqual)
@@ -119,7 +119,7 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity
         {
             if (!_serializer.GetEquals(current, _getter(target)))
             {
-                throw new KeyMismatchException(_name, false);
+                throw new KeyMismatchException(typeof(TEntity), _name, false);
             }
         }
         else
@@ -134,6 +134,11 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity
         return _serializer.GetEquals(_getter(a), _getter(b));
     }
     
+    public TProperty Read(TEntity source)
+    {
+        return _getter(source);
+    }
+    
     private static bool ReadMissingFlag(IDataBufferReader reader)
     {
         return reader.ReadBit();
@@ -145,4 +150,9 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity
     }
     
     #endregion
+
+    public TProperty DeserializeValue(IDataBufferReader reader)
+    {
+        return _serializer.Decode(reader);
+    }
 }

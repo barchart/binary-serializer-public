@@ -44,6 +44,17 @@ public interface IDataBufferReader
     byte[] ReadBytes(int size);
 
     /// <summary>
+    ///     Sets the position for the next read.
+    /// </summary>
+    /// <param name="bytes">
+    ///     The byte position.
+    /// </param>
+    /// <param name="bits">
+    ///     The bit position.
+    /// </param>
+    void Seek(int bytes, int bits);
+    
+    /// <summary>
     ///     Resets the position for the next read operation to the
     ///     beginning of the underlying data source.
     /// </summary>

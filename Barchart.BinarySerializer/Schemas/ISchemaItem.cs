@@ -82,3 +82,8 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     
     #endregion
 }
+
+public interface ISchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity : class, new()
+{
+    TProperty Read(TEntity source);
+}

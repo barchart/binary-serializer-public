@@ -16,5 +16,22 @@ public interface ISchema<TEntity> where TEntity: class, new()
     
     TEntity Deserialize(IDataBufferReader reader, TEntity target);
 
+    /// <summary>
+    ///     Deserializes a key value (only) from the <paramref name="reader" />.
+    /// </summary>
+    /// <param name="reader">
+    ///     The serialized data source from which to read the key.
+    /// </param>
+    /// <param name="name">
+    ///     The name of the key property.
+    /// </param>
+    /// <typeparam name="TProperty">
+    ///     The type of the key property.
+    /// </typeparam>
+    /// <returns>
+    ///     The value of the key.
+    /// </returns>
+    public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
+    
     bool GetEquals(TEntity a, TEntity b);
 }
