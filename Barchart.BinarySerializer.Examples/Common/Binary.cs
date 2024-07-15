@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace Barchart.BinarySerializer.Examples.Common;
 
 public static class Helper
