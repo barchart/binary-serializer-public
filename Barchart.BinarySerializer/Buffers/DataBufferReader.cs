@@ -107,23 +107,6 @@ public class DataBufferReader : IDataBufferReader
         
         return byteMerged;
     }
-
-    /// <inheritdoc />
-    public void Seek(int bytePosition, int bitPosition)
-    {
-        if (bytePosition < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(bytePosition), bytePosition,"The seek position (for bytes) cannot be less than zero.");
-        }
-        
-        if (bitPosition < 0 || bitPosition > 7)
-        {
-            throw new ArgumentOutOfRangeException(nameof(bitPosition), bitPosition,"The seek position (for bits) cannot be less than zero or greater than seven.");
-        }
-        
-        _positionByte = bytePosition;
-        _positionBit = bitPosition;
-    }
     
     /// <inheritdoc />
     public void Reset()

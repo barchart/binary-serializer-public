@@ -42,17 +42,6 @@ public interface IDataBufferReader
     ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
     /// </exception>
     byte[] ReadBytes(int size);
-
-    /// <summary>
-    ///     Sets the position for the next read.
-    /// </summary>
-    /// <param name="bytes">
-    ///     The byte position.
-    /// </param>
-    /// <param name="bits">
-    ///     The bit position.
-    /// </param>
-    void Seek(int bytes, int bits);
     
     /// <summary>
     ///     Resets the position for the next read operation to the
