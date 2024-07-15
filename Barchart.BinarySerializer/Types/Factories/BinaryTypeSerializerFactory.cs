@@ -74,7 +74,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         else if (type.IsEnum)
         {
             Type genericType = typeof(BinarySerializerEnum<>);
-            Type boundType = genericType.MakeGenericType(new Type[] { type });
+            Type boundType = genericType.MakeGenericType(new [] { type });
             
             serializer = (IBinaryTypeSerializer)Activator.CreateInstance(boundType, _serializers[typeof(int)])!;
         }
