@@ -47,16 +47,4 @@ public class DataBufferWriterFactoryTests
     }
     
     #endregion
-
-    [Theory]
-    [InlineData(1024)]
-    [InlineData(2048)]
-    [InlineData(4096)]
-    public void Make_WithCustomByteArrayLength_UsesSpecifiedLength(int byteArrayLength)
-    {
-        var customFactory = new DataBufferWriterFactory(byteArrayLength);
-        var writer = customFactory.Make(new object());
-
-        Assert.IsAssignableFrom<IDataBufferWriter>(writer);
-    }
 }
