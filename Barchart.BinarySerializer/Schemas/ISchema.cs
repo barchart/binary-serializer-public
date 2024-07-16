@@ -1,70 +1,87 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
 
 namespace Barchart.BinarySerializer.Schemas;
 
 /// <summary>
-///     Represents a schema for serializing and deserializing entities of type <typeparamref name="TEntity"/>.
+///     Serializes and deserializes instances of the <typeparamref name="TEntity"/> class.
 /// </summary>
 /// <typeparam name="TEntity">
-///     The type of the entity.
+///     The type of the entity that can be serialized or deserialized.
 /// </typeparam>
 public interface ISchema<TEntity> where TEntity : class, new()
 {
     /// <summary>
-    ///     Serializes the <paramref name="source"/> entity to a byte array using the specified <paramref name="writer"/>.
+    ///     Serializes the <paramref name="source"/> entity. In other words,
+    ///     this method creates a binary "snapshot" of the entity.
     /// </summary>
     /// <param name="writer">
-    ///     The data buffer writer.
+    ///     A buffer for binary data, used during the serialization process.
     /// </param>
     /// <param name="source">
     ///     The entity to serialize.
     /// </param>
-    /// <returns>The serialized byte array.</returns>
+    /// <returns>
+    ///     The serialized entity, as a byte array.
+    /// </returns>
     byte[] Serialize(IDataBufferWriter writer, TEntity source);
 
     /// <summary>
-    ///     Deserializes the changes between the <paramref name="current"/> and <paramref name="previous"/> entities to a byte array using the specified <paramref name="writer"/>.
+    ///     Serializes changes between the <paramref name="current"/> and
+    ///     <paramref name="previous"/> versions of an entity. In other words,
+    ///     this method creates a binary "delta" representing the state change
+    ///     between two version of an entity.
     /// </summary>
     /// <param name="writer">
-    ///     The data buffer writer.
+    ///     A buffer for binary data, used during the serialization process.
     /// </param>
     /// <param name="current">
-    ///     The current entity.
+    ///     The current version of the entity.
     /// </param>
     /// <param name="previous">
-    ///     The previous entity.
+    ///     The previous version of the entity.
     /// </param>
+    /// <exception cref="KeyMismatchException">
+    ///     Thrown when the <paramref name="current"/> and <paramref name="previous"/>
+    ///     instances have different key values.
+    /// </exception>
     /// <returns>
-    ///     The serialized byte array.
+    ///     The serialized changes to the entity, as a byte array.
     /// </returns>
     byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous);
 
     /// <summary>
-    ///     Deserializes an entity of type <typeparamref name="TEntity"/> from the specified <paramref name="reader"/>.
+    ///     Deserializes an entity. In other words, this method recreates the serialized
+    ///     "snapshot" as a new instance of the <typeparamref name="TEntity"/> class.
     /// </summary>
     /// <param name="reader">
-    ///     The data buffer reader.
+    ///     A buffer of binary data which contains the serialized entity.
     /// </param>
     /// <returns>
-    ///     The deserialized entity.
+    ///     A new instance of the <typeparamref name="TEntity"/> class.
     /// </returns>
     TEntity Deserialize(IDataBufferReader reader);
 
     /// <summary>
-    ///     Deserializes an entity of type <typeparamref name="TEntity"/> from the specified <paramref name="reader"/> and assigns it to the <paramref name="target"/> entity.
+    ///     Deserializes an entity, updating an existing instance of
+    ///     the <typeparamref name="TEntity"/> class.
     /// </summary>
     /// <param name="reader">
-    ///     The data buffer reader.
+    ///     A buffer of binary data which contains the serialized entity.
     /// </param>
     /// <param name="target">
     ///     The target entity to assign the deserialized values to.
     /// </param>
+    /// <exception cref="KeyMismatchException">
+    ///     Thrown when key, read from the serialized binary data, does not
+    ///     match the key of the <paramref name="target"/> instance.
+    /// </exception>
     /// <returns>
-    ///     The deserialized entity.
+    ///     The reference to the <paramref name="target"/> instance.
     /// </returns>
     TEntity Deserialize(IDataBufferReader reader, TEntity target);
 
@@ -72,7 +89,7 @@ public interface ISchema<TEntity> where TEntity : class, new()
     ///     Deserializes a key value (only) from the <paramref name="reader" />.
     /// </summary>
     /// <param name="reader">
-    ///     The serialized data source from which to read the key.
+    ///     A buffer of binary data which contains the serialized entity.
     /// </param>
     /// <param name="name">
     ///     The name of the key property.
@@ -86,7 +103,8 @@ public interface ISchema<TEntity> where TEntity : class, new()
     TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
 
     /// <summary>
-    ///     Determines whether two entities of type <typeparamref name="TEntity"/> are equal.
+    ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
+    ///     instances.
     /// </summary>
     /// <param name="a">
     ///     The first entity.
@@ -95,7 +113,8 @@ public interface ISchema<TEntity> where TEntity : class, new()
     ///     The second entity.
     /// </param>
     /// <returns>
-    ///     <c>true</c> if the entities are equal; otherwise, <c>false</c>.
+    ///     True, if the serializable members of the instances are equal;
+    ///     otherwise false.
     /// </returns>
     bool GetEquals(TEntity a, TEntity b);
 }
