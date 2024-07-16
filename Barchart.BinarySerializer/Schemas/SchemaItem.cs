@@ -131,7 +131,17 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> wh
     /// <inheritdoc />
     public bool GetEquals(TEntity a, TEntity b)
     {
-        return _serializer.GetEquals(_getter(a), _getter(b));
+        if (a == null && b == null)
+        {
+            return true;
+        }
+
+        if (a != null && b != null)
+        {
+            return _serializer.GetEquals(_getter(a), _getter(b));
+        }
+        
+        return false;
     }
     
     /// <inheritdoc />
