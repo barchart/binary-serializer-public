@@ -19,15 +19,23 @@ public static class Console
         System.Console.WriteLine($"{counter++}. {message}");
     }
 
-    public static void WriteDetails(string message)
+    public static void WriteDetails(string message, bool lineBreakBefore = true, bool lineBreakAfter = true)
     {
         var builder = new StringBuilder();
 
-        builder.AppendLine();
+        if (lineBreakBefore)
+        {
+            builder.AppendLine();
+        }
+
         builder.Append('\t');
         builder.Append(message);
-        builder.AppendLine();
-        
+
+        if (lineBreakAfter)
+        {
+            builder.AppendLine();
+        }
+
         System.Console.WriteLine(builder.ToString());
     }
     

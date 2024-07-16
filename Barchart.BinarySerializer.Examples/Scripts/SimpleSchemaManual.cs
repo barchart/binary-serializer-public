@@ -2,10 +2,9 @@ using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Examples.Data;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Types;
-
 using Console = Barchart.BinarySerializer.Examples.Common.Console;
 
-namespace Barchart.BinarySerializer.Examples.Modes;
+namespace Barchart.BinarySerializer.Examples.Scripts;
 
 public class SimpleSchemaManual : IScript
 {

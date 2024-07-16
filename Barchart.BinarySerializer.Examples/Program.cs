@@ -1,5 +1,4 @@
-﻿using Barchart.BinarySerializer.Examples;
-using Barchart.BinarySerializer.Examples.Modes;
+﻿using Barchart.BinarySerializer.Examples.Scripts;
 
 using Console = Barchart.BinarySerializer.Examples.Common.Console;
 
@@ -13,6 +12,8 @@ if (args.Length != 0)
     Enum.TryParse(args[0], out type);
 }
 
+Console.WriteLine(type.ToString());
+
 IScript script;
 
 if (type == Script.SIMPLE_SCHEMA_AUTOMATIC)
@@ -22,6 +23,10 @@ if (type == Script.SIMPLE_SCHEMA_AUTOMATIC)
 else if (type == Script.SIMPLE_SCHEMA_MANUAL)
 {
     script = new SimpleSchemaManual();
+}
+else if (type == Script.SIMPLE_ENTITY_LOOKUP)
+{
+    script = new SimpleEntityLookup();
 }
 else
 {

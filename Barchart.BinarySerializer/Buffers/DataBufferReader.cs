@@ -77,7 +77,7 @@ public class DataBufferReader : IDataBufferReader
         
         if (CapacityWouldBeExceeded(_positionBit == 0 ? size - 1 : size))
         {
-            throw new InsufficientCapacityException(true);
+            throw new InsufficientCapacityException(false);
         }
 
         byte[] bytes = new byte[size];

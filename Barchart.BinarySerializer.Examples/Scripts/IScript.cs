@@ -1,4 +1,4 @@
-namespace Barchart.BinarySerializer.Examples.Modes;
+namespace Barchart.BinarySerializer.Examples.Scripts;
 
 public interface IScript
 {
