@@ -47,6 +47,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
+          
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Encode(writer, current, previous);
@@ -74,8 +75,6 @@ namespace Barchart.BinarySerializer.Schemas
 
         private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
         {
-            reader.Reset();
-
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Decode(reader, target, existing);
@@ -86,8 +85,6 @@ namespace Barchart.BinarySerializer.Schemas
                 item.Decode(reader, target, existing);
             }
             
-            reader.Reset();
-
             return target;
         }
 
@@ -114,8 +111,6 @@ namespace Barchart.BinarySerializer.Schemas
                 }
             }
 
-            reader.Reset();
-            
             throw new KeyUndefinedException(typeof(TEntity), name, typeof(TProperty));
         }
         
