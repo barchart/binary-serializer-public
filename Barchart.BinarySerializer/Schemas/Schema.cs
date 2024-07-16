@@ -27,33 +27,6 @@ namespace Barchart.BinarySerializer.Schemas
         #endregion
         
         #region Methods
-
-        public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name)
-        {
-            reader.Reset();
-
-            TEntity target = new TEntity();
-            
-            for (int i = 0; i < _keyItems.Length; i++)
-            {
-                ISchemaItem<TEntity> candidate = _keyItems[i];
-                
-                candidate.Decode(reader, target, false);
-                
-                if (candidate.Name == name && candidate is ISchemaItem<TEntity, TProperty> match)
-                {
-                    TProperty key = match.Read(target);
-                    
-                    reader.Reset();
-
-                    return key;
-                }
-            }
-
-            reader.Reset();
-            
-            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TProperty));
-        }
         
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity source)
@@ -117,7 +90,36 @@ namespace Barchart.BinarySerializer.Schemas
 
             return target;
         }
+
+        /// <inheritdoc />
+        public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name)
+        {
+            reader.Reset();
+
+            TEntity target = new();
+            
+            for (int i = 0; i < _keyItems.Length; i++)
+            {
+                ISchemaItem<TEntity> candidate = _keyItems[i];
+                
+                candidate.Decode(reader, target, false);
+                
+                if (candidate.Name == name && candidate is ISchemaItem<TEntity, TProperty> match)
+                {
+                    TProperty key = match.Read(target);
+                    
+                    reader.Reset();
+
+                    return key;
+                }
+            }
+
+            reader.Reset();
+            
+            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TProperty));
+        }
         
+        /// <inheritdoc />
         public bool GetEquals(TEntity a, TEntity b)
         {
             if (a == null && b == null)
