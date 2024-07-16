@@ -143,7 +143,7 @@ public class DataBufferReader : IDataBufferReader
         private readonly int _positionByte;
         private readonly int _positionBit;
 
-        private volatile int _disposed = 0;
+        private volatile int _disposed;
 
         public DataBufferReaderBookmark(DataBufferReader reader, int positionByte, int positionBit)
         {
