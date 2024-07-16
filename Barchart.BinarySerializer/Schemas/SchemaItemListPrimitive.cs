@@ -50,6 +50,16 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
         List<TItem> items = _getter(source);
+        
+        if (items == null)
+        {
+            WriteMissingFlag(writer, true);
+
+            return;
+        }
+
+        WriteMissingFlag(writer, false);
+
         writer.WriteBytes(BitConverter.GetBytes(items.Count));
 
         foreach (var item in items)
@@ -61,14 +71,38 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity current, TEntity previous)
     {
-        var currentItems = _getter(current);
-        var previousItems = _getter(previous);
+        List<TItem> currentItems = _getter(current);
+        List<TItem> previousItems = _getter(previous);
 
-        var differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_elementSerializer.GetEquals(item, previousItems[index])).ToList();
+        if (currentItems == null && previousItems == null)
+        {
+            WriteMissingFlag(writer, true);
+
+            return;
+        }
+
+        if (currentItems == null)
+        {
+            WriteMissingFlag(writer, false);
+
+            writer.WriteBytes(BitConverter.GetBytes(0));
+            
+            return;
+        }
+
+
+        List<TItem> differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_elementSerializer.GetEquals(item, previousItems[index])).ToList();
 
         bool areListsEqual = currentItems.Count == previousItems.Count && !currentItems.Where((item, index) => !_elementSerializer.GetEquals(item, previousItems[index])).Any();
 
-        WriteMissingFlag(writer, areListsEqual);
+        if (areListsEqual)
+        {
+            WriteMissingFlag(writer, true);
+            
+            return;
+        }
+
+        WriteMissingFlag(writer, false);
 
         writer.WriteBytes(BitConverter.GetBytes(differentItems.Count));
 
@@ -106,6 +140,9 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         List<TItem> listA = _getter(a);
         List<TItem> listB = _getter(b);
 
+        if (listA == null && listB == null) return true;
+        if (listA == null || listB == null) return false;
+        
         if (listA.Count != listB.Count) return false;
 
         for (int i = 0; i < listA.Count; i++)
@@ -122,16 +159,6 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     }
     
     private static void WriteMissingFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
-    }
-
-    private static bool ReadNullFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-    
-    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
     {
         writer.WriteBit(flag);
     }
