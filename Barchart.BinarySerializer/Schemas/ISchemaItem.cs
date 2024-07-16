@@ -83,7 +83,25 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     #endregion
 }
 
+/// <summary>
+///     Defines a generic schema item capable of reading a property value from a source entity.
+/// </summary>
+/// <typeparam name="TEntity">
+///     The type of the entity from which the property value is read. Must be a class and support parameterless instantiation.
+/// </typeparam>
+/// <typeparam name="TProperty">
+///     The type of the property value to be read from the entity.
+/// </typeparam>
 public interface ISchemaItem<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity : class, new()
 {
+    /// <summary>
+    ///     Reads and returns the property value from the specified source entity.
+    /// </summary>
+    /// <param name="source">
+    ///     The source entity from which to read the property value.
+    /// </param>
+    /// <returns>
+    ///     The value of the property read from the source entity.
+    /// </returns>
     TProperty Read(TEntity source);
 }
