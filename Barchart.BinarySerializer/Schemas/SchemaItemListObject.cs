@@ -79,11 +79,11 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
     {
         int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         
-        var items = new List<TItem>();
+        List<TItem> items = new();
 
         for (int i = 0; i < count; i++)
         {
-            var item = new TItem();
+            TItem item = new();
             _itemSchema.Deserialize(reader, item);
             
             items.Add(item);
@@ -95,8 +95,8 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
     /// <inheritdoc />
     public bool GetEquals(TEntity a, TEntity b)
     {
-        var listA = _getter(a);
-        var listB = _getter(b);
+        List<TItem> listA = _getter(a);
+        List<TItem> listB = _getter(b);
 
         if (listA.Count != listB.Count) return false;
 

@@ -76,7 +76,6 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         {
             _elementSerializer.Encode(writer, item);
         }
-        
     }
 
     /// <inheritdoc />
@@ -86,28 +85,26 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
         if (isMissing)
         {
-            
+            return;
         }
-        else 
+        
+        int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
+        
+        List<TItem> items = new();
+
+        for (int i = 0; i < count; i++)
         {
-            int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
-            
-            var items = new List<TItem>();
-
-            for (int i = 0; i < count; i++)
-            {
-                items.Add(_elementSerializer.Decode(reader));
-            }
-
-            _setter(target, items);
+            items.Add(_elementSerializer.Decode(reader));
         }
+
+        _setter(target, items);
     }
 
     /// <inheritdoc />
     public bool GetEquals(TEntity a, TEntity b)
     {
-        var listA = _getter(a);
-        var listB = _getter(b);
+        List<TItem> listA = _getter(a);
+        List<TItem> listB = _getter(b);
 
         if (listA.Count != listB.Count) return false;
 
@@ -138,5 +135,6 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     {
         writer.WriteBit(flag);
     }
+
     #endregion
 }
