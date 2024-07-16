@@ -387,28 +387,27 @@ public class DataBufferReaderTests
    
     #endregion
     
-    #region Test Methods (Reset)
+    #region Test Methods (Bookmark)
     
     [Fact]
-    public void ReadByte_AfterReset_ReturnsFirstByte()
+    public void ReadByte_AfterBookmarkDisposal_ReturnsSameByte()
     {
         byte first;
         byte second;
+        byte third;
 
-        byte[] byteArray = { first = 250, second = 175 };
+        byte[] byteArray = { first = 250, second = 175, third = 100 };
         DataBufferReader dataBuffer = new(byteArray);
+ 
+        Assert.Equal(first, dataBuffer.ReadByte());
+        
+        using (dataBuffer.Bookmark())
+        {
+            Assert.Equal(second, dataBuffer.ReadByte());
+        }
 
-        byte readFirst = dataBuffer.ReadByte();
-        byte readSecond = dataBuffer.ReadByte();
-
-        Assert.Equal(first, readFirst);
-        Assert.Equal(second, readSecond);
-        
-        dataBuffer.Reset();
-        
-        byte readThird = dataBuffer.ReadByte();
-        
-        Assert.Equal(first, readThird);
+        Assert.Equal(second, dataBuffer.ReadByte());
+        Assert.Equal(third, dataBuffer.ReadByte());
     }
     
     #endregion

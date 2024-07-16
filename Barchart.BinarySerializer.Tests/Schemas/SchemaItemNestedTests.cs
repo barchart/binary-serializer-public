@@ -60,8 +60,6 @@ public class SchemaItemNestedTests
     [Fact]
     public void Encode_WithNullNestedProperty_WritesNullFlag()
     {
-        _reader.Reset();
-
         TestEntity testEntity = new()
         {
             NestedProperty = null
