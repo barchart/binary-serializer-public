@@ -89,9 +89,23 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
             return;
         }
 
-        List<TItem> differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_itemSchema.GetEquals(item, previousItems[index])).ToList();
+        List<TItem> differentItems;
+        
+        bool areListsEqual;
+        
+        if (previousItems == null)
+        {
+            differentItems = currentItems;
 
-        bool areListsEqual = currentItems.Count == previousItems.Count && !currentItems.Where((item, index) => !_itemSchema.GetEquals(item, previousItems[index])).Any();
+            areListsEqual = false;
+        }
+        else
+        {
+            differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_itemSchema.GetEquals(item, previousItems[index])).ToList();
+
+            areListsEqual = currentItems.Count == previousItems.Count && !currentItems.Where((item, index) => !_itemSchema.GetEquals(item, previousItems[index])).Any();
+
+        }
 
         if (areListsEqual)
         {
@@ -143,7 +157,7 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
 
         if (listA == null && listB == null) return true;
         if (listA == null || listB == null) return false;
-        
+
         if (listA.Count != listB.Count) return false;
 
         for (int i = 0; i < listA.Count; i++)

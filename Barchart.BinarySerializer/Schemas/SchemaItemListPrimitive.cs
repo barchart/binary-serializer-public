@@ -90,10 +90,22 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
             return;
         }
 
+        List<TItem> differentItems;
 
-        List<TItem> differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_elementSerializer.GetEquals(item, previousItems[index])).ToList();
+        bool areListsEqual;
+        
+        if (previousItems == null)
+        {
+            differentItems = currentItems;
 
-        bool areListsEqual = currentItems.Count == previousItems.Count && !currentItems.Where((item, index) => !_elementSerializer.GetEquals(item, previousItems[index])).Any();
+            areListsEqual = false;
+        }
+        else
+        {
+            differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_elementSerializer.GetEquals(item, previousItems[index])).ToList();
+            
+            areListsEqual = currentItems.Count == previousItems.Count && !currentItems.Where((item, index) => !_elementSerializer.GetEquals(item, previousItems[index])).Any();
+        }
 
         if (areListsEqual)
         {
@@ -142,7 +154,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
         if (listA == null && listB == null) return true;
         if (listA == null || listB == null) return false;
-        
+
         if (listA.Count != listB.Count) return false;
 
         for (int i = 0; i < listA.Count; i++)
