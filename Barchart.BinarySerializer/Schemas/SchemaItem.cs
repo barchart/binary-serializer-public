@@ -134,6 +134,7 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> wh
         return _serializer.GetEquals(_getter(a), _getter(b));
     }
     
+    /// <inheritdoc />
     public TProperty Read(TEntity source)
     {
         return _getter(source);

@@ -64,32 +64,43 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         var currentItems = _getter(current);
         var previousItems = _getter(previous);
 
-        var differentItems = currentItems.Where((item, index) => 
-            previousItems.Count <= index || !_elementSerializer.GetEquals(item, previousItems[index])).ToList();
+        var differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_elementSerializer.GetEquals(item, previousItems[index])).ToList();
 
-        // TODO: Luka ... missing header bit ... do not send list if all elements are equal (and in same order) ...
-        
+        bool areListsEqual = currentItems.Count == previousItems.Count && !currentItems.Where((item, index) => !_elementSerializer.GetEquals(item, previousItems[index])).Any();
+
+        WriteMissingFlag(writer, areListsEqual);
+
         writer.WriteBytes(BitConverter.GetBytes(differentItems.Count));
 
         foreach (var item in differentItems)
         {
             _elementSerializer.Encode(writer, item);
         }
+        
     }
 
     /// <inheritdoc />
     public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
     {
-        int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
-        
-        var items = new List<TItem>();
+        bool isMissing = ReadMissingFlag(reader);
 
-        for (int i = 0; i < count; i++)
+        if (isMissing)
         {
-            items.Add(_elementSerializer.Decode(reader));
+            
         }
+        else 
+        {
+            int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
+            
+            var items = new List<TItem>();
 
-        _setter(target, items);
+            for (int i = 0; i < count; i++)
+            {
+                items.Add(_elementSerializer.Decode(reader));
+            }
+
+            _setter(target, items);
+        }
     }
 
     /// <inheritdoc />
@@ -108,5 +119,24 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         return true;
     }
 
+    private static bool ReadMissingFlag(IDataBufferReader reader)
+    {
+        return reader.ReadBit();
+    }
+    
+    private static void WriteMissingFlag(IDataBufferWriter writer, bool flag)
+    {
+        writer.WriteBit(flag);
+    }
+
+    private static bool ReadNullFlag(IDataBufferReader reader)
+    {
+        return reader.ReadBit();
+    }
+    
+    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
+    {
+        writer.WriteBit(flag);
+    }
     #endregion
 }
