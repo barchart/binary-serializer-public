@@ -42,8 +42,7 @@ public class SchemaFactory : ISchemaFactory
 
         IEnumerable<MemberInfo> members = GetMembersForType(entityType);
 
-        ISchemaItem<TEntity>[] schemaItems = members.Select(MakeSchemaItem<TEntity>)
-            .ToArray();
+        ISchemaItem<TEntity>[] schemaItems = members.Select(MakeSchemaItem<TEntity>).ToArray();
 
         Array.Sort(schemaItems, CompareSchemaItems);
         

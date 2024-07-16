@@ -49,6 +49,7 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
         List<TItem> items = _getter(source);
+
         writer.WriteBytes(BitConverter.GetBytes(items.Count));
 
         foreach (var item in items)
@@ -63,8 +64,7 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
         var currentItems = _getter(current);
         var previousItems = _getter(previous);
 
-        var differentItems = currentItems.Where((item, index) => 
-            previousItems.Count <= index || !_itemSchema.GetEquals(item, previousItems[index])).ToList();
+        var differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_itemSchema.GetEquals(item, previousItems[index])).ToList();
 
         writer.WriteBytes(BitConverter.GetBytes(differentItems.Count));
 
@@ -85,6 +85,7 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
         {
             var item = new TItem();
             _itemSchema.Deserialize(reader, item);
+            
             items.Add(item);
         }
 
