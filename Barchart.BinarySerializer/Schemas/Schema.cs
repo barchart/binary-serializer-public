@@ -47,15 +47,29 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
-          
-            foreach (ISchemaItem<TEntity> item in _keyItems)
+            if (previous == null)
             {
-                item.Encode(writer, current, previous);
-            }
+                foreach (ISchemaItem<TEntity> item in _keyItems)
+                {
+                    item.Encode(writer, current);
+                }
 
-            foreach (ISchemaItem<TEntity> item in _valueItems)
+                foreach (ISchemaItem<TEntity> item in _valueItems)
+                {
+                    item.Encode(writer, current);
+                }
+            }
+            else
             {
-                item.Encode(writer, current, previous);
+                foreach (ISchemaItem<TEntity> item in _keyItems)
+                {
+                    item.Encode(writer, current, previous);
+                }
+
+                foreach (ISchemaItem<TEntity> item in _valueItems)
+                {
+                    item.Encode(writer, current, previous);
+                }
             }
             
             return writer.ToBytes();
