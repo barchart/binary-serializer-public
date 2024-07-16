@@ -1,14 +1,24 @@
+#region Using Statements
+
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Examples.Data;
 using Barchart.BinarySerializer.Schemas.Factories;
 
 using Console = Barchart.BinarySerializer.Examples.Common.Console;
 
+#endregion
+
 namespace Barchart.BinarySerializer.Examples.Scripts;
 
 public class SimpleEntityLookup : IScript
 {
+    #region Properties
+
     public Script Script => Script.SIMPLE_ENTITY_LOOKUP;
+    
+    #endregion
+
+    #region Methods
 
     public void Execute()
     {
@@ -61,4 +71,6 @@ public class SimpleEntityLookup : IScript
         Console.WriteStep(ref step, $"Automobile [ {key} ] state updated");
         Console.WriteDetails(target.ToString());
     }
+
+    #endregion
 }
