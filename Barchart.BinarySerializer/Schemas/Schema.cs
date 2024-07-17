@@ -52,31 +52,16 @@ namespace Barchart.BinarySerializer.Schemas
             // their specific "item" serializers. I could be wrong. Discuss with Luka
             // when possible.
             
-            if (previous == null)
+            foreach (ISchemaItem<TEntity> item in _keyItems)
             {
-                foreach (ISchemaItem<TEntity> item in _keyItems)
-                {
-                    item.Encode(writer, current);
-                }
-
-                foreach (ISchemaItem<TEntity> item in _valueItems)
-                {
-                    item.Encode(writer, current);
-                }
+                item.Encode(writer, current, previous);
             }
-            else
+
+            foreach (ISchemaItem<TEntity> item in _valueItems)
             {
-                foreach (ISchemaItem<TEntity> item in _keyItems)
-                {
-                    item.Encode(writer, current, previous);
-                }
-
-                foreach (ISchemaItem<TEntity> item in _valueItems)
-                {
-                    item.Encode(writer, current, previous);
-                }
+                item.Encode(writer, current, previous);
             }
-            
+        
             return writer.ToBytes();
         }
 
