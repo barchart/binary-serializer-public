@@ -51,20 +51,17 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     {
         List<TItem> items = _getter(source);
         
-        if (items == null)
-        {
-            WriteMissingFlag(writer, true);
-
-            return;
-        }
-
         WriteMissingFlag(writer, false);
+        WriteNullFlag(writer, items == null);
 
-        writer.WriteBytes(BitConverter.GetBytes(items.Count));
-
-        foreach (var item in items)
+        if (items != null)
         {
-            _elementSerializer.Encode(writer, item);
+            writer.WriteBytes(BitConverter.GetBytes(items.Count));
+
+            foreach (var item in items)
+            {
+                _elementSerializer.Encode(writer, item);
+            }
         }
     }
 
@@ -74,38 +71,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         List<TItem> currentItems = _getter(current);
         List<TItem> previousItems = _getter(previous);
 
-        if (currentItems == null && previousItems == null)
-        {
-            WriteMissingFlag(writer, true);
-
-            return;
-        }
-
-        if (currentItems == null)
-        {
-            WriteMissingFlag(writer, false);
-
-            writer.WriteBytes(BitConverter.GetBytes(0));
-            
-            return;
-        }
-
-        List<TItem> differentItems;
-
-        bool areListsEqual;
-        
-        if (previousItems == null)
-        {
-            differentItems = currentItems;
-
-            areListsEqual = false;
-        }
-        else
-        {
-            differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_elementSerializer.GetEquals(item, previousItems[index])).ToList();
-            
-            areListsEqual = currentItems.Count == previousItems.Count && !currentItems.Where((item, index) => !_elementSerializer.GetEquals(item, previousItems[index])).Any();
-        }
+        bool areListsEqual = GetEquals(current, previous);
 
         if (areListsEqual)
         {
@@ -116,11 +82,21 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
         WriteMissingFlag(writer, false);
 
-        writer.WriteBytes(BitConverter.GetBytes(differentItems.Count));
+        int numberOfElements = currentItems.Count;
 
-        foreach (var item in differentItems)
+        writer.WriteBytes(BitConverter.GetBytes(numberOfElements));
+        
+        for (int i = 0; i < numberOfElements; i++)
         {
-            _elementSerializer.Encode(writer, item);
+            if (_elementSerializer.GetEquals(currentItems[i], previousItems[i]))
+            {
+                WriteMissingFlag(writer, true);
+            }
+            else
+            {
+                WriteMissingFlag(writer, false);
+                _elementSerializer.Encode(writer, currentItems[i]);
+            }
         }
     }
 
@@ -134,11 +110,11 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
             return;
         }
         
-        int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
+        int numberOfElements = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         
         List<TItem> items = new();
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < numberOfElements; i++)
         {
             items.Add(_elementSerializer.Decode(reader));
         }
@@ -173,6 +149,24 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     private static void WriteMissingFlag(IDataBufferWriter writer, bool flag)
     {
         writer.WriteBit(flag);
+    }
+
+    private static bool ReadNullFlag(IDataBufferReader reader)
+    {
+        return reader.ReadBit();
+    }
+    
+    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
+    {
+        writer.WriteBit(flag);
+    }
+
+    private bool AreListsEqual(List<TItem> currentItems, List<TItem> previousItems)
+    {
+        if (currentItems == null && previousItems == null) return true;
+        if (currentItems == null || previousItems == null) return false;
+
+        return currentItems.Count == previousItems.Count && !currentItems.Where((item, index) => !_elementSerializer.GetEquals(item, previousItems[index])).Any();
     }
 
     #endregion
