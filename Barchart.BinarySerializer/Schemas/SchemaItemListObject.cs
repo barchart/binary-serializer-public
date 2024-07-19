@@ -95,32 +95,24 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
 
             int numberOfElements = currentItems.Count;
             
-            if (previousItems != null)
-            {  
-                for (int i = 0; i < numberOfElements; i++)
+            for (int i = 0; i < numberOfElements; i++)
+            {
+                if (currentItems[i] == null)
                 {
-                    if (currentItems[i] == null)
-                    {
-                        WriteNullFlag(writer, true);
-                        
-                        continue;
-                    }
+                    WriteNullFlag(writer, true);
+                    
+                    continue;
+                }
 
-                    WriteNullFlag(writer, false);
+                WriteNullFlag(writer, false);
 
+                if (previousItems != null && previousItems[i] != null)
+                {
                     _itemSchema.Serialize(writer, currentItems[i], previousItems[i]);
                 }
-            }
-            else 
-            {
-                for (int i = 0; i < numberOfElements; i++)
-                {
-                    if (currentItems[i] == null)
-                    {
-                        WriteNullFlag(writer, true);
-                        continue;
-                    }
 
+                else
+                {
                     _itemSchema.Serialize(writer, currentItems[i]);
                 }
             }
