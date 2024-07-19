@@ -1,9 +1,15 @@
+#region Using Statements
+
 using Barchart.BinarySerializer.Attributes;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Examples.Data;
 
 public class Automobile
 {
+    #region Properties
+
     [Serialize(true)]
     public string Vin { get; set; }
     
@@ -16,6 +22,9 @@ public class Automobile
     [Serialize]
     public uint Odometer { get; set; }
 
+    #endregion
+
+    #region Constructor(s)
     public Automobile()
     {
         Vin = "";
@@ -25,9 +34,15 @@ public class Automobile
 
         Odometer = 0;
     }
+
+    #endregion
     
+    #region Methods
+
     public override string ToString()
     {
         return $"(Automobile [Vin={Vin}, Make={Make}, Model={Model}, Odometer={Odometer}])";
     }
+    
+    #endregion
 }

@@ -1,11 +1,15 @@
-﻿using Barchart.BinarySerializer.Examples.Scripts;
+﻿#region Using Statements
+
+using Barchart.BinarySerializer.Examples.Scripts;
 
 using Console = Barchart.BinarySerializer.Examples.Common.Console;
+
+#endregion
 
 Console.WriteLine("Barchart.BinarySerializer.Examples Console Application");
 Console.WriteLine();
 
-Script type = default(Script);
+Script type = default;
 
 if (args.Length != 0)
 {

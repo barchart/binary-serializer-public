@@ -1,15 +1,25 @@
+#region Using Statements
+
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Examples.Data;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Types;
 using Console = Barchart.BinarySerializer.Examples.Common.Console;
 
+#endregion
+
 namespace Barchart.BinarySerializer.Examples.Scripts;
 
 public class SimpleSchemaManual : IScript
 {
+    #region Properties
+
     public Script Script => Script.SIMPLE_SCHEMA_MANUAL;
+
+    #endregion
     
+    #region Methods
+
     public void Execute()
     {
         int step = 1;
@@ -18,7 +28,7 @@ public class SimpleSchemaManual : IScript
         
         var schema = new Schema<Person>(new ISchemaItem<Person>[]
         {
-            new SchemaItem<Person, String>("Name", false, (p) => p.Name, (p, value) => p.Name = value, new BinarySerializerString()),
+            new SchemaItem<Person, string>("Name", false, (p) => p.Name, (p, value) => p.Name = value, new BinarySerializerString()),
             new SchemaItem<Person, ushort>("Age", false, (p) => p.Age, (p, value) => p.Age = value, new BinarySerializerUShort()),
             new SchemaItem<Person, bool>("IsProgrammer", false, (p) => p.IsProgrammer, (p, value) => p.IsProgrammer = value, new BinarySerializerBool())
         });
@@ -44,4 +54,6 @@ public class SimpleSchemaManual : IScript
         
         Console.WriteDetails(bryanToo.ToString());
     }
+
+    #endregion
 }

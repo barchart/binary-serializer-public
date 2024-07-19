@@ -1,9 +1,15 @@
+#region Using Statements
+
 using System.Text;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Examples.Common;
 
 public static class Console
 {
+    #region Methods
+
     public static void WriteLine()
     {
         System.Console.WriteLine();
@@ -68,4 +74,6 @@ public static class Console
         
         System.Console.WriteLine(builder.ToString());
     }
+
+    #endregion
 }
