@@ -106,4 +106,5 @@ Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
 Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 321
 ```
 
-> **_NOTE:_** The `Serialize` attribute is used to mark properties or fields for binary serialization. When `true` is passed to the `Serialize` attribute, it indicates that the data member is part of the unique key for the object. Multiple data members can be marked as key components, allowing for compound keys in complex objects.
+> [!NOTE]  
+> The `Serialize` attribute is used to mark properties or fields for binary serialization. When `true` is passed to the `Serialize` attribute, it indicates that the data member is part of the unique key for the object. Multiple data members can be marked as key components, allowing for compound keys in complex objects.
