@@ -142,6 +142,89 @@ public class SchemaItemListPrimitiveTests
 
     #region Test Methods (GetEquals)
 
+    [Fact]
+    public void GetEquals_WithIdenticalNonNullLists_ReturnsTrue()
+    {
+        TestEntity entity1 = new() 
+        { 
+            IntListProperty = new List<int> 
+            { 
+                1, 2, 3 
+            } 
+        };
+
+        TestEntity entity2 = new() 
+        { 
+            IntListProperty = new List<int> 
+            { 
+                1, 2, 3 
+            } 
+        };
+
+        bool result = _schemaItemListPrimitive.GetEquals(entity1, entity2);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void GetEquals_WithDifferentLists_ReturnsFalse()
+    {
+        TestEntity entity1 = new() 
+        { 
+            IntListProperty = new List<int> 
+            { 
+                1, 2, 3 
+            } 
+        };
+
+        TestEntity entity2 = new() 
+        { 
+            IntListProperty = new List<int> 
+            { 
+                4, 5, 6 
+            } 
+        };
+
+        bool result = _schemaItemListPrimitive.GetEquals(entity1, entity2);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void GetEquals_WithBothNullLists_ReturnsTrue()
+    {
+        TestEntity entity1 = new() 
+        { 
+            IntListProperty = null
+        };
+
+        TestEntity entity2 = new() 
+        { 
+            IntListProperty = null
+        };
+
+        bool result = _schemaItemListPrimitive.GetEquals(entity1, entity2);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void GetEquals_WithOneNullList_ReturnsFalse()
+    {
+        TestEntity entity1 = new() 
+        { 
+            IntListProperty = null
+        };
+        
+        TestEntity entity2 = new() 
+        { 
+            IntListProperty = new List<int> { 1, 2, 3 } 
+        };
+
+        bool result = _schemaItemListPrimitive.GetEquals(entity1, entity2);
+
+        Assert.False(result);
+    }
 
     #endregion
 
