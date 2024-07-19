@@ -137,8 +137,15 @@ public class SchemaItemListObjectTests
     [Fact]
     public void GetEquals_WithBothListsNull_ReturnsTrue()
     {
-        TestEntity entityA = new() { ListProperty = null };
-        TestEntity entityB = new() { ListProperty = null };
+        TestEntity entityA = new() 
+        { 
+            ListProperty = null
+        };
+        
+        TestEntity entityB = new()
+        {
+            ListProperty = null
+        };
 
         bool result = _schemaItemListObject.GetEquals(entityA, entityB);
 
@@ -148,8 +155,15 @@ public class SchemaItemListObjectTests
     [Fact]
     public void GetEquals_WithBothListsEmpty_ReturnsTrue()
     {
-        TestEntity entityA = new() { ListProperty = new List<TestProperty>() };
-        TestEntity entityB = new() { ListProperty = new List<TestProperty>() };
+        TestEntity entityA = new() 
+        { 
+            ListProperty = new List<TestProperty>() 
+        };
+
+        TestEntity entityB = new() 
+        { 
+            ListProperty = new List<TestProperty>() 
+        };
 
         bool result = _schemaItemListObject.GetEquals(entityA, entityB);
 
@@ -163,8 +177,16 @@ public class SchemaItemListObjectTests
         {
             ListProperty = new List<TestProperty>
             {
-                new() { PropertyName = "Test1", PropertyValue = 123 },
-                new() { PropertyName = "Test2", PropertyValue = 456 }
+                new() 
+                { 
+                    PropertyName = "Test1", 
+                    PropertyValue = 123 
+                },
+                new() 
+                { 
+                    PropertyName = "Test2",
+                    PropertyValue = 456 
+                }
             }
         };
 
@@ -172,8 +194,16 @@ public class SchemaItemListObjectTests
         {
             ListProperty = new List<TestProperty>
             {
-                new() { PropertyName = "Test1", PropertyValue = 123 },
-                new() { PropertyName = "Test2", PropertyValue = 456 }
+                new() 
+                { 
+                    PropertyName = "Test1", 
+                    PropertyValue = 123 
+                },
+                new() 
+                { 
+                    PropertyName = "Test2", 
+                    PropertyValue = 456 
+                }
             }
         };
 
