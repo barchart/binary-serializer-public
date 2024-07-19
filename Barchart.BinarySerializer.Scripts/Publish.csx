@@ -6,6 +6,8 @@
 #r "nuget: Newtonsoft.Json, 13.0.1"
 #r "nuget: System.CommandLine, 2.0.0-beta1"
 
+#region Using Statements
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -13,6 +15,9 @@ using System.Linq;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 
+#endregion
+
+#region Methods
 void RunCommand(string command, string args)
 {
     var process = new System.Diagnostics.Process
@@ -39,6 +44,8 @@ void RunCommand(string command, string args)
         Console.WriteLine("Error: " + error);
     }
 }
+
+#endregion
 
 string projectDirectory = "../Barchart.BinarySerializer";
 

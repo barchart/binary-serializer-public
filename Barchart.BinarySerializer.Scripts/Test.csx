@@ -3,8 +3,12 @@
     dotnet script Test.csx
 */
 
+#region Using Statements
+
 using System;
 using System.Diagnostics;
+
+#endregion
 
 string projectPath = "../Barchart.BinarySerializer.Tests"; 
 
