@@ -62,9 +62,7 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity current, TEntity previous)
     {
-        bool nestedAreEqual = GetEquals(current, previous);
-
-        if (nestedAreEqual)
+        if (GetEquals(current, previous))
         {
             WriteMissingFlag(writer, true);
 
