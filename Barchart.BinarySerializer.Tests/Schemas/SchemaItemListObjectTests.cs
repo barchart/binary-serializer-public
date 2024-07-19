@@ -78,7 +78,7 @@ public class SchemaItemListObjectTests
     public void Decode_WithNonNullListProperty_CallsSchemaDeserializeForEachItem()
     {
         var callOrder = 0;
-        
+
         _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()))
             .Callback((IDataBufferReader reader, TestProperty property) =>
             {
@@ -123,6 +123,8 @@ public class SchemaItemListObjectTests
         };
 
         _schemaItemListObject.Decode(_reader, testEntity);
+
+        Assert.Empty(testEntity.ListProperty);
     } 
 
     #endregion
