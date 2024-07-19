@@ -14,7 +14,7 @@ The Binary Serializer is a .NET library for serializing and deserializing object
 
 To present you the way `Binary Serializer` can be used, here are simple examples:
 
-Serializing single entity:
+**Serializing single entity:**
 
 ```csharp
 using Barchart.BinarySerializer.Buffers;
@@ -48,7 +48,7 @@ Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
 Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 123
 ```
 
-Serializing difference between two entities:
+**Serializing difference between two entities:**
 
 ```csharp
 using Barchart.BinarySerializer.Buffers;
