@@ -2,8 +2,8 @@
 
 The Binary Serializer is a .NET library for serializing and deserializing objects in binary format using efficient and fast protocol.
 
-The schema that represents the structure of the data to be serialized can be found in the `Barchart.SerializationData` folder.
+The scripts are located in the foldersnamed `Barchart.BinarySerializer.Scripts`.
 
-The examples are located in the folders named `Barchart.Examples.WebsocketSerialization` and `Barchart.Examples.WebsocketDifferenceSerialization`.
+The examples are located in the folder named `Barchart.BinarySerializer.Examples`.
 
-TThe examples are located in the folder named `Barchart.Examples.Barchart.BinarySerializer.Tests`.
+The tests are located in the folder named `BBarchart.BinarySerializer.Tests`.
