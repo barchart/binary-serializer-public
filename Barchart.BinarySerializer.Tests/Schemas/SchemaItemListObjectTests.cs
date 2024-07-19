@@ -2,6 +2,7 @@
 
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Attributes;
 
 #endregion
 
@@ -131,6 +132,7 @@ public class SchemaItemListObjectTests
 
     #region Test Methods (GetEquals)
 
+    
 
     #endregion
 
@@ -143,7 +145,10 @@ public class SchemaItemListObjectTests
 
     public class TestProperty
     {
+        [Serialize(true)]
         public string? PropertyName { get; set; }
+
+        [Serialize(false)]
         public int PropertyValue { get; set; }
     }
 
