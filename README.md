@@ -20,6 +20,15 @@ To present you the way `Binary Serializer` can be used, here are simple examples
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas.Factories;
 
+public class TestClass
+{
+    [Serialize(true)]
+    public string? PropertyName { get; set; }
+    
+    [Serialize(false)]
+    public int PropertyNumber { get; set; }
+}
+
 TestClass testObject = new()
 {
     PropertyName = "Name",
@@ -54,6 +63,15 @@ Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 123
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas.Factories;
 
+public class TestClass
+{
+    [Serialize(true)]
+    public string? PropertyName { get; set; }
+    
+    [Serialize(false)]
+    public int PropertyNumber { get; set; }
+}
+
 TestClass testObjectPrevious = new()
 {
     PropertyName = "Name",
@@ -87,3 +105,5 @@ TestClass deserializedTestObject = schema.Deserialize(reader, testObjectPrevious
 Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
 Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 321
 ```
+
+The `Serialize` attribute is used to mark properties or fields for binary serialization. When `true` is passed to the `Serialize` attribute, it indicates that the property is part of the unique key for the object. Multiple properties can be marked as key components, allowing for compound keys in complex objects. Key properties and fields are always serialized.
