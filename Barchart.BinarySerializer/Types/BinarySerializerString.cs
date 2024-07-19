@@ -50,6 +50,15 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, string value)
     {
+        if (value == null)
+        {
+            WriteNullFlag(writer, true);
+
+            return;
+        }
+
+        WriteNullFlag(writer, false);
+
         byte[] bytes = _encoding.GetBytes(value);
 
         if (bytes.Length > MAXIMUM_STRING_LENGTH_IN_BYTES)
@@ -65,13 +74,31 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
     /// <inheritdoc />
     public string Decode(IDataBufferReader reader)
     {
+        if (ReadNullFlag(reader))
+        {
+            return null!;
+        }
+
         return _encoding.GetString(reader.ReadBytes(_binarySerializerUShort.Decode(reader)));
     }
 
     /// <inheritdoc />
     public bool GetEquals(string a, string b)
     {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+
         return a.Equals(b);
+    }
+
+    private static bool ReadNullFlag(IDataBufferReader reader)
+    {
+        return reader.ReadBit();
+    }
+
+    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
+    {
+        writer.WriteBit(flag);
     }
 
     #endregion
