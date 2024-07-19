@@ -83,26 +83,24 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, currentItems == null);
             
-        if (currentItems == null)
+        if (currentItems != null)
         {
-            return;
-        }
+            int numberOfElements = currentItems.Count;
 
-        int numberOfElements = currentItems.Count;
-
-        writer.WriteBytes(BitConverter.GetBytes(numberOfElements));
-        
-        for (int i = 0; i < numberOfElements; i++)
-        {
-            if (_elementSerializer.GetEquals(currentItems[i], previousItems[i]))
+            writer.WriteBytes(BitConverter.GetBytes(numberOfElements));
+            
+            for (int i = 0; i < numberOfElements; i++)
             {
-                WriteMissingFlag(writer, true);
-            }
-            else
-            {
-                WriteMissingFlag(writer, false);
-                
-                _elementSerializer.Encode(writer, currentItems[i]);
+                if (_elementSerializer.GetEquals(currentItems[i], previousItems[i]))
+                {
+                    WriteMissingFlag(writer, true);
+                }
+                else
+                {
+                    WriteMissingFlag(writer, false);
+                    
+                    _elementSerializer.Encode(writer, currentItems[i]);
+                }
             }
         }
     }

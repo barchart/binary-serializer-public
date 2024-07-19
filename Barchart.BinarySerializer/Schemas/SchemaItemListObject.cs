@@ -149,6 +149,7 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
             else
             {
                 TItem item = new();
+                
                 _itemSchema.Deserialize(reader, item);
                 items.Add(item);
             }
