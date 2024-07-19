@@ -12,7 +12,9 @@ The Binary Serializer is a .NET library for serializing and deserializing object
 
 ## Example Usage
 
-To present you the way `Binary Serializer` can be used, here's a simple example:
+To present you the way `Binary Serializer` can be used, here are simple examples:
+
+Serializing single entity:
 
 ```csharp
 using Barchart.BinarySerializer;
@@ -43,3 +45,43 @@ TestClass deserializedTestObject = schema.Deserialize(reader);
 
 Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
 Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 123
+```
+
+Serializing difference between two entities:
+
+```csharp
+using Barchart.BinarySerializer;
+
+TestClass testObjectPrevious = new()
+{
+    PropertyName = "Name",
+    PropertyNumber = 123
+};
+
+TestClass testObjectCurrent = new()
+{
+    PropertyName = "Name",
+    PropertyNumber = 321
+};
+
+// Instantiate a new SchemaFactory to create schemas for serialization
+SchemaFactory schemaFactory = new();
+
+// Generate a schema for the TestClass
+ISchema<TestClass> schema = schemaFactory.Make<TestClass>();
+
+// Create a DataBufferWriter with a predefined byte array size for serialization
+DataBufferWriter writer = new(new byte[16]);
+
+// Serialize the difference between two objects to a binary format
+byte[] bytes = schema.Serialize(writer, testObjectCurrent, testObjectPrevious);
+
+// Create a DataBufferReader with the serialized bytes for deserialization
+DataBufferReader reader = new(bytes);
+
+// Deserialize the binary data back into an object using the existing object
+TestClass deserializedTestObject = schema.Deserialize(reader, testObjectPrevious);
+
+Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
+Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 321
+```
