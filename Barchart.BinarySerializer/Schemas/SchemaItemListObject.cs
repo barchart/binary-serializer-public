@@ -50,87 +50,97 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
     {
         List<TItem> items = _getter(source);
 
-        if (items == null)
-        {
-            WriteMissingFlag(writer, true);
-
-            return;
-        }
-
         WriteMissingFlag(writer, false);
+        WriteNullFlag(writer, items == null);
 
-        writer.WriteBytes(BitConverter.GetBytes(items.Count));
-
-        foreach (var item in items)
+        if(items != null)
         {
-            _itemSchema.Serialize(writer, item);
+            writer.WriteBytes(BitConverter.GetBytes(items.Count));
+
+            foreach (var item in items)
+            {
+                if (item != null)
+                {
+                    WriteNullFlag(writer, false);
+
+                    _itemSchema.Serialize(writer, item);
+                }
+                else
+                {
+                    WriteNullFlag(writer, true);
+                }
+            }
         }
     }
 
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity current, TEntity previous)
     {
+        if (GetEquals(current, previous))
+        {
+            WriteMissingFlag(writer, true);
+
+            return;
+        }
+
         List<TItem> currentItems = _getter(current);
         List<TItem> previousItems = _getter(previous);
 
-        if (currentItems == null && previousItems == null)
-        {
-            WriteMissingFlag(writer, true);
-
-            return;
-        }
-
-        if (currentItems == null)
-        {
-            WriteMissingFlag(writer, false);
-
-            writer.WriteBytes(BitConverter.GetBytes(0));
-            
-            return;
-        }
-
-        List<TItem> differentItems;
-        
-        bool areListsEqual;
-        
-        if (previousItems == null)
-        {
-            differentItems = currentItems;
-
-            areListsEqual = false;
-        }
-        else
-        {
-            differentItems = currentItems.Where((item, index) => previousItems.Count <= index || !_itemSchema.GetEquals(item, previousItems[index])).ToList();
-
-            areListsEqual = currentItems.Count == previousItems.Count && !currentItems.Where((item, index) => !_itemSchema.GetEquals(item, previousItems[index])).Any();
-
-        }
-
-        if (areListsEqual)
-        {
-            WriteMissingFlag(writer, true);
-            
-            return;
-        }
-
         WriteMissingFlag(writer, false);
+        WriteNullFlag(writer, currentItems == null);
 
-        writer.WriteBytes(BitConverter.GetBytes(differentItems.Count));
-
-        foreach (var item in differentItems)
+        if (currentItems != null)
         {
-            _itemSchema.Serialize(writer, item);
+            writer.WriteBytes(BitConverter.GetBytes(currentItems.Count));
+
+            int numberOfElements = currentItems.Count;
+            
+            if (previousItems != null)
+            {  
+                for (int i = 0; i < numberOfElements; i++)
+                {
+                    if (currentItems[i] == null)
+                    {
+                        WriteNullFlag(writer, true);
+                        
+                        continue;
+                    }
+
+                    WriteNullFlag(writer, false);
+
+                    _itemSchema.Serialize(writer, currentItems[i], previousItems[i]);
+                }
+            }
+            else 
+            {
+                for (int i = 0; i < numberOfElements; i++)
+                {
+                    if (currentItems[i] == null)
+                    {
+                        WriteNullFlag(writer, true);
+                        continue;
+                    }
+
+                    _itemSchema.Serialize(writer, currentItems[i]);
+                }
+            }
         }
     }
 
     /// <inheritdoc />
     public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
     {
-        bool isMissing = ReadMissingFlag(reader);
-
-        if (isMissing)
+        if (ReadMissingFlag(reader))
         {
+            return;
+        }
+
+        List<TItem> currentItems = _getter(target);
+
+        if (ReadNullFlag(reader))
+        {
+            _setter(target, null!);
+
             return;
         }
 
@@ -140,10 +150,16 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
 
         for (int i = 0; i < count; i++)
         {
-            TItem item = new();
-            _itemSchema.Deserialize(reader, item);
-            
-            items.Add(item);
+            if (ReadNullFlag(reader))
+            {
+                items.Add(null!);
+            }
+            else
+            {
+                TItem item = new();
+                _itemSchema.Deserialize(reader, item);
+                items.Add(item);
+            }
         }
 
         _setter(target, items);
@@ -174,6 +190,16 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
     }
     
     private static void WriteMissingFlag(IDataBufferWriter writer, bool flag)
+    {
+        writer.WriteBit(flag);
+    }
+
+    private static bool ReadNullFlag(IDataBufferReader reader)
+    {
+        return reader.ReadBit();
+    }
+
+    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
     {
         writer.WriteBit(flag);
     }
