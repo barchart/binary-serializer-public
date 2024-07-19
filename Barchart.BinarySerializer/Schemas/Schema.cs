@@ -47,11 +47,6 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
-            // 2024/06/16, BRI. The "previous" entity should never be null. We need to 
-            // discuss. Nested objects (or lists) that are null should be handled by
-            // their specific "item" serializers. I could be wrong. Discuss with Luka
-            // when possible.
-            
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Encode(writer, current, previous);
