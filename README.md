@@ -9,3 +9,37 @@ The Binary Serializer is a .NET library for serializing and deserializing object
 - **Examples**: To help you get started and to demonstrate the capabilities of the Binary Serializer, example projects can be found in the [`Barchart.BinarySerializer.Examples`](./Barchart.BinarySerializer.Examples) folder. These examples cover a range of use cases, from basic serialization to more complex scenarios.
 
 - **Tests**: The [`Barchart.BinarySerializer.Tests`](./Barchart.BinarySerializer.Tests) directory contains a group of tests ensuring the library's reliability.
+
+## Example Usage
+
+To present you the way `Binary Serializer` can be used, here's a simple example:
+
+```csharp
+using Barchart.BinarySerializer;
+
+TestClass testObject = new()
+{
+    PropertyName = "Name",
+    PropertyNumber = 123
+};
+
+// Instantiate a new SchemaFactory to create schemas for serialization
+SchemaFactory schemaFactory = new();
+
+// Generate a schema for the TestClass
+ISchema<TestClass> schema = schemaFactory.Make<TestClass>();
+
+// Create a DataBufferWriter with a predefined byte array size for serialization
+DataBufferWriter writer = new(new byte[16]);
+
+// Serialize the object to a binary format
+byte[] bytes = schema.Serialize(writer, bryan);
+
+// Create a DataBufferReader with the serialized bytes for deserialization
+DataBufferReader reader = new(bytes);
+
+// Deserialize the binary data back into an object
+TestClass deserializedTestObject = schema.Deserialize(reader);
+
+Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
+Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 123
