@@ -17,7 +17,7 @@ public class BinarySerializerDateOnly : IBinaryTypeSerializer<DateOnly>
     
     #endregion
 
-    #region Constructors
+    #region Constructor(s)
 
     public BinarySerializerDateOnly()
     {

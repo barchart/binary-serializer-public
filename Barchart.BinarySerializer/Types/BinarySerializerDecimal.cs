@@ -17,7 +17,7 @@ public class BinarySerializerDecimal : IBinaryTypeSerializer<decimal>
 
     #endregion
 
-    #region Constructors
+    #region Constructor(s)
 
     public BinarySerializerDecimal()
     {

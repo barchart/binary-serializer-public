@@ -2,6 +2,8 @@ namespace Barchart.BinarySerializer.Tests.Common;
 
 public static class Helpers
 {
+    #region Methods
+
     public static byte[] ConvertToBytes(bool[] bits)
     {
         int byteCount = (int)Math.Ceiling(bits.Length / 8.0); 
@@ -52,4 +54,6 @@ public static class Helpers
 
         return combinedArray;
     }
+
+    #endregion
 }

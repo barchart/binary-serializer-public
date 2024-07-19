@@ -17,7 +17,7 @@ public class BinarySerializerDateTime : IBinaryTypeSerializer<DateTime>
 
     #endregion
 
-    #region Constructors
+    #region Constructor(s)
 
     public BinarySerializerDateTime()
     {
