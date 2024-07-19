@@ -17,7 +17,8 @@ To present you the way `Binary Serializer` can be used, here are simple examples
 Serializing single entity:
 
 ```csharp
-using Barchart.BinarySerializer;
+using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas.Factories;
 
 TestClass testObject = new()
 {
@@ -50,7 +51,8 @@ Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 123
 Serializing difference between two entities:
 
 ```csharp
-using Barchart.BinarySerializer;
+using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas.Factories;
 
 TestClass testObjectPrevious = new()
 {
