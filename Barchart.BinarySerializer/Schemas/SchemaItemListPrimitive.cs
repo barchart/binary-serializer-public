@@ -7,6 +7,21 @@ using Barchart.BinarySerializer.Types;
 
 namespace Barchart.BinarySerializer.Schemas;
 
+/// <summary>
+///     Manages the serialization and deserialization of a list of primitive types associated with an entity
+///     into a binary format. This class abstracts the complexities of handling binary data conversion for lists,
+///     including support for both complete and differential serialization to efficiently manage data changes.
+///     It utilizes a specified serializer for the elements within the list to ensure accurate type handling.
+/// </summary>
+/// <typeparam name="TEntity">
+///     The type which contains the data to be serialized. In other words,
+///     this is the source of data being serialized (or the assignment
+///     target of data being deserialized).
+/// </typeparam>
+/// <typeparam name="TItem">
+///     The type of the items being serialized (which is read from the source
+///     object) or deserialized (which assigned to the source object).
+/// </typeparam>
 public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new()
 {
     #region Fields

@@ -6,6 +6,19 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Schemas;
 
+/// <summary>
+///     Provides a mechanism for handling the serialization and deserialization of nested properties within an entity,
+///     facilitating the conversion to and from a binary format while managing nullability and presence flags for optimized storage efficiency.
+/// </summary>
+/// <typeparam name="TEntity">
+///     The type which contains the data to be serialized. In other words,
+///     this is the source of data being serialized (or the assignment
+///     target of data being deserialized).
+/// </typeparam>
+/// <typeparam name="TProperty">
+///     The type of data being serialized (which is read from the source
+///     object) or deserialized (which assigned to the source object).
+/// </typeparam>
 public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity: class, new() where TProperty: class, new()
 {
     #region Fields

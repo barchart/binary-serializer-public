@@ -6,6 +6,21 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Schemas;
 
+/// <summary>
+///     Manages the serialization and deserialization of list of complex types within a binary data context.
+///     This class facilitates the structured encoding and decoding of item lists, leveraging a defined schema for each item
+///     to ensure data integrity and support efficient data exchange. It enables both comprehensive and differential
+///     serialization strategies, optimizing data storage and transmission by focusing on the differences between item states.
+/// </summary>
+/// <typeparam name="TEntity">
+///     The type which contains the data to be serialized. In other words,
+///     this is the source of data being serialized (or the assignment
+///     target of data being deserialized).
+/// </typeparam>
+/// <typeparam name="TItem">
+///     The type of the items being serialized (which is read from the source
+///     object) or deserialized (which assigned to the source object).
+/// </typeparam>
 public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new() where TItem : class, new()
 {
     #region Fields
