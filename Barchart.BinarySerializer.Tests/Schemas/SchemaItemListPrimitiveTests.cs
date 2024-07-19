@@ -43,7 +43,7 @@ public class SchemaItemListPrimitiveTests
     #region Test Methods (Encode)
     
     [Fact]
-    public void Encode_WithNonNullListProperty_WritesAllItems()
+    public void Encode_WithNonNullListProperty_EncodesList()
     {
         TestEntity testEntity = new()
         {
@@ -73,7 +73,7 @@ public class SchemaItemListPrimitiveTests
     }
 
     [Fact]
-    public void Encode_WithNullListProperty_WritesZeroAsCount()
+    public void Encode_WithNullListProperty_SetsIsNullFlag()
     {
         TestEntity testEntity = new()
         {
@@ -84,19 +84,59 @@ public class SchemaItemListPrimitiveTests
 
         _reader.Reset();
 
-        bool isListNull = _reader.ReadBit();
         bool isListMissing = _reader.ReadBit();
+        bool isListNull = _reader.ReadBit();
 
-        Assert.False(isListNull);
-        Assert.True(isListMissing);
+        Assert.False(isListMissing);
+        Assert.True(isListNull);
     }
 
     #endregion
 
     #region Test Methods (Decode)
 
+    [Fact]
+    public void Decode_WithMissingListProperty_SetsObjectPropertyToNull()
+    {
+        _writer.WriteBit(false);
+        _writer.WriteBit(true);
+
+        TestEntity testEntity = new()
+        {
+            IntListProperty = new List<int> { 1, 2, 3 }
+        };
+
+        _schemaItemListPrimitive.Decode(_reader, testEntity);
+
+        Assert.Null(testEntity.IntListProperty);
+    }
+
+    [Fact]
+    public void Decode_WithNonNullListProperty_SetsPropertyToDecodedListl()
+    {
+        _writer.WriteBit(false);
+        _writer.WriteBit(false);
+        
+        _writer.WriteBytes(BitConverter.GetBytes(3));
+
+        _writer.WriteBit(false);
+        _writer.WriteBytes(BitConverter.GetBytes(1));
+        _writer.WriteBit(false);
+        _writer.WriteBytes(BitConverter.GetBytes(2));
+        _writer.WriteBit(false);
+        _writer.WriteBytes(BitConverter.GetBytes(3));
     
-   
+        TestEntity testEntity = new()
+        {
+            IntListProperty = new List<int> { 1, 2, 3 }
+        };
+
+        TestEntity decodedEntity = new() { };
+
+        _schemaItemListPrimitive.Decode(_reader, decodedEntity);
+
+        Assert.True(_schemaItemListPrimitive.GetEquals(testEntity, decodedEntity));
+    }
 
     #endregion
 
