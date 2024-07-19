@@ -6,4 +6,4 @@ The scripts are located in the folder named `Barchart.BinarySerializer.Scripts`.
 
 The examples are located in the folder named `Barchart.BinarySerializer.Examples`.
 
-The tests are located in the folder named `BBarchart.BinarySerializer.Tests`.
+The tests are located in the folder named `Barchart.BinarySerializer.Tests`.
