@@ -132,7 +132,104 @@ public class SchemaItemListObjectTests
 
     #region Test Methods (GetEquals)
 
-    
+    [Fact]
+    public void GetEquals_WithBothListsNull_ReturnsTrue()
+    {
+        TestEntity entityA = new() { ListProperty = null };
+        TestEntity entityB = new() { ListProperty = null };
+
+        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void GetEquals_WithBothListsEmpty_ReturnsTrue()
+    {
+        TestEntity entityA = new() { ListProperty = new List<TestProperty>() };
+        TestEntity entityB = new() { ListProperty = new List<TestProperty>() };
+
+        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void GetEquals_WithSameItems_ReturnsTrue()
+    {
+        TestEntity entityA = new()
+        {
+            ListProperty = new List<TestProperty>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 123 },
+                new() { PropertyName = "Test2", PropertyValue = 456 }
+            }
+        };
+
+        TestEntity entityB = new()
+        {
+            ListProperty = new List<TestProperty>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 123 },
+                new() { PropertyName = "Test2", PropertyValue = 456 }
+            }
+        };
+
+        _mockSchema.Setup(schema => schema.GetEquals(It.Is<TestProperty>(p => p.PropertyName == "Test1" && p.PropertyValue == 123), 
+            It.Is<TestProperty>(p => p.PropertyName == "Test1" && p.PropertyValue == 123)))
+            .Returns(true);
+
+        _mockSchema.Setup(schema => schema.GetEquals(It.Is<TestProperty>(p => p.PropertyName == "Test2" && p.PropertyValue == 456), 
+            It.Is<TestProperty>(p => p.PropertyName == "Test2" && p.PropertyValue == 456)))
+            .Returns(true);
+
+        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void GetEquals_WithDifferentItems_ReturnsFalse()
+    {
+        TestEntity entityA = new()
+        {
+            ListProperty = new List<TestProperty>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 123 },
+                new() { PropertyName = "Test2", PropertyValue = 456 }
+            }
+        };
+
+        TestEntity entityB = new()
+        {
+            ListProperty = new List<TestProperty>
+            {
+                new() { PropertyName = "Test3", PropertyValue = 789 },
+                new() { PropertyName = "Test4", PropertyValue = 101 }
+            }
+        };
+
+        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void GetEquals_WithOneNullList_ReturnsFalse()
+    {
+        TestEntity entityA = new() { ListProperty = null };
+        TestEntity entityB = new()
+        {
+            ListProperty = new List<TestProperty>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 123 }
+            }
+        };
+
+        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+
+        Assert.False(result);
+    }
 
     #endregion
 
