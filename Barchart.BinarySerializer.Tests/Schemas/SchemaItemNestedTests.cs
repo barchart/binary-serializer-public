@@ -1,8 +1,10 @@
+#region Using Statements
+
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Attributes;
-using Moq;
-using Xunit;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Tests.Schemas;
 
@@ -245,10 +247,6 @@ public class SchemaItemNestedTests
     public class TestEntity
     {
         public TestProperty? NestedProperty { get; set; }
-
-        public TestEntity()
-        {  
-        }
     }
 
     public class TestProperty
@@ -258,10 +256,6 @@ public class SchemaItemNestedTests
 
         [Serialize(false)]
         public int PropertyValue { get; set; }
-
-        public TestProperty()
-        {
-        }
     }
 
     #endregion

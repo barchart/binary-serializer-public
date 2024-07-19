@@ -196,7 +196,7 @@ public class SchemaItemTests
     public class TestEntity
     {
         [Serialize(true)]
-        public string? Name { get; set; }
+        public string Name { get; set; } = "";
     }
 
     #endregion

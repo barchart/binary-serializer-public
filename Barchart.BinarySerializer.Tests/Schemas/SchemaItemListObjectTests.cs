@@ -13,9 +13,11 @@ public class SchemaItemListObjectTests
     #region Fields
 
     private readonly ITestOutputHelper _testOutputHelper;
+
     private readonly byte[] _buffer;
     private readonly IDataBufferWriter _writer;
     private readonly IDataBufferReader _reader;
+    
     private readonly Mock<ISchema<TestProperty>> _mockSchema;
     private readonly SchemaItemListObject<TestEntity, TestProperty> _schemaItemListObject;
 
