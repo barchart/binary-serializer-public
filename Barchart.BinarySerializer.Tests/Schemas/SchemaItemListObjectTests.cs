@@ -2,13 +2,6 @@
 
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Types;
-using Barchart.BinarySerializer.Schemas.Exceptions;
-using Barchart.BinarySerializer.Attributes;
-
-using Moq;
-using Xunit;
-
 
 #endregion
 
@@ -80,7 +73,57 @@ public class SchemaItemListObjectTests
     #endregion
 
     #region Test Methods (Decode)
-    
+
+    [Fact]
+    public void Decode_WithNonNullListProperty_CallsSchemaDeserializeForEachItem()
+    {
+        var callOrder = 0;
+        
+        _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()))
+            .Callback((IDataBufferReader reader, TestProperty property) =>
+            {
+                if (callOrder == 0)
+                {
+                    property.PropertyName = "Test1";
+                    property.PropertyValue = 123;
+                }
+                else if (callOrder == 1)
+                {
+                    property.PropertyName = "Test2";
+                    property.PropertyValue = 456;
+                }
+
+                callOrder++;
+            });
+
+        _writer.WriteBit(false);
+        _writer.WriteBit(false);
+        _writer.WriteBytes(BitConverter.GetBytes(2));
+
+        TestEntity testEntity = new();
+
+        _schemaItemListObject.Decode(_reader, testEntity);
+
+        Assert.NotNull(testEntity.ListProperty);
+        Assert.Equal(2, testEntity.ListProperty.Count);
+        Assert.Equal("Test1", testEntity.ListProperty[0].PropertyName);
+        Assert.Equal(123, testEntity.ListProperty[0].PropertyValue);
+        Assert.Equal("Test2", testEntity.ListProperty[1].PropertyName);
+        Assert.Equal(456, testEntity.ListProperty[1].PropertyValue);
+    }
+
+    [Fact]
+    public void Decode_WithNullListProperty_SetsPropertyToNull()
+    {
+        _writer.WriteBit(true);
+
+        TestEntity testEntity = new()
+        {
+            ListProperty = new List<TestProperty>()
+        };
+
+        _schemaItemListObject.Decode(_reader, testEntity);
+    } 
 
     #endregion
 
