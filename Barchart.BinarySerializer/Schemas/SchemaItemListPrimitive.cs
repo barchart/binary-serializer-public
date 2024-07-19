@@ -60,6 +60,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
             foreach (var item in items)
             {
+                WriteMissingFlag(writer, false);
+
                 _elementSerializer.Encode(writer, item);
             }
         }
@@ -68,19 +70,24 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity current, TEntity previous)
     {
-        List<TItem> currentItems = _getter(current);
-        List<TItem> previousItems = _getter(previous);
 
-        bool areListsEqual = GetEquals(current, previous);
-
-        if (areListsEqual)
+        if (GetEquals(current, previous))
         {
             WriteMissingFlag(writer, true);
             
             return;
         }
 
+        List<TItem> currentItems = _getter(current);
+        List<TItem> previousItems = _getter(previous);
+
         WriteMissingFlag(writer, false);
+        WriteNullFlag(writer, currentItems == null);
+            
+        if (currentItems == null)
+        {
+            return;
+        }
 
         int numberOfElements = currentItems.Count;
 
@@ -95,6 +102,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
             else
             {
                 WriteMissingFlag(writer, false);
+                
                 _elementSerializer.Encode(writer, currentItems[i]);
             }
         }
@@ -103,20 +111,44 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     /// <inheritdoc />
     public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
     {
-        bool isMissing = ReadMissingFlag(reader);
-
-        if (isMissing)
+        if (ReadMissingFlag(reader))
         {
+            return;
+        }
+
+        if (ReadNullFlag(reader))
+        {
+            if (!existing)
+            {
+                _setter(target, null!);
+            }
+            
             return;
         }
         
         int numberOfElements = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         
-        List<TItem> items = new();
-
+        List<TItem> items = existing && _getter(target) != null ? _getter(target) : new List<TItem>();
+    
         for (int i = 0; i < numberOfElements; i++)
         {
-            items.Add(_elementSerializer.Decode(reader));
+            if (ReadMissingFlag(reader))
+            {
+                continue;
+            }
+            else
+            {
+                TItem decodedItem = _elementSerializer.Decode(reader);
+
+                if (existing && items.Count > i)
+                {
+                    items[i] = decodedItem;
+                }
+                else
+                {
+                    items.Add(decodedItem);
+                }
+            }
         }
 
         _setter(target, items);
