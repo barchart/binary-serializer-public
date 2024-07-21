@@ -47,7 +47,7 @@ ISchema<TestClass> schema = schemaFactory.Make<TestClass>();
 DataBufferWriter writer = new(new byte[16]);
 
 // Serialize the object to a binary format
-byte[] bytes = schema.Serialize(writer, bryan);
+byte[] bytes = schema.Serialize(writer,testObject);
 
 // Create a DataBufferReader with the serialized bytes for deserialization
 DataBufferReader reader = new(bytes);
