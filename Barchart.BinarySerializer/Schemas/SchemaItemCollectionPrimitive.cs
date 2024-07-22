@@ -113,11 +113,11 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
             return;
         }
 
-        IList<TItem> items = _getter(target);
+        IList<TItem> currentItems = _getter(target);
         
         if (ReadNullFlag(reader))
         {
-            if (items != null)
+            if (currentItems != null)
             {
                 _setter(target, null!);
             }
@@ -125,10 +125,7 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
             return;
         }
         
-        if (items == null)
-        {
-            items = new List<TItem>();
-        }
+        List<TItem> items = new();
         
         int numberOfElements = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         

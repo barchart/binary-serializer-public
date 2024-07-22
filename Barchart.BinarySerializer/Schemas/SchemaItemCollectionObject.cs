@@ -163,10 +163,14 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
             }
             else
             {
-                TItem item = new();
-                
-                _itemSchema.Deserialize(reader, item);
-                items.Add(item);
+                if (currentItems != null && currentItems.Count > i)
+                {
+                    items.Add(_itemSchema.Deserialize(reader, currentItems[i]));
+                }
+                else
+                {
+                    items.Add(_itemSchema.Deserialize(reader));
+                }
             }
         }
 
