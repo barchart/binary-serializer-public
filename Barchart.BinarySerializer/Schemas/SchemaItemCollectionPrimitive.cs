@@ -113,17 +113,25 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
             return;
         }
 
+        IList<TItem> items = _getter(target);
+        
         if (ReadNullFlag(reader))
         {
-            _setter(target, null!);
+            if (items != null)
+            {
+                _setter(target, null!);
+            }
             
             return;
         }
         
+        if (items == null)
+        {
+            items = new List<TItem>();
+        }
+        
         int numberOfElements = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         
-        IList<TItem> items = _getter(target) ?? new List<TItem>();
-    
         for (int i = 0; i < numberOfElements; i++)
         {
             if (ReadMissingFlag(reader))
