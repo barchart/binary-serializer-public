@@ -2,6 +2,7 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Types;
+using Microsoft.Extensions.Logging.Abstractions;
 
 #endregion
 
@@ -100,23 +101,7 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
             
         if (currentItems != null)
         {
-            int numberOfElements = currentItems.Count;
-
-            writer.WriteBytes(BitConverter.GetBytes(numberOfElements));
-            
-            for (int i = 0; i < numberOfElements; i++)
-            {
-                if (_elementSerializer.GetEquals(currentItems[i], previousItems[i]))
-                {
-                    WriteMissingFlag(writer, true);
-                }
-                else
-                {
-                    WriteMissingFlag(writer, false);
-                    
-                    _elementSerializer.Encode(writer, currentItems[i]);
-                }
-            }
+            WriteItems(writer, currentItems, previousItems);
         }
     }
 
@@ -180,6 +165,30 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
         }
 
         return true;
+    }
+
+    private void WriteItems(IDataBufferWriter writer, IList<TItem> currentItems, IList<TItem>? previousItems)
+    {
+        int numberOfElements = currentItems.Count;
+        writer.WriteBytes(BitConverter.GetBytes(numberOfElements));
+
+        for (int i = 0; i < numberOfElements; i++)
+        {
+            WriteItem(writer, currentItems[i], previousItems != null ? previousItems[i] : default);
+        }
+    }
+
+    private void WriteItem(IDataBufferWriter writer, TItem currentItem, TItem? previousItem)
+    {
+        if (currentItem != null && previousItem != null && _elementSerializer.GetEquals(currentItem, previousItem))
+        {
+            WriteMissingFlag(writer, true);
+        }
+        else
+        {
+            WriteMissingFlag(writer, false);
+            _elementSerializer.Encode(writer, currentItem);
+        }
     }
 
     private static bool ReadMissingFlag(IDataBufferReader reader)
