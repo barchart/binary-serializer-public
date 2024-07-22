@@ -58,7 +58,7 @@ public class SchemaFactory : ISchemaFactory
         
         MethodInfo unboundMethod;
         
-        if (_binaryTypeSerializerFactory.Supports(memberType))
+        if (IsTypeSupported(memberType))
         {
             typeParameters = new [] { typeof(TEntity), memberType };
 
@@ -108,7 +108,7 @@ public class SchemaFactory : ISchemaFactory
 
         return (ISchemaItem<TEntity>)schemaItem;
     }
-    
+
     private ISchemaItem<TEntity> MakeSchemaItem<TEntity, TMember>(MemberInfo memberInfo) where TEntity: class, new()
     {
         Func<TEntity, TMember> getter = MakeMemberGetter<TEntity, TMember>(memberInfo);
@@ -320,19 +320,19 @@ public class SchemaFactory : ISchemaFactory
         return comparison;
     }
 
-    private static bool PropertyCanBeWritten(PropertyInfo memberInfo)
+    private static bool PropertyCanBeWritten(PropertyInfo propertyInfo)
     {
-        return memberInfo.GetSetMethod() != null;
-    }
-
-    private static bool PropertyHasSerializeAttribute(PropertyInfo memberInfo)
-    {
-        return MemberHasSerializeAttribute(memberInfo);
+        return propertyInfo.GetSetMethod() != null;
     }
 
     private static bool FieldCanBeWritten(FieldInfo fieldInfo)
     {
         return !fieldInfo.IsInitOnly && !fieldInfo.IsLiteral;
+    }
+
+    private static bool PropertyHasSerializeAttribute(PropertyInfo propertyInfo)
+    {
+        return MemberHasSerializeAttribute(propertyInfo);
     }
     
     private static bool FieldHasSerializeAttribute(FieldInfo fieldInfo)
@@ -358,6 +358,11 @@ public class SchemaFactory : ISchemaFactory
     private static bool IsArrayType(Type type)
     {
         return type.IsArray;
+    }
+
+    private bool IsTypeSupported(Type type)
+    {
+        return _binaryTypeSerializerFactory.Supports(type);
     }
 
     #endregion
