@@ -19,7 +19,7 @@ public class SchemaItemCollectionObjectTests
     private readonly IDataBufferReader _reader;
     
     private readonly Mock<ISchema<TestProperty>> _mockSchema;
-    private readonly SchemaItemCollectionObject<TestEntity, TestProperty> _schemaItemListObject;
+    private readonly SchemaItemCollectionObject<TestEntity, TestProperty> _schemaItemCollectionObject;
 
     #endregion
 
@@ -34,7 +34,7 @@ public class SchemaItemCollectionObjectTests
         _reader = new DataBufferReader(_buffer);
 
         _mockSchema = new Mock<ISchema<TestProperty>>();
-        _schemaItemListObject = new SchemaItemCollectionObject<TestEntity, TestProperty>("ListProperty", entity => entity.ListProperty!, (entity, value) => entity.ListProperty = value?.ToList(), _mockSchema.Object);
+        _schemaItemCollectionObject = new SchemaItemCollectionObject<TestEntity, TestProperty>("CollectionProperty", entity => entity.CollectionProperty!, (entity, value) => entity.CollectionProperty = value?.ToList(), _mockSchema.Object);
     }
 
     #endregion
@@ -42,32 +42,32 @@ public class SchemaItemCollectionObjectTests
     #region Test Methods (Encode)
     
     [Fact]
-    public void Encode_WithNonNullListProperty_CallsSchemaSerializeForEachItem()
+    public void Encode_WithNonNullCollectionProperty_CallsSchemaSerializeForEachItem()
     {
         TestEntity testEntity = new()
         {
-            ListProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
             }
         };
 
-        _schemaItemListObject.Encode(_writer, testEntity);
+        _schemaItemCollectionObject.Encode(_writer, testEntity);
 
         _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test1" && p.PropertyValue == 123)), Times.Once);
         _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test2" && p.PropertyValue == 456)), Times.Once);
     }
 
     [Fact]
-    public void Encode_WithNullListProperty_WritesNullFlag()
+    public void Encode_WithNullCollectionProperty_WritesNullFlag()
     {
         TestEntity testEntity = new()
         {
-            ListProperty = null
+            CollectionProperty = null
         };
 
-        _schemaItemListObject.Encode(_writer, testEntity);
+        _schemaItemCollectionObject.Encode(_writer, testEntity);
 
         _reader.Reset();
         Assert.False(_reader.ReadBit());
@@ -78,7 +78,7 @@ public class SchemaItemCollectionObjectTests
     #region Test Methods (Decode)
 
     [Fact]
-    public void Decode_WithNonNullListProperty_CallsSchemaDeserializeForEachItem()
+    public void Decode_WithNonNullCollectionProperty_CallsSchemaDeserializeForEachItem()
     {
         var callOrder = 0;
 
@@ -105,29 +105,29 @@ public class SchemaItemCollectionObjectTests
 
         TestEntity testEntity = new();
 
-        _schemaItemListObject.Decode(_reader, testEntity);
+        _schemaItemCollectionObject.Decode(_reader, testEntity);
 
-        Assert.NotNull(testEntity.ListProperty);
-        Assert.Equal(2, testEntity.ListProperty.Count);
-        Assert.Equal("Test1", testEntity.ListProperty[0].PropertyName);
-        Assert.Equal(123, testEntity.ListProperty[0].PropertyValue);
-        Assert.Equal("Test2", testEntity.ListProperty[1].PropertyName);
-        Assert.Equal(456, testEntity.ListProperty[1].PropertyValue);
+        Assert.NotNull(testEntity.CollectionProperty);
+        Assert.Equal(2, testEntity.CollectionProperty.Count);
+        Assert.Equal("Test1", testEntity.CollectionProperty[0].PropertyName);
+        Assert.Equal(123, testEntity.CollectionProperty[0].PropertyValue);
+        Assert.Equal("Test2", testEntity.CollectionProperty[1].PropertyName);
+        Assert.Equal(456, testEntity.CollectionProperty[1].PropertyValue);
     }
 
     [Fact]
-    public void Decode_WithNullListProperty_SetsPropertyToNull()
+    public void Decode_WithNullCollectionProperty_SetsPropertyToNull()
     {
         _writer.WriteBit(true);
 
         TestEntity testEntity = new()
         {
-            ListProperty = new List<TestProperty>()
+            CollectionProperty = new List<TestProperty>()
         };
 
-        _schemaItemListObject.Decode(_reader, testEntity);
+        _schemaItemCollectionObject.Decode(_reader, testEntity);
 
-        Assert.Empty(testEntity.ListProperty);
+        Assert.Empty(testEntity.CollectionProperty);
     } 
 
     #endregion
@@ -139,15 +139,15 @@ public class SchemaItemCollectionObjectTests
     {
         TestEntity entityA = new() 
         { 
-            ListProperty = null
+            CollectionProperty = null
         };
         
         TestEntity entityB = new()
         {
-            ListProperty = null
+            CollectionProperty = null
         };
 
-        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
 
         Assert.True(result);
     }
@@ -157,15 +157,15 @@ public class SchemaItemCollectionObjectTests
     {
         TestEntity entityA = new() 
         { 
-            ListProperty = new List<TestProperty>() 
+            CollectionProperty = new List<TestProperty>() 
         };
 
         TestEntity entityB = new() 
         { 
-            ListProperty = new List<TestProperty>() 
+            CollectionProperty = new List<TestProperty>() 
         };
 
-        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
 
         Assert.True(result);
     }
@@ -175,7 +175,7 @@ public class SchemaItemCollectionObjectTests
     {
         TestEntity entityA = new()
         {
-            ListProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty>
             {
                 new() 
                 { 
@@ -192,7 +192,7 @@ public class SchemaItemCollectionObjectTests
 
         TestEntity entityB = new()
         {
-            ListProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty>
             {
                 new() 
                 { 
@@ -215,7 +215,7 @@ public class SchemaItemCollectionObjectTests
             It.Is<TestProperty>(p => p.PropertyName == "Test2" && p.PropertyValue == 456)))
             .Returns(true);
 
-        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
 
         Assert.True(result);
     }
@@ -225,7 +225,7 @@ public class SchemaItemCollectionObjectTests
     {
         TestEntity entityA = new()
         {
-            ListProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
@@ -234,14 +234,14 @@ public class SchemaItemCollectionObjectTests
 
         TestEntity entityB = new()
         {
-            ListProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty>
             {
                 new() { PropertyName = "Test3", PropertyValue = 789 },
                 new() { PropertyName = "Test4", PropertyValue = 101 }
             }
         };
 
-        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
 
         Assert.False(result);
     }
@@ -249,16 +249,16 @@ public class SchemaItemCollectionObjectTests
     [Fact]
     public void GetEquals_WithOneNullList_ReturnsFalse()
     {
-        TestEntity entityA = new() { ListProperty = null };
+        TestEntity entityA = new() { CollectionProperty = null };
         TestEntity entityB = new()
         {
-            ListProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 }
             }
         };
 
-        bool result = _schemaItemListObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
 
         Assert.False(result);
     }
@@ -269,7 +269,9 @@ public class SchemaItemCollectionObjectTests
 
     public class TestEntity
     {
-        public List<TestProperty>? ListProperty { get; set; }
+        [Serialize(true)]
+
+        public List<TestProperty>? CollectionProperty { get; set; }
     }
 
     public class TestProperty
