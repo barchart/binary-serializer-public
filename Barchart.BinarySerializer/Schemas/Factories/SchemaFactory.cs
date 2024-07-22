@@ -199,11 +199,11 @@ public class SchemaFactory : ISchemaFactory
     {
         IEnumerable<MemberInfo> fields = entityType
             .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .Where(field => FieldHasSerializeAttribute(field) && IsTypeSupported(field.FieldType))
+            .Where(field => FieldHasSerializeAttribute(field) || !IsTypeSupported(field.FieldType))
             .Where(FieldCanBeWritten);
 
         IEnumerable<MemberInfo> properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(property => PropertyHasSerializeAttribute(property) && IsTypeSupported(property.PropertyType))
+            .Where(property => PropertyHasSerializeAttribute(property) || !IsTypeSupported(property.PropertyType))
             .Where(PropertyCanBeWritten);
 
         return fields.Concat(properties);
