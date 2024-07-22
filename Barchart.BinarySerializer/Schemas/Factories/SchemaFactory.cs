@@ -136,7 +136,7 @@ public class SchemaFactory : ISchemaFactory
         return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
     }
 
-    private ISchemaItem<TEntity> MakeSchemaItemColletionPrimitive<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
+    private ISchemaItem<TEntity> MakeSchemaItemCollectionPrimitive<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
     {
         string name = memberInfo.Name;
 
@@ -172,7 +172,7 @@ public class SchemaFactory : ISchemaFactory
 
     private static Func<MethodInfo, bool> GetMakeSchemaItemCollectionPrimitivePredicate(Type[] typeParameters)
     {
-        return methodInfo => methodInfo.Name == nameof (MakeSchemaItemColletionPrimitive) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
+        return methodInfo => methodInfo.Name == nameof (MakeSchemaItemCollectionPrimitive) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
     private static Func<MethodInfo, bool> GetMakeSchemaItemCollectionObjectPredicate(Type[] typeParameters)
