@@ -130,17 +130,14 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
 
         if (ReadNullFlag(reader))
         {
-            if (!existing)
-            {
-                _setter(target, null!);
-            }
+            _setter(target, null!);
             
             return;
         }
         
         int numberOfElements = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         
-        IList<TItem> items = existing && _getter(target) != null ? _getter(target) : new List<TItem>();
+        IList<TItem> items = _getter(target) ?? new List<TItem>();
     
         for (int i = 0; i < numberOfElements; i++)
         {
@@ -152,7 +149,7 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
             {
                 TItem decodedItem = _elementSerializer.Decode(reader);
 
-                if (existing && items.Count > i)
+                if (items.Count > i)
                 {
                     items[i] = decodedItem;
                 }
