@@ -274,24 +274,32 @@ public class SchemaFactory : ISchemaFactory
             Expression.Parameter(typeof(TEntity)),
             Expression.Parameter(typeof(IList<TItem>))
         };
-        
+
         MemberExpression memberAccess = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
 
         Type memberType = memberInfo is PropertyInfo propertyInfo ? propertyInfo.PropertyType : (memberInfo as FieldInfo)!.FieldType;
+
+        Expression nullCheckExpression = Expression.Equal(typeParameterExpressions[1], Expression.Constant(null, typeof(IList<TItem>)));
+
 
         Expression assignmentExpression;
         if (IsArrayType(memberType))
         {
             MethodInfo toArrayMethod = typeof(Enumerable).GetMethod("ToArray")!.MakeGenericMethod(memberType.GetElementType()!);
             MethodCallExpression listToArrayConversion = Expression.Call(toArrayMethod, typeParameterExpressions[1]);
-            assignmentExpression = Expression.Assign(memberAccess, listToArrayConversion);
+
+            assignmentExpression = Expression.Condition(nullCheckExpression, Expression.Constant(null, memberType), Expression.Convert(listToArrayConversion, memberType));
         }
         else
         {
-            assignmentExpression = Expression.Assign(memberAccess, typeParameterExpressions[1]);
+            Type itemType = memberType.GetGenericArguments()[0];
+            MethodInfo toListMethod = typeof(Enumerable).GetMethod("ToList")!.MakeGenericMethod(itemType);
+            MethodCallExpression listToListConversion = Expression.Call(toListMethod, typeParameterExpressions[1]);
+
+            assignmentExpression = Expression.Condition(nullCheckExpression, Expression.Constant(null, memberType), Expression.Convert(listToListConversion, memberType));
         }
    
-        return  Expression.Lambda<Action<TEntity, IList<TItem>>>(assignmentExpression, typeParameterExpressions[0], typeParameterExpressions[1]).Compile();
+        return Expression.Lambda<Action<TEntity, IList<TItem>>>(assignmentExpression, typeParameterExpressions[0], typeParameterExpressions[1]).Compile();
     }
 
     private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: class, new()
