@@ -237,13 +237,19 @@ public class SchemaFactory : ISchemaFactory
         ParameterExpression entityParameter = Expression.Parameter(typeof(TEntity));
         MemberExpression memberAccess = Expression.MakeMemberAccess(entityParameter, memberInfo);
 
-        if (memberInfo is PropertyInfo propertyInfo && propertyInfo.MemberType == MemberTypes.Property && propertyInfo.PropertyType.IsArray)
+        Type memberType = memberInfo is PropertyInfo propertyInfo ? propertyInfo.PropertyType : (memberInfo as FieldInfo)!.FieldType;
+
+        Expression conversion;
+        if (IsArrayType(memberType))
         {
-            UnaryExpression arrayToIListConversion = Expression.Convert(memberAccess, typeof(IList<TItem>));
-            return Expression.Lambda<Func<TEntity, IList<TItem>>>(arrayToIListConversion, entityParameter).Compile();
+            conversion = Expression.Convert(memberAccess, typeof(IList<TItem>));
+        }
+        else
+        {
+            conversion = memberAccess;
         }
         
-        return Expression.Lambda<Func<TEntity, IList<TItem>>>(memberAccess, entityParameter).Compile();
+        return Expression.Lambda<Func<TEntity, IList<TItem>>>(conversion, entityParameter).Compile();
     }
     
     private static Action<TEntity, TMember> MakeMemberSetter<TEntity, TMember>(MemberInfo memberInfo)
@@ -265,14 +271,19 @@ public class SchemaFactory : ISchemaFactory
         ParameterExpression listParameter = Expression.Parameter(typeof(IList<TItem>));
         MemberExpression memberAccess = Expression.MakeMemberAccess(entityParameter, memberInfo);
 
-        if (memberInfo is PropertyInfo propertyInfo && propertyInfo.MemberType == MemberTypes.Property && propertyInfo.PropertyType.IsArray)
+        Type memberType = memberInfo is PropertyInfo propertyInfo ? propertyInfo.PropertyType : (memberInfo as FieldInfo)!.FieldType;
+
+        Expression assignment;
+        if (IsArrayType(memberType))
         {
-            UnaryExpression listToArrayConversion = Expression.Convert(listParameter, propertyInfo.PropertyType);
-            BinaryExpression arrayAssignment = Expression.Assign(memberAccess, listToArrayConversion);
-            return Expression.Lambda<Action<TEntity, IList<TItem>>>(arrayAssignment, entityParameter, listParameter).Compile();
+            UnaryExpression listToArrayConversion = Expression.Convert(listParameter, memberType);
+            assignment = Expression.Assign(memberAccess, listToArrayConversion);
+        }
+        else
+        {
+            assignment = Expression.Assign(memberAccess, listParameter);
         }
 
-        BinaryExpression assignment = Expression.Assign(memberAccess, listParameter);
         return Expression.Lambda<Action<TEntity, IList<TItem>>>(assignment, entityParameter, listParameter).Compile();
     }
 
@@ -315,7 +326,17 @@ public class SchemaFactory : ISchemaFactory
 
     private static bool IsCollectionType(Type type)
     {
-        return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) || type.IsArray;
+        return IsListType(type) || IsArrayType(type);
+    }
+
+    private static bool IsListType(Type type)
+    {
+        return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
+    }
+
+    private static bool IsArrayType(Type type)
+    {
+        return type.IsArray;
     }
 
     #endregion
