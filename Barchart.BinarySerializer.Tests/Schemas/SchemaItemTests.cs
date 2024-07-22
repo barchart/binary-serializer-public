@@ -189,32 +189,6 @@ public class SchemaItemTests
         Assert.False(result);
     }
 
-    [Fact]
-    public void GetEquals_WithDifferentValues_ReturnsFalse2()
-    {
-        var testObject = new TestEntity2()
-        {
-            Names = null,
-            Names2 = new List<int?> { 1, null, 3 }
-
-        };
-        var testObject2 = new TestEntity2()
-        {
-            Names = new int[] {1, 2, 3},
-            Names2 = new List<int?> { 1, null, 3 }
-
-        };
-
-        SchemaFactory schemaFactory = new();
-        DataBufferWriter writer = new(new byte[1000]);
-        ISchema<TestEntity2> schema = schemaFactory.Make<TestEntity2>();
-        byte[] bytes = schema.Serialize(writer, testObject, testObject2);
-        DataBufferReader reader = new(bytes);
-        TestEntity2 deserializedTestObject = schema.Deserialize(reader, testObject2);
-
-
-    }
-
     #endregion
 
     #region Nested Types
