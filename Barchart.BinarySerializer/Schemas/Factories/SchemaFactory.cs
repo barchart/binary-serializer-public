@@ -81,11 +81,11 @@ public class SchemaFactory : ISchemaFactory
 
             if (_binaryTypeSerializerFactory.Supports(itemType!))
             {
-                unboundMethod = methods.Single(GetMakeSchemaItemListPrimitivePredicate(typeParameters));
+                unboundMethod = methods.Single(GetMakeSchemaItemCollectionPrimitivePredicate(typeParameters));
             }
             else
             {
-                unboundMethod = methods.Single(GetMakeSchemaItemListObjectPredicate(typeParameters));
+                unboundMethod = methods.Single(GetMakeSchemaItemCollectionObjectPredicate(typeParameters));
             }
         }
         else
@@ -136,7 +136,7 @@ public class SchemaFactory : ISchemaFactory
         return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
     }
 
-    private ISchemaItem<TEntity> MakeSchemaItemListPrimitive<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
+    private ISchemaItem<TEntity> MakeSchemaItemColletionPrimitive<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
     {
         string name = memberInfo.Name;
 
@@ -148,7 +148,7 @@ public class SchemaFactory : ISchemaFactory
         return new SchemaItemCollectionPrimitive<TEntity, TItem>(name, getter, setter, itemSerializer);
     }
 
-    private ISchemaItem<TEntity> MakeSchemaItemListObject<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new() where TItem : class, new()
+    private ISchemaItem<TEntity> MakeSchemaItemCollectionObject<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new() where TItem : class, new()
     {
         string name = memberInfo.Name;
 
@@ -165,21 +165,21 @@ public class SchemaFactory : ISchemaFactory
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItem) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
-    private static Func<MethodInfo, bool> GetMakeSchemaItemListPrimitivePredicate(Type[] typeParameters)
-    {
-        return methodInfo => methodInfo.Name == nameof (MakeSchemaItemListPrimitive) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
-    }
-
-    private static Func<MethodInfo, bool> GetMakeSchemaItemListObjectPredicate(Type[] typeParameters)
-    {
-        return methodInfo => methodInfo.Name == nameof(MakeSchemaItemListObject) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
-    }
-
     private static Func<MethodInfo, bool> GetMakeSchemaItemNestedPredicate(Type[] typeParameters)
     {
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItemNested) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
+    private static Func<MethodInfo, bool> GetMakeSchemaItemCollectionPrimitivePredicate(Type[] typeParameters)
+    {
+        return methodInfo => methodInfo.Name == nameof (MakeSchemaItemColletionPrimitive) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
+    }
+
+    private static Func<MethodInfo, bool> GetMakeSchemaItemCollectionObjectPredicate(Type[] typeParameters)
+    {
+        return methodInfo => methodInfo.Name == nameof(MakeSchemaItemCollectionObject) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
+    }
+    
     private static Type GetMemberType(MemberInfo memberInfo)
     {
         if (memberInfo is PropertyInfo propertyInfo)
