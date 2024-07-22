@@ -133,6 +133,8 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
         {
             if (ReadMissingFlag(reader))
             {
+                items.Add(currentItems[i]);
+                
                 continue;
             }
             else
