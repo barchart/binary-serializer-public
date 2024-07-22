@@ -2,7 +2,6 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Types;
-using Microsoft.Extensions.Logging.Abstractions;
 
 #endregion
 
