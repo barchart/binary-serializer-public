@@ -245,14 +245,22 @@ public class SchemaFactory : ISchemaFactory
         Expression conversion;
         if (IsArrayType(memberType))
         {
-            conversion = Expression.Convert(memberAccess, typeof(IList<TItem>));
+            MethodInfo toListMethod = typeof(Enumerable).GetMethod("ToList")!.MakeGenericMethod(memberType.GetElementType()!);
+            conversion = Expression.Call(toListMethod, Expression.Convert(memberAccess, memberType.GetElementType()!.MakeArrayType()));
+            conversion = Expression.Convert(conversion, typeof(IList<TItem>));
         }
         else
         {
-            conversion = memberAccess;
+            conversion = Expression.Convert(memberAccess, typeof(IList<TItem>));
         }
-        
-        return Expression.Lambda<Func<TEntity, IList<TItem>>>(conversion, typeParameterExpressions[0]).Compile();
+
+        Expression nullCheck = Expression.Condition(
+            Expression.Equal(memberAccess, Expression.Constant(null, memberAccess.Type)),
+            Expression.Constant(null, typeof(IList<TItem>)),
+            conversion
+        );
+
+        return Expression.Lambda<Func<TEntity, IList<TItem>>>(nullCheck, typeParameterExpressions[0]).Compile();
     }
     
     private static Action<TEntity, TMember> MakeMemberSetter<TEntity, TMember>(MemberInfo memberInfo)
@@ -281,7 +289,6 @@ public class SchemaFactory : ISchemaFactory
 
         Expression nullCheckExpression = Expression.Equal(typeParameterExpressions[1], Expression.Constant(null, typeof(IList<TItem>)));
 
-
         Expression assignmentExpression;
         if (IsArrayType(memberType))
         {
@@ -298,8 +305,10 @@ public class SchemaFactory : ISchemaFactory
 
             assignmentExpression = Expression.Condition(nullCheckExpression, Expression.Constant(null, memberType), Expression.Convert(listToListConversion, memberType));
         }
+
+        Expression assignToMember = Expression.Assign(memberAccess, assignmentExpression);
    
-        return Expression.Lambda<Action<TEntity, IList<TItem>>>(assignmentExpression, typeParameterExpressions[0], typeParameterExpressions[1]).Compile();
+        return Expression.Lambda<Action<TEntity, IList<TItem>>>(assignToMember, typeParameterExpressions[0], typeParameterExpressions[1]).Compile();
     }
 
     private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: class, new()
