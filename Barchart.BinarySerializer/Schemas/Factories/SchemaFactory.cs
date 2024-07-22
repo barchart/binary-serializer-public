@@ -64,12 +64,22 @@ public class SchemaFactory : ISchemaFactory
 
             unboundMethod = methods.Single(GetMakeSchemaItemPredicate(typeParameters));
         }
-        else if (IsListType(memberType))
+        else if (IsCollectionType(memberType))
         {
-            Type itemType = memberType.GetGenericArguments()[0];
-            typeParameters = new [] { typeof(TEntity), itemType };
+            Type? itemType;
 
-            if (_binaryTypeSerializerFactory.Supports(itemType))
+            if (memberType.IsArray)
+            {
+                itemType = memberType.GetElementType();
+            }
+            else
+            {
+                itemType = memberType.GetGenericArguments()[0];
+            }
+
+            typeParameters = new[] { typeof(TEntity), itemType! };
+
+            if (_binaryTypeSerializerFactory.Supports(itemType!))
             {
                 unboundMethod = methods.Single(GetMakeSchemaItemListPrimitivePredicate(typeParameters));
             }
@@ -130,84 +140,24 @@ public class SchemaFactory : ISchemaFactory
     {
         string name = memberInfo.Name;
 
-        Func<TEntity, List<TItem>> getter = MakeMemberGetter<TEntity, List<TItem>>(memberInfo);
-        Action<TEntity, List<TItem>> setter = MakeMemberSetter<TEntity, List<TItem>>(memberInfo);
+        Func<TEntity, IList<TItem>> getter = MakeCollectionMemberGetter<TEntity, TItem>(memberInfo);
+        Action<TEntity, IList<TItem>> setter = MakeCollectionMemberSetter<TEntity, TItem>(memberInfo);
 
         IBinaryTypeSerializer<TItem> itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
         
-        return new SchemaItemListPrimitive<TEntity, TItem>(name, getter, setter, itemSerializer);
+        return new SchemaItemCollectionPrimitive<TEntity, TItem>(name, getter, setter, itemSerializer);
     }
 
     private ISchemaItem<TEntity> MakeSchemaItemListObject<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new() where TItem : class, new()
     {
         string name = memberInfo.Name;
 
-        Func<TEntity, List<TItem>> getter = MakeMemberGetter<TEntity, List<TItem>>(memberInfo);
-        Action<TEntity, List<TItem>> setter = MakeMemberSetter<TEntity, List<TItem>>(memberInfo);
+        Func<TEntity, IList<TItem>> getter = MakeCollectionMemberGetter<TEntity, TItem>(memberInfo);
+        Action<TEntity, IList<TItem>> setter = MakeCollectionMemberSetter<TEntity, TItem>(memberInfo);
 
         ISchema<TItem> itemSchema = Make<TItem>();
 
-        return new SchemaItemListObject<TEntity, TItem>(name, getter, setter, itemSchema);
-    }
-    private static Func<TEntity, TMember> MakeMemberGetter<TEntity, TMember>(MemberInfo memberInfo)
-    {
-        ParameterExpression[] typeParameterExpressions = {
-            Expression.Parameter(typeof(TEntity))
-        };
-        
-        MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
-        
-        return Expression.Lambda<Func<TEntity, TMember>>(propertyAccessExpression, typeParameterExpressions).Compile();
-    }
-    
-    private static Action<TEntity, TMember> MakeMemberSetter<TEntity, TMember>(MemberInfo memberInfo)
-    {
-        ParameterExpression[] typeParameterExpressions = {
-            Expression.Parameter(typeof(TEntity)),
-            Expression.Parameter(typeof(TMember))
-        };
-        
-        MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
-        BinaryExpression propertyAssignmentExpression = Expression.Assign(propertyAccessExpression, typeParameterExpressions[1]);
-
-        return Expression.Lambda<Action<TEntity, TMember>>(propertyAssignmentExpression, typeParameterExpressions).Compile();
-    }
-    
-    private static bool PropertyCanBeWritten(PropertyInfo memberInfo)
-    {
-        return memberInfo.GetSetMethod() != null;
-    }
-
-    private static bool PropertyHasSerializeAttribute(PropertyInfo memberInfo)
-    {
-        return MemberHasSerializeAttribute(memberInfo);
-    }
-
-    private static bool FieldCanBeWritten(FieldInfo fieldInfo)
-    {
-        return !fieldInfo.IsInitOnly && !fieldInfo.IsLiteral;
-    }
-    
-    private static bool FieldHasSerializeAttribute(FieldInfo fieldInfo)
-    {
-        return MemberHasSerializeAttribute(fieldInfo);
-    }
-    
-    private static bool MemberHasSerializeAttribute(MemberInfo memberInfo)
-    {
-        return memberInfo.GetCustomAttribute<SerializeAttribute>() != null;
-    }
-
-    private static SerializeAttribute GetSerializeAttribute(MemberInfo memberInfo)
-    {
-        SerializeAttribute? serializeAttribute = memberInfo.GetCustomAttribute<SerializeAttribute>();
-
-        if (serializeAttribute == null)
-        {
-            throw new NullReferenceException("An attempt to get a SerializeAttribute returned a null reference. This should not be possible.");
-        }
-
-        return serializeAttribute;
+        return new SchemaItemCollectionObject<TEntity, TItem>(name, getter, setter, itemSchema);
     }
 
     private static Func<MethodInfo, bool> GetMakeSchemaItemPredicate(Type[] typeParameters)
@@ -228,18 +178,6 @@ public class SchemaFactory : ISchemaFactory
     private static Func<MethodInfo, bool> GetMakeSchemaItemNestedPredicate(Type[] typeParameters)
     {
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItemNested) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
-    }
-
-    private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: class, new()
-    {
-        int comparison = a.Key.CompareTo(b.Key);
-
-        if (comparison == 0)
-        {
-            comparison = string.Compare(a.Name, b.Name, StringComparison.Ordinal);
-        }
-
-        return comparison;
     }
 
     private static Type GetMemberType(MemberInfo memberInfo)
@@ -270,10 +208,114 @@ public class SchemaFactory : ISchemaFactory
 
         return fields.Concat(properties);
     }
-
-    private static bool IsListType(Type type)
+    
+    private static SerializeAttribute GetSerializeAttribute(MemberInfo memberInfo)
     {
-        return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
+        SerializeAttribute? serializeAttribute = memberInfo.GetCustomAttribute<SerializeAttribute>();
+
+        if (serializeAttribute == null)
+        {
+            throw new NullReferenceException("An attempt to get a SerializeAttribute returned a null reference. This should not be possible.");
+        }
+
+        return serializeAttribute;
+    }
+
+    private static Func<TEntity, TMember> MakeMemberGetter<TEntity, TMember>(MemberInfo memberInfo)
+    {
+        ParameterExpression[] typeParameterExpressions = {
+            Expression.Parameter(typeof(TEntity))
+        };
+        
+        MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
+        
+        return Expression.Lambda<Func<TEntity, TMember>>(propertyAccessExpression, typeParameterExpressions).Compile();
+    }
+
+    private static Func<TEntity, IList<TItem>> MakeCollectionMemberGetter<TEntity, TItem>(MemberInfo memberInfo)
+    {
+        ParameterExpression entityParameter = Expression.Parameter(typeof(TEntity));
+        MemberExpression memberAccess = Expression.MakeMemberAccess(entityParameter, memberInfo);
+
+        if (memberInfo is PropertyInfo propertyInfo && propertyInfo.MemberType == MemberTypes.Property && propertyInfo.PropertyType.IsArray)
+        {
+            UnaryExpression arrayToIListConversion = Expression.Convert(memberAccess, typeof(IList<TItem>));
+            return Expression.Lambda<Func<TEntity, IList<TItem>>>(arrayToIListConversion, entityParameter).Compile();
+        }
+        
+        return Expression.Lambda<Func<TEntity, IList<TItem>>>(memberAccess, entityParameter).Compile();
+    }
+    
+    private static Action<TEntity, TMember> MakeMemberSetter<TEntity, TMember>(MemberInfo memberInfo)
+    {
+        ParameterExpression[] typeParameterExpressions = {
+            Expression.Parameter(typeof(TEntity)),
+            Expression.Parameter(typeof(TMember))
+        };
+        
+        MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
+        BinaryExpression propertyAssignmentExpression = Expression.Assign(propertyAccessExpression, typeParameterExpressions[1]);
+
+        return Expression.Lambda<Action<TEntity, TMember>>(propertyAssignmentExpression, typeParameterExpressions).Compile();
+    }
+    
+    private static Action<TEntity, IList<TItem>> MakeCollectionMemberSetter<TEntity, TItem>(MemberInfo memberInfo)
+    {
+        ParameterExpression entityParameter = Expression.Parameter(typeof(TEntity));
+        ParameterExpression listParameter = Expression.Parameter(typeof(IList<TItem>));
+        MemberExpression memberAccess = Expression.MakeMemberAccess(entityParameter, memberInfo);
+
+        if (memberInfo is PropertyInfo propertyInfo && propertyInfo.MemberType == MemberTypes.Property && propertyInfo.PropertyType.IsArray)
+        {
+            UnaryExpression listToArrayConversion = Expression.Convert(listParameter, propertyInfo.PropertyType);
+            BinaryExpression arrayAssignment = Expression.Assign(memberAccess, listToArrayConversion);
+            return Expression.Lambda<Action<TEntity, IList<TItem>>>(arrayAssignment, entityParameter, listParameter).Compile();
+        }
+
+        BinaryExpression assignment = Expression.Assign(memberAccess, listParameter);
+        return Expression.Lambda<Action<TEntity, IList<TItem>>>(assignment, entityParameter, listParameter).Compile();
+    }
+
+    private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: class, new()
+    {
+        int comparison = a.Key.CompareTo(b.Key);
+
+        if (comparison == 0)
+        {
+            comparison = string.Compare(a.Name, b.Name, StringComparison.Ordinal);
+        }
+
+        return comparison;
+    }
+
+    private static bool PropertyCanBeWritten(PropertyInfo memberInfo)
+    {
+        return memberInfo.GetSetMethod() != null;
+    }
+
+    private static bool PropertyHasSerializeAttribute(PropertyInfo memberInfo)
+    {
+        return MemberHasSerializeAttribute(memberInfo);
+    }
+
+    private static bool FieldCanBeWritten(FieldInfo fieldInfo)
+    {
+        return !fieldInfo.IsInitOnly && !fieldInfo.IsLiteral;
+    }
+    
+    private static bool FieldHasSerializeAttribute(FieldInfo fieldInfo)
+    {
+        return MemberHasSerializeAttribute(fieldInfo);
+    }
+    
+    private static bool MemberHasSerializeAttribute(MemberInfo memberInfo)
+    {
+        return memberInfo.GetCustomAttribute<SerializeAttribute>() != null;
+    }
+
+    private static bool IsCollectionType(Type type)
+    {
+        return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) || type.IsArray;
     }
 
     #endregion
