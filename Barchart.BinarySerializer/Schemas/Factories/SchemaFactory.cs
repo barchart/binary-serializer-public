@@ -267,24 +267,26 @@ public class SchemaFactory : ISchemaFactory
     
     private static Action<TEntity, IList<TItem>> MakeCollectionMemberSetter<TEntity, TItem>(MemberInfo memberInfo)
     {
-        ParameterExpression entityParameter = Expression.Parameter(typeof(TEntity));
-        ParameterExpression listParameter = Expression.Parameter(typeof(IList<TItem>));
+        ParameterExpression entityParameter = Expression.Parameter(typeof(TEntity), "entity");
+        ParameterExpression listParameter = Expression.Parameter(typeof(IList<TItem>), "list");
         MemberExpression memberAccess = Expression.MakeMemberAccess(entityParameter, memberInfo);
 
         Type memberType = memberInfo is PropertyInfo propertyInfo ? propertyInfo.PropertyType : (memberInfo as FieldInfo)!.FieldType;
 
-        Expression assignment;
+        Expression assignmentExpression;
         if (IsArrayType(memberType))
         {
-            UnaryExpression listToArrayConversion = Expression.Convert(listParameter, memberType);
-            assignment = Expression.Assign(memberAccess, listToArrayConversion);
+            MethodInfo toArrayMethod = typeof(Enumerable).GetMethod("ToArray")!.MakeGenericMethod(memberType.GetElementType()!);
+            MethodCallExpression listToArrayConversion = Expression.Call(toArrayMethod, listParameter);
+            assignmentExpression = Expression.Assign(memberAccess, listToArrayConversion);
         }
         else
         {
-            assignment = Expression.Assign(memberAccess, listParameter);
+            assignmentExpression = Expression.Assign(memberAccess, listParameter);
         }
 
-        return Expression.Lambda<Action<TEntity, IList<TItem>>>(assignment, entityParameter, listParameter).Compile();
+        var setterLambda = Expression.Lambda<Action<TEntity, IList<TItem>>>(assignmentExpression, entityParameter, listParameter);
+        return setterLambda.Compile();
     }
 
     private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: class, new()
