@@ -195,15 +195,15 @@ public class SchemaFactory : ISchemaFactory
         throw new ArgumentException("When using reflection to build a Schema<T>, the serializable members must be fields or properties");
     }
 
-    private static IEnumerable<MemberInfo> GetMembersForType(Type entityType)
+    private IEnumerable<MemberInfo> GetMembersForType(Type entityType)
     {
         IEnumerable<MemberInfo> fields = entityType
             .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .Where(FieldHasSerializeAttribute)
+            .Where(field => FieldHasSerializeAttribute(field) && IsTypeSupported(field.FieldType))
             .Where(FieldCanBeWritten);
 
         IEnumerable<MemberInfo> properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(PropertyHasSerializeAttribute)
+            .Where(property => PropertyHasSerializeAttribute(property) && IsTypeSupported(property.PropertyType))
             .Where(PropertyCanBeWritten);
 
         return fields.Concat(properties);
