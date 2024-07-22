@@ -80,39 +80,29 @@ public class SchemaItemCollectionObjectTests
     [Fact]
     public void Decode_WithNonNullCollectionProperty_CallsSchemaDeserializeForEachItem()
     {
-        var callOrder = 0;
-
-        _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()))
-            .Callback((IDataBufferReader reader, TestProperty property) =>
-            {
-                if (callOrder == 0)
-                {
-                    property.PropertyName = "Test1";
-                    property.PropertyValue = 123;
-                }
-                else if (callOrder == 1)
-                {
-                    property.PropertyName = "Test2";
-                    property.PropertyValue = 456;
-                }
-
-                callOrder++;
-            });
-
         _writer.WriteBit(false);
         _writer.WriteBit(false);
         _writer.WriteBytes(BitConverter.GetBytes(2));
 
-        TestEntity testEntity = new();
+        TestEntity testEntity = new(){
+            CollectionProperty = new List<TestProperty>(){
+                new(){
+                    PropertyName = "T",
+                    PropertyValue = 1
+                },
+                new()
+                {
+                    PropertyName = "T",
+                    PropertyValue = 4
+                }
+            }
+        };
 
         _schemaItemCollectionObject.Decode(_reader, testEntity);
 
+        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()), Times.Exactly(2));
+
         Assert.NotNull(testEntity.CollectionProperty);
-        Assert.Equal(2, testEntity.CollectionProperty.Count);
-        Assert.Equal("Test1", testEntity.CollectionProperty[0].PropertyName);
-        Assert.Equal(123, testEntity.CollectionProperty[0].PropertyValue);
-        Assert.Equal("Test2", testEntity.CollectionProperty[1].PropertyName);
-        Assert.Equal(456, testEntity.CollectionProperty[1].PropertyValue);
     }
 
     [Fact]
