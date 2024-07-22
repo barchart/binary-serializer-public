@@ -246,6 +246,7 @@ public class SchemaFactory : ISchemaFactory
         if (IsArrayType(memberType))
         {
             MethodInfo toListMethod = typeof(Enumerable).GetMethod("ToList")!.MakeGenericMethod(memberType.GetElementType()!);
+
             conversion = Expression.Call(toListMethod, Expression.Convert(memberAccess, memberType.GetElementType()!.MakeArrayType()));
             conversion = Expression.Convert(conversion, typeof(IList<TItem>));
         }
@@ -254,13 +255,9 @@ public class SchemaFactory : ISchemaFactory
             conversion = Expression.Convert(memberAccess, typeof(IList<TItem>));
         }
 
-        Expression nullCheck = Expression.Condition(
-            Expression.Equal(memberAccess, Expression.Constant(null, memberAccess.Type)),
-            Expression.Constant(null, typeof(IList<TItem>)),
-            conversion
-        );
+        Expression nullCheckExpression = Expression.Condition(Expression.Equal(memberAccess, Expression.Constant(null, memberAccess.Type)), Expression.Constant(null, typeof(IList<TItem>)), conversion);
 
-        return Expression.Lambda<Func<TEntity, IList<TItem>>>(nullCheck, typeParameterExpressions[0]).Compile();
+        return Expression.Lambda<Func<TEntity, IList<TItem>>>(nullCheckExpression, typeParameterExpressions[0]).Compile();
     }
     
     private static Action<TEntity, TMember> MakeMemberSetter<TEntity, TMember>(MemberInfo memberInfo)
