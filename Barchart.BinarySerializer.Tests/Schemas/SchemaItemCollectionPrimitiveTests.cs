@@ -9,7 +9,7 @@ using Barchart.BinarySerializer.Types;
 
 namespace Barchart.BinarySerializer.Tests.Schemas;
 
-public class SchemaItemListPrimitiveTests
+public class SchemaItemCollectionPrimitiveTests
 {
     #region Fields
 
@@ -19,13 +19,13 @@ public class SchemaItemListPrimitiveTests
     private readonly IDataBufferWriter _writer;
     private readonly IDataBufferReader _reader;
 
-    private readonly SchemaItemListPrimitive<TestEntity, int> _schemaItemListPrimitive;
+    private readonly SchemaItemCollectionPrimitive<TestEntity, int> _schemaItemListPrimitive;
 
     #endregion
 
     #region Constructor(s)
 
-    public SchemaItemListPrimitiveTests(ITestOutputHelper testOutputHelper)
+    public SchemaItemCollectionPrimitiveTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
 
@@ -35,7 +35,7 @@ public class SchemaItemListPrimitiveTests
 
         IBinaryTypeSerializer<int> intSerializer = new BinarySerializerInt();
 
-        _schemaItemListPrimitive = new SchemaItemListPrimitive<TestEntity, int>("IntListProperty", entity => entity.IntListProperty!, (entity, value) => entity.IntListProperty = value, intSerializer);    
+        _schemaItemListPrimitive = new SchemaItemCollectionPrimitive<TestEntity, int>("IntListProperty", entity => entity.IntListProperty!, (entity, value) => entity.IntListProperty = value?.ToList(), intSerializer);    
     }
 
     #endregion

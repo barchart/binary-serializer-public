@@ -1,16 +1,17 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Types;
 
 #endregion
 
 namespace Barchart.BinarySerializer.Schemas;
 
 /// <summary>
-///     Manages the serialization and deserialization of list of complex types within a binary data context.
-///     This class facilitates the structured encoding and decoding of item lists, leveraging a defined schema for each item
-///     to ensure data integrity and support efficient data exchange. It enables both comprehensive and differential
-///     serialization strategies, optimizing data storage and transmission by focusing on the differences between item states.
+///     Manages the serialization and deserialization of a list or array of primitive types associated with an entity
+///     into a binary format. This class abstracts the complexities of handling binary data conversion for lists,
+///     including support for both complete and differential serialization to efficiently manage data changes.
+///     It utilizes a specified serializer for the elements within the list to ensure accurate type handling.
 /// </summary>
 /// <typeparam name="TEntity">
 ///     The type which contains the data to be serialized. In other words,
@@ -21,29 +22,29 @@ namespace Barchart.BinarySerializer.Schemas;
 ///     The type of the items being serialized (which is read from the source
 ///     object) or deserialized (which assigned to the source object).
 /// </typeparam>
-public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new() where TItem : class, new()
+public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new()
 {
     #region Fields
  
     private readonly string _name;
 
-    private readonly Func<TEntity, List<TItem>> _getter;
-    private readonly Action<TEntity, List<TItem>> _setter;
+    private readonly Func<TEntity, IList<TItem>> _getter;
+    private readonly Action<TEntity, IList<TItem>> _setter;
 
-    private readonly ISchema<TItem> _itemSchema;
+    private readonly IBinaryTypeSerializer<TItem> _elementSerializer;
     
     #endregion
 
     #region Constructor(s)
 
-    public SchemaItemListObject(string name, Func<TEntity, List<TItem>> getter, Action<TEntity, List<TItem>> setter, ISchema<TItem> itemSchema)
+    public SchemaItemCollectionPrimitive(string name, Func<TEntity, IList<TItem>> getter, Action<TEntity, IList<TItem>> setter, IBinaryTypeSerializer<TItem> elementSerializer)
     {
         _name = name;
 
         _getter = getter;
         _setter = setter;
 
-        _itemSchema = itemSchema;
+        _elementSerializer = elementSerializer;
     }
 
     #endregion
@@ -63,27 +64,20 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
-        List<TItem> items = _getter(source);
-
+        IList<TItem> items = _getter(source);
+        
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, items == null);
 
-        if(items != null)
+        if (items != null)
         {
             writer.WriteBytes(BitConverter.GetBytes(items.Count));
 
             foreach (var item in items)
             {
-                if (item != null)
-                {
-                    WriteNullFlag(writer, false);
+                WriteMissingFlag(writer, false);
 
-                    _itemSchema.Serialize(writer, item);
-                }
-                else
-                {
-                    WriteNullFlag(writer, true);
-                }
+                _elementSerializer.Encode(writer, item);
             }
         }
     }
@@ -94,41 +88,33 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
         if (GetEquals(current, previous))
         {
             WriteMissingFlag(writer, true);
-
+            
             return;
         }
 
-        List<TItem> currentItems = _getter(current);
-        List<TItem> previousItems = _getter(previous);
+        IList<TItem> currentItems = _getter(current);
+        IList<TItem> previousItems = _getter(previous);
 
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, currentItems == null);
-
+            
         if (currentItems != null)
         {
-            writer.WriteBytes(BitConverter.GetBytes(currentItems.Count));
-
             int numberOfElements = currentItems.Count;
+
+            writer.WriteBytes(BitConverter.GetBytes(numberOfElements));
             
             for (int i = 0; i < numberOfElements; i++)
             {
-                if (currentItems[i] == null)
+                if (_elementSerializer.GetEquals(currentItems[i], previousItems[i]))
                 {
-                    WriteNullFlag(writer, true);
-                    
-                    continue;
+                    WriteMissingFlag(writer, true);
                 }
-
-                WriteNullFlag(writer, false);
-
-                if (previousItems != null && previousItems[i] != null)
-                {
-                    _itemSchema.Serialize(writer, currentItems[i], previousItems[i]);
-                }
-
                 else
                 {
-                    _itemSchema.Serialize(writer, currentItems[i]);
+                    WriteMissingFlag(writer, false);
+                    
+                    _elementSerializer.Encode(writer, currentItems[i]);
                 }
             }
         }
@@ -142,31 +128,38 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
             return;
         }
 
-        List<TItem> currentItems = _getter(target);
-
         if (ReadNullFlag(reader))
         {
-            _setter(target, null!);
-
+            if (!existing)
+            {
+                _setter(target, null!);
+            }
+            
             return;
         }
-
-        int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         
-        List<TItem> items = new();
-
-        for (int i = 0; i < count; i++)
+        int numberOfElements = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
+        
+        IList<TItem> items = existing && _getter(target) != null ? _getter(target) : new List<TItem>();
+    
+        for (int i = 0; i < numberOfElements; i++)
         {
-            if (ReadNullFlag(reader))
+            if (ReadMissingFlag(reader))
             {
-                items.Add(null!);
+                continue;
             }
             else
             {
-                TItem item = new();
-                
-                _itemSchema.Deserialize(reader, item);
-                items.Add(item);
+                TItem decodedItem = _elementSerializer.Decode(reader);
+
+                if (existing && items.Count > i)
+                {
+                    items[i] = decodedItem;
+                }
+                else
+                {
+                    items.Add(decodedItem);
+                }
             }
         }
 
@@ -176,8 +169,8 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
     /// <inheritdoc />
     public bool GetEquals(TEntity a, TEntity b)
     {
-        List<TItem> listA = _getter(a);
-        List<TItem> listB = _getter(b);
+        IList<TItem> listA = _getter(a);
+        IList<TItem> listB = _getter(b);
 
         if (listA == null && listB == null) return true;
         if (listA == null || listB == null) return false;
@@ -186,7 +179,7 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
 
         for (int i = 0; i < listA.Count; i++)
         {
-            if (!_itemSchema.GetEquals(listA[i], listB[i])) return false;
+            if (!_elementSerializer.GetEquals(listA[i], listB[i])) return false;
         }
 
         return true;
@@ -206,7 +199,7 @@ public class SchemaItemListObject<TEntity, TItem> : ISchemaItem<TEntity> where T
     {
         return reader.ReadBit();
     }
-
+    
     private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
     {
         writer.WriteBit(flag);

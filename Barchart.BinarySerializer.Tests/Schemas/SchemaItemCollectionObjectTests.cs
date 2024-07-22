@@ -8,7 +8,7 @@ using Barchart.BinarySerializer.Attributes;
 
 namespace Barchart.BinarySerializer.Tests.Schemas;
 
-public class SchemaItemListObjectTests
+public class SchemaItemCollectionObjectTests
 {
     #region Fields
 
@@ -19,13 +19,13 @@ public class SchemaItemListObjectTests
     private readonly IDataBufferReader _reader;
     
     private readonly Mock<ISchema<TestProperty>> _mockSchema;
-    private readonly SchemaItemListObject<TestEntity, TestProperty> _schemaItemListObject;
+    private readonly SchemaItemCollectionObject<TestEntity, TestProperty> _schemaItemListObject;
 
     #endregion
 
     #region Constructor(s)
 
-    public SchemaItemListObjectTests(ITestOutputHelper testOutputHelper)
+    public SchemaItemCollectionObjectTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
 
@@ -34,7 +34,7 @@ public class SchemaItemListObjectTests
         _reader = new DataBufferReader(_buffer);
 
         _mockSchema = new Mock<ISchema<TestProperty>>();
-        _schemaItemListObject = new SchemaItemListObject<TestEntity, TestProperty>("ListProperty", entity => entity.ListProperty!, (entity, value) => entity.ListProperty = value, _mockSchema.Object);
+        _schemaItemListObject = new SchemaItemCollectionObject<TestEntity, TestProperty>("ListProperty", entity => entity.ListProperty!, (entity, value) => entity.ListProperty = value?.ToList(), _mockSchema.Object);
     }
 
     #endregion
