@@ -6,6 +6,9 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Types;
 
+/// <summary>
+///     Reads (and writes) uint values to (and from) a binary data source.
+/// </summary>
 public class BinarySerializerUInt : IBinaryTypeSerializer<uint>
 {
     #region Constants

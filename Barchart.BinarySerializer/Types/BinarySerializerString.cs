@@ -9,7 +9,7 @@ using Barchart.BinarySerializer.Buffers;
 namespace Barchart.BinarySerializer.Types;
 
 /// <summary>
-///     Provides binary serialization functionality for strings.
+///     Reads (and writes) string values to (and from) a binary data source.
 /// </summary>
 public class BinarySerializerString : IBinaryTypeSerializer<string>
 {

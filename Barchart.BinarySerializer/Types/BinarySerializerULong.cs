@@ -6,6 +6,9 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Types;
 
+/// <summary>
+///     Reads (and writes) ulong values to (and from) a binary data source.
+/// </summary>
 public class BinarySerializerULong : IBinaryTypeSerializer<ulong>
 {
     #region Constants

@@ -17,6 +17,15 @@ public class UnsupportedTypeException : InvalidOperationException
     private readonly Type _unsupported;
 
     #endregion
+
+    #region Properties
+
+    /// <summary>
+    ///     The type for which an <see cref="IBinaryTypeSerializer{T}" /> cannot be created.
+    /// </summary>
+    public Type Unsupported => _unsupported;
+
+    #endregion
     
     #region Constructor(s)
     
@@ -25,14 +34,5 @@ public class UnsupportedTypeException : InvalidOperationException
         _unsupported = unsupported;
     }
     
-    #endregion
-    
-    #region Properties
-
-    /// <summary>
-    ///     The type for which an <see cref="IBinaryTypeSerializer{T}" /> cannot be created.
-    /// </summary>
-    public Type Unsupported => _unsupported;
-
     #endregion
 }

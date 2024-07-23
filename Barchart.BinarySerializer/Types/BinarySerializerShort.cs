@@ -6,6 +6,9 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Types;
 
+/// <summary>
+///     Reads (and writes) short values to (and from) a binary data source.
+/// </summary>
 public class BinarySerializerShort : IBinaryTypeSerializer<short>
 {
     #region Constants

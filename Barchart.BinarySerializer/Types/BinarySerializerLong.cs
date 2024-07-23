@@ -6,6 +6,9 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Types;
 
+/// <summary>
+///     Reads (and writes) long values to (and from) a binary data source.
+/// </summary>
 public class BinarySerializerLong : IBinaryTypeSerializer<long>
 {
     #region Constants

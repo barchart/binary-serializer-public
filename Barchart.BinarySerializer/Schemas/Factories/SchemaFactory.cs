@@ -11,6 +11,7 @@ using Barchart.BinarySerializer.Types.Factories;
 
 namespace Barchart.BinarySerializer.Schemas.Factories;
 
+/// <inheritdoc />
 public class SchemaFactory : ISchemaFactory
 {
     #region Fields

@@ -7,7 +7,7 @@ using Barchart.BinarySerializer.Buffers;
 namespace Barchart.BinarySerializer.Types;
 
 /// <summary>
-///     Provides binary serialization functionality for value types (that are nullable).
+///     Reads (and writes) nullable value types to (and from) a binary data source.
 /// </summary>
 /// <typeparam name="T">
 ///     The value type to serialize.
