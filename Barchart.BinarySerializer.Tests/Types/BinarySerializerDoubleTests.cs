@@ -75,7 +75,7 @@ public class BinarySerializerDoubleTests
         
         mock.Setup(m => m.ReadBytes(8)).Returns(bytes);
 
-        var actual = _serializer.Decode(mock.Object);
+        double actual = _serializer.Decode(mock.Object);
         
         Assert.Equal(expected, actual);
     }
@@ -96,8 +96,8 @@ public class BinarySerializerDoubleTests
     [InlineData(new[] { 0.1, 0.2 })]
     public void GetEquals_Various_MatchesIEquatableOutput(double[] doubles)
     {
-        var actual = _serializer.GetEquals(doubles[0], doubles[1]);
-        var expected = doubles[0].Equals(doubles[1]);
+        bool actual = _serializer.GetEquals(doubles[0], doubles[1]);
+        bool expected = doubles[0].Equals(doubles[1]);
         
         Assert.Equal(expected, actual);
     }

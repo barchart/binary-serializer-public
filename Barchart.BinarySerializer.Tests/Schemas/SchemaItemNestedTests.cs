@@ -42,7 +42,7 @@ public class SchemaItemNestedTests
 
     #region Test Methods (Encode)
 
-     [Fact]
+    [Fact]
     public void Encode_WithNonNullNestedProperty_CallsSchemaSerialize()
     {
         TestEntity testEntity = new()
@@ -73,16 +73,6 @@ public class SchemaItemNestedTests
 
         Assert.False(_reader.ReadBit());
         Assert.True(_reader.ReadBit());
-    }
-
-    [Fact]
-    public void Encode_WithDifferentKeyValues_ThrowsKeyMismatchException()
-    {
-    }
-
-    [Fact]
-    public void Encode_WithIdenticalKeyValues_WritesData()
-    {
     }
 
     #endregion

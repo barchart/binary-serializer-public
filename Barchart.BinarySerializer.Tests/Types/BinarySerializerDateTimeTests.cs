@@ -62,8 +62,8 @@ public class BinarySerializerDateTimeTests
         
         for (int i = 0; i < expectedBytes.Length; i++)
         {
-            var expectedByte = expectedBytes[i];
-            var actualByte = bytesWritten[0][i];
+            byte expectedByte = expectedBytes[i];
+            byte actualByte = bytesWritten[0][i];
             
             Assert.Equal(expectedByte, actualByte);
         }
@@ -86,7 +86,7 @@ public class BinarySerializerDateTimeTests
         DateTime value = new(year, month, day, hour, minute, second, DateTimeKind.Utc);
         mock.Setup(m => m.ReadBytes(8)).Returns(BitConverter.GetBytes((long)(value - DateTime.UnixEpoch).TotalMilliseconds));
 
-        var deserialized = _serializer.Decode(mock.Object);
+        DateTime deserialized = _serializer.Decode(mock.Object);
         
         Assert.Equal(value, deserialized);
     }
@@ -106,8 +106,8 @@ public class BinarySerializerDateTimeTests
         DateTime date1 = new(dateTimes[0], dateTimes[1], dateTimes[2], dateTimes[3], dateTimes[4], dateTimes[5], DateTimeKind.Utc);
         DateTime date2 = new(dateTimes[6], dateTimes[7], dateTimes[8], dateTimes[9], dateTimes[10], dateTimes[11], DateTimeKind.Utc);
             
-        var actual = _serializer.GetEquals(date1, date2);
-        var expected = date1.Equals(date2);
+        bool actual = _serializer.GetEquals(date1, date2);
+        bool expected = date1.Equals(date2);
             
         Assert.Equal(expected, actual);
     }

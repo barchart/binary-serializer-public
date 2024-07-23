@@ -62,8 +62,8 @@ public class BinarySerializerDateOnlyTests
         
         for (int i = 0; i < expectedBytes.Length; i++)
         {
-            var expectedByte = expectedBytes[i];
-            var actualByte = bytesWritten[0][i];
+            byte expectedByte = expectedBytes[i];
+            byte actualByte = bytesWritten[0][i];
             
             Assert.Equal(expectedByte, actualByte);
         }
@@ -87,7 +87,7 @@ public class BinarySerializerDateOnlyTests
         int daysSinceEpoch = value.DayNumber - DateOnly.MinValue.DayNumber;
         mock.Setup(m => m.ReadBytes(4)).Returns(BitConverter.GetBytes(daysSinceEpoch));
 
-        var deserialized = _serializer.Decode(mock.Object);
+        DateOnly deserialized = _serializer.Decode(mock.Object);
         
         Assert.Equal(value, deserialized);
     }
@@ -107,8 +107,8 @@ public class BinarySerializerDateOnlyTests
         DateOnly date1 = new(dates[0], dates[1], dates[2]);
         DateOnly date2 = new(dates[3], dates[4], dates[5]);
         
-        var actual = _serializer.GetEquals(date1, date2);
-        var expected = date1.Equals(date2);
+        bool actual = _serializer.GetEquals(date1, date2);
+        bool expected = date1.Equals(date2);
         
         Assert.Equal(expected, actual);
     }

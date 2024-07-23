@@ -71,8 +71,8 @@ public class BinarySerializerDecimalTests
         
         for (int i = 0; i < expectedBytes.Length; i++)
         {
-            var expectedByte = expectedBytes[i];
-            var actualByte = bytes[i];
+            byte expectedByte = expectedBytes[i];
+            byte actualByte = bytes[i];
             
             Assert.Equal(expectedByte, actualByte);
         }
@@ -126,8 +126,8 @@ public class BinarySerializerDecimalTests
         decimal a = decimal.Parse(first);
         decimal b = decimal.Parse(second);
 
-        var actual = _serializer.GetEquals(a, b);
-        var expected = first.Equals(second);
+        bool actual = _serializer.GetEquals(a, b);
+        bool expected = first.Equals(second);
 
         Assert.Equal(expected, actual);
     }

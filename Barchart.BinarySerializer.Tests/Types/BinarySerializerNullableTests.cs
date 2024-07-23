@@ -81,8 +81,8 @@ public class BinarySerializerNullableTests
         {
             bitsToRead.Add(false);
 
-            var buffer = new List<byte>();
-            var bufferWriterMock = new Mock<IDataBufferWriter>();
+            List<byte> buffer = new();
+            Mock<IDataBufferWriter> bufferWriterMock = new();
 
             bufferWriterMock.Setup(m => m.WriteBit(It.IsAny<bool>())).Callback<bool>(b => bitsToRead.Add(b));
             bufferWriterMock.Setup(m => m.WriteByte(It.IsAny<byte>())).Callback<byte>(b => byteToRead = b);
@@ -110,12 +110,12 @@ public class BinarySerializerNullableTests
 
         mock.Setup(m => m.ReadBytes(It.IsAny<int>())).Returns<int>(count => 
         {
-            var result = bytesToRead.Take(count).ToArray();
+            byte[] result = bytesToRead.Take(count).ToArray();
             bytesToRead.RemoveRange(0, Math.Min(count, bytesToRead.Count));
             return result;
         });
 
-        var decodedValue = serializer.Decode(mock.Object);
+        T? decodedValue = serializer.Decode(mock.Object);
 
         Assert.Equal(expectedValue, decodedValue);
     }
@@ -130,8 +130,8 @@ public class BinarySerializerNullableTests
     {
         BinarySerializerNullable<T> serializer = new(innerSerializer);
         
-        var expected = value1.Equals(value2);
-        var actual = serializer.GetEquals(value1, value2);
+        bool expected = value1.Equals(value2);
+        bool actual = serializer.GetEquals(value1, value2);
         
         Assert.Equal(expected, actual);
     }

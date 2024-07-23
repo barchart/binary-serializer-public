@@ -59,8 +59,8 @@ public class BinarySerializerUShortTests
 
         for (int i = 0; i < expectedBytes.Length; i++)
         {
-            var expectedByte = expectedBytes[i];
-            var actualByte = bytesWritten[0][i];
+            byte expectedByte = expectedBytes[i];
+            byte actualByte = bytesWritten[0][i];
 
             Assert.Equal(expectedByte, actualByte);
         }
@@ -81,7 +81,7 @@ public class BinarySerializerUShortTests
 
         mock.Setup(m => m.ReadBytes(2)).Returns(BitConverter.GetBytes(value));
 
-        var deserialized = _serializer.Decode(mock.Object);
+        ushort deserialized = _serializer.Decode(mock.Object);
 
         Assert.Equal(value, deserialized);
     }
@@ -98,8 +98,8 @@ public class BinarySerializerUShortTests
     [InlineData(new ushort[] { 1, 12345 })]
     public void GetEquals_Various_MatchesIEquatableOutput(ushort[] ushorts)
     {
-        var actual = _serializer.GetEquals(ushorts[0], ushorts[1]);
-        var expected = ushorts[0].Equals(ushorts[1]);
+        bool actual = _serializer.GetEquals(ushorts[0], ushorts[1]);
+        bool expected = ushorts[0].Equals(ushorts[1]);
 
         Assert.Equal(expected, actual);
     }

@@ -69,7 +69,7 @@ public class BinarySerializerStringTests
         mock.Setup(m => m.ReadBytes(2)).Returns(BitConverter.GetBytes((short)value.Length));
         mock.Setup(m => m.ReadBytes(value.Length)).Returns(Encoding.UTF8.GetBytes(value));
 
-        var deserialized = _serializer.Decode(mock.Object);
+        string deserialized = _serializer.Decode(mock.Object);
 
         Assert.Equal(value, deserialized);
     }
@@ -85,8 +85,8 @@ public class BinarySerializerStringTests
     [InlineData(new object[] { new string[] { "Binary", "Serialization" }})]
     public void GetEquals_Various_MatchesIEquatableOutput(string[] strings)
     {
-        var actual = _serializer.GetEquals(strings[0], strings[1]);
-        var expected = strings[0].Equals(strings[1]);
+        bool actual = _serializer.GetEquals(strings[0], strings[1]);
+        bool expected = strings[0].Equals(strings[1]);
         
         Assert.Equal(expected, actual);
     }

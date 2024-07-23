@@ -271,8 +271,6 @@ public class SchemaItemCollectionObjectTests
 
     public class TestEntity
     {
-        [Serialize(true)]
-
         public List<TestProperty>? CollectionProperty { get; set; }
     }
 

@@ -60,8 +60,8 @@ public class BinarySerializerIntTests
         
         for (int i = 0; i < expectedBytes.Length; i++)
         {
-            var expectedByte = expectedBytes[i];
-            var actualByte = bytesWritten[0][i];
+            byte expectedByte = expectedBytes[i];
+            byte actualByte = bytesWritten[0][i];
             
             Assert.Equal(expectedByte, actualByte);
         }
@@ -83,7 +83,7 @@ public class BinarySerializerIntTests
         
         mock.Setup(m => m.ReadBytes(4)).Returns(BitConverter.GetBytes(value));
 
-        var deserialized = _serializer.Decode(mock.Object);
+        int deserialized = _serializer.Decode(mock.Object);
         
         Assert.Equal(value, deserialized);
     }
@@ -101,8 +101,8 @@ public class BinarySerializerIntTests
     [InlineData(new[] { 1, -1 })]
     public void GetEquals_Various_MatchesIEquatableOutput(int[] integers)
     {
-        var actual = _serializer.GetEquals(integers[0], integers[1]);
-        var expected = integers[0].Equals(integers[1]);
+        bool actual = _serializer.GetEquals(integers[0], integers[1]);
+        bool expected = integers[0].Equals(integers[1]);
         
         Assert.Equal(expected, actual);
     }

@@ -59,8 +59,8 @@ public class BinarySerializerEnumTests
     
         for (int i = 0; i < expectedBytes.Length; i++)
         {
-            var expectedByte = expectedBytes[i];
-            var actualByte = bytesWritten[0][i];
+            byte expectedByte = expectedBytes[i];
+            byte actualByte = bytesWritten[0][i];
         
             Assert.Equal(expectedByte, actualByte);
         }
@@ -99,8 +99,8 @@ public class BinarySerializerEnumTests
     [InlineData(new[] { TestEnum.Value1, TestEnum.Value3 })]
     public void GetEquals_Various_ReturnsExpectedResult(TestEnum[] testEnums)
     {
-        var actual = _serializer.GetEquals(testEnums[0], testEnums[1]);
-        var expected = testEnums[0].Equals(testEnums[1]);
+        bool actual = _serializer.GetEquals(testEnums[0], testEnums[1]);
+        bool expected = testEnums[0].Equals(testEnums[1]);
 
         Assert.Equal(expected, actual);
     }
