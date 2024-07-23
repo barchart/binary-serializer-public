@@ -48,6 +48,19 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     /// </param>
     void Encode(IDataBufferWriter writer, TEntity source);
 
+    /// <summary>
+    ///     Reads data from the source object, serializes that data to binary, 
+    ///     and writes the serialized data to the binary data storage.
+    /// </summary>
+    /// <param name="writer">
+    ///     Writable binary data storage.
+    /// </param>
+    /// <param name="current">
+    ///     The current object to read data from.
+    /// </param>
+    /// <param name="previous">
+    ///     The previous object to read data from.
+    /// </param>
     void Encode(IDataBufferWriter writer, TEntity current, TEntity previous);
     
     /// <summary>
