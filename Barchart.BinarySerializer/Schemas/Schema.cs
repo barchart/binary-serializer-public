@@ -7,6 +7,7 @@ using Barchart.BinarySerializer.Schemas.Exceptions;
 
 namespace Barchart.BinarySerializer.Schemas
 {
+    /// <inheritdoc />
     public class Schema<TEntity> : ISchema<TEntity> where TEntity: class, new()
     {
         #region Fields
