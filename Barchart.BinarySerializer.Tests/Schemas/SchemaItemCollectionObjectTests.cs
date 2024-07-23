@@ -80,7 +80,7 @@ public class SchemaItemCollectionObjectTests
     [Fact]
     public void Decode_WithNonNullCollectionProperty_CallsSchemaDeserializeForEachItem()
     {
-        var expectedItemsCount = 2;
+        int expectedItemsCount = 2;
         int count = 1;
 
         _writer.WriteBit(false);
