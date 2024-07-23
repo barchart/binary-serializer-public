@@ -1,6 +1,6 @@
 # @barchart/binary-serialization-net
 
-The Binary Serializer is a .NET library for serializing and deserializing objects in binary format using efficient and fast protocol.
+The Binary Serializer is a .NET library for serializing objects (into a binary format) and deserializing objects (from the binary format).
 
 ## Structure
 
@@ -14,9 +14,9 @@ The Binary Serializer is a .NET library for serializing and deserializing object
 
 ## Example Usage
 
-To present you the way `Binary Serializer` can be used, here are simple examples:
+Here are some simple examples of the library's usage:
 
-**Serializing single entity:**
+**Serialize a Snapshot:**
 
 ```csharp
 using Barchart.BinarySerializer.Buffers;
@@ -47,19 +47,19 @@ ISchema<TestClass> schema = schemaFactory.Make<TestClass>();
 DataBufferWriter writer = new(new byte[16]);
 
 // Serialize the object to a binary format
-byte[] bytes = schema.Serialize(writer,testObject);
+byte[] serialized = schema.Serialize(writer, testObject);
 
 // Create a DataBufferReader with the serialized bytes for deserialization
-DataBufferReader reader = new(bytes);
+DataBufferReader reader = new(serialized);
 
 // Deserialize the binary data back into an object
-TestClass deserializedTestObject = schema.Deserialize(reader);
+TestClass deserialized = schema.Deserialize(reader);
 
-Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
-Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 123
+Console.WriteLine(deserialized.PropertyName); // Output: Name
+Console.WriteLine(deserialized.PropertyNumber); // Output: 123
 ```
 
-**Serializing difference between two entities:**
+**Serialize Changes:**
 
 ```csharp
 using Barchart.BinarySerializer.Buffers;
@@ -96,13 +96,13 @@ ISchema<TestClass> schema = schemaFactory.Make<TestClass>();
 DataBufferWriter writer = new(new byte[16]);
 
 // Serialize the difference between two objects to a binary format
-byte[] bytes = schema.Serialize(writer, testObjectCurrent, testObjectPrevious);
+byte[] changes = schema.Serialize(writer, testObjectCurrent, testObjectPrevious);
 
 // Create a DataBufferReader with the serialized bytes for deserialization
-DataBufferReader reader = new(bytes);
+DataBufferReader reader = new(changes);
 
-// Deserialize the binary data back into an object using the existing object
-TestClass deserializedTestObject = schema.Deserialize(reader, testObjectPrevious);
+// Deserialize the binary data back into the existing object
+schema.Deserialize(reader, testObjectPrevious);
 
 Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
 Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 321
