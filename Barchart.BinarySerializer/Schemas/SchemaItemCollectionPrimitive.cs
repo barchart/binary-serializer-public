@@ -35,6 +35,16 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
     
     #endregion
 
+    #region Properties
+
+    /// <inheritdoc />
+    public string Name => _name;
+
+    /// <inheritdoc />
+    public bool Key => false;
+
+    #endregion
+
     #region Constructor(s)
 
     public SchemaItemCollectionPrimitive(string name, Func<TEntity, IList<TItem>> getter, Action<TEntity, IList<TItem>> setter, IBinaryTypeSerializer<TItem> elementSerializer)
@@ -46,16 +56,6 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
 
         _elementSerializer = elementSerializer;
     }
-
-    #endregion
-
-    #region Properties
-
-    /// <inheritdoc />
-    public string Name => _name;
-
-    /// <inheritdoc />
-    public bool Key => false;
 
     #endregion
 

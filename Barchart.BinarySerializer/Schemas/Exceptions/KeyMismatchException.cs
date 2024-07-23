@@ -15,18 +15,7 @@ public class KeyMismatchException : InvalidOperationException
     private readonly string _keyName;
 
     #endregion
-    
-    #region Constructor(s)
-    
-    public KeyMismatchException(Type entityType, string keyName, bool serializing) : base(serializing ? $"An attempt was made to serialize the difference between two entities with different key values [ {keyName} ]." : $"An attempt was made to alter the a key property during deserialization [ {keyName} ].")
-    {
-        _entityType = entityType;
-        
-        _keyName = keyName;
-    }
-    
-    #endregion
-    
+
     #region Properties
 
     /// <summary>
@@ -39,5 +28,16 @@ public class KeyMismatchException : InvalidOperationException
     /// </summary>
     public string KeyName => _keyName;
 
+    #endregion
+    
+    #region Constructor(s)
+    
+    public KeyMismatchException(Type entityType, string keyName, bool serializing) : base(serializing ? $"An attempt was made to serialize the difference between two entities with different key values [ {keyName} ]." : $"An attempt was made to alter the a key property during deserialization [ {keyName} ].")
+    {
+        _entityType = entityType;
+        
+        _keyName = keyName;
+    }
+    
     #endregion
 }

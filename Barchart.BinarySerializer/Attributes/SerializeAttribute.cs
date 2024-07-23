@@ -12,16 +12,7 @@ public class SerializeAttribute : Attribute
     private readonly bool _key;
     
     #endregion
-    
-    #region Constructor(s)
 
-    public SerializeAttribute(bool key = false)
-    {
-        _key = key;
-    }
-
-    #endregion
-    
     #region Properties
     
     /// <summary>
@@ -29,6 +20,15 @@ public class SerializeAttribute : Attribute
     ///     of a compound key).
     /// </summary>
     public bool Key => _key;
+
+    #endregion
+
+    #region Constructor(s)
+
+    public SerializeAttribute(bool key = false)
+    {
+        _key = key;
+    }
 
     #endregion
 }

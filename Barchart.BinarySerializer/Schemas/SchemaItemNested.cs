@@ -32,6 +32,16 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
     
     #endregion
 
+    #region Properties
+    
+    /// <inheritdoc />
+    public string Name => _name;
+
+    /// <inheritdoc />
+    public bool Key => false;
+    
+    #endregion
+
     #region Constructor(s)
 
     public SchemaItemNested(string name, Func<TEntity, TProperty> getter, Action<TEntity, TProperty> setter, ISchema<TProperty> schema)
@@ -44,16 +54,6 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
         _schema = schema;
     }
 
-    #endregion
-    
-    #region Properties
-    
-    /// <inheritdoc />
-    public string Name => _name;
-
-    /// <inheritdoc />
-    public bool Key => false;
-    
     #endregion
     
     #region Methods

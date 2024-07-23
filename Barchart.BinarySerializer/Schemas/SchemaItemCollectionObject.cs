@@ -34,6 +34,16 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
     
     #endregion
 
+    #region Properties
+
+    /// <inheritdoc />
+    public string Name => _name;
+
+    /// <inheritdoc />
+    public bool Key => false;
+
+    #endregion
+
     #region Constructor(s)
 
     public SchemaItemCollectionObject(string name, Func<TEntity, IList<TItem>> getter, Action<TEntity, IList<TItem>> setter, ISchema<TItem> itemSchema)
@@ -45,16 +55,6 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
 
         _itemSchema = itemSchema;
     }
-
-    #endregion
-
-    #region Properties
-
-    /// <inheritdoc />
-    public string Name => _name;
-
-    /// <inheritdoc />
-    public bool Key => false;
 
     #endregion
 

@@ -36,6 +36,16 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> wh
     
     #endregion
 
+    #region Properties
+    
+    /// <inheritdoc />
+    public string Name => _name;
+
+    /// <inheritdoc />
+    public bool Key => _key;
+    
+    #endregion
+
     #region Constructor(s)
 
     public SchemaItem(string name, bool key, Func<TEntity, TProperty> getter, Action<TEntity, TProperty> setter, IBinaryTypeSerializer<TProperty> serializer)
@@ -49,16 +59,6 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> wh
         _serializer = serializer;
     }
 
-    #endregion
-
-    #region Properties
-    
-    /// <inheritdoc />
-    public string Name => _name;
-
-    /// <inheritdoc />
-    public bool Key => _key;
-    
     #endregion
     
     #region Methods

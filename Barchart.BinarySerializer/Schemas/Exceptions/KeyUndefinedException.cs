@@ -14,19 +14,7 @@ public class KeyUndefinedException : InvalidOperationException
     private readonly Type _keyType;
 
     #endregion
-    
-    #region Constructor(s)
 
-    public KeyUndefinedException(Type entityType, string keyName, Type keyType) : base($"The schema for [ {entityType.Name} ] does not contain a key property with the specified name and type [ {keyName} ] [ {keyType.Name} ].")
-    {
-        _entityType = entityType;
-        
-        _keyName = keyName;
-        _keyType = keyType;
-    }
-    
-    #endregion
-    
     #region Properties
 
     /// <summary>
@@ -44,5 +32,17 @@ public class KeyUndefinedException : InvalidOperationException
     /// </summary>
     public string KeyName => _keyName;
 
+    #endregion
+    
+    #region Constructor(s)
+
+    public KeyUndefinedException(Type entityType, string keyName, Type keyType) : base($"The schema for [ {entityType.Name} ] does not contain a key property with the specified name and type [ {keyName} ] [ {keyType.Name} ].")
+    {
+        _entityType = entityType;
+        
+        _keyName = keyName;
+        _keyType = keyType;
+    }
+    
     #endregion
 }
