@@ -80,29 +80,41 @@ public class SchemaItemCollectionObjectTests
     [Fact]
     public void Decode_WithNonNullCollectionProperty_CallsSchemaDeserializeForEachItem()
     {
-        _writer.WriteBit(false);
-        _writer.WriteBit(false);
-        _writer.WriteBytes(BitConverter.GetBytes(2));
+        var expectedItemsCount = 2;
+        int count = 1;
 
-        TestEntity testEntity = new(){
-            CollectionProperty = new List<TestProperty>(){
-                new(){
-                    PropertyName = "T",
-                    PropertyValue = 1
-                },
-                new()
-                {
-                    PropertyName = "T",
-                    PropertyValue = 4
-                }
-            }
+        _writer.WriteBit(false);
+        _writer.WriteBit(false);
+        _writer.WriteBytes(BitConverter.GetBytes(expectedItemsCount));
+
+        TestEntity testEntity = new()
+        {
+            CollectionProperty = new List<TestProperty>()
         };
+
+        _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>()))
+            .Callback(() => {
+                TestProperty item = new()
+                {
+                    PropertyName = "Test",
+                    PropertyValue = count++
+                };
+                testEntity.CollectionProperty.Add(item);
+            })
+            .Returns(() => testEntity.CollectionProperty.LastOrDefault()!)
+            .Verifiable();
 
         _schemaItemCollectionObject.Decode(_reader, testEntity);
 
-        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()), Times.Exactly(2));
+        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>()), Times.Exactly(expectedItemsCount));
 
         Assert.NotNull(testEntity.CollectionProperty);
+        Assert.Equal(expectedItemsCount, testEntity.CollectionProperty.Count);
+        
+        for (int i = 0; i < expectedItemsCount; i++)
+        {
+            Assert.Equal(i + 1, testEntity.CollectionProperty.ElementAt(i).PropertyValue);
+        }
     }
 
     [Fact]
