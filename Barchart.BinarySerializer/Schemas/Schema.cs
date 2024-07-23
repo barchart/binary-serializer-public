@@ -91,23 +91,20 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name)
         {
-            reader.Reset();
-
-            TEntity target = new();
-            
-            for (int i = 0; i < _keyItems.Length; i++)
+            using (reader.Bookmark())
             {
-                ISchemaItem<TEntity> candidate = _keyItems[i];
-                
-                candidate.Decode(reader, target, false);
-                
-                if (candidate.Name == name && candidate is ISchemaItem<TEntity, TProperty> match)
+                TEntity target = new();
+            
+                for (int i = 0; i < _keyItems.Length; i++)
                 {
-                    TProperty key = match.Read(target);
-                    
-                    reader.Reset();
-
-                    return key;
+                    ISchemaItem<TEntity> candidate = _keyItems[i];
+                
+                    candidate.Decode(reader, target, false);
+                
+                    if (candidate.Name == name && candidate is ISchemaItem<TEntity, TProperty> match)
+                    {
+                        return match.Read(target);
+                    }
                 }
             }
 

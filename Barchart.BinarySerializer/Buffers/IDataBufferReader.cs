@@ -42,12 +42,15 @@ public interface IDataBufferReader
     ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
     /// </exception>
     byte[] ReadBytes(int size);
-    
-    /// <summary>
-    ///     Resets the position for the next read operation to the
-    ///     beginning of the underlying data source.
-    /// </summary>
-    void Reset();
 
+    /// <summary>
+    ///     Records the current read position of the internal storage.
+    /// </summary>
+    /// <returns>
+    ///     An <see cref="IDisposable"/> that causes the read position
+    ///     of the internal storage to be reset.
+    /// </returns>
+    IDisposable Bookmark();
+    
     #endregion
 }

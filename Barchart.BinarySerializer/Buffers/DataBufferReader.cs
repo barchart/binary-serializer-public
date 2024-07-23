@@ -109,10 +109,9 @@ public class DataBufferReader : IDataBufferReader
     }
     
     /// <inheritdoc />
-    public void Reset()
+    public IDisposable Bookmark()
     {
-        _positionByte = 0;
-        _positionBit = 0;
+        return new DataBufferReaderBookmark(this, _positionByte, _positionBit);
     }
 
     private void AdvanceBit()
@@ -132,6 +131,41 @@ public class DataBufferReader : IDataBufferReader
     {
         return _positionByte + additionalBytes >= _byteArray.Length;
     }
+    
+    #endregion
+    
+    #region Nested Class
 
+    private class DataBufferReaderBookmark : IDisposable
+    {
+        private readonly DataBufferReader _reader;
+        
+        private readonly int _positionByte;
+        private readonly int _positionBit;
+
+        private volatile int _disposed;
+
+        public DataBufferReaderBookmark(DataBufferReader reader, int positionByte, int positionBit)
+        {
+            _reader = reader;
+
+            _positionByte = positionByte;
+            _positionBit = positionBit;
+
+            _disposed = 0;
+        }
+
+        public void Dispose()
+        {
+            if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+            {
+                return;
+            }
+            
+            _reader._positionByte = _positionByte;
+            _reader._positionBit = _positionBit;
+        }
+    }
+    
     #endregion
 }
