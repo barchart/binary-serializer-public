@@ -8,7 +8,7 @@ public interface IDataBufferWriterFactory
     #region Methods
 
     /// <summary>
-    ///     Creates a <see cref="IDataBufferWriter" /> instance.
+    ///     Creates an <see cref="IDataBufferWriter" /> instance.
     /// </summary>
     /// <param name="entity">
     ///     The entity being serialized.
