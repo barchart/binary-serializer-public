@@ -13,7 +13,7 @@ public class LoggerWrapper
 {
     #region Fields
 
-    private static readonly LoggerWrapper? _instance = null;
+    private static readonly LoggerWrapper? Instance = null;
 
     #endregion
 
@@ -33,7 +33,7 @@ public class LoggerWrapper
     /// </param>
     public static void Initialize(string logFilePath)
     {
-        if (_instance != null)
+        if (Instance != null)
         {
             throw new InvalidOperationException("Logger is already initialized.");
         }
@@ -71,7 +71,7 @@ public class LoggerWrapper
 
     private static void EnsureInitialized()
     {
-        if (_instance == null)
+        if (Instance == null)
         {
             throw new InvalidOperationException("Logger is not initialized. Call Initialize() with a log file path first.");
         }
