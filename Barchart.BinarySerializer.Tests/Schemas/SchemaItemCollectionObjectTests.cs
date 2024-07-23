@@ -69,7 +69,6 @@ public class SchemaItemCollectionObjectTests
 
         _schemaItemCollectionObject.Encode(_writer, testEntity);
 
-        _reader.Reset();
         Assert.False(_reader.ReadBit());
     }
 

@@ -51,8 +51,6 @@ public class SchemaItemCollectionPrimitiveTests
 
         _schemaItemListPrimitive.Encode(_writer, testEntity);
 
-        _reader.Reset();
-
         bool isListNull = _reader.ReadBit();
         bool isListMissing = _reader.ReadBit();
 
@@ -80,8 +78,6 @@ public class SchemaItemCollectionPrimitiveTests
         };
 
         _schemaItemListPrimitive.Encode(_writer, testEntity);
-
-        _reader.Reset();
 
         bool isListMissing = _reader.ReadBit();
         bool isListNull = _reader.ReadBit();
