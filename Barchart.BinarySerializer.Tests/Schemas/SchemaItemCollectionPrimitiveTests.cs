@@ -1,11 +1,10 @@
 #region Using Statements
 
-
-#endregion
-
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Types;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Tests.Schemas;
 

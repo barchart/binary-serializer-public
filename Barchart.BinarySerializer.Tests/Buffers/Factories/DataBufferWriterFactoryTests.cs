@@ -9,9 +9,15 @@ namespace Barchart.BinarySerializer.Tests.Buffers.Factories;
 
 public class DataBufferWriterFactoryTests
 {
+    #region Fields
+
     private readonly ITestOutputHelper _testOutputHelper;
 
     private readonly DataBufferWriterFactory _factory;
+
+    #endregion
+
+    #region Constructor(s)
 
     public DataBufferWriterFactoryTests(ITestOutputHelper testOutputHelper)
     {
@@ -19,6 +25,8 @@ public class DataBufferWriterFactoryTests
 
         _factory = new DataBufferWriterFactory();
     }
+
+    #endregion
 
     #region Test Methods (Constructor)
 
@@ -41,7 +49,7 @@ public class DataBufferWriterFactoryTests
     [Fact]
     public void Make_WithDefaultFactory_ReturnsIDataBufferWriterInstance()
     {
-        var writer = _factory.Make(new object());
+        IDataBufferWriter writer = _factory.Make(new object());
 
         Assert.IsAssignableFrom<IDataBufferWriter>(writer);
     }
