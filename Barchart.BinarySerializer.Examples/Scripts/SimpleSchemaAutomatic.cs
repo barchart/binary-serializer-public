@@ -2,52 +2,65 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Examples.Data;
+using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Schemas.Factories;
+
 using Console = Barchart.BinarySerializer.Examples.Common.Console;
 
 #endregion
 
 namespace Barchart.BinarySerializer.Examples.Scripts;
 
+/// <summary>
+///     Demonstrates automatic schema generation and (de)serialization of a `Person` instance.
+/// </summary>
 public class SimpleSchemaAutomatic : IScript
 {
     #region Properties
+
+    /// <inheritdoc />
     public Script Script => Script.SIMPLE_SCHEMA_AUTOMATIC;
 
     #endregion
 
     #region Methods
 
+    /// <inheritdoc />
     public void Execute()
     {
         int step = 1;
     
         Console.WriteStep(ref step, "Creating a SchemaFactory");
         
-        var schemaFactory = new SchemaFactory();
+        SchemaFactory schemaFactory = new();
         
         Console.WriteStep(ref step, "Generating a schema for the Person class (via reflection)");
         
-        var schema = schemaFactory.Make<Person>();
+        ISchema<Person> schema = schemaFactory.Make<Person>();
         
         Console.WriteStep(ref step, "Constructing a sample instance of the [Person] class");
 
-        var bryan = new Person { Name = "Bryan", Age = 49, IsProgrammer = true };
+        Person bryan = new() 
+        { 
+            Name = "Bryan",
+            Age = 49, 
+            IsProgrammer = true 
+        };
         
         Console.WriteDetails(bryan.ToString());
         
         Console.WriteStep(ref step, "Serializing the sample [Person] instance to binary");
 
-        var writer = new DataBufferWriter(new byte[16]);
-        var bytes = schema.Serialize(writer, bryan);
+        DataBufferWriter writer = new(new byte[16]);
+        byte[] bytes = schema.Serialize(writer, bryan);
         
         Console.WriteDetails(bytes);
         
         Console.WriteStep(ref step, $"Deserializing binary data into new [Person] instance");
 
-        var reader = new DataBufferReader(bytes);
+        DataBufferReader reader = new(bytes);
 
-        var bryanToo = schema.Deserialize(reader);
+        Person bryanToo = schema.Deserialize(reader);
         
         Console.WriteDetails(bryanToo.ToString());
     }

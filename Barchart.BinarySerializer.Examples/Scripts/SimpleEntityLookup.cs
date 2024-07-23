@@ -11,16 +11,21 @@ using Console = Barchart.BinarySerializer.Examples.Common.Console;
 
 namespace Barchart.BinarySerializer.Examples.Scripts;
 
+/// <summary>
+///     Demonstrates the process of looking up and updating an entity in a dictionary using the binary serializer.
+/// </summary>=
 public class SimpleEntityLookup : IScript
 {
     #region Properties
 
+    /// <inheritdoc />
     public Script Script => Script.SIMPLE_ENTITY_LOOKUP;
     
     #endregion
 
     #region Methods
 
+    /// <inheritdoc />
     public void Execute()
     {
         int step = 1;

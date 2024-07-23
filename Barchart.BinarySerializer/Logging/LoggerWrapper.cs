@@ -45,24 +45,48 @@ public class LoggerWrapper
 
     }
 
+    /// <summary>
+    ///     Logs information level messages. This method should be used for general informational messages.
+    /// </summary>
+    /// <param name="text">
+    ///     The message to log.
+    /// </param>
     public static void LogInformation(string text)
     {
         EnsureInitialized();
         Log.Information(text);
     }
 
+    /// <summary>
+    ///     Logs debug level messages. This method should be used for messages that are useful in debugging scenarios.
+    /// </summary>
+    /// <param name="text">
+    ///     The message to log.
+    /// </param>
     public static void LogDebug(string text)
     {
         EnsureInitialized();
         Log.Debug(text);
     }
 
+    /// <summary>
+    ///     Logs warning level messages. This method should be used for messages that signify a potential issue or important notice.
+    /// </summary>
+    /// <param name="text">
+    ///     The message to log.
+    /// </param>
     public static void LogWarning(string text)
     {
         EnsureInitialized();
         Log.Warning(text);
     }
 
+    /// <summary>
+    ///     Logs error level messages. This method should be used for messages that signify an error has occurred.
+    /// </summary>
+    /// <param name="text">
+    ///     The message to log.
+    /// </param>
     public static void LogError(string text)
     {
         EnsureInitialized();
