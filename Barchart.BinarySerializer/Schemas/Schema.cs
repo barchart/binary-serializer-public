@@ -89,7 +89,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name)
+        public TMember ReadKey<TMember>(IDataBufferReader reader, string name)
         {
             using (reader.Bookmark())
             {
@@ -101,14 +101,14 @@ namespace Barchart.BinarySerializer.Schemas
                 
                     candidate.Decode(reader, target, false);
                 
-                    if (candidate.Name == name && candidate is ISchemaItem<TEntity, TProperty> match)
+                    if (candidate.Name == name && candidate is ISchemaItem<TEntity, TMember> match)
                     {
                         return match.Read(target);
                     }
                 }
             }
 
-            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TProperty));
+            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TMember));
         }
         
         /// <inheritdoc />

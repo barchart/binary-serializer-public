@@ -94,13 +94,13 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="name">
     ///     The name of the key property.
     /// </param>
-    /// <typeparam name="TProperty">
+    /// <typeparam name="TMember">
     ///     The type of the key property.
     /// </typeparam>
     /// <returns>
     ///     The value of the key.
     /// </returns>
-    TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
+    TMember ReadKey<TMember>(IDataBufferReader reader, string name);
 
     /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>

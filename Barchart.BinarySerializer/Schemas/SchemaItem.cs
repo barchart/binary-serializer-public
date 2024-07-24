@@ -17,11 +17,11 @@ namespace Barchart.BinarySerializer.Schemas;
 ///     this is the source of data being serialized (or the assignment
 ///     target of data being deserialized).
 /// </typeparam>
-/// <typeparam name="TProperty">
+/// <typeparam name="TMember">
 ///     The type of data being serialized (which is read from the source
 ///     object) or deserialized (which assigned to the source object).
 /// </typeparam>
-public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> where TEntity: class, new()
+public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where TEntity: class, new()
 {
     #region Fields
 
@@ -29,10 +29,10 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> wh
     
     private readonly bool _key;
 
-    private readonly Func<TEntity, TProperty> _getter;
-    private readonly Action<TEntity, TProperty> _setter;
+    private readonly Func<TEntity, TMember> _getter;
+    private readonly Action<TEntity, TMember> _setter;
 
-    private readonly IBinaryTypeSerializer<TProperty> _serializer;
+    private readonly IBinaryTypeSerializer<TMember> _serializer;
     
     #endregion
 
@@ -48,7 +48,7 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> wh
 
     #region Constructor(s)
 
-    public SchemaItem(string name, bool key, Func<TEntity, TProperty> getter, Action<TEntity, TProperty> setter, IBinaryTypeSerializer<TProperty> serializer)
+    public SchemaItem(string name, bool key, Func<TEntity, TMember> getter, Action<TEntity, TMember> setter, IBinaryTypeSerializer<TMember> serializer)
     {
         _name = name;
         _key = key;
@@ -113,7 +113,7 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> wh
             return;
         }
         
-        TProperty current = _serializer.Decode(reader);
+        TMember current = _serializer.Decode(reader);
 
         if (Key && existing)
         {
@@ -145,7 +145,7 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> wh
     }
     
     /// <inheritdoc />
-    public TProperty Read(TEntity source)
+    public TMember Read(TEntity source)
     {
         return _getter(source);
     }
@@ -162,7 +162,7 @@ public class SchemaItem<TEntity, TProperty> : ISchemaItem<TEntity, TProperty> wh
     
     #endregion
 
-    public TProperty DeserializeValue(IDataBufferReader reader)
+    public TMember DeserializeValue(IDataBufferReader reader)
     {
         return _serializer.Decode(reader);
     }

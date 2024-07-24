@@ -15,20 +15,20 @@ namespace Barchart.BinarySerializer.Schemas;
 ///     this is the source of data being serialized (or the assignment
 ///     target of data being deserialized).
 /// </typeparam>
-/// <typeparam name="TProperty">
+/// <typeparam name="TMember">
 ///     The type of data being serialized (which is read from the source
 ///     object) or deserialized (which assigned to the source object).
 /// </typeparam>
-public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where TEntity: class, new() where TProperty: class, new()
+public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEntity: class, new() where TMember: class, new()
 {
     #region Fields
 
     private readonly string _name;
 
-    private readonly Func<TEntity, TProperty> _getter;
-    private readonly Action<TEntity, TProperty> _setter;
+    private readonly Func<TEntity, TMember> _getter;
+    private readonly Action<TEntity, TMember> _setter;
 
-    private readonly ISchema<TProperty> _schema;
+    private readonly ISchema<TMember> _schema;
     
     #endregion
 
@@ -44,7 +44,7 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
 
     #region Constructor(s)
 
-    public SchemaItemNested(string name, Func<TEntity, TProperty> getter, Action<TEntity, TProperty> setter, ISchema<TProperty> schema)
+    public SchemaItemNested(string name, Func<TEntity, TMember> getter, Action<TEntity, TMember> setter, ISchema<TMember> schema)
     {
         _name = name;
 
@@ -61,7 +61,7 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
-        TProperty nested = _getter(source);
+        TMember nested = _getter(source);
         
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, nested == null);
@@ -82,8 +82,8 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
             return;
         }
         
-        TProperty nestedCurrent = _getter(current);
-        TProperty nestedPrevious = _getter(previous);
+        TMember nestedCurrent = _getter(current);
+        TMember nestedPrevious = _getter(previous);
 
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, nestedCurrent == null);
@@ -102,7 +102,7 @@ public class SchemaItemNested<TEntity, TProperty> : ISchemaItem<TEntity> where T
             return;
         }
 
-        TProperty nested = _getter(target);
+        TMember nested = _getter(target);
         
         if (ReadNullFlag(reader))
         {
