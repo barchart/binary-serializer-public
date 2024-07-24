@@ -191,6 +191,53 @@ public class SchemaItemTests
 
     #endregion
 
+    #region Test Methods (Read)
+
+    [Fact]
+    public void Read_WithValidData_ReturnsExpectedEntity()
+    {
+        byte[] data = new byte[100];
+        DataBufferReader reader = new(data);
+
+        SchemaItem<TestEntity, string> schemaItem = new("Name", true, _getter, _setter, _serializerMock.Object);
+
+        TestEntity target = new()
+        {
+            Name = "CurrentValue"
+        };
+        
+        string result = schemaItem.Read(target);
+
+        Assert.NotNull(result);
+        Assert.Equal("CurrentValue", result);
+    }
+
+    [Fact]
+    public void Read_WithWrongData_ReturnsWrongWEntity()
+    {
+        TestEntity target = new()
+        {
+            Name = "CurrentValue"
+        };
+
+        TestEntity targetInvalid = new()
+        {
+            Name = "CurrentInvalid"
+        };
+
+        byte[] data = new byte[100];
+        DataBufferReader reader = new(data);
+
+        SchemaItem<TestEntity, string> schemaItem = new("Name", true, _getter, _setter, _serializerMock.Object);
+
+        string result = schemaItem.Read(targetInvalid);
+
+        Assert.NotNull(result);
+        Assert.Equal("CurrentInvalid", result);
+    }
+
+    #endregion
+
     #region Nested Types
 
     public class TestEntity
