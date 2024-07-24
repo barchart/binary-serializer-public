@@ -5,6 +5,7 @@ using System.Reflection;
 
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Types;
+using Barchart.BinarySerializer.Types.Exceptions;
 using Barchart.BinarySerializer.Types.Factories;
 
 #endregion
@@ -89,11 +90,15 @@ public class SchemaFactory : ISchemaFactory
                 unboundMethod = methods.Single(GetMakeSchemaItemCollectionObjectPredicate(typeParameters));
             }
         }
-        else
+        else if (IsNestedClass(memberType))
         {
             typeParameters = new [] { typeof(TEntity), memberType };
 
             unboundMethod = methods.Single(GetMakeSchemaItemNestedPredicate(typeParameters));
+        }
+        else
+        {
+            throw new UnsupportedTypeException(memberType);
         }
         
         MethodInfo boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
@@ -173,7 +178,7 @@ public class SchemaFactory : ISchemaFactory
 
     private static Func<MethodInfo, bool> GetMakeSchemaItemCollectionPrimitivePredicate(Type[] typeParameters)
     {
-        return methodInfo => methodInfo.Name == nameof (MakeSchemaItemCollectionPrimitive) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
+        return methodInfo => methodInfo.Name == nameof(MakeSchemaItemCollectionPrimitive) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
 
     private static Func<MethodInfo, bool> GetMakeSchemaItemCollectionObjectPredicate(Type[] typeParameters)
@@ -200,12 +205,12 @@ public class SchemaFactory : ISchemaFactory
     {
         IEnumerable<MemberInfo> fields = entityType
             .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .Where(field => FieldHasSerializeAttribute(field) || !IsTypeSupported(field.FieldType))
-            .Where(FieldCanBeWritten);
+            .Where(FieldCanBeWritten)
+            .Where(field => FieldHasSerializeAttribute(field) || IsCollectionType(field.FieldType) || IsNestedClass(field.FieldType));
 
         IEnumerable<MemberInfo> properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(property => PropertyHasSerializeAttribute(property) || !IsTypeSupported(property.PropertyType))
-            .Where(PropertyCanBeWritten);
+            .Where(PropertyCanBeWritten)
+            .Where(property => PropertyHasSerializeAttribute(property) || IsCollectionType(property.PropertyType) || IsNestedClass(property.PropertyType));
 
         return fields.Concat(properties);
     }
@@ -359,6 +364,11 @@ public class SchemaFactory : ISchemaFactory
     private static bool IsArrayType(Type type)
     {
         return type.IsArray;
+    }
+
+    private static bool IsNestedClass(Type type)
+    {
+        return type.IsNested;
     }
 
     private bool IsTypeSupported(Type type)
