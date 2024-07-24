@@ -142,14 +142,14 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
             return;
         }
 
-        IList<TItem> currentItems = _getter(target);
-
         if (ReadNullFlag(reader))
         {
             _setter(target, null!);
 
             return;
         }
+
+        IList<TItem> currentItems = _getter(target);
 
         int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         
