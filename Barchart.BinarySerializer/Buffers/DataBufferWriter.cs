@@ -167,6 +167,12 @@ public class DataBufferWriter : IDataBufferWriter
         return _positionBit == 0 ? _positionByte : _positionByte + 1;
     }
 
+    /// <inheritdoc />
+    public IDisposable Bookmark()
+    {
+        return new DataBufferWriterBookmark(this, _positionByte, _positionBit);
+    }
+    
     private void AdvanceBit()
     {
         if (_positionBit == 7)
@@ -185,5 +191,52 @@ public class DataBufferWriter : IDataBufferWriter
         return _positionByte + additionalBytes >= _byteArray.Length;
     }
 
+    #endregion
+
+    #region Nested Class
+
+    private class DataBufferWriterBookmark : IDisposable
+    {
+        #region Fields
+
+        private readonly DataBufferWriter _writer;
+        
+        private readonly int _positionByte;
+        private readonly int _positionBit;
+
+        private volatile int _disposed;
+
+        #endregion
+        
+        #region Constructor(s)
+
+        public DataBufferWriterBookmark(DataBufferWriter writer, int positionByte, int positionBit)
+        {
+            _writer = writer;
+
+            _positionByte = positionByte;
+            _positionBit = positionBit;
+
+            _disposed = 0;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public void Dispose()
+        {
+            if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+            {
+                return;
+            }
+            
+            _writer._positionByte = _positionByte;
+            _writer._positionBit = _positionBit;
+        }
+
+        #endregion
+    }
+    
     #endregion
 }
