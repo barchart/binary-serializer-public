@@ -49,7 +49,7 @@ public class DataBufferWriterFactoryTests
     [Fact]
     public void Make_WithDefaultFactory_ReturnsIDataBufferWriterInstance()
     {
-        IDataBufferWriter writer = _factory.Make(new object());
+        IDataBufferWriter writer = _factory.Make();
 
         Assert.IsAssignableFrom<IDataBufferWriter>(writer);
     }
