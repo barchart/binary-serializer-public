@@ -1,35 +1,35 @@
-#region Using Statements
-
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Buffers.Factories;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Schemas.Factories;
 
-#endregion
-
 namespace Barchart.BinarySerializer.Serializers;
 
 public class Serializer<TEntity> where TEntity : class, new()
 {
-    #region Fields
-
-    private readonly SchemaFactory _schemaFactory;
     private readonly ISchema<TEntity> _schema;
 
-    private readonly DataBufferWriterFactory _writerFactory;
-    private readonly IDataBufferWriter _writer;
-
-    #endregion
+    private readonly IDataBufferReaderFactory _dataBufferReaderFactory;
+    private readonly IDataBufferWriterFactory _dataBufferWriterFactory;
 
     #region Constructor(s)
 
     public Serializer()
     {
-        _schemaFactory = new();
-        _schema = _schemaFactory.Make<TEntity>();
+        ISchemaFactory schemaFactory = new SchemaFactory();
 
-        _writerFactory = new();
-        _writer = _writerFactory.Make();
+        _schema = schemaFactory.Make<TEntity>();
+
+        _dataBufferReaderFactory = new DataBufferReaderFactory();
+        _dataBufferWriterFactory = new DataBufferWriterFactory();
+    }
+
+    public Serializer(ISchema<TEntity> schema, IDataBufferReaderFactory dataBufferReaderFactory, IDataBufferWriterFactory dataBufferWriterFactory)
+    {
+        _schema = schema;
+
+        _dataBufferReaderFactory = dataBufferReaderFactory;
+        _dataBufferWriterFactory = dataBufferWriterFactory;
     }
 
     #endregion
@@ -38,30 +38,28 @@ public class Serializer<TEntity> where TEntity : class, new()
 
     public byte[] Serialize(TEntity source)
     {
-        using(_writer.Bookmark())
-        {
-            return _schema.Serialize(_writer, source);
-        }
+        IDataBufferWriter writer = _dataBufferWriterFactory.Make();
+
+        return _schema.Serialize(writer, source);
     }
 
     public byte[] Serialize(TEntity current, TEntity previous)
     {
-        using(_writer.Bookmark())
-        {
-            return _schema.Serialize(_writer, current, previous);
-        }
+        IDataBufferWriter writer = _dataBufferWriterFactory.Make();
+
+        return _schema.Serialize(writer, current, previous);
     }
 
     public TEntity Deserialize(byte[] serialized)
     {
-        DataBufferReader reader = new(serialized);
+        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
 
         return _schema.Deserialize(reader);
     }
 
     public TEntity Deserialize(byte[] serialized, TEntity target)
     {
-        DataBufferReader reader = new(serialized);
+        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
 
         return _schema.Deserialize(reader, target);
     }
