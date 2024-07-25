@@ -138,12 +138,17 @@ public class DataBufferReader : IDataBufferReader
 
     private class DataBufferReaderBookmark : IDisposable
     {
+        #region Fields
         private readonly DataBufferReader _reader;
         
         private readonly int _positionByte;
         private readonly int _positionBit;
 
         private volatile int _disposed;
+
+        #endregion
+        
+        #region Constructor(s)
 
         public DataBufferReaderBookmark(DataBufferReader reader, int positionByte, int positionBit)
         {
@@ -155,6 +160,10 @@ public class DataBufferReader : IDataBufferReader
             _disposed = 0;
         }
 
+        #endregion
+
+        #region Methods
+
         public void Dispose()
         {
             if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
@@ -165,6 +174,8 @@ public class DataBufferReader : IDataBufferReader
             _reader._positionByte = _positionByte;
             _reader._positionBit = _positionBit;
         }
+
+        #endregion
     }
     
     #endregion
