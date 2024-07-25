@@ -10,10 +10,7 @@ public interface IDataBufferWriterFactory
     /// <summary>
     ///     Creates an <see cref="IDataBufferWriter" /> instance.
     /// </summary>
-    /// <param name="entity">
-    ///     The entity being serialized.
-    /// </param>
-    IDataBufferWriter Make<TEntity>(TEntity entity);
+    IDataBufferWriter Make();
 
     #endregion
 }
