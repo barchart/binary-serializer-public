@@ -9,12 +9,12 @@ using Barchart.BinarySerializer.Schemas.Factories;
 
 namespace Barchart.BinarySerializer.Serializers;
 
-public class Serializer<T> where T : class, new()
+public class Serializer<TEntity> where TEntity : class, new()
 {
     #region Fields
 
     private readonly SchemaFactory _schemaFactory;
-    private readonly ISchema<T> _schema;
+    private readonly ISchema<TEntity> _schema;
 
     private readonly DataBufferWriterFactory _writerFactory;
     private readonly IDataBufferWriter _writer;
@@ -26,7 +26,7 @@ public class Serializer<T> where T : class, new()
     public Serializer()
     {
         _schemaFactory = new();
-        _schema = _schemaFactory.Make<T>();
+        _schema = _schemaFactory.Make<TEntity>();
 
         _writerFactory = new();
         _writer = _writerFactory.Make();
@@ -36,7 +36,7 @@ public class Serializer<T> where T : class, new()
 
     #region Methods
 
-    public byte[] Serialize(T source)
+    public byte[] Serialize(TEntity source)
     {
         using(_writer.Bookmark())
         {
@@ -44,11 +44,26 @@ public class Serializer<T> where T : class, new()
         }
     }
 
-    public T Deserialize(byte[] serialized)
+    public byte[] Serialize(TEntity current, TEntity previous)
+    {
+        using(_writer.Bookmark())
+        {
+            return _schema.Serialize(_writer, current, previous);
+        }
+    }
+
+    public TEntity Deserialize(byte[] serialized)
     {
         DataBufferReader reader = new(serialized);
-        
+
         return _schema.Deserialize(reader);
+    }
+
+    public TEntity Deserialize(byte[] serialized, TEntity target)
+    {
+        DataBufferReader reader = new(serialized);
+
+        return _schema.Deserialize(reader, target);
     }
 
     #endregion
