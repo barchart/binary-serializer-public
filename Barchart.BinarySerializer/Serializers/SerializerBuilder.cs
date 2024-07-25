@@ -55,7 +55,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
         return new Serializer<TEntity>(schema, _dataBufferReaderFactory, _dataBufferWriterFactory);
     }
     
-    public static SerializerBuilder<TEntity> ForType<TEntity>() where TEntity: class, new()
+    public static SerializerBuilder<TEntity> ForType()
     {
         return new SerializerBuilder<TEntity>();
     }
