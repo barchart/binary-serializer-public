@@ -1,17 +1,25 @@
+#region Using Statements
+
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Buffers.Factories;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Schemas.Factories;
 
+#endregion
+
 namespace Barchart.BinarySerializer.Serializers;
 
 public class Serializer<TEntity> where TEntity : class, new()
 {
+    #region Fields
+
     private readonly ISchema<TEntity> _schema;
 
     private readonly IDataBufferReaderFactory _dataBufferReaderFactory;
     private readonly IDataBufferWriterFactory _dataBufferWriterFactory;
 
+    #endregion
+    
     #region Constructor(s)
 
     public Serializer()

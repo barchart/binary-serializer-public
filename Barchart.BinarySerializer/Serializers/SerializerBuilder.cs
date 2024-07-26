@@ -1,17 +1,27 @@
+#region Using Statements
+
 using Barchart.BinarySerializer.Buffers.Factories;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Schemas.Factories;
 using Barchart.BinarySerializer.Types.Factories;
 
+#endregion
+
 namespace Barchart.BinarySerializer.Serializers;
 
 public class SerializerBuilder<TEntity> where TEntity: class, new()
 {
+    #region Fields
+
     private ISchemaFactory _schemaFactory;
 
     private IDataBufferReaderFactory _dataBufferReaderFactory;
     private IDataBufferWriterFactory _dataBufferWriterFactory;
     
+    #endregion
+
+    #region Constructor(s)
+
     public SerializerBuilder()
     {
         _schemaFactory = new SchemaFactory();
@@ -19,7 +29,11 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
         _dataBufferReaderFactory = new DataBufferReaderFactory();
         _dataBufferWriterFactory = new DataBufferWriterFactory();
     }
+
+    #endregion
     
+    #region Methods
+
     public SerializerBuilder<TEntity> WithSchemaFactory(ISchemaFactory schemaFactory)
     {
         _schemaFactory = schemaFactory;
@@ -59,4 +73,6 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     {
         return new SerializerBuilder<TEntity>();
     }
+
+    #endregion
 }
