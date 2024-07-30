@@ -70,6 +70,7 @@ public class SchemaItemCollectionObjectTests
         _schemaItemCollectionObject.Encode(_writer, testEntity);
 
         Assert.False(_reader.ReadBit());
+        Assert.True(_reader.ReadBit());
     }
 
     #endregion
