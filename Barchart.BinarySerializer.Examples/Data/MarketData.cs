@@ -40,7 +40,7 @@ public class SubscriptionResponse
     [Serialize(key: false)]
     public Status? Status { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize(key: true)]
     public long? MarketId { get; set; }
 
     [Serialize(key: false)]
@@ -68,7 +68,7 @@ public class InstrumentDefinition
 {
     #region Properties
 
-    [Serialize(key: false)]
+    [Serialize(key: true)]
     public long? MarketId { get; set; }
 
     [Serialize(key: false)]
@@ -375,6 +375,9 @@ public class BestBidOffer
 
     [Serialize(key: false)]
     public bool? Transient { get; set; }
+
+    [Serialize(key: true)]
+    public long? MarketId { get; set; }
 
     #endregion
 }
