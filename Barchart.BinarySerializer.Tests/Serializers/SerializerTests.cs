@@ -29,7 +29,7 @@ public class SerializerTests
 
     #endregion
 
-    #region Test Methods (Serializer)
+    #region Test Methods (Serialize)
 
     [Fact]
     public void Serialize_ShouldReturnSerializedData()
@@ -114,6 +114,70 @@ public class SerializerTests
     }
 
     #endregion
+
+    #region Test Methods (ReadKey)
+
+    [Fact]
+    public void ReadKey_ShouldReturnCorrectKey()
+    {
+        TestEntity entity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value"
+        };
+
+        byte[] serialized = _serializer.Serialize(entity);
+
+        string keyName = "KeyProperty";
+        string expectedKey = "Key";
+
+        string result = _serializer.ReadKey<string>(serialized, keyName);
+
+        Assert.Equal(expectedKey, result);
+    }
+
+    #endregion
+
+    #region Test Methods (GetEqials)
+
+    [Fact]
+    public void GetEquals_ShouldReturnTrueForEqualEntities()
+    {
+        TestEntity entityA = new() { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value" 
+        };
+
+        TestEntity entityB = new() { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value" 
+        };
+
+        bool result = _serializer.GetEquals(entityA, entityB);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void GetEquals_ShouldReturnFalseForDifferentEntities()
+    {
+
+        TestEntity entityA = new() { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value" 
+        };
+
+        TestEntity entityB = new() { 
+            KeyProperty = "Key", 
+            ValueProperty = "DifferentValue" 
+        };
+
+        bool result = _serializer.GetEquals(entityA, entityB);
+
+        Assert.False(result);
+    }
+
+    #endregion    
     
     #region Nested Types
 
