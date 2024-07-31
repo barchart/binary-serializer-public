@@ -99,7 +99,7 @@ public class Serializer<TEntity> where TEntity : class, new()
         return _schema.Deserialize(reader);
     }
 
-   /// <summary>
+    /// <summary>
     ///     Deserializes an entity, updating an existing instance of
     ///     the <typeparamref name="TEntity"/> class.
     /// </summary>
@@ -116,6 +116,46 @@ public class Serializer<TEntity> where TEntity : class, new()
     {
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
         return _schema.Deserialize(reader, target);
+    }
+
+    /// <summary>
+    ///     Deserializes a key value (only) from the <paramref name="serialized" />.
+    /// </summary>
+    /// <param name="serialized">
+    ///     A byte array of binary data which contains the serialized entity.
+    /// </param>
+    /// <param name="name">
+    ///     The name of the key property
+    /// </param>
+    /// <typeparam name="TMember">
+    ///     The type of the key property.
+    /// </typeparam>
+    /// <returns>
+    ///      The value of the key.
+    /// </returns>
+    public TMember ReadKey<TMember>(byte[] serialized, string name)
+    {
+        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
+        return _schema.ReadKey<TMember>(reader, name);
+    }
+
+    /// <summary>
+    ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
+    ///     instances.
+    /// </summary>
+    /// <param name="a">
+    ///     The first entity.
+    /// </param>
+    /// <param name="b">
+    ///     The second entity.
+    /// </param>
+    /// <returns>
+    ///     True, if the serializable members of the instances are equal;
+    ///     otherwise false.
+    /// </returns>
+    public bool GetEquals(TEntity a, TEntity b)
+    {
+        return _schema.GetEquals(a, b);
     }
 
     #endregion
