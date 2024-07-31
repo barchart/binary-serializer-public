@@ -6,6 +6,7 @@ using Barchart.BinarySerializer.Types.Exceptions;
 
 namespace Barchart.BinarySerializer.Types.Factories;
 
+/// <inheritdoc />
 public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
 {
     #region Fields
