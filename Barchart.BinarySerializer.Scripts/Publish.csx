@@ -100,6 +100,13 @@ void CreateGitHubRelease(string gitToken, string newVersion, string releaseDescr
     RunCommand(command, args);
 }
 
+void CommitAndPushChanges()
+{
+    RunCommand("git", "add .");
+    RunCommand("git", "commit -m \"Chore: Bump project version\"");
+    RunCommand("git", "push origin main");
+}
+
 #endregion
 
 string projectDirectory = "../Barchart.BinarySerializer";
@@ -141,8 +148,8 @@ rootCommand.Handler = CommandHandler.Create<string, string, string>((apiKey, git
         return;
     }
 
-    // TODO: Git commit change to .csproj files (before release creation) ...
-    
+    CommitAndPushChanges();
+
     Console.WriteLine("Publishing release to GitHub...");
     string releaseDescription = ReadReleaseDescription(newVersion);
     CreateGitHubRelease(gitToken, newVersion, releaseDescription);
