@@ -88,11 +88,8 @@ void UpdateCsprojVersion(string csprojPath, string newVersion)
 string ReadReleaseDescription(string version)
 {
     string descriptionFilePath = $"../.releases/{version}.md";
-    if (File.Exists(descriptionFilePath))
-    {
-        return File.ReadAllText(descriptionFilePath);
-    }
-    return "No release description available.";
+    
+    return File.ReadAllText(descriptionFilePath);
 }
 
 void CreateGitHubRelease(string gitToken, string newVersion, string releaseDescription)
