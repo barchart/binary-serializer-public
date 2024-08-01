@@ -1,5 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,14 +10,12 @@
     <IsPackable>true</IsPackable>
     <PackageId>binary-serializer-net</PackageId>
     <Title>PackageId&gt;binary-serializer-net</Title>
-    <Version>0.0.0</Version>
+    <Version>0.0.1</Version>
     <Authors>Luka Sotra,Bryan Ingle</Authors>
     <Company>Barchart</Company>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
   </ItemGroup>
-
 </Project>

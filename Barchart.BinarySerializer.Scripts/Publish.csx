@@ -103,7 +103,7 @@ void CreateGitHubRelease(string gitToken, string newVersion, string releaseDescr
 
 void CommitAndPushChanges()
 {
-    RunCommand("git", "add .");
+    RunCommand("git", "add ../*");
     RunCommand("git", "commit -m \"Chore: Bump project version\"");
     RunCommand("git", "push origin main");
 }
