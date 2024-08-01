@@ -94,6 +94,7 @@ public class BinarySerializerCharTests
     #endregion
 
     #region Test Methods (GetEquals)
+    
     [Theory]
     [InlineData(new[] { 'a', 'a' })]
     [InlineData(new[] { 'b', 'b' })]
