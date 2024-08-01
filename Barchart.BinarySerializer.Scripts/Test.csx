@@ -1,5 +1,6 @@
 /*
     usage example:
+    dotnet tool install -g dotnet-script
     dotnet script Test.csx
 */
 
