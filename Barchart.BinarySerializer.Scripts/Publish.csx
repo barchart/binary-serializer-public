@@ -121,8 +121,6 @@ var rootCommand = new RootCommand
 
 rootCommand.Handler = CommandHandler.Create<string, string, string>((apiKey, gitToken, versionIncrement) =>
 {
-    // TODO: Scan all projects in directory and update all .csproj files ...
-    
     var doc = XDocument.Load(csprojPath);
     var versionElement = doc.Descendants("Version").FirstOrDefault();
     var currentVersion = versionElement?.Value ?? "0.0.0";
@@ -131,8 +129,6 @@ rootCommand.Handler = CommandHandler.Create<string, string, string>((apiKey, git
     Console.WriteLine($"Version incremented from {currentVersion} to {newVersion}");
 
     UpdateCsprojVersion(csprojPath, newVersion);
-
-    // TODO: Git commit change to .csproj files (before release creation) ...
     
     RunCommand("dotnet", $"build {projectDirectory} -c Release");
     RunCommand("dotnet", $"pack {projectDirectory} -c Release --output {projectDirectory}/output");
@@ -145,6 +141,8 @@ rootCommand.Handler = CommandHandler.Create<string, string, string>((apiKey, git
         return;
     }
 
+    // TODO: Git commit change to .csproj files (before release creation) ...
+    
     Console.WriteLine("Publishing release to GitHub...");
     string releaseDescription = ReadReleaseDescription(newVersion);
     CreateGitHubRelease(gitToken, newVersion, releaseDescription);
