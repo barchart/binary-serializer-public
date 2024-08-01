@@ -141,13 +141,13 @@ rootCommand.Handler = CommandHandler.Create<string, string, string>((apiKey, git
         return;
     }
 
-    Console.WriteLine("Pushing package to NuGet...");
-    string source = "https://api.nuget.org/v3/index.json";
-    RunCommand("dotnet", $"nuget push {packagePath} --api-key {apiKey} --source {source}");
-
     Console.WriteLine("Publishing release to GitHub...");
     string releaseDescription = ReadReleaseDescription(newVersion);
     CreateGitHubRelease(gitToken, newVersion, releaseDescription);
+    
+    Console.WriteLine("Pushing package to NuGet...");
+    string source = "https://api.nuget.org/v3/index.json";
+    RunCommand("dotnet", $"nuget push {packagePath} --api-key {apiKey} --source {source}");
 });
 
 rootCommand.Invoke(Args.ToArray());
