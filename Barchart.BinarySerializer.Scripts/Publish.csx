@@ -1,5 +1,6 @@
 /*
     usage example:
+    dotnet tool install -g dotnet-script
     dotnet script Publish.csx -- --api-key "YourApiKey" --git-token "YourGitToken" --version-increment VERSION
 
     VERSION: "MAJOR", "MINOR", "PATCH"
