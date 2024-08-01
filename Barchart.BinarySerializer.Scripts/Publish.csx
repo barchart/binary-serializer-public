@@ -1,3 +1,9 @@
+/*
+    usage example:
+    dotnet script Publish.csx -- --api-key "YourApiKey" --git-token "YourGitToken" --version-increment VERSION
+
+    VERSION: "MAJOR", "MINOR", "PATCH"
+*/
 #r "nuget: Newtonsoft.Json, 13.0.1"
 #r "nuget: System.CommandLine, 2.0.0-beta1"
 
