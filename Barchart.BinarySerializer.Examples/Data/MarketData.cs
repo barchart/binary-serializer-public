@@ -327,6 +327,9 @@ public class MarketState
     [Serialize(key: false)]
     public long? TransactionTime { get; set; }
 
+    [Serialize(key: true)]
+    public long? MarketId { get; set; }
+
     #endregion
 }
 
@@ -376,7 +379,7 @@ public class BestBidOffer
     [Serialize(key: false)]
     public bool? Transient { get; set; }
 
-    [Serialize(key: true)]
+    [Serialize(key: false)]
     public long? MarketId { get; set; }
 
     #endregion
