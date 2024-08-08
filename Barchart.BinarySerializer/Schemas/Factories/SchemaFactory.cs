@@ -204,7 +204,7 @@ public class SchemaFactory : ISchemaFactory
     private IEnumerable<MemberInfo> GetMembersForType(Type entityType)
     {
         IEnumerable<MemberInfo> fields = entityType
-            .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            .GetFields(BindingFlags.Instance | BindingFlags.Public)
             .Where(FieldCanBeWritten)
             .Where(field => FieldHasSerializeAttribute(field) || IsCollectionType(field.FieldType) || IsNestedClass(field.FieldType));
 
@@ -368,7 +368,7 @@ public class SchemaFactory : ISchemaFactory
 
     private static bool IsNestedClass(Type type)
     {
-        return type.IsNested;
+        return type.IsNested && !type.IsEnum;
     }
 
     private bool IsTypeSupported(Type type)
