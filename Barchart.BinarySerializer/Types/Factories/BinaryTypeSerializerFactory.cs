@@ -1,5 +1,6 @@
 #region Using Statements
 
+using System.Reflection;
 using Barchart.BinarySerializer.Types.Exceptions;
 
 #endregion
@@ -38,6 +39,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         AddStructSerializer(new BinarySerializerUShort());
         
         AddSerializer(new BinarySerializerString());
+        AddEnumSerializer((BinarySerializerInt)_serializers[typeof(int)]);
     }
     
     public BinaryTypeSerializerFactory()
@@ -52,7 +54,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     /// <inheritdoc />
     public virtual bool Supports(Type type)
     {
-        return _serializers.ContainsKey(type) || type.IsEnum;
+        return _serializers.ContainsKey(type) || type.IsEnum || IsNullableEnum(type);
     }
     
     /// <inheritdoc />
@@ -79,6 +81,23 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
             
             serializer = (IBinaryTypeSerializer)Activator.CreateInstance(boundType, _serializers[typeof(int)])!;
         }
+        else if (IsNullableEnum(type))
+        {
+            Type underlyingType = Nullable.GetUnderlyingType(type)!;
+
+            if (Supports(underlyingType))
+            {
+                Type genericType = typeof(BinarySerializerNullable<>);
+                Type boundType = genericType.MakeGenericType(underlyingType);
+                
+                IBinaryTypeSerializer underlyingSerializer = Make(underlyingType);
+                serializer = (IBinaryTypeSerializer)Activator.CreateInstance(boundType, underlyingSerializer)!;
+            }
+            else
+            {
+                throw new UnsupportedTypeException(type);
+            }
+        }
         else
         {
             throw new UnsupportedTypeException(type);
@@ -98,5 +117,31 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         AddSerializer(new BinarySerializerNullable<T>(serializer));
     }
 
+    private static void AddEnumSerializer(BinarySerializerInt serializer)
+    {
+        AddSerializer(serializer);
+        AddSerializer(new BinarySerializerNullable<int>(serializer));
+    }
+
+    private static bool IsNullableEnum(Type type)
+    {
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            Type genericArgument = type.GetGenericArguments()[0];
+            if (genericArgument.IsEnum)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private IBinaryTypeSerializer Make(Type type)
+    {
+        MethodInfo method = typeof(BinaryTypeSerializerFactory).GetMethod(nameof(Make))!.MakeGenericMethod(type);
+        return (IBinaryTypeSerializer)method.Invoke(this, null)!;
+    }
+    
     #endregion
 }
