@@ -206,11 +206,11 @@ public class SchemaFactory : ISchemaFactory
         IEnumerable<MemberInfo> fields = entityType
             .GetFields(BindingFlags.Instance | BindingFlags.Public)
             .Where(FieldCanBeWritten)
-            .Where(field => FieldHasSerializeAttribute(field) || IsCollectionType(field.FieldType) || IsNestedClass(field.FieldType));
+            .Where(field => FieldHasSerializeAttribute(field));
 
         IEnumerable<MemberInfo> properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .Where(PropertyCanBeWritten)
-            .Where(property => PropertyHasSerializeAttribute(property) || IsCollectionType(property.PropertyType) || IsNestedClass(property.PropertyType));
+            .Where(property => PropertyHasSerializeAttribute(property));
 
         return fields.Concat(properties);
     }
@@ -368,7 +368,7 @@ public class SchemaFactory : ISchemaFactory
 
     private static bool IsNestedClass(Type type)
     {
-        return type.IsNested && !type.IsEnum;
+        return type.IsClass;
     }
 
     private bool IsTypeSupported(Type type)
