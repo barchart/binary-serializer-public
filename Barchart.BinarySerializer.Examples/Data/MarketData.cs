@@ -31,7 +31,7 @@ public class SubscriptionResponse
 {
     #region Properties
 
-    [Serialize(key: true)]
+    [Serialize(key: false)]
     public string? Symbol { get; set; }
 
     [Serialize(key: false)]
@@ -83,7 +83,7 @@ public class InstrumentDefinition
     [Serialize(key: false)]
     public string? VendorId { get; set; }
 
-    [Serialize(key: true)]
+    [Serialize(key: false)]
     public string? Symbol { get; set; }
 
     [Serialize(key: false)]
@@ -252,7 +252,7 @@ public class MarketState
     [Serialize(key: false)]
     public int? TradeDate { get; set; }
 
-    [Serialize(key: true)]
+    [Serialize(key: false)]
     public string? Symbol { get; set; }
 
     [Serialize(key: false)]
