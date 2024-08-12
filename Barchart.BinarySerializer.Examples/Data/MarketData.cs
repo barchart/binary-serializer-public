@@ -1,7 +1,6 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Attributes;
-
 using Org.Openfeed;
 using static Org.Openfeed.InstrumentDefinition.Types;
 using static Org.Openfeed.MarketSummary.Types;
@@ -15,13 +14,13 @@ public class MarketData
 {
     #region Properties
 
-    [Serialize(key: false)]
+    [Serialize]
     public SubscriptionResponse? SubscriptionResponse { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public InstrumentDefinition? InstrumentDefinition { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public MarketState? MarketState { get; set; }
 
     #endregion
@@ -31,34 +30,34 @@ public class SubscriptionResponse
 {
     #region Properties
 
-    [Serialize(key: false)]
+    [Serialize(true)]
     public string? Symbol { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? CorrelationId { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public Status? Status { get; set; }
 
-    [Serialize(key: true)]
+    [Serialize(true)]
     public long? MarketId { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? Exchange { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? ChannelId { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? NumberOfDefinitions { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public SubscriptionType? SubscriptionType { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? Unsubscribe { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? SnapshotIntervalSeconds { get; set; }
 
     #endregion
@@ -68,178 +67,178 @@ public class InstrumentDefinition
 {
     #region Properties
 
-    [Serialize(key: true)]
+    [Serialize(true)]
     public long? MarketId { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public InstrumentType? InstrumentType { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public List<BookType>? SupportBookTypes { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? BookDepth { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? VendorId { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize(true)]
     public string? Symbol { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? Description { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? CfiCode { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? CurrencyCode { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? ExchangeCode { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public float? MinimumPriceIncrement { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public float? ContractPointValue { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public Schedule? Schedule { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public Calendar? Calendar { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? RecordCreateTime { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? RecordUpdateTime { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? TimeZoneName { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? InstrumentGroup { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public MaturityDate? SymbolExpiration { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public State? State { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? Channel { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? UnderlyingMarketId { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public PriceFormat? PriceFormat { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public PriceFormat? OptionStrikePriceFormat { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? PriceDenominator { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? QuantityDenominator { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? IsTradable { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? TransactionTime { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? AuxiliaryData { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public List<Symbol>? Symbols { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? OptionStrike { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public OptionType? OptionType { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public OptionStyle? OptionStyle { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? OptionStrikeDenominator { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? SpreadCode { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public List<SpreadLeg>? SpreadLeg { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? UserDefinedSpread { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? MarketTier { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? FinancialStatusIndicator { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? Isin { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public CurrencyPair? CurrencyPair { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? ExchangeSendsVolume { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? ExchangeSendsHigh { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? ExchangeSendsLow { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? ExchangeSendsOpen { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? ConsolidatedFeedInstrument { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? OpenOutcryInstrument { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? SyntheticAmericanOptionInstrument { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? BarchartExchangeCode { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? BarchartBaseCode { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? VolumeDenominator { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? BidOfferQuantityDenominator { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? PrimaryListingMarketParticipantId { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? SubscriptionSymbol { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public MaturityDate? ContractMaturity { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? Underlying { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? Commodity { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? UnderlyingOpenfeedMarketId { get; set; }
 
     #endregion
@@ -249,85 +248,85 @@ public class MarketState
 {
     #region Properties
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? TradeDate { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? Symbol { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? PriceDenominator { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public InstrumentStatus? InstrumentStatus { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public BestBidOffer? BBO { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public IndexValue? Index { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public Open? Open { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public High? High { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public Low? Low { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public Close? Close { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public PrevClose? PrevClose { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public Last? Last { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public YearHigh? YearHigh { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public YearLow? YearLow { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public Volume? Volume { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public Vwap? Vwap { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public NumberOfTrades? NumberOfTrades { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public MarketSession? PreviousSession { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public MarketSession? TSession { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public VolumeAtPrice? VolumeAtPrice { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public HighRolling? HighRolling { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public LowRolling? LowRolling { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public MarketSession? ZSession { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public MarketSession? Session { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public MarketSummary? MarketSummary { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? TransactionTime { get; set; }
 
-    [Serialize(key: true)]
+    [Serialize(true)]
     public long? MarketId { get; set; }
 
     #endregion
@@ -337,49 +336,49 @@ public class BestBidOffer
 {
     #region Properties
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? TransactionTime { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? BidPrice { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? BidQuantity { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? BidOrderCount { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? BidOriginator { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? BidQuoteCondition { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? OfferPrice { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? OfferQuantity { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public int? OfferOrderCount { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public string? OfferOriginator { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public string? OfferQuoteCondition { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public string? QuoteCondition { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? Regional { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public bool? Transient { get; set; }
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? MarketId { get; set; }
 
     #endregion
@@ -389,28 +388,28 @@ public class VolumeAtPrice
 {
     #region Properties
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? MarketId { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public string? Symbol { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public long? TransactionTime { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public long? LastPrice { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public long? LastQuantity { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public long? LastCumulativeVolume { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public int? TradeDate { get; set; } 
     
-    [Serialize(key: false)]
+    [Serialize]
     public List<PriceLevelVolume>? PriceVolumes { get; set; }
     
     #endregion
@@ -420,67 +419,67 @@ public class MarketSummary
 {
     #region Properties
 
-    [Serialize(key: false)]
+    [Serialize]
     public long? TransactionTime { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public int? TradingDate { get; set; } 
     
-    [Serialize(key: false)]
+    [Serialize]
     public bool? StartOfDay { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public bool? EndOfDay { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public ClearSet? Clear { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public InstrumentStatus? InstrumentStatus { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public BestBidOffer? Bbo { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public Open? Open { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public High? High { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public Low? Low { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public Close? Close { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public PrevClose? PrevClose { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public Last? Last { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public Volume? Volume { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public Settlement? Settlement { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public OpenInterest? OpenInterest { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public Vwap? Vwap { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public string? Session { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public SummaryType? SummaryType { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public Volume? PrevVolume { get; set; }
     
-    [Serialize(key: false)]
+    [Serialize]
     public bool? Transient { get; set; }
 
     #endregion
