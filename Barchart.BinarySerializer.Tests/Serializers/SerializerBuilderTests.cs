@@ -104,12 +104,12 @@ namespace Barchart.BinarySerializer.Tests.Serializers
 
         #region Nested Types
 
-        public class TestEntity
+        private class TestEntity
         {
             [Serialize(true)]
             public string KeyProperty { get; set; } = "";
 
-            [Serialize(false)]
+            [Serialize]
             public string ValueProperty { get; set; } = "";
         }
 

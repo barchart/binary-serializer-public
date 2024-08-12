@@ -91,15 +91,15 @@ public class BinarySerializerUShortTests
     #region Test Methods (GetEquals)
 
     [Theory]
-    [InlineData(new ushort[] { ushort.MaxValue, ushort.MaxValue })]
-    [InlineData(new ushort[] { ushort.MinValue, ushort.MinValue })]
-    [InlineData(new ushort[] { ushort.MaxValue, ushort.MinValue })]
-    [InlineData(new ushort[] { ushort.MinValue, ushort.MaxValue })]
+    [InlineData(new[] { ushort.MaxValue, ushort.MaxValue })]
+    [InlineData(new[] { ushort.MinValue, ushort.MinValue })]
+    [InlineData(new[] { ushort.MaxValue, ushort.MinValue })]
+    [InlineData(new[] { ushort.MinValue, ushort.MaxValue })]
     [InlineData(new ushort[] { 1, 12345 })]
-    public void GetEquals_Various_MatchesIEquatableOutput(ushort[] ushorts)
+    public void GetEquals_Various_MatchesIEquatableOutput(ushort[] uShorts)
     {
-        bool actual = _serializer.GetEquals(ushorts[0], ushorts[1]);
-        bool expected = ushorts[0].Equals(ushorts[1]);
+        bool actual = _serializer.GetEquals(uShorts[0], uShorts[1]);
+        bool expected = uShorts[0].Equals(uShorts[1]);
 
         Assert.Equal(expected, actual);
     }

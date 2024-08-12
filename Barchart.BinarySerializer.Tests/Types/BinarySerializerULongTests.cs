@@ -91,15 +91,15 @@ public class BinarySerializerULongTests
     #region Test Methods (GetEquals)
 
     [Theory]
-    [InlineData(new ulong[] { ulong.MaxValue, ulong.MaxValue })]
-    [InlineData(new ulong[] { ulong.MinValue, ulong.MinValue })]
-    [InlineData(new ulong[] { ulong.MaxValue, ulong.MinValue })]
-    [InlineData(new ulong[] { ulong.MinValue, ulong.MaxValue })]
+    [InlineData(new[] { ulong.MaxValue, ulong.MaxValue })]
+    [InlineData(new[] { ulong.MinValue, ulong.MinValue })]
+    [InlineData(new[] { ulong.MaxValue, ulong.MinValue })]
+    [InlineData(new[] { ulong.MinValue, ulong.MaxValue })]
     [InlineData(new ulong[] { 1, 123456789 })]
-    public void GetEquals_Various_MatchesIEquatableOutput(ulong[] ulongs)
+    public void GetEquals_Various_MatchesIEquatableOutput(ulong[] uLongs)
     {
-        bool actual = _serializer.GetEquals(ulongs[0], ulongs[1]);
-        bool expected = ulongs[0].Equals(ulongs[1]);
+        bool actual = _serializer.GetEquals(uLongs[0], uLongs[1]);
+        bool expected = uLongs[0].Equals(uLongs[1]);
 
         Assert.Equal(expected, actual);
     }

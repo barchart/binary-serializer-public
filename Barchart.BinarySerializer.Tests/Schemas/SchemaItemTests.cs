@@ -16,7 +16,6 @@ public class SchemaItemTests
 
     private readonly ITestOutputHelper _testOutputHelper;
 
-    private readonly byte[] _buffer;
     private readonly IDataBufferWriter _writer;
 
     private readonly Mock<IBinaryTypeSerializer<string>> _serializerMock;
@@ -31,8 +30,8 @@ public class SchemaItemTests
     {
         _testOutputHelper = testOutputHelper;
 
-        _buffer = new byte[100000]; 
-        _writer = new DataBufferWriter(_buffer);
+        byte[] buffer = new byte[100000]; 
+        _writer = new DataBufferWriter(buffer);
 
         _serializerMock = new Mock<IBinaryTypeSerializer<string>>();
         _getter = entity => entity.Name;
@@ -196,9 +195,6 @@ public class SchemaItemTests
     [Fact]
     public void Read_WithValidData_ReturnsExpectedEntity()
     {
-        byte[] data = new byte[100];
-        DataBufferReader reader = new(data);
-
         SchemaItem<TestEntity, string> schemaItem = new("Name", true, _getter, _setter, _serializerMock.Object);
 
         TestEntity target = new()
@@ -215,18 +211,10 @@ public class SchemaItemTests
     [Fact]
     public void Read_WithWrongData_ReturnsWrongWEntity()
     {
-        TestEntity target = new()
-        {
-            Name = "CurrentValue"
-        };
-
         TestEntity targetInvalid = new()
         {
             Name = "CurrentInvalid"
         };
-
-        byte[] data = new byte[100];
-        DataBufferReader reader = new(data);
 
         SchemaItem<TestEntity, string> schemaItem = new("Name", true, _getter, _setter, _serializerMock.Object);
 
@@ -240,7 +228,7 @@ public class SchemaItemTests
 
     #region Nested Types
 
-    public class TestEntity
+    private class TestEntity
     {
         [Serialize(true)]
         public string Name { get; set; } = "";

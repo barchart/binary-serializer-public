@@ -91,15 +91,15 @@ public class BinarySerializerUIntTests
     #region Test Methods (GetEquals)
 
     [Theory]
-    [InlineData(new uint[] { uint.MaxValue, uint.MaxValue })]
-    [InlineData(new uint[] { uint.MinValue, uint.MinValue })]
-    [InlineData(new uint[] { uint.MaxValue, uint.MinValue })]
-    [InlineData(new uint[] { uint.MinValue, uint.MaxValue })]
+    [InlineData(new[] { uint.MaxValue, uint.MaxValue })]
+    [InlineData(new[] { uint.MinValue, uint.MinValue })]
+    [InlineData(new[] { uint.MaxValue, uint.MinValue })]
+    [InlineData(new[] { uint.MinValue, uint.MaxValue })]
     [InlineData(new uint[] { 1, 123456789 })]
-    public void GetEquals_Various_MatchesIEquatableOutput(uint[] uints)
+    public void GetEquals_Various_MatchesIEquatableOutput(uint[] uInts)
     {
-        bool actual = _serializer.GetEquals(uints[0], uints[1]);
-        bool expected = uints[0].Equals(uints[1]);
+        bool actual = _serializer.GetEquals(uInts[0], uInts[1]);
+        bool expected = uInts[0].Equals(uInts[1]);
 
         Assert.Equal(expected, actual);
     }

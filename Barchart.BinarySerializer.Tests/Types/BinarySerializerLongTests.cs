@@ -93,12 +93,12 @@ public class BinarySerializerLongTests
     #region Test Methods (GetEquals)
 
     [Theory]
-    [InlineData(new long[] { long.MaxValue, long.MaxValue })]
-    [InlineData(new long[] { long.MinValue, long.MinValue })]
-    [InlineData(new long[] { 0L, 0L })]
-    [InlineData(new long[] { long.MaxValue, long.MinValue })]
-    [InlineData(new long[] { long.MinValue, long.MaxValue })]
-    [InlineData(new long[] { 1L, -1L })]
+    [InlineData(new[] { long.MaxValue, long.MaxValue })]
+    [InlineData(new[] { long.MinValue, long.MinValue })]
+    [InlineData(new[] { 0L, 0L })]
+    [InlineData(new[] { long.MaxValue, long.MinValue })]
+    [InlineData(new[] { long.MinValue, long.MaxValue })]
+    [InlineData(new[] { 1L, -1L })]
     public void GetEquals_Various_MatchesIEquatableOutput(long[] longs)
     {
         bool actual = _serializer.GetEquals(longs[0], longs[1]);

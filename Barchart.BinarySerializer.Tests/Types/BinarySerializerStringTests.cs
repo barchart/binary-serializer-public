@@ -65,7 +65,6 @@ public class BinarySerializerStringTests
     {
         Mock<IDataBufferReader> mock = new();
 
-        byte[] encodedBytes = new byte[2];
         mock.Setup(m => m.ReadBytes(2)).Returns(BitConverter.GetBytes((short)value.Length));
         mock.Setup(m => m.ReadBytes(value.Length)).Returns(Encoding.UTF8.GetBytes(value));
 
@@ -79,10 +78,10 @@ public class BinarySerializerStringTests
     #region Test Methods (GetEquals)
 
     [Theory]
-    [InlineData(new object[] { new string[] { "Test", "Test" }})]
-    [InlineData(new object[] { new string[] { "String", "string" }})]
-    [InlineData(new object[] { new string[] { "", "" }})]
-    [InlineData(new object[] { new string[] { "Binary", "Serialization" }})]
+    [InlineData(new object[] { new[] { "Test", "Test" }})]
+    [InlineData(new object[] { new[] { "String", "string" }})]
+    [InlineData(new object[] { new[] { "", "" }})]
+    [InlineData(new object[] { new[] { "Binary", "Serialization" }})]
     public void GetEquals_Various_MatchesIEquatableOutput(string[] strings)
     {
         bool actual = _serializer.GetEquals(strings[0], strings[1]);

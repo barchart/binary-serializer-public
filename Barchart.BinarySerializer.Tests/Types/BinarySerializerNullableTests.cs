@@ -103,10 +103,7 @@ public class BinarySerializerNullableTests
             return bit;
         });
 
-        mock.Setup(m => m.ReadByte()).Returns(() => 
-        {
-            return byteToRead;
-        });
+        mock.Setup(m => m.ReadByte()).Returns(() => byteToRead);
 
         mock.Setup(m => m.ReadBytes(It.IsAny<int>())).Returns<int>(count => 
         {
@@ -139,8 +136,8 @@ public class BinarySerializerNullableTests
     #endregion
 
     #region Nested Types
-        
-    public enum TestEnum
+
+    private enum TestEnum
     {
         Value1,
         Value2,

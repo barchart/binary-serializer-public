@@ -14,7 +14,6 @@ public class SchemaItemCollectionPrimitiveTests
 
     private readonly ITestOutputHelper _testOutputHelper;
 
-    private readonly byte[] _buffer;
     private readonly IDataBufferWriter _writer;
     private readonly IDataBufferReader _reader;
 
@@ -28,9 +27,9 @@ public class SchemaItemCollectionPrimitiveTests
     {
         _testOutputHelper = testOutputHelper;
 
-        _buffer = new byte[100000];
-        _writer = new DataBufferWriter(_buffer);
-        _reader = new DataBufferReader(_buffer);
+        byte[] buffer = new byte[100000];
+        _writer = new DataBufferWriter(buffer);
+        _reader = new DataBufferReader(buffer);
 
         IBinaryTypeSerializer<int> intSerializer = new BinarySerializerInt();
 
@@ -107,7 +106,7 @@ public class SchemaItemCollectionPrimitiveTests
     }
 
     [Fact]
-    public void Decode_WithNonNullListProperty_SetsPropertyToDecodedListl()
+    public void Decode_WithNonNullListProperty_SetsPropertyToDecodedList()
     {
         _writer.WriteBit(false);
         _writer.WriteBit(false);
@@ -126,7 +125,7 @@ public class SchemaItemCollectionPrimitiveTests
             IntListProperty = new List<int> { 1, 2, 3 }
         };
 
-        TestEntity decodedEntity = new() { };
+        TestEntity decodedEntity = new();
 
         _schemaItemListPrimitive.Decode(_reader, decodedEntity);
 
@@ -225,9 +224,10 @@ public class SchemaItemCollectionPrimitiveTests
 
     #region Nested Types
 
-    public class TestEntity
+    private class TestEntity
     {
         public List<int>? IntListProperty { get; set; }
     }
+    
     #endregion
 }

@@ -15,11 +15,6 @@ public class SchemaTests
     #region Fields
     private readonly ITestOutputHelper _testOutputHelper;
 
-    private readonly BinarySerializerString _serializer;
-
-    private readonly SchemaItem<TestEntity, string> _keyItem;
-    private readonly SchemaItem<TestEntity, string> _valueItem;
-
     private readonly ISchema<TestEntity> _schema;
 
     #endregion
@@ -30,25 +25,25 @@ public class SchemaTests
     {
         _testOutputHelper = testOutputHelper;
 
-        _serializer = new BinarySerializerString();
+        BinarySerializerString serializer = new();
 
-        _keyItem = new SchemaItem<TestEntity, string>(
+        SchemaItem<TestEntity, string> keyItem = new(
             "KeyProperty",
             true,
             entity => entity.KeyProperty,
             (entity, value) => entity.KeyProperty = value,
-            _serializer
+            serializer!
         );
 
-        _valueItem = new SchemaItem<TestEntity, string>(
+        SchemaItem<TestEntity, string> valueItem = new(
             "ValueProperty",
             false,
             entity => entity.ValueProperty,
             (entity, value) => entity.ValueProperty = value,
-            _serializer
+            serializer!
         );
 
-        _schema = new Schema<TestEntity>(new ISchemaItem<TestEntity>[] { _keyItem, _valueItem });
+        _schema = new Schema<TestEntity>(new ISchemaItem<TestEntity>[] { keyItem, valueItem });
     }
 
     #endregion
@@ -95,7 +90,7 @@ public class SchemaTests
         byte[] bytes =_schema.Serialize(writer, entity);
 
         DataBufferReader reader = new(bytes);
-        string? result = _schema.ReadKey<string>(reader, "KeyProperty");
+        string result = _schema.ReadKey<string>(reader, "KeyProperty");
 
         Assert.Equal(expectedValue, result);
     }
@@ -111,7 +106,7 @@ public class SchemaTests
         byte[] bytes =_schema.Serialize(writer, entity);
 
         DataBufferReader reader = new(bytes);
-        string? result = _schema.ReadKey<string>(reader, "KeyProperty");
+        _schema.ReadKey<string>(reader, "KeyProperty");
 
         Assert.Throws<KeyUndefinedException>(() => _schema.ReadKey<string>(reader, invalidValue));
     }
@@ -156,12 +151,12 @@ public class SchemaTests
 
     #region Nested Types
 
-    public class TestEntity
+    private class TestEntity
     {
         [Serialize(true)]
         public string KeyProperty { get; set; } = "";
 
-        [Serialize(false)]
+        [Serialize]
         public string ValueProperty { get; set; } = "";
     }
 

@@ -123,7 +123,7 @@ public class DataBufferReaderTests
         byte[] byteArray = { first = 250, second = 175, third = 100 };
         DataBufferReader dataBuffer = new(byteArray);
 
-        var expectedBytes = new byte[] { first, second, third };
+        var expectedBytes = new[] { first, second, third };
         var readBytes = dataBuffer.ReadBytes(3);
 
         Assert.Equal(expectedBytes, readBytes);
@@ -138,7 +138,7 @@ public class DataBufferReaderTests
         byte[] byteArray = { first = 250, second = 175, 100 };
         DataBufferReader dataBuffer = new(byteArray);
 
-        var expectedBytes = new byte[] { first, second };
+        var expectedBytes = new[] { first, second };
         var readBytes = dataBuffer.ReadBytes(2);
 
         Assert.Equal(expectedBytes, readBytes);
@@ -160,7 +160,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneBitOneByte_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[2] { 0b01111111, 0b10000000 };
+        byte[] byteArray = { 0b01111111, 0b10000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         bool readBit = dataBuffer.ReadBit();
@@ -173,7 +173,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_TwoBitsOneByte_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[2] { 0b00111111, 0b11000000 };
+        byte[] byteArray = { 0b00111111, 0b11000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         bool readBitOne = dataBuffer.ReadBit();
@@ -188,7 +188,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneBitTwoBytes_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[3] { 0b01111111, 0b11111111, 0b10000000 };
+        byte[] byteArray = { 0b01111111, 0b11111111, 0b10000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         bool readBit = dataBuffer.ReadBit();
@@ -203,7 +203,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneBitOneByteOneBitOneByte_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[3] { 0b01111111, 0b10111111, 0b11000000 };
+        byte[] byteArray = { 0b01111111, 0b10111111, 0b11000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         bool readBitOne = dataBuffer.ReadBit();
@@ -220,7 +220,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneByteOneBitOneByte_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[3] { 0b11111111, 0b01111111, 0b10000000 };
+        byte[] byteArray = { 0b11111111, 0b01111111, 0b10000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         byte readByteOne = dataBuffer.ReadByte();
@@ -239,7 +239,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneBitOneByteArray_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[2] { 0b10000001, 0b10000000 };
+        byte[] byteArray = { 0b10000001, 0b10000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         bool readBit = dataBuffer.ReadBit();
@@ -254,7 +254,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneBitTwoByteArray_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[3] { 0b10000001, 0b10000011, 0b11111111 };
+        byte[] byteArray = { 0b10000001, 0b10000011, 0b11111111 };
         DataBufferReader dataBuffer = new(byteArray);
 
         bool readBit = dataBuffer.ReadBit();
@@ -270,7 +270,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneBitThreeByteArray_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[4] { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
+        byte[] byteArray = { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         bool readBit = dataBuffer.ReadBit();
@@ -287,7 +287,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneByteArrayOneBit_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[3] { 0b10000001, 0b10000011, 0b11111111 };
+        byte[] byteArray = { 0b10000001, 0b10000011, 0b11111111 };
         DataBufferReader dataBuffer = new(byteArray);
 
         byte[] readBytes = dataBuffer.ReadBytes(2);
@@ -302,7 +302,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_TwoByteArrayOneBit_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[4] { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
+        byte[] byteArray = { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         byte[] readBytes = dataBuffer.ReadBytes(3);
@@ -322,7 +322,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneByteTwoByteArray_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[3] { 0b10000001, 0b10000011, 0b11111111 };
+        byte[] byteArray = { 0b10000001, 0b10000011, 0b11111111 };
         DataBufferReader dataBuffer = new(byteArray);
 
         byte readByte = dataBuffer.ReadByte();
@@ -337,7 +337,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_TwoByteArrayOneByte_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[4] { 0b10111101, 0b11001110, 0b10101100, 0b00000000 };
+        byte[] byteArray = { 0b10111101, 0b11001110, 0b10101100, 0b00000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         byte[] readBytes = dataBuffer.ReadBytes(2);
@@ -350,7 +350,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_TwoBytesOneByteArray_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[4] { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
+        byte[] byteArray = { 0b10000001, 0b10000011, 0b11111111, 0b00000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         byte readByteOne = dataBuffer.ReadByte();
@@ -371,7 +371,7 @@ public class DataBufferReaderTests
     [Fact]
     public void Read_OneBitOneByteTwoByteArrayOneBit_ReturnsCorrectData()
     {
-        byte[] byteArray = new byte[4] { 0b11111111, 0b11010110, 0b01011110, 0b10000000 };
+        byte[] byteArray = { 0b11111111, 0b11010110, 0b01011110, 0b10000000 };
         DataBufferReader dataBuffer = new(byteArray);
 
         bool readBit1 = dataBuffer.ReadBit();

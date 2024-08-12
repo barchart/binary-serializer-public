@@ -93,11 +93,11 @@ public class BinarySerializerShortTests
     #region Test Methods (GetEquals)
 
     [Theory]
-    [InlineData(new short[] { short.MaxValue, short.MaxValue })]
-    [InlineData(new short[] { short.MinValue, short.MinValue })]
+    [InlineData(new[] { short.MaxValue, short.MaxValue })]
+    [InlineData(new[] { short.MinValue, short.MinValue })]
     [InlineData(new short[] { 0, 0 })]
-    [InlineData(new short[] { short.MaxValue, short.MinValue })]
-    [InlineData(new short[] { short.MinValue, short.MaxValue })]
+    [InlineData(new[] { short.MaxValue, short.MinValue })]
+    [InlineData(new[] { short.MinValue, short.MaxValue })]
     [InlineData(new short[] { 1, -1 })]
     public void GetEquals_Various_MatchesIEquatableOutput(short[] shorts)
     {
