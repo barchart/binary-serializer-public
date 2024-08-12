@@ -14,7 +14,6 @@ public class SchemaItemCollectionObjectTests
 
     private readonly ITestOutputHelper _testOutputHelper;
 
-    private readonly byte[] _buffer;
     private readonly IDataBufferWriter _writer;
     private readonly IDataBufferReader _reader;
     
@@ -29,9 +28,9 @@ public class SchemaItemCollectionObjectTests
     {
         _testOutputHelper = testOutputHelper;
 
-        _buffer = new byte[100000];
-        _writer = new DataBufferWriter(_buffer);
-        _reader = new DataBufferReader(_buffer);
+        byte[] buffer = new byte[100000];
+        _writer = new DataBufferWriter(buffer);
+        _reader = new DataBufferReader(buffer);
 
         _mockSchema = new Mock<ISchema<TestProperty>>();
         _schemaItemCollectionObject = new SchemaItemCollectionObject<TestEntity, TestProperty>("CollectionProperty", entity => entity.CollectionProperty!, (entity, value) => entity.CollectionProperty = value?.ToList(), _mockSchema.Object);
@@ -46,7 +45,7 @@ public class SchemaItemCollectionObjectTests
     {
         TestEntity testEntity = new()
         {
-            CollectionProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
@@ -89,7 +88,7 @@ public class SchemaItemCollectionObjectTests
 
         TestEntity testEntity = new()
         {
-            CollectionProperty = new List<TestProperty>()
+            CollectionProperty = new List<TestProperty?>()
         };
 
         _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>()))
@@ -113,7 +112,7 @@ public class SchemaItemCollectionObjectTests
         
         for (int i = 0; i < expectedItemsCount; i++)
         {
-            Assert.Equal(i + 1, testEntity.CollectionProperty.ElementAt(i).PropertyValue);
+            Assert.Equal(i + 1, testEntity.CollectionProperty.ElementAt(i)?.PropertyValue);
         }
     }
 
@@ -124,7 +123,7 @@ public class SchemaItemCollectionObjectTests
 
         TestEntity testEntity = new()
         {
-            CollectionProperty = new List<TestProperty>()
+            CollectionProperty = new List<TestProperty?>()
         };
 
         _schemaItemCollectionObject.Decode(_reader, testEntity);
@@ -159,12 +158,12 @@ public class SchemaItemCollectionObjectTests
     {
         TestEntity entityA = new() 
         { 
-            CollectionProperty = new List<TestProperty>() 
+            CollectionProperty = new List<TestProperty?>() 
         };
 
         TestEntity entityB = new() 
         { 
-            CollectionProperty = new List<TestProperty>() 
+            CollectionProperty = new List<TestProperty?>() 
         };
 
         bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
@@ -177,7 +176,7 @@ public class SchemaItemCollectionObjectTests
     {
         TestEntity entityA = new()
         {
-            CollectionProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty?>
             {
                 new() 
                 { 
@@ -194,7 +193,7 @@ public class SchemaItemCollectionObjectTests
 
         TestEntity entityB = new()
         {
-            CollectionProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty?>
             {
                 new() 
                 { 
@@ -227,7 +226,7 @@ public class SchemaItemCollectionObjectTests
     {
         TestEntity entityA = new()
         {
-            CollectionProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
@@ -236,7 +235,7 @@ public class SchemaItemCollectionObjectTests
 
         TestEntity entityB = new()
         {
-            CollectionProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test3", PropertyValue = 789 },
                 new() { PropertyName = "Test4", PropertyValue = 101 }
@@ -254,7 +253,7 @@ public class SchemaItemCollectionObjectTests
         TestEntity entityA = new() { CollectionProperty = null };
         TestEntity entityB = new()
         {
-            CollectionProperty = new List<TestProperty>
+            CollectionProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 }
             }
@@ -271,16 +270,16 @@ public class SchemaItemCollectionObjectTests
 
     public class TestEntity
     {
-        public List<TestProperty>? CollectionProperty { get; set; }
+        public List<TestProperty?>? CollectionProperty { get; set; }
     }
 
     public class TestProperty
     {
         [Serialize(true)]
-        public string? PropertyName { get; set; }
+        public string? PropertyName { get; init; }
 
-        [Serialize(false)]
-        public int PropertyValue { get; set; }
+        [Serialize]
+        public int PropertyValue { get; init; }
     }
 
     #endregion

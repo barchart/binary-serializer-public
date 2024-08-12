@@ -14,7 +14,6 @@ public class SchemaItemNestedTests
 
     private readonly ITestOutputHelper _testOutputHelper;
 
-    private readonly byte[] _buffer;
     private readonly IDataBufferWriter _writer;
     private readonly IDataBufferReader _reader;
 
@@ -29,9 +28,9 @@ public class SchemaItemNestedTests
     {
         _testOutputHelper = testOutputHelper;
 
-        _buffer = new byte[100000]; 
-        _writer = new DataBufferWriter(_buffer);
-        _reader = new DataBufferReader(_buffer);
+        byte[] buffer = new byte[100000]; 
+        _writer = new DataBufferWriter(buffer);
+        _reader = new DataBufferReader(buffer);
 
         _mockSchema = new Mock<ISchema<TestProperty>>();
         _schemaItemNested = new SchemaItemNested<TestEntity, TestProperty>("NestedProperty", entity => entity.NestedProperty!,
@@ -89,7 +88,7 @@ public class SchemaItemNestedTests
         };
 
         _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()))
-                .Callback((IDataBufferReader reader, TestProperty property) =>
+                .Callback((IDataBufferReader _, TestProperty property) =>
                 {
                     property.PropertyName = "Test";
                     property.PropertyValue = 123;
@@ -242,7 +241,7 @@ public class SchemaItemNestedTests
         [Serialize(true)]
         public string? PropertyName { get; set; }
 
-        [Serialize(false)]
+        [Serialize]
         public int PropertyValue { get; set; }
     }
 
