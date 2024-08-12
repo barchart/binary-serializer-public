@@ -115,7 +115,7 @@ public class SerializerTests
 
     #endregion
 
-    #region Test Methods (ReadKey)
+    #region Test Methods (TryReadKey)
 
     [Fact]
     public void ReadKey_ShouldReturnCorrectKey()
@@ -131,7 +131,7 @@ public class SerializerTests
         string keyName = "KeyProperty";
         string expectedKey = "Key";
 
-        string result = _serializer.ReadKey<string>(serialized, keyName);
+        _serializer.TryReadKey(serialized, keyName, out string? result);
 
         Assert.Equal(expectedKey, result);
     }
@@ -181,13 +181,13 @@ public class SerializerTests
     
     #region Nested Types
 
-    public class TestEntity
+    private class TestEntity
     {
         [Serialize(true)]
-        public string KeyProperty { get; set; } = "";
+        public string KeyProperty { get; init; } = "";
 
-        [Serialize(false)]
-        public string ValueProperty { get; set; } = "";
+        [Serialize]
+        public string ValueProperty { get; init; } = "";
     }
 
     #endregion

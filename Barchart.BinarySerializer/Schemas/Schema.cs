@@ -1,7 +1,6 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
 
@@ -89,26 +88,28 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public TMember ReadKey<TMember>(IDataBufferReader reader, string name)
+        public bool TryReadKey<TMember>(IDataBufferReader reader, string name, out TMember? value)
         {
             using (reader.Bookmark())
             {
                 TEntity target = new();
-            
+
                 for (int i = 0; i < _keyItems.Length; i++)
                 {
                     ISchemaItem<TEntity> candidate = _keyItems[i];
-                
+
                     candidate.Decode(reader, target);
-                
+
                     if (candidate.Name == name && candidate is ISchemaItem<TEntity, TMember> match)
                     {
-                        return match.Read(target);
+                        value = match.Read(target);
+                        return true;
                     }
                 }
             }
 
-            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TMember));
+            value = default;
+            return false;
         }
         
         /// <inheritdoc />

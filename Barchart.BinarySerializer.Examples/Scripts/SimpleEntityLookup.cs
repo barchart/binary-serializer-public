@@ -3,6 +3,7 @@
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Examples.Data;
 using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Schemas.Exceptions;
 using Barchart.BinarySerializer.Schemas.Factories;
 
 using Console = Barchart.BinarySerializer.Examples.Common.Console;
@@ -43,7 +44,7 @@ public class SimpleEntityLookup : IScript
         automobiles.Add(roadster.Vin, roadster);
         
         Console.WriteDetails(delorian.ToString(), true, false);
-        Console.WriteDetails(roadster.ToString(), false, true);
+        Console.WriteDetails(roadster.ToString(), false);
         
         Console.WriteStep(ref step, "Generating a schema for the Automobile class (via reflection)");
         
@@ -63,12 +64,15 @@ public class SimpleEntityLookup : IScript
         DataBufferReader reader = new(update);
         
         Console.WriteStep(ref step, "Extracting the key value from the update");
-        
-        string key = schema.ReadKey<string>(reader, "Vin");
+
+        if (!schema.TryReadKey(reader, "Vin", out string? key))
+        {
+            throw new KeyUndefinedException(typeof(Automobile), "Vin", typeof(string));
+        }
 
         Console.WriteStep(ref step, $"Key for the affected automobile instance is [ {key} ]");
         
-        Automobile target = automobiles[key];
+        Automobile target = automobiles[key!];
         
         Console.WriteStep(ref step, $"Updating automobile [ {key} ]");
         

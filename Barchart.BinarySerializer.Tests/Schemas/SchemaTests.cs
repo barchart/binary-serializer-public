@@ -77,7 +77,7 @@ public class SchemaTests
 
     #endregion
 
-    #region Test Methods (ReadKey)
+    #region Test Methods (TryReadKey)
 
     [Fact]
     public void ReadKey_WithValidKey_ReturnsExpectedValue()
@@ -90,7 +90,8 @@ public class SchemaTests
         byte[] bytes =_schema.Serialize(writer, entity);
 
         DataBufferReader reader = new(bytes);
-        string result = _schema.ReadKey<string>(reader, "KeyProperty");
+        
+        _schema.TryReadKey(reader, "KeyProperty", out string? result);
 
         Assert.Equal(expectedValue, result);
     }
@@ -106,9 +107,10 @@ public class SchemaTests
         byte[] bytes =_schema.Serialize(writer, entity);
 
         DataBufferReader reader = new(bytes);
-        _schema.ReadKey<string>(reader, "KeyProperty");
+        
+        _schema.TryReadKey(reader, "KeyProperty", out string? _);
 
-        Assert.Throws<KeyUndefinedException>(() => _schema.ReadKey<string>(reader, invalidValue));
+        Assert.False(_schema.TryReadKey<string>(reader, invalidValue, out _));
     }
 
     [Fact]
@@ -118,7 +120,8 @@ public class SchemaTests
 
         DataBufferReader reader = new(new byte[100]);
 
-        Assert.Throws<KeyUndefinedException>(() => _schema.ReadKey<string>(reader, invalidKeyName));
+        
+        Assert.False(_schema.TryReadKey<string>(reader, invalidKeyName, out _));
     }
 
     #endregion

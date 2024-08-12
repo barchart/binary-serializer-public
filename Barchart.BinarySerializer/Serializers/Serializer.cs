@@ -119,24 +119,27 @@ public class Serializer<TEntity> where TEntity : class, new()
     }
 
     /// <summary>
-    ///     Deserializes a key value (only) from the <paramref name="serialized" />.
+    ///     Attempts to deserialize a key value from the specified <paramref name="serialized" /> byte array.
     /// </summary>
     /// <param name="serialized">
-    ///     A byte array of binary data which contains the serialized entity.
+    ///     A byte array containing the binary data to deserialize.
     /// </param>
     /// <param name="name">
-    ///     The name of the key property
+    ///     The name of the key property to deserialize.
     /// </param>
     /// <typeparam name="TMember">
     ///     The type of the key property.
     /// </typeparam>
+    /// <param name="value">
+    ///     When this method returns, contains the deserialized value of the key if the key is found; otherwise, the default value for <typeparamref name="TMember" />.
+    /// </param>
     /// <returns>
-    ///      The value of the key.
+    ///     <see langword="true"/> if the key is successfully found and deserialized; otherwise, <see langword="false"/>.
     /// </returns>
-    public TMember ReadKey<TMember>(byte[] serialized, string name)
+    public bool TryReadKey<TMember>(byte[] serialized, string name, out TMember? value)
     {
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
-        return _schema.ReadKey<TMember>(reader, name);
+        return _schema.TryReadKey(reader, name, out value);
     }
 
     /// <summary>
