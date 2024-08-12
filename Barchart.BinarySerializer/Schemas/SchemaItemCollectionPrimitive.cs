@@ -28,8 +28,8 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
  
     private readonly string _name;
 
-    private readonly Func<TEntity, IList<TItem>> _getter;
-    private readonly Action<TEntity, IList<TItem>> _setter;
+    private readonly Func<TEntity, IList<TItem>?> _getter;
+    private readonly Action<TEntity, IList<TItem>?> _setter;
 
     private readonly IBinaryTypeSerializer<TItem> _elementSerializer;
     
@@ -47,7 +47,7 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
 
     #region Constructor(s)
 
-    public SchemaItemCollectionPrimitive(string name, Func<TEntity, IList<TItem>> getter, Action<TEntity, IList<TItem>> setter, IBinaryTypeSerializer<TItem> elementSerializer)
+    public SchemaItemCollectionPrimitive(string name, Func<TEntity, IList<TItem>?> getter, Action<TEntity, IList<TItem>?> setter, IBinaryTypeSerializer<TItem> elementSerializer)
     {
         _name = name;
 
@@ -64,7 +64,7 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
-        IList<TItem> items = _getter(source);
+        IList<TItem>? items = _getter(source);
         
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, items == null);
@@ -92,8 +92,8 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
             return;
         }
 
-        IList<TItem> currentItems = _getter(current);
-        IList<TItem> previousItems = _getter(previous);
+        IList<TItem>? currentItems = _getter(current);
+        IList<TItem>? previousItems = _getter(previous);
 
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, currentItems == null);
@@ -112,7 +112,7 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
             return;
         }
 
-        IList<TItem> currentItems = _getter(target);
+        IList<TItem>? currentItems = _getter(target);
         
         if (ReadNullFlag(reader))
         {
@@ -132,9 +132,7 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
         {
             if (ReadMissingFlag(reader))
             {
-                items.Add(currentItems[i]);
-                
-                continue;
+                items.Add(currentItems![i]);
             }
             else
             {
@@ -155,19 +153,42 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
     }
 
     /// <inheritdoc />
-    public bool GetEquals(TEntity a, TEntity b)
+    public bool GetEquals(TEntity? a, TEntity? b)
     {
-        IList<TItem> listA = _getter(a);
-        IList<TItem> listB = _getter(b);
+        if (a == null && b == null)
+        {
+            return true;
+        }
+        
+        if (a == null || b == null)
+        {
+            return false;
+        }
+        
+        IList<TItem>? listA = _getter(a);
+        IList<TItem>? listB = _getter(b);
 
-        if (listA == null && listB == null) return true;
-        if (listA == null || listB == null) return false;
+        if (listA == null && listB == null)
+        {
+            return true;
+        }
 
-        if (listA.Count != listB.Count) return false;
+        if (listA == null || listB == null)
+        {
+            return false;
+        }
+
+        if (listA.Count != listB.Count)
+        {
+            return false;
+        }
 
         for (int i = 0; i < listA.Count; i++)
         {
-            if (!_elementSerializer.GetEquals(listA[i], listB[i])) return false;
+            if (!_elementSerializer.GetEquals(listA[i], listB[i]))
+            {
+                return false;
+            }
         }
 
         return true;

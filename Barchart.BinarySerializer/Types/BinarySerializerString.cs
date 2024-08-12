@@ -11,7 +11,7 @@ namespace Barchart.BinarySerializer.Types;
 /// <summary>
 ///     Reads (and writes) string values to (and from) a binary data source.
 /// </summary>
-public class BinarySerializerString : IBinaryTypeSerializer<string>
+public class BinarySerializerString : IBinaryTypeSerializer<string?>
 {
     #region Constants
 
@@ -48,7 +48,7 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter writer, string value)
+    public void Encode(IDataBufferWriter writer, string? value)
     {
         if (value == null)
         {
@@ -83,7 +83,7 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
     }
 
     /// <inheritdoc />
-    public bool GetEquals(string a, string b)
+    public bool GetEquals(string? a, string? b)
     {
         if (a == null && b == null) return true;
         if (a == null || b == null) return false;

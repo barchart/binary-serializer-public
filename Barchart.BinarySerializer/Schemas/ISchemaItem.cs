@@ -26,7 +26,7 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     bool Key { get; }
     
     /// <summary>
-    ///     The name of the member (property, field, etc) from which data is
+    ///     The name of the member (property, field, etc.) from which data is
     ///     read (or to which deserialized data is assigned). This name is used
     ///     for display purposes only.
     /// </summary>
@@ -91,7 +91,7 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     /// <returns>
     ///     True if the two data points are equal; otherwise false.
     /// </returns>
-    bool GetEquals(TEntity a, TEntity b);
+    bool GetEquals(TEntity? a, TEntity? b);
     
     #endregion
 }

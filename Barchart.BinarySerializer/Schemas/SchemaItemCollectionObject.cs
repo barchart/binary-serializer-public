@@ -27,8 +27,8 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
  
     private readonly string _name;
 
-    private readonly Func<TEntity, IList<TItem>> _getter;
-    private readonly Action<TEntity, IList<TItem>> _setter;
+    private readonly Func<TEntity, IList<TItem?>?> _getter;
+    private readonly Action<TEntity, IList<TItem?>?> _setter;
 
     private readonly ISchema<TItem> _itemSchema;
     
@@ -46,7 +46,7 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
 
     #region Constructor(s)
 
-    public SchemaItemCollectionObject(string name, Func<TEntity, IList<TItem>> getter, Action<TEntity, IList<TItem>> setter, ISchema<TItem> itemSchema)
+    public SchemaItemCollectionObject(string name, Func<TEntity, IList<TItem?>?> getter, Action<TEntity, IList<TItem?>?> setter, ISchema<TItem> itemSchema)
     {
         _name = name;
 
@@ -63,27 +63,29 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
-        IList<TItem> items = _getter(source);
+        IList<TItem?>? items = _getter(source);
 
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, items == null);
 
-        if(items != null)
+        if (items == null)
         {
-            writer.WriteBytes(BitConverter.GetBytes(items.Count));
+            return;
+        }
+        
+        writer.WriteBytes(BitConverter.GetBytes(items.Count));
 
-            foreach (var item in items)
+        foreach (TItem? item in items)
+        {
+            if (item != null)
             {
-                if (item != null)
-                {
-                    WriteNullFlag(writer, false);
+                WriteNullFlag(writer, false);
 
-                    _itemSchema.Serialize(writer, item);
-                }
-                else
-                {
-                    WriteNullFlag(writer, true);
-                }
+                _itemSchema.Serialize(writer, item);
+            }
+            else
+            {
+                WriteNullFlag(writer, true);
             }
         }
     }
@@ -98,38 +100,40 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
             return;
         }
 
-        IList<TItem> currentItems = _getter(current);
-        IList<TItem> previousItems = _getter(previous);
+        IList<TItem?>? currentItems = _getter(current);
+        IList<TItem?>? previousItems = _getter(previous);
 
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, currentItems == null);
 
-        if (currentItems != null)
+        if (currentItems == null)
         {
-            writer.WriteBytes(BitConverter.GetBytes(currentItems.Count));
+            return;
+        }
+        
+        writer.WriteBytes(BitConverter.GetBytes(currentItems.Count));
 
-            int numberOfElements = currentItems.Count;
+        int numberOfElements = currentItems.Count;
             
-            for (int i = 0; i < numberOfElements; i++)
+        for (int i = 0; i < numberOfElements; i++)
+        {
+            if (currentItems[i] == null)
             {
-                if (currentItems[i] == null)
-                {
-                    WriteNullFlag(writer, true);
+                WriteNullFlag(writer, true);
                     
-                    continue;
-                }
+                continue;
+            }
 
-                WriteNullFlag(writer, false);
+            WriteNullFlag(writer, false);
 
-                if (previousItems != null && previousItems[i] != null)
-                {
-                    _itemSchema.Serialize(writer, currentItems[i], previousItems[i]);
-                }
+            if (previousItems?[i] != null)
+            {
+                _itemSchema.Serialize(writer, currentItems[i]!, previousItems[i]!);
+            }
 
-                else
-                {
-                    _itemSchema.Serialize(writer, currentItems[i]);
-                }
+            else
+            {
+                _itemSchema.Serialize(writer, currentItems[i]!);
             }
         }
     }
@@ -149,7 +153,7 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
             return;
         }
 
-        IList<TItem> currentItems = _getter(target);
+        IList<TItem?>? currentItems = _getter(target);
 
         int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         
@@ -165,7 +169,7 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
             {
                 if (currentItems != null && currentItems.Count > i)
                 {
-                    items.Add(_itemSchema.Deserialize(reader, currentItems[i]));
+                    items.Add(_itemSchema.Deserialize(reader, currentItems[i]!));
                 }
                 else
                 {
@@ -174,23 +178,46 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
             }
         }
 
-        _setter(target, items);
+        _setter(target, items!);
     }
 
     /// <inheritdoc />
-    public bool GetEquals(TEntity a, TEntity b)
+    public bool GetEquals(TEntity? a, TEntity? b)
     {
-        IList<TItem> listA = _getter(a);
-        IList<TItem> listB = _getter(b);
+        if (a == null && b == null)
+        {
+            return true;
+        }
+        
+        if (a == null || b == null)
+        {
+            return false;
+        }
+        
+        IList<TItem?>? listA = _getter(a);
+        IList<TItem?>? listB = _getter(b);
 
-        if (listA == null && listB == null) return true;
-        if (listA == null || listB == null) return false;
+        if (listA == null && listB == null)
+        {
+            return true;
+        }
 
-        if (listA.Count != listB.Count) return false;
+        if (listA == null || listB == null)
+        {
+            return false;
+        }
+
+        if (listA.Count != listB.Count)
+        {
+            return false;
+        }
 
         for (int i = 0; i < listA.Count; i++)
         {
-            if (!_itemSchema.GetEquals(listA[i], listB[i])) return false;
+            if (!_itemSchema.GetEquals(listA[i], listB[i]))
+            {
+                return false;
+            }
         }
 
         return true;

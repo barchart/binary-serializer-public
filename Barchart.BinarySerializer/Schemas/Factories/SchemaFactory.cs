@@ -139,7 +139,7 @@ public class SchemaFactory : ISchemaFactory
 
         ISchema<TMember> schema = Make<TMember>();
 
-        return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
+        return new SchemaItemNested<TEntity, TMember>(name, getter, setter!, schema);
     }
 
     private ISchemaItem<TEntity> MakeSchemaItemCollectionPrimitive<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
@@ -151,7 +151,7 @@ public class SchemaFactory : ISchemaFactory
 
         IBinaryTypeSerializer<TItem> itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
         
-        return new SchemaItemCollectionPrimitive<TEntity, TItem>(name, getter, setter, itemSerializer);
+        return new SchemaItemCollectionPrimitive<TEntity, TItem>(name, getter, setter!, itemSerializer);
     }
 
     private ISchemaItem<TEntity> MakeSchemaItemCollectionObject<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new() where TItem : class, new()
@@ -163,7 +163,7 @@ public class SchemaFactory : ISchemaFactory
 
         ISchema<TItem> itemSchema = Make<TItem>();
 
-        return new SchemaItemCollectionObject<TEntity, TItem>(name, getter, setter, itemSchema);
+        return new SchemaItemCollectionObject<TEntity, TItem>(name, getter!, setter!, itemSchema);
     }
 
     private static Func<MethodInfo, bool> GetMakeSchemaItemPredicate(Type[] typeParameters)
@@ -206,11 +206,11 @@ public class SchemaFactory : ISchemaFactory
         IEnumerable<MemberInfo> fields = entityType
             .GetFields(BindingFlags.Instance | BindingFlags.Public)
             .Where(FieldCanBeWritten)
-            .Where(field => FieldHasSerializeAttribute(field));
+            .Where(FieldHasSerializeAttribute);
 
         IEnumerable<MemberInfo> properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .Where(PropertyCanBeWritten)
-            .Where(property => PropertyHasSerializeAttribute(property));
+            .Where(PropertyHasSerializeAttribute);
 
         return fields.Concat(properties);
     }
@@ -333,7 +333,7 @@ public class SchemaFactory : ISchemaFactory
 
     private static bool FieldCanBeWritten(FieldInfo fieldInfo)
     {
-        return !fieldInfo.IsInitOnly && !fieldInfo.IsLiteral;
+        return fieldInfo is { IsInitOnly: false, IsLiteral: false };
     }
 
     private static bool PropertyHasSerializeAttribute(PropertyInfo propertyInfo)

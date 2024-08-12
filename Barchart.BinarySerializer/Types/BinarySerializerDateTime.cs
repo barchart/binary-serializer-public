@@ -13,16 +13,7 @@ public class BinarySerializerDateTime : IBinaryTypeSerializer<DateTime>
 {
     #region Fields
 
-    private readonly BinarySerializerLong _binarySerializerLong;
-
-    #endregion
-
-    #region Constructor(s)
-
-    public BinarySerializerDateTime()
-    {
-        _binarySerializerLong = new BinarySerializerLong();
-    }
+    private readonly BinarySerializerLong _binarySerializerLong = new();
 
     #endregion
 

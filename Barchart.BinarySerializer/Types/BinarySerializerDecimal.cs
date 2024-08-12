@@ -13,16 +13,7 @@ public class BinarySerializerDecimal : IBinaryTypeSerializer<decimal>
 {
     #region Fields
 
-    private readonly BinarySerializerInt _binarySerializerInt;
-
-    #endregion
-
-    #region Constructor(s)
-
-    public BinarySerializerDecimal()
-    {
-        _binarySerializerInt = new BinarySerializerInt();
-    }
+    private readonly BinarySerializerInt _binarySerializerInt = new();
 
     #endregion
 

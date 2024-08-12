@@ -13,16 +13,7 @@ public class BinarySerializerDateOnly : IBinaryTypeSerializer<DateOnly>
 {
     #region Fields
 
-    private readonly BinarySerializerInt _binarySerializerInt;
-    
-    #endregion
-
-    #region Constructor(s)
-
-    public BinarySerializerDateOnly()
-    {
-        _binarySerializerInt = new BinarySerializerInt();
-    }
+    private readonly BinarySerializerInt _binarySerializerInt = new();
     
     #endregion
 

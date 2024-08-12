@@ -12,7 +12,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
 {
     #region Fields
 
-    private static readonly IDictionary<Type, IBinaryTypeSerializer> _serializers;
+    private static readonly IDictionary<Type, IBinaryTypeSerializer> Serializers;
 
     #endregion
 
@@ -20,7 +20,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     
     static BinaryTypeSerializerFactory()
     {
-        _serializers = new Dictionary<Type, IBinaryTypeSerializer>();
+        Serializers = new Dictionary<Type, IBinaryTypeSerializer>();
         
         AddStructSerializer(new BinarySerializerBool());
         AddStructSerializer(new BinarySerializerByte());
@@ -39,12 +39,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         AddStructSerializer(new BinarySerializerUShort());
         
         AddSerializer(new BinarySerializerString());
-        AddEnumSerializer((BinarySerializerInt)_serializers[typeof(int)]);
-    }
-    
-    public BinaryTypeSerializerFactory()
-    {
-        
+        AddEnumSerializer((BinarySerializerInt)Serializers[typeof(int)]);
     }
 
     #endregion
@@ -54,7 +49,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     /// <inheritdoc />
     public virtual bool Supports(Type type)
     {
-        return _serializers.ContainsKey(type) || type.IsEnum || IsNullableEnum(type);
+        return Serializers.ContainsKey(type) || type.IsEnum || IsNullableEnum(type);
     }
     
     /// <inheritdoc />
@@ -70,16 +65,16 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
 
         IBinaryTypeSerializer serializer;
         
-        if (_serializers.ContainsKey(type))
+        if (Serializers.ContainsKey(type))
         {
-            serializer = _serializers[typeof(T)];
+            serializer = Serializers[typeof(T)];
         } 
         else if (type.IsEnum)
         {
             Type genericType = typeof(BinarySerializerEnum<>);
             Type boundType = genericType.MakeGenericType(new [] { type });
             
-            serializer = (IBinaryTypeSerializer)Activator.CreateInstance(boundType, _serializers[typeof(int)])!;
+            serializer = (IBinaryTypeSerializer)Activator.CreateInstance(boundType, Serializers[typeof(int)])!;
         }
         else if (IsNullableEnum(type))
         {
@@ -108,7 +103,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
 
     private static void AddSerializer<T>(IBinaryTypeSerializer<T> serializer)
     {
-        _serializers[typeof(T)] = serializer;
+        Serializers[typeof(T)] = serializer;
     }
     
     private static void AddStructSerializer<T>(IBinaryTypeSerializer<T> serializer) where T: struct

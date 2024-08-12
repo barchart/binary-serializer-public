@@ -46,10 +46,7 @@ public class DataBufferWriterFactory : IDataBufferWriterFactory
     /// <inheritdoc />
     public IDataBufferWriter Make()
     {
-        if (_byteArray == null)
-        {
-            _byteArray = new byte[_byteArrayLength];
-        }
+        _byteArray ??= new byte[_byteArrayLength];
 
         return new DataBufferWriter(_byteArray);
     }

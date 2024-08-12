@@ -25,8 +25,8 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
 
     private readonly string _name;
 
-    private readonly Func<TEntity, TMember> _getter;
-    private readonly Action<TEntity, TMember> _setter;
+    private readonly Func<TEntity, TMember?> _getter;
+    private readonly Action<TEntity, TMember?> _setter;
 
     private readonly ISchema<TMember> _schema;
     
@@ -44,7 +44,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
 
     #region Constructor(s)
 
-    public SchemaItemNested(string name, Func<TEntity, TMember> getter, Action<TEntity, TMember> setter, ISchema<TMember> schema)
+    public SchemaItemNested(string name, Func<TEntity, TMember?> getter, Action<TEntity, TMember?> setter, ISchema<TMember> schema)
     {
         _name = name;
 
@@ -61,7 +61,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
-        TMember nested = _getter(source);
+        TMember? nested = _getter(source);
         
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, nested == null);
@@ -82,14 +82,24 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
             return;
         }
         
-        TMember nestedCurrent = _getter(current);
-        TMember nestedPrevious = _getter(previous);
+        TMember? nestedCurrent = _getter(current);
+        TMember? nestedPrevious = _getter(previous);
 
         WriteMissingFlag(writer, false);
         WriteNullFlag(writer, nestedCurrent == null);
 
-        if (nestedCurrent != null)
+        if (nestedCurrent == null)
         {
+            return;
+        }
+        
+        if (nestedPrevious == null)
+        {
+            _schema.Serialize(writer, nestedCurrent);
+
+        }
+        else
+        { 
             _schema.Serialize(writer, nestedCurrent, nestedPrevious);
         }
     }
@@ -102,7 +112,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
             return;
         }
 
-        TMember nested = _getter(target);
+        TMember? nested = _getter(target);
         
         if (ReadNullFlag(reader))
         {
@@ -125,8 +135,18 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
     }
 
     /// <inheritdoc />
-    public bool GetEquals(TEntity a, TEntity b)
+    public bool GetEquals(TEntity? a, TEntity? b)
     {
+        if (a == null && b == null)
+        {
+            return true;
+        }
+        
+        if (a == null || b == null)
+        {
+            return false;
+        }
+        
         return _schema.GetEquals(_getter(a), _getter(b));
     }
     
