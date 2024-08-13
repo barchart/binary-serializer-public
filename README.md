@@ -84,7 +84,7 @@ Serializer<TestClass> serializer = new();
 byte[] changes = serializer.Serialize(testObjectCurrent, testObjectPrevious);
 
 // Deserialize the binary data back into the existing object
-serializer.Deserialize(changes, testObjectPrevious);
+TestClass deserializedTestObject = serializer.Deserialize(changes, testObjectPrevious);
 
 Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
 Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 321
