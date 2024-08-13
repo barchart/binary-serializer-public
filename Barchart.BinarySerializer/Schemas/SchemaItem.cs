@@ -129,15 +129,22 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     }
 
     /// <inheritdoc />
-    public void CompareAndApply(TEntity target, TEntity source)
+    public void CompareAndApply(ref TEntity? target, TEntity? source)
     {
+        if (source == null)
+        {
+            return;
+        }
+        
+        target ??= new TEntity();
+        
         TMember sourceValue = _getter(source);
         
         if (sourceValue == null)
         {
             return;
         }
-        
+
         _setter(target, sourceValue);
     }
 

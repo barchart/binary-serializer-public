@@ -151,9 +151,9 @@ public class Serializer<TEntity> where TEntity : class, new()
     /// <param name="source">
     ///     The object containing the updates.
     /// </param>
-    public void CompareAndUpdate(TEntity target, TEntity source)
+    public void CompareAndUpdate(ref TEntity? target, TEntity? source)
     {
-        _schema.CompareAndUpdate(target, source);
+        _schema.CompareAndUpdate(ref target, source);
     }
 
     /// <summary>

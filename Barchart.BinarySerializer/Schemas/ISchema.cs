@@ -114,7 +114,7 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="source">
     ///     The object containing the updates.
     /// </param>
-    public void CompareAndUpdate(TEntity target, TEntity source);
+    public void CompareAndUpdate(ref TEntity? target, TEntity? source);
     
     /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>

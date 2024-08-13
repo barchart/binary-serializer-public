@@ -182,8 +182,15 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
     }
 
     /// <inheritdoc />
-    public void CompareAndApply(TEntity target, TEntity source)
+    public void CompareAndApply(ref TEntity? target, TEntity? source)
     {
+        if (source == null)
+        {
+            return;
+        }
+        
+        target ??= new TEntity();
+        
         IList<TItem?>? sourceItems = _getter(source);
         IList<TItem?>? targetItems = _getter(target);
 

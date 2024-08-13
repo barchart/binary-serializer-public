@@ -88,7 +88,7 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     /// <param name="source">
     ///     The object containing the values to be applied.
     /// </param>
-    void CompareAndApply(TEntity target, TEntity source);
+    void CompareAndApply(ref TEntity? target, TEntity? source);
     
     /// <summary>
     ///     Indicates whether two data points, read from the entities, are equal.
