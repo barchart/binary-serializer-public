@@ -37,23 +37,14 @@ TestClass testObject = new()
     PropertyNumber = 123
 };
 
-// Instantiate a new SchemaFactory to create schemas for serialization
-SchemaFactory schemaFactory = new();
+// Crates a instance of Serializer class for the specified class
+Serializer<TestClass> serializer = new();
 
-// Generate a schema for the TestClass
-ISchema<TestClass> schema = schemaFactory.Make<TestClass>();
-
-// Create a DataBufferWriter with a predefined byte array size for serialization
-DataBufferWriter writer = new(new byte[16]);
-
-// Serialize the object to a binary format
-byte[] serialized = schema.Serialize(writer, testObject);
-
-// Create a DataBufferReader with the serialized bytes for deserialization
-DataBufferReader reader = new(serialized);
+// Serializer the object into binary data
+byte[] serialized = serializer.Serialize(testObject);
 
 // Deserialize the binary data back into an object
-TestClass deserialized = schema.Deserialize(reader);
+TestClass deserialized = serializer.Deserialize(serialized);
 
 Console.WriteLine(deserialized.PropertyName); // Output: Name
 Console.WriteLine(deserialized.PropertyNumber); // Output: 123
@@ -86,23 +77,14 @@ TestClass testObjectCurrent = new()
     PropertyNumber = 321
 };
 
-// Instantiate a new SchemaFactory to create schemas for serialization
-SchemaFactory schemaFactory = new();
-
-// Generate a schema for the TestClass
-ISchema<TestClass> schema = schemaFactory.Make<TestClass>();
-
-// Create a DataBufferWriter with a predefined byte array size for serialization
-DataBufferWriter writer = new(new byte[16]);
+// Crates a instance of Serializer class for the specified class
+Serializer<TestClass> serializer = new();
 
 // Serialize the difference between two objects to a binary format
-byte[] changes = schema.Serialize(writer, testObjectCurrent, testObjectPrevious);
-
-// Create a DataBufferReader with the serialized bytes for deserialization
-DataBufferReader reader = new(changes);
+byte[] changes = serializer.Serialize(testObjectCurrent, testObjectPrevious);
 
 // Deserialize the binary data back into the existing object
-schema.Deserialize(reader, testObjectPrevious);
+serializer.Deserialize(changes, testObjectPrevious);
 
 Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
 Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 321
