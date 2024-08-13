@@ -133,6 +133,100 @@ public class SchemaItemCollectionPrimitiveTests
     }
 
     #endregion
+    
+    #region Test Methods (CompareAndApply)
+
+    [Fact]
+    public void CompareAndApply_WithNullSourceList_DoesNotModifyTarget()
+    {
+        TestEntity source = new()
+        {
+            IntListProperty = null
+        };
+
+        TestEntity? target = new()
+        {
+            IntListProperty = new List<int> { 1, 2, 3 }
+        };
+
+        _schemaItemListPrimitive.CompareAndApply(ref target, source);
+
+        Assert.Equal(new List<int> { 1, 2, 3 }, target?.IntListProperty);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithNullTargetList_SetsTargetToSourceList()
+    {
+        TestEntity source = new()
+        {
+            IntListProperty = new List<int> { 4, 5, 6 }
+        };
+
+        TestEntity? target = new()
+        {
+            IntListProperty = null
+        };
+
+        _schemaItemListPrimitive.CompareAndApply(ref target, source);
+
+        Assert.Equal(new List<int> { 4, 5, 6 }, target?.IntListProperty);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithNonNullLists_UpdatesTargetWithSourceValues()
+    {
+        TestEntity source = new()
+        {
+            IntListProperty = new List<int> { 4, 5, 6 }
+        };
+
+        TestEntity? target = new()
+        {
+            IntListProperty = new List<int> { 1, 2, 3 }
+        };
+
+        _schemaItemListPrimitive.CompareAndApply(ref target, source);
+
+        Assert.Equal(new List<int> { 4, 5, 6 }, target?.IntListProperty);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithSourceListLongerThanTarget_UpdatesOnlyExistingElements()
+    {
+        TestEntity source = new()
+        {
+            IntListProperty = new List<int> { 4, 5, 6, 7 }
+        };
+
+        TestEntity? target = new()
+        {
+            IntListProperty = new List<int> { 1, 2, 3 }
+        };
+
+        _schemaItemListPrimitive.CompareAndApply(ref target, source);
+
+        Assert.Equal(new List<int> { 4, 5, 6 }, target?.IntListProperty);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithSourceListShorterThanTarget_UpdatesOnlyExistingElements()
+    {
+        TestEntity source = new()
+        {
+            IntListProperty = new List<int> { 4, 5 }
+        };
+
+        TestEntity? target = new()
+        {
+            IntListProperty = new List<int> { 1, 2, 3 }
+        };
+
+        _schemaItemListPrimitive.CompareAndApply(ref target, source);
+
+        Assert.Equal(new List<int> { 4, 5, 3 }, target?.IntListProperty);
+    }
+
+    #endregion
 
     #region Test Methods (GetEquals)
 
