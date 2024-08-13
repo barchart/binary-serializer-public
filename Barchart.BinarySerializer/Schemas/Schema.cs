@@ -115,7 +115,12 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public void CompareAndUpdate(TEntity target, TEntity source)
         {
-            foreach (ISchemaItem<TEntity> item in _keyItems.Concat(_valueItems))
+            foreach (ISchemaItem<TEntity> item in _keyItems)
+            {
+                item.CompareAndApply(target, source);
+            }
+            
+            foreach (ISchemaItem<TEntity> item in _valueItems)
             {
                 item.CompareAndApply(target, source);
             }
