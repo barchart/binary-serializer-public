@@ -109,7 +109,8 @@ public interface ISchema<TEntity> where TEntity : class, new()
     ///     Compares two objects and applies non-null fields from the source object to the target object.
     /// </summary>
     /// <param name="target">
-    ///     The object to be updated.</param>
+    ///     The object to be updated.
+    /// </param>
     /// <param name="source">
     ///     The object containing the updates.
     /// </param>

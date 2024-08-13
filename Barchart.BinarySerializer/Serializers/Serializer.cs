@@ -141,6 +141,20 @@ public class Serializer<TEntity> where TEntity : class, new()
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
         return _schema.TryReadKey(reader, name, out value);
     }
+    
+    /// <summary>
+    ///     Compares two objects and applies non-null fields from the source object to the target object.
+    /// </summary>
+    /// <param name="target">
+    ///     The object to be updated.
+    /// </param>
+    /// <param name="source">
+    ///     The object containing the updates.
+    /// </param>
+    public void CompareAndUpdate(TEntity target, TEntity source)
+    {
+        _schema.CompareAndUpdate(target, source);
+    }
 
     /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
