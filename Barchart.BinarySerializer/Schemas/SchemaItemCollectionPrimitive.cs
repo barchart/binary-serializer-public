@@ -176,12 +176,11 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
             
             return;
         }
-        
-        int minCount = Math.Min(sourceItems.Count, targetItems.Count);
 
-        for (int i = 0; i < minCount; i++)
+        targetItems.Clear();
+        foreach (TItem item in sourceItems)
         {
-            targetItems[i] = sourceItems[i];
+            targetItems.Add(item);
         }
     }
 

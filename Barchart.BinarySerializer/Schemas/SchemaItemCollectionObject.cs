@@ -206,11 +206,10 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
             return;
         }
         
-        int count = Math.Min(sourceItems.Count, targetItems.Count);
-
-        for (int i = 0; i < count; i++)
+        targetItems.Clear();
+        foreach (TItem? item in sourceItems)
         {
-            targetItems[i] = sourceItems[i];
+            targetItems.Add(item);
         }
     }
 
