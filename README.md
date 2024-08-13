@@ -37,7 +37,7 @@ TestClass testObject = new()
     PropertyNumber = 123
 };
 
-// Crates a instance of Serializer class for the specified class
+// Creates a instance of Serializer class for the specified class
 Serializer<TestClass> serializer = new();
 
 // Serializer the object into binary data
@@ -77,7 +77,7 @@ TestClass testObjectCurrent = new()
     PropertyNumber = 321
 };
 
-// Crates a instance of Serializer class for the specified class
+// Creates a instance of Serializer class for the specified class
 Serializer<TestClass> serializer = new();
 
 // Serialize the difference between two objects to a binary format
