@@ -138,6 +138,79 @@ public class SchemaItemNestedTests
     }
 
     #endregion
+    
+    #region Test Methods (CompareAndApply)
+
+    [Fact]
+    public void CompareAndApply_WithSourceValueNull_DoesNotUpdateTarget()
+    {
+        TestEntity sourceEntity = new()
+        {
+            NestedProperty = null
+        };
+
+        TestEntity? targetEntity = new()
+        {
+            NestedProperty = new TestProperty
+            {
+                PropertyName = "Original",
+                PropertyValue = 123
+            }
+        };
+
+        _schemaItemNested.CompareAndApply(ref targetEntity, sourceEntity);
+
+        Assert.NotNull(targetEntity?.NestedProperty);
+        Assert.Equal("Original", targetEntity.NestedProperty.PropertyName);
+        Assert.Equal(123, targetEntity.NestedProperty.PropertyValue);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithTargetValueNull_UpdatesTarget()
+    {
+        TestEntity sourceEntity = new()
+        {
+            NestedProperty = new TestProperty
+            {
+                PropertyName = "Updated",
+                PropertyValue = 456
+            }
+        };
+
+        TestEntity? targetEntity = new()
+        {
+            NestedProperty = null
+        };
+
+        _schemaItemNested.CompareAndApply(ref targetEntity, sourceEntity);
+
+        Assert.NotNull(targetEntity?.NestedProperty);
+        Assert.Equal("Updated", targetEntity.NestedProperty.PropertyName);
+        Assert.Equal(456, targetEntity.NestedProperty.PropertyValue);
+    }
+    
+    [Fact]
+    public void CompareAndApply_WithTargetEntityNull_UpdatesTarget()
+    {
+        TestEntity sourceEntity = new()
+        {
+            NestedProperty = new TestProperty
+            {
+                PropertyName = "Updated",
+                PropertyValue = 456
+            }
+        };
+
+        TestEntity? targetEntity = null;
+
+        _schemaItemNested.CompareAndApply(ref targetEntity, sourceEntity);
+
+        Assert.NotNull(targetEntity?.NestedProperty);
+        Assert.Equal("Updated", targetEntity.NestedProperty.PropertyName);
+        Assert.Equal(456, targetEntity.NestedProperty.PropertyValue);
+    }
+
+    #endregion
 
     #region Test Methods (GetEquals)
 
