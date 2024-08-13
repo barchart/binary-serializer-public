@@ -135,6 +135,27 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
     }
 
     /// <inheritdoc />
+    public void CompareAndApply(TEntity target, TEntity source)
+    {
+        TMember? sourceValue = _getter(source);
+        TMember? targetValue = _getter(target);
+
+        if (sourceValue == null)
+        {
+            return;
+        }
+        
+        if (targetValue == null)
+        {
+            _setter(target, sourceValue);
+        }
+        else
+        {
+            _schema.CompareAndUpdate(targetValue, sourceValue);
+        }
+    }
+
+    /// <inheritdoc />
     public bool GetEquals(TEntity? a, TEntity? b)
     {
         if (a == null && b == null)

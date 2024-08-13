@@ -182,6 +182,32 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
     }
 
     /// <inheritdoc />
+    public void CompareAndApply(TEntity target, TEntity source)
+    {
+        IList<TItem?>? sourceItems = _getter(source);
+        IList<TItem?>? targetItems = _getter(target);
+
+        if (sourceItems == null)
+        {
+            return;
+        }
+        
+        if (targetItems == null)
+        {
+            _setter(target, sourceItems);
+            
+            return;
+        }
+        
+        int count = Math.Min(sourceItems.Count, targetItems.Count);
+
+        for (int i = 0; i < count; i++)
+        {
+            targetItems[i] = sourceItems[i];
+        }
+    }
+
+    /// <inheritdoc />
     public bool GetEquals(TEntity? a, TEntity? b)
     {
         if (a == null && b == null)

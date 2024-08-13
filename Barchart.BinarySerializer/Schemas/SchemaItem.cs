@@ -129,6 +129,19 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     }
 
     /// <inheritdoc />
+    public void CompareAndApply(TEntity target, TEntity source)
+    {
+        TMember sourceValue = _getter(source);
+        
+        if (sourceValue == null)
+        {
+            return;
+        }
+        
+        _setter(target, sourceValue);
+    }
+
+    /// <inheritdoc />
     public bool GetEquals(TEntity? a, TEntity? b)
     {
         if (a == null && b == null)
