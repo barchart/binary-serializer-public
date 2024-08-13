@@ -3,7 +3,6 @@
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.Schemas.Exceptions;
 using Barchart.BinarySerializer.Types;
 
 #endregion
@@ -27,20 +26,20 @@ public class SchemaTests
 
         BinarySerializerString serializer = new();
 
-        SchemaItem<TestEntity, string> keyItem = new(
+        SchemaItem<TestEntity, string?> keyItem = new(
             "KeyProperty",
             true,
             entity => entity.KeyProperty,
             (entity, value) => entity.KeyProperty = value,
-            serializer!
+            serializer
         );
 
-        SchemaItem<TestEntity, string> valueItem = new(
+        SchemaItem<TestEntity, string?> valueItem = new(
             "ValueProperty",
             false,
             entity => entity.ValueProperty,
             (entity, value) => entity.ValueProperty = value,
-            serializer!
+            serializer
         );
 
         _schema = new Schema<TestEntity>(new ISchemaItem<TestEntity>[] { keyItem, valueItem });
@@ -53,7 +52,12 @@ public class SchemaTests
     [Fact]
     public void Serialize_WithValidData_WritesDataCorrectly()
     {
-        TestEntity entity = new() { KeyProperty = "Key", ValueProperty = "Value" };
+        TestEntity entity = new()
+        {
+            KeyProperty = "Key",
+            ValueProperty = "Value"
+        };
+        
         DataBufferWriter writer = new(new byte[100]);
 
         byte[] bytes =_schema.Serialize(writer, entity);
@@ -84,7 +88,11 @@ public class SchemaTests
     {
         string expectedValue = "Key";
 
-        TestEntity entity = new() { KeyProperty = "Key", ValueProperty = "Value" };
+        TestEntity entity = new()
+        {
+            KeyProperty = "Key",
+            ValueProperty = "Value"
+        };
         DataBufferWriter writer = new(new byte[100]);
 
         byte[] bytes =_schema.Serialize(writer, entity);
@@ -101,7 +109,12 @@ public class SchemaTests
     {
         string invalidValue = "InvalidKey";
 
-        TestEntity entity = new() { KeyProperty = "Key", ValueProperty = "Value" };
+        TestEntity entity = new()
+        {
+            KeyProperty = "Key", 
+            ValueProperty = "Value"
+        };
+        
         DataBufferWriter writer = new(new byte[100]);
 
         byte[] bytes =_schema.Serialize(writer, entity);
@@ -126,13 +139,104 @@ public class SchemaTests
 
     #endregion
 
+    #region Test Methods (CompareAndApply)
+
+    [Fact]
+    public void CompareAndApply_WithNonNullSource_UpdatesTarget()
+    {
+        TestEntity source = new()
+        {
+            KeyProperty = "Hello",
+            ValueProperty = "Yes"
+        };
+
+        TestEntity? target = new()
+        {
+            KeyProperty = "Hello",
+            ValueProperty = "No"
+        };
+
+        _schema.CompareAndUpdate(ref target, source);
+
+        Assert.Equal("Hello", target?.KeyProperty);
+        Assert.Equal("Yes", target?.ValueProperty);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithNullSource_DoesNotUpdateTarget()
+    {
+        TestEntity source = new()
+        {
+            KeyProperty = null!,
+            ValueProperty = "Yes"
+        };
+
+        TestEntity? target = new()
+        {
+            KeyProperty = "World",
+            ValueProperty = "Yes"
+        };
+
+        _schema.CompareAndUpdate(ref target, source);
+
+        Assert.Equal("World", target?.KeyProperty);
+        Assert.Equal("Yes", target?.ValueProperty);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithNullTarget_ThrowsNoException()
+    {
+        TestEntity source = new()
+        {
+            KeyProperty = "Hello",
+            ValueProperty = "Yes"
+        };
+
+        TestEntity? target = null;
+
+        Exception? exception = Record.Exception(() => _schema.CompareAndUpdate(ref target, source));
+        Assert.Null(exception);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithIdenticalSourceAndTarget_NoChangesMade()
+    {
+        TestEntity source = new()
+        {
+            KeyProperty = "Hello",
+            ValueProperty = "Yes",
+        };
+
+        TestEntity? target = new()
+        {
+            KeyProperty = "Hello",
+            ValueProperty = "Yes"
+        };
+
+        _schema.CompareAndUpdate(ref target, source);
+
+        Assert.Equal("Hello", target?.KeyProperty);
+        Assert.Equal("Yes", target?.ValueProperty);
+    }
+
+    #endregion
+
     #region Test Methods (GetEquals)
 
     [Fact]
     public void GetEquals_WithEqualEntities_ReturnsTrue()
     {
-        TestEntity entityA = new() { KeyProperty = "value", ValueProperty = "value" };
-        TestEntity entityB = new() { KeyProperty = "value", ValueProperty = "value" };
+        TestEntity entityA = new()
+        {
+            KeyProperty = "value", 
+            ValueProperty = "value"
+        };
+        
+        TestEntity entityB = new()
+        {
+            KeyProperty = "value",
+            ValueProperty = "value"
+        };
 
         bool result = _schema.GetEquals(entityA, entityB);
 
@@ -142,8 +246,17 @@ public class SchemaTests
     [Fact]
     public void GetEquals_WithDifferentEntities_ReturnsFalse()
     {
-        TestEntity entityA = new() { KeyProperty = "valueA", ValueProperty = "value" };
-        TestEntity entityB = new() { KeyProperty = "valueB", ValueProperty = "value" };
+        TestEntity entityA = new()
+        {
+            KeyProperty = "valueA", 
+            ValueProperty = "value"
+        };
+        
+        TestEntity entityB = new()
+        {
+            KeyProperty = "valueB", 
+            ValueProperty = "value"
+        };
 
         bool result = _schema.GetEquals(entityA, entityB);
 
@@ -157,10 +270,10 @@ public class SchemaTests
     private class TestEntity
     {
         [Serialize(true)]
-        public string KeyProperty { get; set; } = "";
+        public string? KeyProperty { get; set; } = "";
 
         [Serialize]
-        public string ValueProperty { get; set; } = "";
+        public string? ValueProperty { get; set; } = "";
     }
 
     #endregion
