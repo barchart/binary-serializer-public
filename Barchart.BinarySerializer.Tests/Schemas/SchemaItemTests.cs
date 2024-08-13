@@ -155,6 +155,108 @@ public class SchemaItemTests
     }
 
     #endregion
+    
+   #region Test Methods (CompareAndApply)
+
+    [Fact]
+    public void CompareAndApply_ShouldSetTargetValue_WhenSourceValueIsNotNull()
+    {
+        SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
+
+        TestEntity? target = new()
+        {
+            Name = "OldValue"
+        };
+        TestEntity source = new()
+        {
+            Name = "NewValue"
+        };
+
+        schemaItem.CompareAndApply(ref target, source);
+
+        Assert.Equal("NewValue", target?.Name);
+    }
+
+    [Fact]
+    public void CompareAndApply_ShouldNotSetTargetValue_WhenSourceValueIsNull()
+    {
+        SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
+
+        TestEntity? target = new()
+        {
+            Name = "OldValue"
+        };
+        TestEntity source = new()
+        {
+            Name = null!
+        };
+
+        schemaItem.CompareAndApply(ref target, source);
+
+        Assert.Equal("OldValue", target?.Name);
+    }
+
+    [Fact]
+    public void CompareAndApply_ShouldNotChangeTarget_WhenSourceAndTargetAreIdentical()
+    {
+        SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
+
+        TestEntity? target = new()
+        {
+            Name = "SameValue"
+        };
+        
+        TestEntity? source = new()
+        {
+            Name = "SameValue"
+        };
+
+        schemaItem.CompareAndApply(ref target, source);
+
+        Assert.Equal("SameValue", target?.Name);
+    }
+
+    [Fact]
+    public void CompareAndApply_ShouldSetTargetValue_WhenSourceHasDifferentNonNullValue()
+    {
+        SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
+
+        TestEntity? target = new()
+        {
+            Name = "InitialValue"
+        };
+        
+        TestEntity source = new()
+        {
+            Name = "UpdatedValue"
+        };
+
+        schemaItem.CompareAndApply(ref target, source);
+
+        Assert.Equal("UpdatedValue", target?.Name);
+    }
+
+    [Fact]
+    public void CompareAndApply_ShouldNotChangeTarget_WhenSourceIsNullAndTargetIsNotNull()
+    {
+        SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
+
+        TestEntity? target = new()
+        {
+            Name = "InitialValue"
+        };
+        
+        TestEntity source = new()
+        {
+            Name = null!
+        };
+
+        schemaItem.CompareAndApply(ref target, source);
+
+        Assert.Equal("InitialValue", target?.Name);
+    }
+
+    #endregion
 
     #region Test Methods (GetEquals)
 
@@ -165,8 +267,15 @@ public class SchemaItemTests
 
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity a = new() { Name = "Value" };
-        TestEntity b = new() { Name = "Value" };
+        TestEntity a = new()
+        {
+            Name = "Value"
+        };
+        
+        TestEntity b = new()
+        {
+            Name = "Value"
+        };
 
         bool result = schemaItem.GetEquals(a, b);
 
@@ -180,8 +289,15 @@ public class SchemaItemTests
 
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity a = new() { Name = "ValueA" };
-        TestEntity b = new() { Name = "ValueB" };
+        TestEntity a = new()
+        {
+            Name = "ValueA"
+        };
+        
+        TestEntity b = new()
+        {
+            Name = "ValueB"
+        };
 
         bool result = schemaItem.GetEquals(a, b);
 
