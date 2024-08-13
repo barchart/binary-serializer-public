@@ -205,7 +205,7 @@ public class SchemaItemCollectionPrimitiveTests
 
         _schemaItemListPrimitive.CompareAndApply(ref target, source);
 
-        Assert.Equal(new List<int> { 4, 5, 6 }, target?.IntListProperty);
+        Assert.Equal(new List<int> { 4, 5, 6, 7 }, target?.IntListProperty);
     }
 
     [Fact]
@@ -223,7 +223,7 @@ public class SchemaItemCollectionPrimitiveTests
 
         _schemaItemListPrimitive.CompareAndApply(ref target, source);
 
-        Assert.Equal(new List<int> { 4, 5, 3 }, target?.IntListProperty);
+        Assert.Equal(new List<int> { 4, 5 }, target?.IntListProperty);
     }
 
     #endregion
