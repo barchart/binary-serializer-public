@@ -132,6 +132,162 @@ public class SchemaItemCollectionObjectTests
     } 
 
     #endregion
+    
+    #region Test Methods (CompareAndApply)
+
+    [Fact]
+    public void CompareAndApply_WithNullSourceList_DoesNothing()
+    {
+        TestEntity? targetEntity = new()
+        {
+            CollectionProperty = new List<TestProperty?>
+            {
+                new()
+                {
+                    PropertyName = "Test1",
+                    PropertyValue = 123
+                }
+            }
+        };
+
+        TestEntity sourceEntity = new()
+        {
+            CollectionProperty = null
+        };
+
+        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+
+        Assert.NotNull(targetEntity?.CollectionProperty);
+        Assert.Single(targetEntity.CollectionProperty);
+        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
+        Assert.Equal(123, targetEntity.CollectionProperty[0]?.PropertyValue);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithNullTargetList_SetsTargetToSourceList()
+    {
+        TestEntity? targetEntity = new()
+        {
+            CollectionProperty = null
+        };
+
+        TestEntity sourceEntity = new()
+        {
+            CollectionProperty = new List<TestProperty?>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 123 },
+                new() { PropertyName = "Test2", PropertyValue = 456 }
+            }
+        };
+
+        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+
+        Assert.NotNull(targetEntity?.CollectionProperty);
+        Assert.Equal(2, targetEntity.CollectionProperty.Count);
+        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
+        Assert.Equal(123, targetEntity.CollectionProperty[0]?.PropertyValue);
+        Assert.Equal("Test2", targetEntity.CollectionProperty[1]?.PropertyName);
+        Assert.Equal(456, targetEntity.CollectionProperty[1]?.PropertyValue);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithBothListsNonNull_UpdatesTargetWithSourceValues()
+    {
+        // Arrange
+        TestEntity? targetEntity = new()
+        {
+            CollectionProperty = new List<TestProperty?>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 123 },
+                new() { PropertyName = "Test2", PropertyValue = 456 }
+            }
+        };
+
+        TestEntity sourceEntity = new()
+        {
+            CollectionProperty = new List<TestProperty?>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 789 },
+                new() { PropertyName = "Test2", PropertyValue = 101 }
+            }
+        };
+
+        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+
+        Assert.NotNull(targetEntity?.CollectionProperty);
+        Assert.Equal(2, targetEntity.CollectionProperty.Count);
+        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
+        Assert.Equal(789, targetEntity.CollectionProperty[0]?.PropertyValue);
+        Assert.Equal("Test2", targetEntity.CollectionProperty[1]?.PropertyName);
+        Assert.Equal(101, targetEntity.CollectionProperty[1]?.PropertyValue);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithSourceListShorter_TruncatesTargetList()
+    {
+        TestEntity? targetEntity = new()
+        {
+            CollectionProperty = new List<TestProperty?>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 123 },
+                new() { PropertyName = "Test2", PropertyValue = 456 },
+                new() { PropertyName = "Test3", PropertyValue = 789 }
+            }
+        };
+
+        TestEntity sourceEntity = new()
+        {
+            CollectionProperty = new List<TestProperty?>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 111 },
+                new() { PropertyName = "Test2", PropertyValue = 222 }
+            }
+        };
+
+        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+
+        Assert.NotNull(targetEntity?.CollectionProperty);
+        Assert.Equal(2, targetEntity.CollectionProperty.Count);
+        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
+        Assert.Equal(111, targetEntity.CollectionProperty[0]?.PropertyValue);
+        Assert.Equal("Test2", targetEntity.CollectionProperty[1]?.PropertyName);
+        Assert.Equal(222, targetEntity.CollectionProperty[1]?.PropertyValue);
+    }
+
+    [Fact]
+    public void CompareAndApply_WithSourceListLonger_AddsExtraItemsToTargetList()
+    {
+        TestEntity? targetEntity = new()
+        {
+            CollectionProperty = new List<TestProperty?>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 123 }
+            }
+        };
+
+        TestEntity sourceEntity = new()
+        {
+            CollectionProperty = new List<TestProperty?>
+            {
+                new() { PropertyName = "Test1", PropertyValue = 111 },
+                new() { PropertyName = "Test2", PropertyValue = 222 },
+                new() { PropertyName = "Test3", PropertyValue = 333 }
+            }
+        };
+
+        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+
+        Assert.NotNull(targetEntity?.CollectionProperty);
+        Assert.Equal(3, targetEntity.CollectionProperty.Count);
+        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
+        Assert.Equal(111, targetEntity.CollectionProperty[0]?.PropertyValue);
+        Assert.Equal("Test2", targetEntity.CollectionProperty[1]?.PropertyName);
+        Assert.Equal(222, targetEntity.CollectionProperty[1]?.PropertyValue);
+        Assert.Equal("Test3", targetEntity.CollectionProperty[2]?.PropertyName);
+        Assert.Equal(333, targetEntity.CollectionProperty[2]?.PropertyValue);
+    }
+
+    #endregion
 
     #region Test Methods (GetEquals)
 
