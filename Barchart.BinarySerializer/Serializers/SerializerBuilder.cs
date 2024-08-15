@@ -20,6 +20,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     #region Fields
 
     private ISchemaFactory _schemaFactory;
+    
     private IDataBufferReaderFactory _dataBufferReaderFactory;
     private IDataBufferWriterFactory _dataBufferWriterFactory;
 
@@ -34,6 +35,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     public SerializerBuilder()
     {
         _schemaFactory = new SchemaFactory();
+        
         _dataBufferReaderFactory = new DataBufferReaderFactory();
         _dataBufferWriterFactory = new DataBufferWriterFactory();
     }
@@ -54,6 +56,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     public SerializerBuilder<TEntity> WithSchemaFactory(ISchemaFactory schemaFactory)
     {
         _schemaFactory = schemaFactory;
+        
         return this;
     }
 
@@ -69,6 +72,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     public SerializerBuilder<TEntity> WithSchemaFactory(IBinaryTypeSerializerFactory typeSerializerFactory)
     {
         _schemaFactory = new SchemaFactory(typeSerializerFactory);
+        
         return this;
     }
 
@@ -84,6 +88,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     public SerializerBuilder<TEntity> WithDataBufferReaderFactory(IDataBufferReaderFactory dataBufferReaderFactory)
     {
         _dataBufferReaderFactory = dataBufferReaderFactory;
+        
         return this;
     }
 
@@ -99,6 +104,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     public SerializerBuilder<TEntity> WithDataBufferWriterFactory(IDataBufferWriterFactory dataBufferWriterFactory)
     {
         _dataBufferWriterFactory = dataBufferWriterFactory;
+        
         return this;
     }
 
@@ -111,6 +117,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     public Serializer<TEntity> Build()
     {
         ISchema<TEntity> schema = _schemaFactory.Make<TEntity>();
+        
         return new Serializer<TEntity>(schema, _dataBufferReaderFactory, _dataBufferWriterFactory);
     }
 
