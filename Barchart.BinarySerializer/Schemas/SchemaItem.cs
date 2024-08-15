@@ -177,9 +177,4 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     }
     
     #endregion
-
-    public TMember DeserializeValue(IDataBufferReader reader)
-    {
-        return _serializer.Decode(reader);
-    }
 }
