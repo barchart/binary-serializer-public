@@ -39,18 +39,27 @@ public class BinarySerializerStringTests
     {
         Mock<IDataBufferWriter> mock = new();
 
+        List<bool> bitsWritten = new();
+        List<byte> byteWritten = new();
         List<byte[]> bytesWritten = new();
-        mock.Setup(m => m.WriteBytes(It.IsAny<byte[]>())).Callback<byte[]>(b => bytesWritten.Add(b));
-
+            
+        mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
+        mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
+        mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
+        
         _serializer.Encode(mock.Object, value);
 
         Assert.Equal(2, bytesWritten.Count);
         
-        byte[] expectedLengthBytes = BitConverter.GetBytes((short)value.Length);
-        Assert.Equal(expectedLengthBytes, bytesWritten[0]);
-
+        byte[] expectedLengthBytes = BitConverter.GetBytes((ushort)value.Length);
+        byte[] actualLengthBytes = bytesWritten[0];
+        
+        Assert.Equal(expectedLengthBytes, actualLengthBytes);
+         
         byte[] expectedContentBytes = Encoding.UTF8.GetBytes(value);
-        Assert.Equal(expectedContentBytes, bytesWritten[1]);
+        byte[] actualContentBytes = bytesWritten[1];
+        
+        Assert.Equal(expectedContentBytes, actualContentBytes);
     }
 
     #endregion
@@ -64,9 +73,12 @@ public class BinarySerializerStringTests
     public void Decode_UTF8EncodedStrings_ReturnsExpectedValue(string value)
     {
         Mock<IDataBufferReader> mock = new();
-
-        mock.Setup(m => m.ReadBytes(2)).Returns(BitConverter.GetBytes((short)value.Length));
-        mock.Setup(m => m.ReadBytes(value.Length)).Returns(Encoding.UTF8.GetBytes(value));
+        
+        byte[] serializedLengthBytes = BitConverter.GetBytes((ushort)value.Length);
+        byte[] serializedContentBytes = Encoding.UTF8.GetBytes(value);
+        
+        mock.Setup(m => m.ReadBytes(2)).Returns(serializedLengthBytes);
+        mock.Setup(m => m.ReadBytes(value.Length)).Returns(serializedContentBytes);
 
         string deserialized = _serializer.Decode(mock.Object);
 
