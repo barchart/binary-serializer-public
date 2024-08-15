@@ -14,7 +14,7 @@ namespace Barchart.BinarySerializer.Examples.Scripts;
 
 /// <summary>
 ///     Demonstrates the process of looking up and updating an entity in a dictionary using the binary serializer.
-/// </summary>=
+/// </summary>
 public class SimpleEntityLookup : IScript
 {
     #region Properties
@@ -30,7 +30,7 @@ public class SimpleEntityLookup : IScript
     public void Execute()
     {
         int step = 1;
-
+        
         Console.WriteStep(ref step, "Creating a dictionary to hold automobile instances");
         
         IDictionary<string, Automobile> automobiles = new Dictionary<string, Automobile>();
