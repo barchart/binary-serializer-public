@@ -20,6 +20,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     #region Fields
 
     private readonly ISchema<TEntity> _schema;
+    
     private readonly IDataBufferReaderFactory _dataBufferReaderFactory;
     private readonly IDataBufferWriterFactory _dataBufferWriterFactory;
 
@@ -30,7 +31,9 @@ public class Serializer<TEntity> where TEntity : class, new()
     public Serializer()
     {
         ISchemaFactory schemaFactory = new SchemaFactory();
+        
         _schema = schemaFactory.Make<TEntity>();
+        
         _dataBufferReaderFactory = new DataBufferReaderFactory();
         _dataBufferWriterFactory = new DataBufferWriterFactory();
     }
@@ -38,6 +41,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     public Serializer(ISchema<TEntity> schema, IDataBufferReaderFactory dataBufferReaderFactory, IDataBufferWriterFactory dataBufferWriterFactory)
     {
         _schema = schema;
+        
         _dataBufferReaderFactory = dataBufferReaderFactory;
         _dataBufferWriterFactory = dataBufferWriterFactory;
     }
@@ -59,6 +63,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     public byte[] Serialize(TEntity source)
     {
         IDataBufferWriter writer = _dataBufferWriterFactory.Make();
+        
         return _schema.Serialize(writer, source);
     }
 
@@ -80,6 +85,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     public byte[] Serialize(TEntity current, TEntity previous)
     {
         IDataBufferWriter writer = _dataBufferWriterFactory.Make();
+        
         return _schema.Serialize(writer, current, previous);
     }
 
@@ -96,6 +102,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     public TEntity Deserialize(byte[] serialized)
     {
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
+        
         return _schema.Deserialize(reader);
     }
 
@@ -115,6 +122,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     public TEntity Deserialize(byte[] serialized, TEntity target)
     {
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
+        
         return _schema.Deserialize(reader, target);
     }
 
@@ -139,6 +147,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     public bool TryReadKey<TMember>(byte[] serialized, string name, out TMember? value)
     {
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
+        
         return _schema.TryReadKey(reader, name, out value);
     }
     
