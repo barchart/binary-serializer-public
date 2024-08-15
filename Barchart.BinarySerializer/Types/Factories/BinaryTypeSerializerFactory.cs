@@ -72,7 +72,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         else if (type.IsEnum)
         {
             Type genericType = typeof(BinarySerializerEnum<>);
-            Type boundType = genericType.MakeGenericType(new [] { type });
+            Type boundType = genericType.MakeGenericType(type);
             
             serializer = (IBinaryTypeSerializer)Activator.CreateInstance(boundType, Serializers[typeof(int)])!;
         }
@@ -120,16 +120,13 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
 
     private static bool IsNullableEnum(Type type)
     {
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Nullable<>))
         {
-            Type genericArgument = type.GetGenericArguments()[0];
-            if (genericArgument.IsEnum)
-            {
-                return true;
-            }
+            return false;
         }
-
-        return false;
+        
+        Type genericArgument = type.GetGenericArguments()[0];
+        return genericArgument.IsEnum;
     }
 
     private IBinaryTypeSerializer Make(Type type)

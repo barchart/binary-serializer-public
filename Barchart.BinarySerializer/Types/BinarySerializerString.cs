@@ -85,8 +85,15 @@ public class BinarySerializerString : IBinaryTypeSerializer<string?>
     /// <inheritdoc />
     public bool GetEquals(string? a, string? b)
     {
-        if (a == null && b == null) return true;
-        if (a == null || b == null) return false;
+        if (a == null && b == null)
+        {
+            return true;
+        }
+
+        if (a == null || b == null)
+        {
+            return false;
+        }
 
         return a.Equals(b);
     }
