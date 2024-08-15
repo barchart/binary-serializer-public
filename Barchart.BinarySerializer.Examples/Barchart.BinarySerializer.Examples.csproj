@@ -13,10 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="openfeed.net" Version="1.0.19" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Update="Program.cs">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Compile>
