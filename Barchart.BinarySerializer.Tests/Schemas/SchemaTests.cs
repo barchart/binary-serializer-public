@@ -139,10 +139,10 @@ public class SchemaTests
 
     #endregion
 
-    #region Test Methods (CompareAndApply)
+    #region Test Methods (CompareAndUpdate)
 
     [Fact]
-    public void CompareAndApply_WithNonNullSource_UpdatesTarget()
+    public void CompareAndUpdate_WithNonNullSource_UpdatesTarget()
     {
         TestEntity source = new()
         {
@@ -163,7 +163,7 @@ public class SchemaTests
     }
 
     [Fact]
-    public void CompareAndApply_WithNullSource_DoesNotUpdateTarget()
+    public void CompareAndUpdate_WithNullSource_DoesNotUpdateTarget()
     {
         TestEntity source = new()
         {
@@ -184,7 +184,7 @@ public class SchemaTests
     }
 
     [Fact]
-    public void CompareAndApply_WithNullTarget_ThrowsNoException()
+    public void CompareAndUpdate_WithNullTarget_ThrowsNoException()
     {
         TestEntity source = new()
         {
@@ -199,7 +199,7 @@ public class SchemaTests
     }
 
     [Fact]
-    public void CompareAndApply_WithIdenticalSourceAndTarget_NoChangesMade()
+    public void CompareAndUpdate_WithIdenticalSourceAndTarget_NoChangesMade()
     {
         TestEntity source = new()
         {

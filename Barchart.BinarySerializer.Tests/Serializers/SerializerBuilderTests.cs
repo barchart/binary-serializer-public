@@ -17,7 +17,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
 
         private readonly ITestOutputHelper _testOutputHelper;
 
-        private readonly SerializerBuilder<TestEntity> _serializerBuilder;
+        private readonly SerializerBuilder<TestEntity> _serializerBuilder = new();
     
         #endregion
 
@@ -26,23 +26,12 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         public SerializerBuilderTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
-
-            _serializerBuilder = new();
         }
 
         #endregion
 
-        #region Test Methods (SerializerBuilder)
-
-        [Fact]
-        public void BuildSerializer_ReturnsInstanceOfSerializer()
-        {
-            Serializer<TestEntity> serializer = _serializerBuilder.Build();
-
-            Assert.NotNull(serializer);
-            Assert.IsType<Serializer<TestEntity>>(serializer);
-        }
-
+        #region Test Methods (WithSchemaFactory)
+        
         [Fact]
         public void WithSchemaFactory_ShouldSetSchemaFactory()
         {
@@ -66,6 +55,10 @@ namespace Barchart.BinarySerializer.Tests.Serializers
 
             Assert.NotNull(serializer);
         }
+        
+        #endregion
+
+        #region Test Methods (WithDataBufferWriterFactory)
 
         [Fact]
         public void WithDataBufferReaderFactory_ShouldSetDataBufferReaderFactory()
@@ -90,6 +83,23 @@ namespace Barchart.BinarySerializer.Tests.Serializers
 
             Assert.NotNull(serializer);
         }
+        
+        #endregion
+        
+        #region Test Methods (Build)
+
+        [Fact]
+        public void Build_ReturnsInstanceOfSerializer()
+        {
+            Serializer<TestEntity> serializer = _serializerBuilder.Build();
+
+            Assert.NotNull(serializer);
+            Assert.IsType<Serializer<TestEntity>>(serializer);
+        }
+
+        #endregion
+
+        #region Test Methods (ForType)
 
         [Fact]
         public void ForType_ShouldReturnNewSerializerBuilderInstance()
@@ -101,7 +111,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         }
 
         #endregion
-
+        
         #region Nested Types
 
         private class TestEntity
