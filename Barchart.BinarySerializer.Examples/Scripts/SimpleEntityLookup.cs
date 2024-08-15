@@ -65,14 +65,11 @@ public class SimpleEntityLookup : IScript
         
         Console.WriteStep(ref step, "Extracting the key value from the update");
 
-        if (!schema.TryReadKey(reader, "Vin", out string? key))
-        {
-            throw new KeyUndefinedException(typeof(Automobile), "Vin", typeof(string));
-        }
+        string key = schema.ReadKey<string>(reader, "Vin");
 
         Console.WriteStep(ref step, $"Key for the affected automobile instance is [ {key} ]");
         
-        Automobile target = automobiles[key!];
+        Automobile target = automobiles[key];
         
         Console.WriteStep(ref step, $"Updating automobile [ {key} ]");
         

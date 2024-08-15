@@ -3,6 +3,7 @@
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Schemas.Exceptions;
 using Barchart.BinarySerializer.Types;
 
 #endregion
@@ -26,7 +27,7 @@ public class SchemaTests
 
         BinarySerializerString serializer = new();
 
-        SchemaItem<TestEntity, string?> keyItem = new(
+        SchemaItem<TestEntity, string> keyItem = new(
             "KeyProperty",
             true,
             entity => entity.KeyProperty,
@@ -34,7 +35,7 @@ public class SchemaTests
             serializer
         );
 
-        SchemaItem<TestEntity, string?> valueItem = new(
+        SchemaItem<TestEntity, string> valueItem = new(
             "ValueProperty",
             false,
             entity => entity.ValueProperty,
@@ -81,7 +82,7 @@ public class SchemaTests
 
     #endregion
 
-    #region Test Methods (TryReadKey)
+    #region Test Methods (ReadKey)
 
     [Fact]
     public void ReadKey_WithValidKey_ReturnsExpectedValue()
@@ -93,22 +94,21 @@ public class SchemaTests
             KeyProperty = "Key",
             ValueProperty = "Value"
         };
+        
         DataBufferWriter writer = new(new byte[100]);
 
         byte[] bytes =_schema.Serialize(writer, entity);
 
         DataBufferReader reader = new(bytes);
         
-        _schema.TryReadKey(reader, "KeyProperty", out string? result);
+        string actualValue = _schema.ReadKey<String>(reader, "KeyProperty");
 
-        Assert.Equal(expectedValue, result);
+        Assert.Equal(expectedValue, actualValue);
     }
 
     [Fact]
     public void ReadKey_WithInvalidKey_ThrowsKeyUndefinedException()
     {
-        string invalidValue = "InvalidKey";
-
         TestEntity entity = new()
         {
             KeyProperty = "Key", 
@@ -121,20 +121,7 @@ public class SchemaTests
 
         DataBufferReader reader = new(bytes);
         
-        _schema.TryReadKey(reader, "KeyProperty", out string? _);
-
-        Assert.False(_schema.TryReadKey<string>(reader, invalidValue, out _));
-    }
-
-    [Fact]
-    public void ReadKey_WithEmptyBuffer_ThrowsKeyUndefinedException()
-    {
-        string invalidKeyName = "InvalidKey";
-
-        DataBufferReader reader = new(new byte[100]);
-
-        
-        Assert.False(_schema.TryReadKey<string>(reader, invalidKeyName, out _));
+        Assert.Throws<KeyUndefinedException>(() => _schema.ReadKey<String>(reader, "InvalidKey"));
     }
 
     #endregion
@@ -270,10 +257,10 @@ public class SchemaTests
     private class TestEntity
     {
         [Serialize(true)]
-        public string? KeyProperty { get; set; } = "";
+        public string KeyProperty { get; set; } = "";
 
         [Serialize]
-        public string? ValueProperty { get; set; } = "";
+        public string ValueProperty { get; set; } = "";
     }
 
     #endregion

@@ -86,25 +86,22 @@ public interface ISchema<TEntity> where TEntity : class, new()
     TEntity Deserialize(IDataBufferReader reader, TEntity target);
 
     /// <summary>
-    ///     Attempts to deserialize a key value from the <paramref name="reader" />.
+    ///     Deserializes a key value (only) from the <paramref name="reader" />.
     /// </summary>
     /// <param name="reader">
-    ///     The buffer containing the binary data to deserialize.
+    ///     The serialized data source from which to read the key.
     /// </param>
     /// <param name="name">
-    ///     The name of the key property to deserialize.
+    ///     The name of the key property.
     /// </param>
-    /// <typeparam name="TMember">
+    /// <typeparam name="TProperty">
     ///     The type of the key property.
     /// </typeparam>
-    /// <param name="value">
-    ///     When this method returns, contains the deserialized value of the key if the key is found; otherwise, the default value for <typeparamref name="TMember" />.
-    /// </param>
     /// <returns>
-    ///     <see langword="true"/> if the key is successfully found and deserialized; otherwise, <see langword="false"/>.
+    ///     The value of the key.
     /// </returns>
-    bool TryReadKey<TMember>(IDataBufferReader reader, string name, out TMember? value);
-
+    public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
+    
     /// <summary>
     ///     Compares two objects and applies non-null fields from the source object to the target object.
     /// </summary>

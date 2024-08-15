@@ -23,8 +23,7 @@ public class SerializerTests
     {
         _testOutputHelper = testOutputHelper;
 
-       _serializer = new();
-        
+       _serializer = new Serializer<TestEntity>();
     }
 
     #endregion
@@ -85,6 +84,7 @@ public class SerializerTests
         TestEntity deserializedEntity = _serializer.Deserialize(serialized);
 
         Assert.NotNull(deserializedEntity);
+        
         Assert.Equal(entity.KeyProperty, deserializedEntity.KeyProperty);
         Assert.Equal(entity.ValueProperty, deserializedEntity.ValueProperty);
     }
@@ -99,6 +99,7 @@ public class SerializerTests
         };
 
         byte[] serialized = _serializer.Serialize(entity);
+        
         TestEntity targetEntity = new()
         {
             KeyProperty = "Key",
@@ -108,32 +109,11 @@ public class SerializerTests
         TestEntity deserializedEntity = _serializer.Deserialize(serialized, targetEntity);
 
         Assert.NotNull(deserializedEntity);
+        
         Assert.Equal(targetEntity, deserializedEntity);
+        
         Assert.Equal(entity.KeyProperty, deserializedEntity.KeyProperty);
         Assert.Equal(entity.ValueProperty, deserializedEntity.ValueProperty);
-    }
-
-    #endregion
-
-    #region Test Methods (TryReadKey)
-
-    [Fact]
-    public void ReadKey_ShouldReturnCorrectKey()
-    {
-        TestEntity entity = new() 
-        { 
-            KeyProperty = "Key", 
-            ValueProperty = "Value"
-        };
-
-        byte[] serialized = _serializer.Serialize(entity);
-
-        string keyName = "KeyProperty";
-        string expectedKey = "Key";
-
-        _serializer.TryReadKey(serialized, keyName, out string? result);
-
-        Assert.Equal(expectedKey, result);
     }
 
     #endregion
