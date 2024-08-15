@@ -8,25 +8,17 @@ namespace Barchart.BinarySerializer.Schemas.Exceptions;
 /// </summary>
 public class KeyMismatchException : InvalidOperationException
 {
-    #region Fields
-
-    private readonly Type _entityType;
-
-    private readonly string _keyName;
-
-    #endregion
-
     #region Properties
 
     /// <summary>
     ///     The type of the entity.
     /// </summary>
-    public Type EntityType => _entityType;
-    
+    public Type EntityType { get; }
+
     /// <summary>
     ///     The name of the key.
     /// </summary>
-    public string KeyName => _keyName;
+    public string KeyName { get; }
 
     #endregion
     
@@ -34,9 +26,9 @@ public class KeyMismatchException : InvalidOperationException
     
     public KeyMismatchException(Type entityType, string keyName, bool serializing) : base(serializing ? $"An attempt was made to serialize the difference between two entities with different key values [ {keyName} ]." : $"An attempt was made to alter the a key property during deserialization [ {keyName} ].")
     {
-        _entityType = entityType;
+        EntityType = entityType;
         
-        _keyName = keyName;
+        KeyName = keyName;
     }
     
     #endregion

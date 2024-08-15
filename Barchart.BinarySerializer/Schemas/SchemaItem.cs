@@ -25,10 +25,6 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
 {
     #region Fields
 
-    private readonly string _name;
-    
-    private readonly bool _key;
-
     private readonly Func<TEntity, TMember> _getter;
     private readonly Action<TEntity, TMember> _setter;
 
@@ -39,19 +35,19 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     #region Properties
     
     /// <inheritdoc />
-    public string Name => _name;
+    public string Name { get; }
 
     /// <inheritdoc />
-    public bool Key => _key;
-    
+    public bool Key { get; }
+
     #endregion
 
     #region Constructor(s)
 
     public SchemaItem(string name, bool key, Func<TEntity, TMember> getter, Action<TEntity, TMember> setter, IBinaryTypeSerializer<TMember> serializer)
     {
-        _name = name;
-        _key = key;
+        Name = name;
+        Key = key;
 
         _getter = getter;
         _setter = setter;
@@ -119,7 +115,7 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
         {
             if (!_serializer.GetEquals(current, _getter(target)))
             {
-                throw new KeyMismatchException(typeof(TEntity), _name, false);
+                throw new KeyMismatchException(typeof(TEntity), Name, false);
             }
         }
         else

@@ -25,8 +25,6 @@ namespace Barchart.BinarySerializer.Schemas;
 public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new()
 {
     #region Fields
- 
-    private readonly string _name;
 
     private readonly Func<TEntity, IList<TItem>?> _getter;
     private readonly Action<TEntity, IList<TItem>?> _setter;
@@ -38,10 +36,10 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
     #region Properties
 
     /// <inheritdoc />
-    public string Name => _name;
+    public string Name { get; }
 
     /// <inheritdoc />
-    public bool Key => false;
+    public bool Key { get; }
 
     #endregion
 
@@ -49,7 +47,8 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
 
     public SchemaItemCollectionPrimitive(string name, Func<TEntity, IList<TItem>?> getter, Action<TEntity, IList<TItem>?> setter, IBinaryTypeSerializer<TItem> elementSerializer)
     {
-        _name = name;
+        Name = name;
+        Key = false;
 
         _getter = getter;
         _setter = setter;

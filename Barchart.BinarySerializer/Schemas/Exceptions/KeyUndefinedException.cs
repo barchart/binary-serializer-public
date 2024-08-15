@@ -6,31 +6,22 @@ namespace Barchart.BinarySerializer.Schemas.Exceptions;
 /// </summary>
 public class KeyUndefinedException : InvalidOperationException
 {
-    #region Fields
-
-    private readonly Type _entityType;
-    
-    private readonly string _keyName;
-    private readonly Type _keyType;
-
-    #endregion
-
     #region Properties
 
     /// <summary>
     ///     The type of the entity.
     /// </summary>
-    public Type EntityType => _entityType;
-    
+    public Type EntityType { get; }
+
     /// <summary>
     ///     The type of the key.
     /// </summary>
-    public Type KeyType => _keyType;
-    
+    public Type KeyType { get; }
+
     /// <summary>
     ///     The name of the key.
     /// </summary>
-    public string KeyName => _keyName;
+    public string KeyName { get; }
 
     #endregion
     
@@ -38,10 +29,10 @@ public class KeyUndefinedException : InvalidOperationException
 
     public KeyUndefinedException(Type entityType, string keyName, Type keyType) : base($"The schema for [ {entityType.Name} ] does not contain a key property with the specified name and type [ {keyName} ] [ {keyType.Name} ].")
     {
-        _entityType = entityType;
+        EntityType = entityType;
         
-        _keyName = keyName;
-        _keyType = keyType;
+        KeyName = keyName;
+        KeyType = keyType;
     }
     
     #endregion

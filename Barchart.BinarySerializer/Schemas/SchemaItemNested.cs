@@ -23,8 +23,6 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
 {
     #region Fields
 
-    private readonly string _name;
-
     private readonly Func<TEntity, TMember?> _getter;
     private readonly Action<TEntity, TMember?> _setter;
 
@@ -35,10 +33,10 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
     #region Properties
     
     /// <inheritdoc />
-    public string Name => _name;
+    public string Name { get; }
 
     /// <inheritdoc />
-    public bool Key => false;
+    public bool Key { get; }
     
     #endregion
 
@@ -46,8 +44,9 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
 
     public SchemaItemNested(string name, Func<TEntity, TMember?> getter, Action<TEntity, TMember?> setter, ISchema<TMember> schema)
     {
-        _name = name;
-
+        Name = name;
+        Key = false;
+        
         _getter = getter;
         _setter = setter;
 
