@@ -107,6 +107,28 @@ public class Serializer<TEntity> where TEntity : class, new()
     }
 
     /// <summary>
+    ///     Deserializes a key value (only) from the <paramref name="serialized" />.
+    /// </summary>
+    /// <param name="serialized">
+    ///     A byte array containing the binary data to deserialize.
+    /// </param>
+    /// <param name="name">
+    ///     The name of the key property
+    /// </param>
+    /// <typeparam name="TMember">
+    ///     The type of the key property.
+    /// </typeparam>
+    /// <returns>
+    ///     The value of the key.
+    /// </returns>
+    public TMember ReadKey<TMember>(byte[] serialized, string name)
+    {
+        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
+        
+        return _schema.ReadKey<TMember>(reader, name);
+    }
+    
+    /// <summary>
     ///     Deserializes an entity, updating an existing instance of
     ///     the <typeparamref name="TEntity"/> class.
     /// </summary>
