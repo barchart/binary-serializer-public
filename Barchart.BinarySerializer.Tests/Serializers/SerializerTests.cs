@@ -31,7 +31,7 @@ public class SerializerTests
     #region Test Methods (Serialize)
 
     [Fact]
-    public void Serialize_ShouldReturnSerializedData()
+    public void Serialize_SingleEntity_ReturnsSerializedData()
     {
         TestEntity entity = new() 
         { 
@@ -46,7 +46,7 @@ public class SerializerTests
     }
 
     [Fact]
-    public void Serialize_WithPreviousEntity_ShouldReturnSerializedData()
+    public void Serialize_WithPreviousEntity_ReturnsSerializedData()
     {
         TestEntity currentEntity = new() 
         { 
@@ -71,7 +71,7 @@ public class SerializerTests
     #region Test Methods (Deserialize)
 
     [Fact]
-    public void Deserialize_ShouldReturnDeserializedEntity()
+    public void Deserialize_SingleEntity_ReturnsDeserializedEntity()
     {
         TestEntity entity = new() 
         { 
@@ -90,7 +90,7 @@ public class SerializerTests
     }
 
     [Fact]
-    public void Deserialize_WithTarget_ShouldPopulateTargetEntity()
+    public void Deserialize_Changes_ShouldPopulateTargetEntity()
     {
         TestEntity entity = new() 
         { 
@@ -121,7 +121,7 @@ public class SerializerTests
     #region Test Methods (CompareAndUpdate)
 
     [Fact]
-    public void CompareAndUpdate_ShouldReturnCorrectKey()
+    public void CompareAndUpdate_WithDifferentProperties_ShouldUpdateFirstEntity()
     {
         TestEntity entity1 = new() 
         { 
@@ -146,7 +146,7 @@ public class SerializerTests
     #region Test Methods (ReadKey)
 
     [Fact]
-    public void ReadKey_ShouldReturnCorrectKey()
+    public void ReadKey_WhenCalled_ReturnsCorrectKey()
     {
         TestEntity entity = new() 
         { 
@@ -169,7 +169,7 @@ public class SerializerTests
     #region Test Methods (GetEquals)
 
     [Fact]
-    public void GetEquals_ShouldReturnTrueForEqualEntities()
+    public void GetEquals_EqualEntities_ReturnsTrue()
     {
         TestEntity entityA = new() { 
             KeyProperty = "Key", 
@@ -187,7 +187,7 @@ public class SerializerTests
     }
 
     [Fact]
-    public void GetEquals_ShouldReturnFalseForDifferentEntities()
+    public void GetEquals_DifferentEntities_ReturnsFalse()
     {
 
         TestEntity entityA = new() { 

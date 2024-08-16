@@ -156,7 +156,7 @@ public class SchemaItemTests
 
     #endregion
     
-   #region Test Methods (CompareAndApply)
+    #region Test Methods (CompareAndApply)
 
     [Fact]
     public void CompareAndApply_ShouldSetTargetValue_WhenSourceValueIsNotNull()
@@ -186,6 +186,7 @@ public class SchemaItemTests
         {
             Name = "OldValue"
         };
+        
         TestEntity source = new()
         {
             Name = null!
@@ -206,7 +207,7 @@ public class SchemaItemTests
             Name = "SameValue"
         };
         
-        TestEntity? source = new()
+        TestEntity source = new()
         {
             Name = "SameValue"
         };

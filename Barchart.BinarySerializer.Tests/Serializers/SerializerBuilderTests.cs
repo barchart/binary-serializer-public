@@ -33,7 +33,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         #region Test Methods (WithSchemaFactory)
         
         [Fact]
-        public void WithSchemaFactory_ShouldSetSchemaFactory()
+        public void WithSchemaFactory_WhenCalled_ShouldSetSchemaFactory()
         {
             SchemaFactory schemaFactory = new();
             SerializerBuilder<TestEntity> builder = new();
@@ -45,7 +45,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         }
 
         [Fact]
-        public void WithSchemaFactory_WithTypeSerializerFactory_ShouldSetSchemaFactory()
+        public void WithSchemaFactory_WhenCalledWithTypeSerializerFactory_ShouldSetSchemaFactory()
         {
             BinaryTypeSerializerFactory typeSerializerFactory = new();
             SerializerBuilder<TestEntity> builder = new();
@@ -61,7 +61,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         #region Test Methods (WithDataBufferWriterFactory)
 
         [Fact]
-        public void WithDataBufferReaderFactory_ShouldSetDataBufferReaderFactory()
+        public void WithDataBufferReaderFactory_WhenCalled_ShouldSetDataBufferReaderFactory()
         {
             DataBufferReaderFactory dataBufferReaderFactory = new();
             SerializerBuilder<TestEntity> builder = new();
@@ -73,7 +73,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         }
 
         [Fact]
-        public void WithDataBufferWriterFactory_ShouldSetDataBufferWriterFactory()
+        public void WithDataBufferWriterFactory_WhenCalled_ShouldSetDataBufferWriterFactory()
         {
             DataBufferWriterFactory dataBufferWriterFactory = new();
             SerializerBuilder<TestEntity> builder = new();
@@ -89,7 +89,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         #region Test Methods (Build)
 
         [Fact]
-        public void Build_ReturnsInstanceOfSerializer()
+        public void Build_WhenCalled_ReturnsInstanceOfSerializer()
         {
             Serializer<TestEntity> serializer = _serializerBuilder.Build();
 
@@ -102,7 +102,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         #region Test Methods (ForType)
 
         [Fact]
-        public void ForType_ShouldReturnNewSerializerBuilderInstance()
+        public void ForType_WhenCalled_ShouldReturnNewSerializerBuilderInstance()
         {
             SerializerBuilder<TestEntity> builder = SerializerBuilder<TestEntity>.ForType();
 
