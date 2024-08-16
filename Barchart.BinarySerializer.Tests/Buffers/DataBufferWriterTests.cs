@@ -468,6 +468,66 @@ public class DataBufferWriterTests
     }
 
     #endregion
+    
+    #region Test Methods (Bug: Populated Array)
+    
+    [Fact]
+    public void Write_PopulatedArrayOneBitOneByte_ModifiesBuffer()
+    {
+        byte[] byteArray = new byte[] { 0b11111111, 0b11111111 };
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteByte(0b10101010);
+        
+        Assert.Equal(0b01010101, byteArray[0]);
+        Assert.Equal(0b00000000, byteArray[1]);
+        
+        byteArray = new byte[] { 0b11111111, 0b11111111 };
+        dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteBit(true);
+        dataBuffer.WriteByte(0b01010101);
+        
+        Assert.Equal(0b10101010, byteArray[0]);
+        Assert.Equal(0b10000000, byteArray[1]);
+    }
+    
+    [Fact]
+    public void Write_PopulatedArrayTwoBitsOneByte_ModifiesBuffer()
+    {
+        byte[] byteArray = { 0b11111111, 0b11111111 };
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteBit(true);
+        dataBuffer.WriteByte(0b01010101);
+        
+        _testOutputHelper.WriteLine(PrintBits(byteArray[0]));
+        _testOutputHelper.WriteLine(PrintBits(byteArray[1]));
+        
+        Assert.Equal(0b01010101, byteArray[0]);
+        Assert.Equal(0b01000000, byteArray[1]);
+    }
+    
+    [Fact]
+    public void Write_PopulatedArrayThreeBitsTwoBytes_ModifiesBuffer()
+    {
+        byte[] byteArray = { 0b11111111, 0b11111111, 0b11111111 };
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteBit(false);
+        dataBuffer.WriteBit(true);
+        dataBuffer.WriteBit(false);
+        
+        dataBuffer.WriteBytes(new byte[] { 0b10101010, 0b10101010 });
+        
+        Assert.Equal(0b01010101, byteArray[0]);
+        Assert.Equal(0b01010101, byteArray[1]);
+        Assert.Equal(0b01000000, byteArray[2]);
+    }
+    
+    #endregion
 
     #region Static Methods
 

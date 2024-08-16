@@ -51,19 +51,14 @@ public class DataBufferWriter : IDataBufferWriter
             throw new InsufficientCapacityException(true);
         }
 
+        if (_positionBit == 0)
+        {
+            _byteArray[_positionByte] = 0;
+        }
+
         if (value)
         {
-            byte byteCurrent;
-
-            if (_positionBit == 0)
-            {
-                byteCurrent = 0;
-            }
-            else
-            {
-                byteCurrent = _byteArray[_positionByte];
-            }
-
+            byte byteCurrent = _byteArray[_positionByte];
             byte byteMask = (byte)(TRUE << (7 - _positionBit));
 
             _byteArray[_positionByte] = (byte)(byteCurrent | byteMask);
@@ -185,7 +180,7 @@ public class DataBufferWriter : IDataBufferWriter
             _positionBit++;
         }
     }
-
+    
     private bool CapacityWouldBeExceeded(int additionalBytes)
     {
         return _positionByte + additionalBytes >= _byteArray.Length;
