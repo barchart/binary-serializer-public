@@ -63,7 +63,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     {
         Type type = typeof(T);
 
-        IBinaryTypeSerializer serializer;
+        IBinaryTypeSerializer serializer = null;
         
         if (Serializers.ContainsKey(type))
         {
@@ -86,14 +86,12 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
                 Type boundType = genericType.MakeGenericType(underlyingType);
                 
                 IBinaryTypeSerializer underlyingSerializer = Make(underlyingType);
+                
                 serializer = (IBinaryTypeSerializer)Activator.CreateInstance(boundType, underlyingSerializer)!;
             }
-            else
-            {
-                throw new UnsupportedTypeException(type);
-            }
         }
-        else
+        
+        if (serializer == null)
         {
             throw new UnsupportedTypeException(type);
         }
