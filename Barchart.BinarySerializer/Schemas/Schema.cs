@@ -99,7 +99,7 @@ namespace Barchart.BinarySerializer.Schemas
                 {
                     ISchemaItem<TEntity> candidate = _keyItems[i];
                 
-                    candidate.Decode(reader, target, false);
+                    candidate.Decode(reader, target);
                 
                     if (candidate.Name == name && candidate is ISchemaItem<TEntity, TProperty> match)
                     {
