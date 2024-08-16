@@ -474,7 +474,7 @@ public class DataBufferWriterTests
     [Fact]
     public void Write_PopulatedArrayOneBitOneByte_ModifiesBuffer()
     {
-        byte[] byteArray = new byte[] { 0b11111111, 0b11111111 };
+        byte[] byteArray = { 0b11111111, 0b11111111 };
         DataBufferWriter dataBuffer = new(byteArray);
         
         dataBuffer.WriteBit(false);
