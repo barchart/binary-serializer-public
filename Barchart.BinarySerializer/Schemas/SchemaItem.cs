@@ -80,14 +80,13 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
             throw new KeyMismatchException(typeof(TEntity), Name, true);
         }
 
-        if (!Key)
-        {
-            WriteMissingFlag(writer, valuesAreEqual);
-        }
-        
         if (Key || !valuesAreEqual)
         {
             Encode(writer, current);
+        }
+        else
+        {
+            WriteMissingFlag(writer, true); 
         }
     }
 
