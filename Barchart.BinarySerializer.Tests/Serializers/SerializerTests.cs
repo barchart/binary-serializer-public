@@ -142,6 +142,29 @@ public class SerializerTests
     }
 
     #endregion
+    
+    #region Test Methods (ReadKey)
+
+    [Fact]
+    public void ReadKey_ShouldReturnCorrectKey()
+    {
+        TestEntity entity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value"
+        };
+
+        byte[] serialized = _serializer.Serialize(entity);
+
+        string keyName = "KeyProperty";
+        string expectedKey = "Key";
+
+        string result = _serializer.ReadKey<string>(serialized, keyName);
+
+        Assert.Equal(expectedKey, result);
+    }
+
+    #endregion
 
     #region Test Methods (GetEquals)
 
