@@ -31,6 +31,28 @@ public class BinarySerializerStringTests
 
     #region Test Methods (Encode)
 
+    [Fact]
+    public void Encode_Null_WritesExpectedBytes()
+    {
+        Mock<IDataBufferWriter> mock = new();
+
+        List<bool> bitsWritten = new();
+        List<byte> byteWritten = new();
+        List<byte[]> bytesWritten = new();
+            
+        mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
+        mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
+        mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
+        
+        _serializer.Encode(mock.Object, null!);
+
+        Assert.Single(bitsWritten);
+        Assert.Empty(byteWritten);
+        Assert.Empty(bytesWritten);
+        
+        Assert.True(bitsWritten[0]);
+    }
+    
     [Theory]
     [InlineData("Testing Encoding & Decoding methods")]
     [InlineData("")]
@@ -49,7 +71,11 @@ public class BinarySerializerStringTests
         
         _serializer.Encode(mock.Object, value);
 
+        Assert.Single(bitsWritten);
+        Assert.Empty(byteWritten);
         Assert.Equal(2, bytesWritten.Count);
+        
+        Assert.False(bitsWritten[0]);
         
         byte[] expectedLengthBytes = BitConverter.GetBytes((ushort)value.Length);
         byte[] actualLengthBytes = bytesWritten[0];
@@ -77,12 +103,26 @@ public class BinarySerializerStringTests
         byte[] serializedLengthBytes = BitConverter.GetBytes((ushort)value.Length);
         byte[] serializedContentBytes = Encoding.UTF8.GetBytes(value);
         
+        mock.Setup(m => m.ReadBit()).Returns(false);
+        
         mock.Setup(m => m.ReadBytes(2)).Returns(serializedLengthBytes);
         mock.Setup(m => m.ReadBytes(value.Length)).Returns(serializedContentBytes);
 
         string deserialized = _serializer.Decode(mock.Object);
 
         Assert.Equal(value, deserialized);
+    }
+    
+    [Fact]
+    public void Decode_Null_ReturnsExpectedValue()
+    {
+        Mock<IDataBufferReader> mock = new();
+        
+        mock.Setup(m => m.ReadBit()).Returns(true);
+
+        string deserialized = _serializer.Decode(mock.Object);
+
+        Assert.Null(deserialized);
     }
 
     #endregion
@@ -94,10 +134,30 @@ public class BinarySerializerStringTests
     [InlineData(new object[] { new[] { "String", "string" }})]
     [InlineData(new object[] { new[] { "", "" }})]
     [InlineData(new object[] { new[] { "Binary", "Serialization" }})]
+    [InlineData(new object[] { new[] { "a", null }})]
+    [InlineData(new object[] { new[] { null, "b" }})]
+    [InlineData(new object[] { new[] { null, null, "hack" }})]
     public void GetEquals_Various_MatchesIEquatableOutput(string[] strings)
     {
-        bool actual = _serializer.GetEquals(strings[0], strings[1]);
-        bool expected = strings[0].Equals(strings[1]);
+        string a = strings[0];
+        string b = strings[1];
+        
+        bool actual = _serializer.GetEquals(a, b);
+
+        bool expected;
+        
+        if (a != null)
+        {
+            expected = a.Equals(b);
+        } 
+        else if (b != null)
+        {
+            expected = b.Equals(a);
+        }
+        else
+        {
+            expected = true;
+        }
         
         Assert.Equal(expected, actual);
     }
