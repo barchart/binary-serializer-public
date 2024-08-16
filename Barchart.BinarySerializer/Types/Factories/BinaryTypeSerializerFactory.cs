@@ -63,7 +63,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     {
         Type type = typeof(T);
 
-        IBinaryTypeSerializer serializer = null;
+        IBinaryTypeSerializer? serializer = null;
         
         if (Serializers.ContainsKey(type))
         {

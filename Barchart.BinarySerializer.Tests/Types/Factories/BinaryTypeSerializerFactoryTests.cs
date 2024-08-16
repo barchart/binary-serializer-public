@@ -256,6 +256,14 @@ public class BinaryTypeSerializerFactoryTests
     }
     
     [Fact]
+    public void Make_NullableString_ReturnsTypedSerializer()
+    {
+        IBinaryTypeSerializer<string?> serializer = _factory.Make<string?>();
+
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<string>>(serializer);
+    }
+    
+    [Fact]
     public void Make_UInt32_ReturnsTypedSerializer()
     {
         IBinaryTypeSerializer<uint> serializer = _factory.Make<uint>();
