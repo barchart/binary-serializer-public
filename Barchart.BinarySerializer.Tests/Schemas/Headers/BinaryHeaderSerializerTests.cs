@@ -8,23 +8,23 @@ using Barchart.BinarySerializer.Schemas.Headers;
 
 namespace Barchart.BinarySerializer.Tests.Schemas.Headers;
 
-public class HeaderSerializerTests
+public class BinaryHeaderSerializerTests
 {
     #region Fields
     
     private readonly ITestOutputHelper _testOutputHelper;
     
-    private readonly HeaderSerializer _serializer;
+    private readonly BinaryHeaderSerializer _serializer;
     
     #endregion
     
     #region Constructor(s)
         
-    public HeaderSerializerTests(ITestOutputHelper testOutputHelper)
+    public BinaryHeaderSerializerTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
 
-        _serializer = new HeaderSerializer();
+        _serializer = new BinaryHeaderSerializer();
     }
     
     #endregion

@@ -8,9 +8,9 @@ using Barchart.BinarySerializer.Schemas.Exceptions;
 namespace Barchart.BinarySerializer.Schemas.Headers;
 
 /// <summary>
-///     The default implementation of <see cref="IHeaderSerializer" />.
+///     The default implementation of <see cref="IBinaryHeaderSerializer" />.
 /// </summary>
-public class HeaderSerializer : IHeaderSerializer
+public class BinaryHeaderSerializer : IBinaryHeaderSerializer
 {
     #region Fields
     
@@ -20,7 +20,7 @@ public class HeaderSerializer : IHeaderSerializer
     
     #region Constructor(s)
     
-    public HeaderSerializer()
+    public BinaryHeaderSerializer()
     {
 
     }
