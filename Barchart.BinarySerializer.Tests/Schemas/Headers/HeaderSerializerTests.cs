@@ -106,7 +106,7 @@ public class HeaderSerializerTests
 
         mock.Setup(m => m.ReadByte()).Returns(0b00000000);
         
-        Header header = _serializer.Decode(mock.Object);
+        IHeader header = _serializer.Decode(mock.Object);
         
         Assert.Equal(0, header.EntityId);
         Assert.False(header.Snapshot);
@@ -119,7 +119,7 @@ public class HeaderSerializerTests
 
         mock.Setup(m => m.ReadByte()).Returns(0b10001111);
         
-        Header header = _serializer.Decode(mock.Object);
+        IHeader header = _serializer.Decode(mock.Object);
         
         Assert.Equal(15, header.EntityId);
         Assert.True(header.Snapshot);

@@ -6,10 +6,10 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Schemas.Headers;
 
-public interface IHeaderSerializer<THeader> where THeader : IHeader
+public interface IHeaderSerializer
 {
     
     public void Encode(IDataBufferWriter writer, byte entityId, bool snapshot);
     
-    public THeader Decode(IDataBufferReader reader);
+    public IHeader Decode(IDataBufferReader reader);
 }
