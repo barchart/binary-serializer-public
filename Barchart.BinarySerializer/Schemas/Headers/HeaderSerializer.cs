@@ -32,7 +32,7 @@ public class HeaderSerializer : IHeaderSerializer<Header>
     {
         if (entityId > 15)
         {
-            throw new ArgumentOutOfRangeException("entityId", "The entityId argument cannot exceed 15. For now, the header serializer is configured to use four bits for this value.");
+            throw new ArgumentOutOfRangeException("entityId", "The entityId argument cannot exceed 15 because the header serializer is configured to use four bits for entityId value.");
         }
         
         byte combined = entityId;
@@ -61,7 +61,7 @@ public class HeaderSerializer : IHeaderSerializer<Header>
 
         if (entityId > 15)
         {
-            throw new InvalidHeaderException("The entityId cannot exceed 15. For now, the header serializer is configured to use four bits for this value.");
+            throw new InvalidHeaderException("The entityId cannot exceed 15 because the header serializer is configured to use four bits for entityId value.");
         }
         
         return new Header(entityId, snapshot);
