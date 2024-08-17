@@ -28,7 +28,7 @@ public class BinaryHeaderSerializer : IBinaryHeaderSerializer
     #endregion
     
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter writer, byte entityId, bool snapshot)
+    public virtual void Encode(IDataBufferWriter writer, byte entityId, bool snapshot)
     {
         if (entityId > 15)
         {
@@ -46,7 +46,7 @@ public class BinaryHeaderSerializer : IBinaryHeaderSerializer
     }
 
     /// <inheritdoc />
-    public IHeader Decode(IDataBufferReader reader)
+    public virtual IHeader Decode(IDataBufferReader reader)
     {
         byte combined = reader.ReadByte();
         
