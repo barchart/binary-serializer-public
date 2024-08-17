@@ -1,9 +1,9 @@
 namespace Barchart.BinarySerializer.Schemas.Headers;
 
 /// <summary>
-///     The default implementation of the <see cref="ISchemaHeader" />.
+///     The default implementation of the <see cref="IHeader" />.
 /// </summary>
-public struct SchemaHeader : ISchemaHeader
+public struct Header : IHeader
 {
     #region Fields
     
@@ -14,7 +14,7 @@ public struct SchemaHeader : ISchemaHeader
     
     #region Constructor(s)
     
-    public SchemaHeader(byte entityId, bool snapshot)
+    public Header(byte entityId, bool snapshot)
     {
         _entityId = entityId;
         _snapshot = snapshot;

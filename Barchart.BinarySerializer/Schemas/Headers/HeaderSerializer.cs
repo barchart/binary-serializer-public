@@ -8,9 +8,9 @@ using Barchart.BinarySerializer.Schemas.Exceptions;
 namespace Barchart.BinarySerializer.Schemas.Headers;
 
 /// <summary>
-///     The default implementation of <see cref="ISchemaHeaderSerializer{THeader}" />.
+///     The default implementation of <see cref="IHeaderSerializer{THeader}" />.
 /// </summary>
-public class SchemaHeaderSerializer : ISchemaHeaderSerializer<SchemaHeader>
+public class HeaderSerializer : IHeaderSerializer<Header>
 {
     #region Fields
     
@@ -20,7 +20,7 @@ public class SchemaHeaderSerializer : ISchemaHeaderSerializer<SchemaHeader>
     
     #region Constructor(s)
     
-    public SchemaHeaderSerializer()
+    public HeaderSerializer()
     {
 
     }
@@ -32,7 +32,7 @@ public class SchemaHeaderSerializer : ISchemaHeaderSerializer<SchemaHeader>
     {
         if (entityId > 15)
         {
-            throw new ArgumentOutOfRangeException("entityId", "The entityId argument cannot exceed 15. For now, the serializer is configured to use four bits for this value.");
+            throw new ArgumentOutOfRangeException("entityId", "The entityId argument cannot exceed 15. For now, the header serializer is configured to use four bits for this value.");
         }
         
         byte combined = entityId;
@@ -46,7 +46,7 @@ public class SchemaHeaderSerializer : ISchemaHeaderSerializer<SchemaHeader>
     }
 
     /// <inheritdoc />
-    public SchemaHeader Decode(IDataBufferReader reader)
+    public Header Decode(IDataBufferReader reader)
     {
         byte combined = reader.ReadByte();
         
@@ -61,9 +61,9 @@ public class SchemaHeaderSerializer : ISchemaHeaderSerializer<SchemaHeader>
 
         if (entityId > 15)
         {
-            throw new InvalidHeaderException("The entityId cannot exceed 15. For now, the serializer is configured to use four bits for this value.");
+            throw new InvalidHeaderException("The entityId cannot exceed 15. For now, the header serializer is configured to use four bits for this value.");
         }
         
-        return new SchemaHeader(entityId, snapshot);
+        return new Header(entityId, snapshot);
     }
 }

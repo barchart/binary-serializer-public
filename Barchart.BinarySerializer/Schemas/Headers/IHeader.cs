@@ -11,11 +11,11 @@ namespace Barchart.BinarySerializer.Schemas.Headers;
 ///         number, the byte length of the message, etc. Obviously, doing
 ///         so would add to the total length of the message. Consumers
 ///         of this library could extend this interface and write a
-///         custom <see cref="ISchemaHeaderSerializer{THeader}" /> as
+///         custom <see cref="IHeaderSerializer{THeader}" /> as
 ///         desired.
 ///     </para>
 /// </summary>
-public interface ISchemaHeader
+public interface IHeader
 {
     /// <summary>
     ///     An identifier for the entity that was serialized.

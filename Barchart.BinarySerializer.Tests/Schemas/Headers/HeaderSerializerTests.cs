@@ -6,25 +6,25 @@ using Barchart.BinarySerializer.Schemas.Headers;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Tests.Headers;
+namespace Barchart.BinarySerializer.Tests.Schemas.Headers;
 
-public class SchemaHeaderSerializerTests
+public class HeaderSerializerTests
 {
     #region Fields
     
     private readonly ITestOutputHelper _testOutputHelper;
     
-    private readonly SchemaHeaderSerializer _serializer;
+    private readonly HeaderSerializer _serializer;
     
     #endregion
     
     #region Constructor(s)
         
-    public SchemaHeaderSerializerTests(ITestOutputHelper testOutputHelper)
+    public HeaderSerializerTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
 
-        _serializer = new SchemaHeaderSerializer();
+        _serializer = new HeaderSerializer();
     }
     
     #endregion
@@ -106,7 +106,7 @@ public class SchemaHeaderSerializerTests
 
         mock.Setup(m => m.ReadByte()).Returns(0b00000000);
         
-        SchemaHeader header = _serializer.Decode(mock.Object);
+        Header header = _serializer.Decode(mock.Object);
         
         Assert.Equal(0, header.EntityId);
         Assert.False(header.Snapshot);
@@ -119,7 +119,7 @@ public class SchemaHeaderSerializerTests
 
         mock.Setup(m => m.ReadByte()).Returns(0b10001111);
         
-        SchemaHeader header = _serializer.Decode(mock.Object);
+        Header header = _serializer.Decode(mock.Object);
         
         Assert.Equal(15, header.EntityId);
         Assert.True(header.Snapshot);

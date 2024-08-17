@@ -6,7 +6,7 @@ using Barchart.BinarySerializer.Buffers;
 
 namespace Barchart.BinarySerializer.Schemas.Headers;
 
-public interface ISchemaHeaderSerializer<THeader> where THeader : ISchemaHeader
+public interface IHeaderSerializer<THeader> where THeader : IHeader
 {
     
     public void Encode(IDataBufferWriter writer, byte entityId, bool snapshot);
