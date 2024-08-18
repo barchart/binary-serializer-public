@@ -2,6 +2,7 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Types;
+using Barchart.BinarySerializer.Utilities;
 
 #endregion
 
@@ -65,8 +66,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     {
         IList<TItem>? items = _getter(source);
         
-        WriteMissingFlag(writer, false);
-        WriteNullFlag(writer, items == null);
+        Serialization.WriteMissingFlag(writer, false);
+        Serialization.WriteNullFlag(writer, items == null);
 
         if (items != null)
         {
@@ -74,7 +75,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
             foreach (var item in items)
             {
-                WriteMissingFlag(writer, false);
+                Serialization.WriteMissingFlag(writer, false);
 
                 _elementSerializer.Encode(writer, item);
             }
@@ -86,7 +87,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     {
         if (GetEquals(current, previous))
         {
-            WriteMissingFlag(writer, true);
+            Serialization.WriteMissingFlag(writer, true);
             
             return;
         }
@@ -94,8 +95,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         IList<TItem>? currentItems = _getter(current);
         IList<TItem>? previousItems = _getter(previous);
 
-        WriteMissingFlag(writer, false);
-        WriteNullFlag(writer, currentItems == null);
+        Serialization.WriteMissingFlag(writer, false);
+        Serialization.WriteNullFlag(writer, currentItems == null);
             
         if (currentItems != null)
         {
@@ -106,14 +107,14 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     /// <inheritdoc />
     public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
     {
-        if (ReadMissingFlag(reader))
+        if (Serialization.ReadMissingFlag(reader))
         {
             return;
         }
 
         IList<TItem>? currentItems = _getter(target);
         
-        if (ReadNullFlag(reader))
+        if (Serialization.ReadNullFlag(reader))
         {
             if (currentItems != null)
             {
@@ -129,7 +130,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         
         for (int i = 0; i < numberOfElements; i++)
         {
-            if (ReadMissingFlag(reader))
+            if (Serialization.ReadMissingFlag(reader))
             {
                 items.Add(currentItems![i]);
             }
@@ -240,33 +241,14 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     {
         if (currentItem != null && previousItem != null && _elementSerializer.GetEquals(currentItem, previousItem))
         {
-            WriteMissingFlag(writer, true);
+            Serialization.WriteMissingFlag(writer, true);
         }
         else
-        {
-            WriteMissingFlag(writer, false);
+        { 
+            Serialization.WriteMissingFlag(writer, false);
+            
             _elementSerializer.Encode(writer, currentItem);
         }
-    }
-
-    private static bool ReadMissingFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-    
-    private static void WriteMissingFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
-    }
-
-    private static bool ReadNullFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-    
-    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
     }
 
     #endregion

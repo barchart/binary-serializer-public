@@ -1,6 +1,7 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Utilities;
 
 #endregion
 
@@ -34,7 +35,7 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, T? value)
     {
-        WriteNullFlag(writer, !value.HasValue);
+        Serialization.WriteNullFlag(writer, !value.HasValue);
 
         if (value.HasValue)
         {
@@ -45,7 +46,7 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
     /// <inheritdoc />
     public T? Decode(IDataBufferReader reader)
     {
-        if (ReadNullFlag(reader))
+        if (Serialization.ReadNullFlag(reader))
         {
             return null;
         }
@@ -57,16 +58,6 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
     public bool GetEquals(T? a, T? b)
     {
         return (!a.HasValue && !b.HasValue) || (a.HasValue && b.HasValue && _typeSerializer.GetEquals(a.Value, b.Value));
-    }
-    
-    private static bool ReadNullFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-    
-    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
     }
 
     #endregion

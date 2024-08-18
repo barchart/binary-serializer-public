@@ -3,6 +3,7 @@
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas.Exceptions;
 using Barchart.BinarySerializer.Types;
+using Barchart.BinarySerializer.Utilities;
 
 #endregion
 
@@ -64,7 +65,7 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     {
         if (!Key)
         {
-            WriteMissingFlag(writer, false);
+            Serialization.WriteMissingFlag(writer, false);
         }
 
         _serializer.Encode(writer, _getter(source));
@@ -86,7 +87,7 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
         }
         else
         {
-            WriteMissingFlag(writer, true); 
+            Serialization.WriteMissingFlag(writer, true); 
         }
     }
 
@@ -101,7 +102,7 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
         }
         else
         {
-            missing = ReadMissingFlag(reader);
+            missing = Serialization.ReadMissingFlag(reader);
         }
 
         if (missing)
@@ -164,16 +165,6 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     public TMember Read(TEntity source)
     {
         return _getter(source);
-    }
-    
-    private static bool ReadMissingFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-    
-    private static void WriteMissingFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
     }
     
     #endregion

@@ -1,6 +1,7 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Utilities;
 
 #endregion
 
@@ -62,8 +63,8 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
     {
         TMember nested = _getter(source);
         
-        WriteMissingFlag(writer, false);
-        WriteNullFlag(writer, nested == null);
+        Serialization.WriteMissingFlag(writer, false);
+        Serialization.WriteNullFlag(writer, nested == null);
 
         if (nested != null)
         {
@@ -76,7 +77,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
     {
         bool unchanged = GetEquals(current, previous);
         
-        WriteMissingFlag(writer, unchanged);
+        Serialization.WriteMissingFlag(writer, unchanged);
         
         if (unchanged)
         {
@@ -86,7 +87,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
         TMember nestedCurrent = _getter(current);
         TMember nestedPrevious = _getter(previous);
         
-        WriteNullFlag(writer, nestedCurrent == null);
+        Serialization.WriteNullFlag(writer, nestedCurrent == null);
 
         if (nestedCurrent == null)
         {
@@ -107,14 +108,14 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
     /// <inheritdoc />
     public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
     {
-        if (ReadMissingFlag(reader))
+        if (Serialization.ReadMissingFlag(reader))
         {
             return;
         }
 
         TMember nested = _getter(target);
         
-        if (ReadNullFlag(reader))
+        if (Serialization.ReadNullFlag(reader))
         {
             if (nested != null)
             {
@@ -172,26 +173,6 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
         }
         
         return _schema.GetEquals(_getter(a), _getter(b));
-    }
-    
-    private static bool ReadMissingFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-    
-    private static void WriteMissingFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
-    }
-
-    private static bool ReadNullFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-    
-    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
     }
     
     #endregion

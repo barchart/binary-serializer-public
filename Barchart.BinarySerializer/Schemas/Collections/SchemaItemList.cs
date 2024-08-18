@@ -1,6 +1,7 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Utilities;
 
 #endregion
 
@@ -64,8 +65,8 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
     {
         IList<TItem?>? items = _getter(source);
 
-        WriteMissingFlag(writer, false);
-        WriteNullFlag(writer, items == null);
+        Serialization.WriteMissingFlag(writer, false);
+        Serialization.WriteNullFlag(writer, items == null);
 
         if (items == null)
         {
@@ -78,13 +79,13 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
         {
             if (item != null)
             {
-                WriteNullFlag(writer, false);
+                Serialization.WriteNullFlag(writer, false);
 
                 _itemSchema.Serialize(writer, item);
             }
             else
             {
-                WriteNullFlag(writer, true);
+                Serialization.WriteNullFlag(writer, true);
             }
         }
     }
@@ -94,7 +95,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
     {
         if (GetEquals(current, previous))
         {
-            WriteMissingFlag(writer, true);
+            Serialization.WriteMissingFlag(writer, true);
 
             return;
         }
@@ -102,8 +103,8 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
         IList<TItem?>? currentItems = _getter(current);
         IList<TItem?>? previousItems = _getter(previous);
 
-        WriteMissingFlag(writer, false);
-        WriteNullFlag(writer, currentItems == null);
+        Serialization.WriteMissingFlag(writer, false);
+        Serialization.WriteNullFlag(writer, currentItems == null);
 
         if (currentItems == null)
         {
@@ -118,12 +119,12 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
         {
             if (currentItems[i] == null)
             {
-                WriteNullFlag(writer, true);
+                Serialization.WriteNullFlag(writer, true);
                     
                 continue;
             }
 
-            WriteNullFlag(writer, false);
+            Serialization.WriteNullFlag(writer, false);
 
             if (previousItems?[i] != null)
             {
@@ -140,12 +141,12 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
     /// <inheritdoc />
     public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
     {
-        if (ReadMissingFlag(reader))
+        if (Serialization.ReadMissingFlag(reader))
         {
             return;
         }
 
-        if (ReadNullFlag(reader))
+        if (Serialization.ReadNullFlag(reader))
         {
             _setter(target, null!);
 
@@ -160,7 +161,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
         for (int i = 0; i < count; i++)
         {
-            if (ReadNullFlag(reader))
+            if (Serialization.ReadNullFlag(reader))
             {
                 items.Add(null!);
             }
@@ -252,26 +253,6 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
         }
 
         return true;
-    }
-
-    private static bool ReadMissingFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-    
-    private static void WriteMissingFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
-    }
-
-    private static bool ReadNullFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-
-    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
     }
 
     #endregion

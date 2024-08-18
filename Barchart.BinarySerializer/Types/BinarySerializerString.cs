@@ -3,6 +3,7 @@
 using System.Text;
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Utilities;
 
 #endregion
 
@@ -50,7 +51,7 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, string value)
     {
-        WriteNullFlag(writer, value == null);
+        Serialization.WriteNullFlag(writer, value == null);
         
         if (value == null)
         {
@@ -72,7 +73,7 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
     /// <inheritdoc />
     public string Decode(IDataBufferReader reader)
     {
-        if (ReadNullFlag(reader))
+        if (Serialization.ReadNullFlag(reader))
         {
             return null!;
         }
@@ -94,16 +95,6 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
         }
 
         return a.Equals(b);
-    }
-
-    private static bool ReadNullFlag(IDataBufferReader reader)
-    {
-        return reader.ReadBit();
-    }
-
-    private static void WriteNullFlag(IDataBufferWriter writer, bool flag)
-    {
-        writer.WriteBit(flag);
     }
 
     #endregion
