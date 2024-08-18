@@ -4,7 +4,7 @@ using Barchart.BinarySerializer.Buffers;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Schemas;
+namespace Barchart.BinarySerializer.Schemas.Collections;
 
 /// <summary>
 ///     Manages the serialization and deserialization of list or array of complex types within a binary data context.
@@ -21,7 +21,7 @@ namespace Barchart.BinarySerializer.Schemas;
 ///     The type of the items being serialized (which is read from the source
 ///     object) or deserialized (which assigned to the source object).
 /// </typeparam>
-public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new() where TItem : class, new()
+public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new() where TItem : class, new()
 {
     #region Fields
 
@@ -44,7 +44,7 @@ public class SchemaItemCollectionObject<TEntity, TItem> : ISchemaItem<TEntity> w
 
     #region Constructor(s)
 
-    public SchemaItemCollectionObject(string name, Func<TEntity, IList<TItem?>?> getter, Action<TEntity, IList<TItem?>?> setter, ISchema<TItem> itemSchema)
+    public SchemaItemList(string name, Func<TEntity, IList<TItem?>?> getter, Action<TEntity, IList<TItem?>?> setter, ISchema<TItem> itemSchema)
     {
         Name = name;
         Key = false;

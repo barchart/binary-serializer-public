@@ -5,7 +5,7 @@ using Barchart.BinarySerializer.Types;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Schemas;
+namespace Barchart.BinarySerializer.Schemas.Collections;
 
 /// <summary>
 ///     Manages the serialization and deserialization of a list or array of primitive types associated with an entity
@@ -22,7 +22,7 @@ namespace Barchart.BinarySerializer.Schemas;
 ///     The type of the items being serialized (which is read from the source
 ///     object) or deserialized (which assigned to the source object).
 /// </typeparam>
-public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new()
+public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> where TEntity : class, new()
 {
     #region Fields
 
@@ -45,7 +45,7 @@ public class SchemaItemCollectionPrimitive<TEntity, TItem> : ISchemaItem<TEntity
 
     #region Constructor(s)
 
-    public SchemaItemCollectionPrimitive(string name, Func<TEntity, IList<TItem>?> getter, Action<TEntity, IList<TItem>?> setter, IBinaryTypeSerializer<TItem> elementSerializer)
+    public SchemaItemListPrimitive(string name, Func<TEntity, IList<TItem>?> getter, Action<TEntity, IList<TItem>?> setter, IBinaryTypeSerializer<TItem> elementSerializer)
     {
         Name = name;
         Key = false;

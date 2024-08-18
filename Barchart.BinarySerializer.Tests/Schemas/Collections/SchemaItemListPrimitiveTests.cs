@@ -1,14 +1,14 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Schemas.Collections;
 using Barchart.BinarySerializer.Types;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Tests.Schemas;
+namespace Barchart.BinarySerializer.Tests.Schemas.Collections;
 
-public class SchemaItemCollectionPrimitiveTests
+public class SchemaItemListPrimitiveTests
 {
     #region Fields
 
@@ -17,13 +17,13 @@ public class SchemaItemCollectionPrimitiveTests
     private readonly IDataBufferWriter _writer;
     private readonly IDataBufferReader _reader;
 
-    private readonly SchemaItemCollectionPrimitive<TestEntity, int> _schemaItemListPrimitive;
+    private readonly SchemaItemListPrimitive<TestEntity, int> _schemaItemListPrimitive;
 
     #endregion
 
     #region Constructor(s)
 
-    public SchemaItemCollectionPrimitiveTests(ITestOutputHelper testOutputHelper)
+    public SchemaItemListPrimitiveTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
 
@@ -33,7 +33,7 @@ public class SchemaItemCollectionPrimitiveTests
 
         IBinaryTypeSerializer<int> intSerializer = new BinarySerializerInt();
 
-        _schemaItemListPrimitive = new SchemaItemCollectionPrimitive<TestEntity, int>("IntListProperty", entity => entity.IntListProperty!, (entity, value) => entity.IntListProperty = value?.ToList(), intSerializer);    
+        _schemaItemListPrimitive = new SchemaItemListPrimitive<TestEntity, int>("IntListProperty", entity => entity.IntListProperty!, (entity, value) => entity.IntListProperty = value?.ToList(), intSerializer);    
     }
 
     #endregion

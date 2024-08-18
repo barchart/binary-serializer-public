@@ -1,14 +1,15 @@
 #region Using Statements
 
-using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas;
+using Barchart.BinarySerializer.Schemas.Collections;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Tests.Schemas;
+namespace Barchart.BinarySerializer.Tests.Schemas.Collections;
 
-public class SchemaItemCollectionObjectTests
+public class SchemaItemListTests
 {
     #region Fields
 
@@ -18,13 +19,13 @@ public class SchemaItemCollectionObjectTests
     private readonly IDataBufferReader _reader;
     
     private readonly Mock<ISchema<TestProperty>> _mockSchema;
-    private readonly SchemaItemCollectionObject<TestEntity, TestProperty> _schemaItemCollectionObject;
+    private readonly SchemaItemList<TestEntity, TestProperty> _schemaItemList;
 
     #endregion
 
     #region Constructor(s)
 
-    public SchemaItemCollectionObjectTests(ITestOutputHelper testOutputHelper)
+    public SchemaItemListTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
 
@@ -33,7 +34,7 @@ public class SchemaItemCollectionObjectTests
         _reader = new DataBufferReader(buffer);
 
         _mockSchema = new Mock<ISchema<TestProperty>>();
-        _schemaItemCollectionObject = new SchemaItemCollectionObject<TestEntity, TestProperty>("CollectionProperty", entity => entity.CollectionProperty!, (entity, value) => entity.CollectionProperty = value?.ToList(), _mockSchema.Object);
+        _schemaItemList = new SchemaItemList<TestEntity, TestProperty>("CollectionProperty", entity => entity.CollectionProperty!, (entity, value) => entity.CollectionProperty = value?.ToList(), _mockSchema.Object);
     }
 
     #endregion
@@ -52,7 +53,7 @@ public class SchemaItemCollectionObjectTests
             }
         };
 
-        _schemaItemCollectionObject.Encode(_writer, testEntity);
+        _schemaItemList.Encode(_writer, testEntity);
 
         _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test1" && p.PropertyValue == 123)), Times.Once);
         _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test2" && p.PropertyValue == 456)), Times.Once);
@@ -66,7 +67,7 @@ public class SchemaItemCollectionObjectTests
             CollectionProperty = null
         };
 
-        _schemaItemCollectionObject.Encode(_writer, testEntity);
+        _schemaItemList.Encode(_writer, testEntity);
 
         Assert.False(_reader.ReadBit());
         Assert.True(_reader.ReadBit());
@@ -103,7 +104,7 @@ public class SchemaItemCollectionObjectTests
             .Returns(() => testEntity.CollectionProperty.LastOrDefault()!)
             .Verifiable();
 
-        _schemaItemCollectionObject.Decode(_reader, testEntity);
+        _schemaItemList.Decode(_reader, testEntity);
 
         _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>()), Times.Exactly(expectedItemsCount));
 
@@ -126,7 +127,7 @@ public class SchemaItemCollectionObjectTests
             CollectionProperty = new List<TestProperty?>()
         };
 
-        _schemaItemCollectionObject.Decode(_reader, testEntity);
+        _schemaItemList.Decode(_reader, testEntity);
 
         Assert.Empty(testEntity.CollectionProperty);
     } 
@@ -155,7 +156,7 @@ public class SchemaItemCollectionObjectTests
             CollectionProperty = null
         };
 
-        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+        _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
         Assert.NotNull(targetEntity?.CollectionProperty);
         Assert.Single(targetEntity.CollectionProperty);
@@ -180,7 +181,7 @@ public class SchemaItemCollectionObjectTests
             }
         };
 
-        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+        _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
         Assert.NotNull(targetEntity?.CollectionProperty);
         Assert.Equal(2, targetEntity.CollectionProperty.Count);
@@ -212,7 +213,7 @@ public class SchemaItemCollectionObjectTests
             }
         };
 
-        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+        _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
         Assert.NotNull(targetEntity?.CollectionProperty);
         Assert.Equal(2, targetEntity.CollectionProperty.Count);
@@ -244,7 +245,7 @@ public class SchemaItemCollectionObjectTests
             }
         };
 
-        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+        _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
         Assert.NotNull(targetEntity?.CollectionProperty);
         Assert.Equal(2, targetEntity.CollectionProperty.Count);
@@ -275,7 +276,7 @@ public class SchemaItemCollectionObjectTests
             }
         };
 
-        _schemaItemCollectionObject.CompareAndApply(ref targetEntity, sourceEntity);
+        _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
         Assert.NotNull(targetEntity?.CollectionProperty);
         Assert.Equal(3, targetEntity.CollectionProperty.Count);
@@ -304,7 +305,7 @@ public class SchemaItemCollectionObjectTests
             CollectionProperty = null
         };
 
-        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemList.GetEquals(entityA, entityB);
 
         Assert.True(result);
     }
@@ -322,7 +323,7 @@ public class SchemaItemCollectionObjectTests
             CollectionProperty = new List<TestProperty?>() 
         };
 
-        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemList.GetEquals(entityA, entityB);
 
         Assert.True(result);
     }
@@ -372,7 +373,7 @@ public class SchemaItemCollectionObjectTests
             It.Is<TestProperty>(p => p.PropertyName == "Test2" && p.PropertyValue == 456)))
             .Returns(true);
 
-        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemList.GetEquals(entityA, entityB);
 
         Assert.True(result);
     }
@@ -398,7 +399,7 @@ public class SchemaItemCollectionObjectTests
             }
         };
 
-        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemList.GetEquals(entityA, entityB);
 
         Assert.False(result);
     }
@@ -415,7 +416,7 @@ public class SchemaItemCollectionObjectTests
             }
         };
 
-        bool result = _schemaItemCollectionObject.GetEquals(entityA, entityB);
+        bool result = _schemaItemList.GetEquals(entityA, entityB);
 
         Assert.False(result);
     }

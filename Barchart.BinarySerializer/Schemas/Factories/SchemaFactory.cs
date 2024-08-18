@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Schemas.Collections;
 using Barchart.BinarySerializer.Types;
 using Barchart.BinarySerializer.Types.Exceptions;
 using Barchart.BinarySerializer.Types.Factories;
@@ -151,7 +152,7 @@ public class SchemaFactory : ISchemaFactory
 
         IBinaryTypeSerializer<TItem> itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
         
-        return new SchemaItemCollectionPrimitive<TEntity, TItem>(name, getter, setter!, itemSerializer);
+        return new SchemaItemListPrimitive<TEntity, TItem>(name, getter, setter!, itemSerializer);
     }
 
     private ISchemaItem<TEntity> MakeSchemaItemCollectionObject<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new() where TItem : class, new()
@@ -163,7 +164,7 @@ public class SchemaFactory : ISchemaFactory
 
         ISchema<TItem> itemSchema = Make<TItem>();
 
-        return new SchemaItemCollectionObject<TEntity, TItem>(name, getter!, setter!, itemSchema);
+        return new SchemaItemList<TEntity, TItem>(name, getter!, setter!, itemSchema);
     }
 
     private static Func<MethodInfo, bool> GetMakeSchemaItemPredicate(Type[] typeParameters)
