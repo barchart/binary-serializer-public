@@ -102,7 +102,7 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     /// <returns>
     ///     True if the two data points are equal; otherwise false.
     /// </returns>
-    bool GetEquals(TEntity? a, TEntity? b);
+    bool GetEquals(TEntity a, TEntity b);
     
     #endregion
 }
