@@ -140,7 +140,7 @@ public class SchemaFactory : ISchemaFactory
 
         ISchema<TMember> schema = Make<TMember>();
 
-        return new SchemaItemNested<TEntity, TMember>(name, getter, setter!, schema);
+        return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
     }
 
     private ISchemaItem<TEntity> MakeSchemaItemCollectionPrimitive<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new()
@@ -152,7 +152,7 @@ public class SchemaFactory : ISchemaFactory
 
         IBinaryTypeSerializer<TItem> itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
         
-        return new SchemaItemListPrimitive<TEntity, TItem>(name, getter, setter!, itemSerializer);
+        return new SchemaItemListPrimitive<TEntity, TItem>(name, getter, setter, itemSerializer);
     }
 
     private ISchemaItem<TEntity> MakeSchemaItemCollectionObject<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new() where TItem : class, new()
@@ -164,7 +164,7 @@ public class SchemaFactory : ISchemaFactory
 
         ISchema<TItem> itemSchema = Make<TItem>();
 
-        return new SchemaItemList<TEntity, TItem>(name, getter!, setter!, itemSchema);
+        return new SchemaItemList<TEntity, TItem>(name, getter, setter, itemSchema);
     }
 
     private static Func<MethodInfo, bool> GetMakeSchemaItemPredicate(Type[] typeParameters)

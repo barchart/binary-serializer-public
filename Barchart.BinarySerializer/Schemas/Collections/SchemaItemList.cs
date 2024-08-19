@@ -75,7 +75,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
         
         writer.WriteBytes(BitConverter.GetBytes(items.Count));
 
-        foreach (TItem? item in items)
+        foreach (TItem item in items)
         {
             if (item != null)
             {
@@ -126,7 +126,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
             Serialization.WriteNullFlag(writer, false);
 
-            if (previousItems?[i] != null)
+            if (previousItems[i] != null)
             {
                 _itemSchema.Serialize(writer, currentItems[i], previousItems[i]);
             }
@@ -207,7 +207,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
         }
         
         targetItems.Clear();
-        foreach (TItem? item in sourceItems)
+        foreach (TItem item in sourceItems)
         {
             targetItems.Add(item);
         }

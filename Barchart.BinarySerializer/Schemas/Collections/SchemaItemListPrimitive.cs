@@ -134,7 +134,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         {
             if (Serialization.ReadMissingFlag(reader))
             {
-                items.Add(currentItems![i]);
+                items.Add(currentItems[i]);
             }
             else
             {
@@ -164,8 +164,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         
         target ??= new TEntity();
         
-        IList<TItem>? sourceItems = _getter(source);
-        IList<TItem>? targetItems = _getter(target);
+        IList<TItem> sourceItems = _getter(source);
+        IList<TItem> targetItems = _getter(target);
         
         if (sourceItems == null)
         {
@@ -187,7 +187,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     }
 
     /// <inheritdoc />
-    public bool GetEquals(TEntity? a, TEntity? b)
+    public bool GetEquals(TEntity a, TEntity b)
     {
         if (a == null && b == null)
         {
@@ -199,8 +199,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
             return false;
         }
         
-        IList<TItem>? listA = _getter(a);
-        IList<TItem>? listB = _getter(b);
+        IList<TItem> listA = _getter(a);
+        IList<TItem> listB = _getter(b);
 
         if (listA == null && listB == null)
         {
@@ -228,18 +228,18 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         return true;
     }
 
-    private void WriteItems(IDataBufferWriter writer, IList<TItem> currentItems, IList<TItem>? previousItems)
+    private void WriteItems(IDataBufferWriter writer, IList<TItem> currentItems, IList<TItem> previousItems)
     {
         int numberOfElements = currentItems.Count;
         writer.WriteBytes(BitConverter.GetBytes(numberOfElements));
 
         for (int i = 0; i < numberOfElements; i++)
         {
-            WriteItem(writer, currentItems[i], previousItems != null ? previousItems[i] : default);
+            WriteItem(writer, currentItems[i], previousItems != null ? previousItems[i] : default!);
         }
     }
 
-    private void WriteItem(IDataBufferWriter writer, TItem currentItem, TItem? previousItem)
+    private void WriteItem(IDataBufferWriter writer, TItem currentItem, TItem previousItem)
     {
         if (currentItem != null && previousItem != null && _elementSerializer.GetEquals(currentItem, previousItem))
         {
