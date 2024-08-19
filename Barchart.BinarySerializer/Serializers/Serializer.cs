@@ -107,6 +107,26 @@ public class Serializer<TEntity> where TEntity : class, new()
     }
 
     /// <summary>
+    ///     Deserializes an entity, updating an existing instance of
+    ///     the <typeparamref name="TEntity"/> class.
+    /// </summary>
+    /// <param name="serialized">
+    ///     The byte array that contains serialized data.
+    /// </param>
+    /// <param name="target">
+    ///     The target entity to populate with deserialized data.
+    /// </param>
+    /// <returns>
+    ///     The reference to the <paramref name="target"/> instance.
+    /// </returns>
+    public TEntity Deserialize(byte[] serialized, TEntity target)
+    {
+        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
+        
+        return _schema.Deserialize(reader, target);
+    }
+    
+    /// <summary>
     ///     Deserializes a key value (only) from the <paramref name="serialized" />.
     /// </summary>
     /// <param name="serialized">
@@ -129,26 +149,6 @@ public class Serializer<TEntity> where TEntity : class, new()
     }
     
     /// <summary>
-    ///     Deserializes an entity, updating an existing instance of
-    ///     the <typeparamref name="TEntity"/> class.
-    /// </summary>
-    /// <param name="serialized">
-    ///     The byte array that contains serialized data.
-    /// </param>
-    /// <param name="target">
-    ///     The target entity to populate with deserialized data.
-    /// </param>
-    /// <returns>
-    ///     The reference to the <paramref name="target"/> instance.
-    /// </returns>
-    public TEntity Deserialize(byte[] serialized, TEntity target)
-    {
-        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
-        
-        return _schema.Deserialize(reader, target);
-    }
-    
-    /// <summary>
     ///     Compares two objects and applies non-null fields from the source object to the target object.
     /// </summary>
     /// <param name="target">
@@ -157,7 +157,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     /// <param name="source">
     ///     The object containing the updates.
     /// </param>
-    public void CompareAndUpdate(ref TEntity? target, TEntity? source)
+    public void CompareAndUpdate(ref TEntity target, TEntity source)
     {
         _schema.CompareAndUpdate(ref target, source);
     }

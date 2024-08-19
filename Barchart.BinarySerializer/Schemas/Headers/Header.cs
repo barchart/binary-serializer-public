@@ -5,30 +5,23 @@ namespace Barchart.BinarySerializer.Schemas.Headers;
 /// </summary>
 public struct Header : IHeader
 {
-    #region Fields
+    #region Properties
     
-    private readonly byte _entityId;
-    private readonly bool _snapshot;
-    
+    /// <inheritdoc />
+    public byte EntityId { get; }
+
+    /// <inheritdoc />
+    public bool Snapshot { get; }
+
     #endregion
     
     #region Constructor(s)
     
     public Header(byte entityId, bool snapshot)
     {
-        _entityId = entityId;
-        _snapshot = snapshot;
+        EntityId = entityId;
+        Snapshot = snapshot;
     }
-    
-    #endregion
-    
-    #region Properties
-    
-    /// <inheritdoc />
-    public byte EntityId => _entityId;
-    
-    /// <inheritdoc />
-    public bool Snapshot => _snapshot;
     
     #endregion
 }

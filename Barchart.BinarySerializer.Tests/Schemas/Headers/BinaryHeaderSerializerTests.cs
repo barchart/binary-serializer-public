@@ -1,8 +1,8 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Schemas.Exceptions;
 using Barchart.BinarySerializer.Schemas.Headers;
+using Barchart.BinarySerializer.Schemas.Headers.Exceptions;
 
 #endregion
 
@@ -132,7 +132,7 @@ public class BinaryHeaderSerializerTests
 
         mock.Setup(m => m.ReadByte()).Returns(0b10010000);
         
-        Assert.Throws<InvalidHeaderException>(() => _serializer.Decode(mock.Object)); ;
+        Assert.Throws<InvalidHeaderException>(() => _serializer.Decode(mock.Object));
     }
     
     #endregion

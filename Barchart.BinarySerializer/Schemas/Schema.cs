@@ -112,7 +112,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <inheritdoc />
-        public void CompareAndUpdate(ref TEntity? target, TEntity? source)
+        public void CompareAndUpdate(ref TEntity target, TEntity source)
         {
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
@@ -126,7 +126,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <inheritdoc />
-        public bool GetEquals(TEntity? a, TEntity? b)
+        public bool GetEquals(TEntity a, TEntity b)
         {
             if (a == null && b == null)
             {

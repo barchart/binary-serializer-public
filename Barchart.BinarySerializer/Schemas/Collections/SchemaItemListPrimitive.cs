@@ -27,8 +27,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 {
     #region Fields
 
-    private readonly Func<TEntity, IList<TItem>?> _getter;
-    private readonly Action<TEntity, IList<TItem>?> _setter;
+    private readonly Func<TEntity, IList<TItem>> _getter;
+    private readonly Action<TEntity, IList<TItem>> _setter;
 
     private readonly IBinaryTypeSerializer<TItem> _elementSerializer;
     
@@ -46,7 +46,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
     #region Constructor(s)
 
-    public SchemaItemListPrimitive(string name, Func<TEntity, IList<TItem>?> getter, Action<TEntity, IList<TItem>?> setter, IBinaryTypeSerializer<TItem> elementSerializer)
+    public SchemaItemListPrimitive(string name, Func<TEntity, IList<TItem>> getter, Action<TEntity, IList<TItem>> setter, IBinaryTypeSerializer<TItem> elementSerializer)
     {
         Name = name;
         Key = false;
@@ -64,21 +64,23 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
-        IList<TItem>? items = _getter(source);
+        IList<TItem> items = _getter(source);
         
         Serialization.WriteMissingFlag(writer, false);
         Serialization.WriteNullFlag(writer, items == null);
 
-        if (items != null)
+        if (items == null)
         {
-            writer.WriteBytes(BitConverter.GetBytes(items.Count));
+            return;
+        }
+        
+        writer.WriteBytes(BitConverter.GetBytes(items.Count));
 
-            foreach (var item in items)
-            {
-                Serialization.WriteMissingFlag(writer, false);
+        foreach (var item in items)
+        {
+            Serialization.WriteMissingFlag(writer, false);
 
-                _elementSerializer.Encode(writer, item);
-            }
+            _elementSerializer.Encode(writer, item);
         }
     }
 
@@ -92,8 +94,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
             return;
         }
 
-        IList<TItem>? currentItems = _getter(current);
-        IList<TItem>? previousItems = _getter(previous);
+        IList<TItem> currentItems = _getter(current);
+        IList<TItem> previousItems = _getter(previous);
 
         Serialization.WriteMissingFlag(writer, false);
         Serialization.WriteNullFlag(writer, currentItems == null);
@@ -112,7 +114,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
             return;
         }
 
-        IList<TItem>? currentItems = _getter(target);
+        IList<TItem> currentItems = _getter(target);
         
         if (Serialization.ReadNullFlag(reader))
         {
@@ -153,7 +155,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     }
 
     /// <inheritdoc />
-    public void CompareAndApply(ref TEntity? target, TEntity? source)
+    public void CompareAndApply(ref TEntity target, TEntity source)
     {
         if (source == null)
         {

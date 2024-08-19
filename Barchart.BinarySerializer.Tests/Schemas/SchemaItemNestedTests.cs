@@ -149,7 +149,7 @@ public class SchemaItemNestedTests
             NestedProperty = null
         };
 
-        TestEntity? targetEntity = new()
+        TestEntity targetEntity = new()
         {
             NestedProperty = new TestProperty
             {
@@ -160,7 +160,7 @@ public class SchemaItemNestedTests
 
         _schemaItemNested.CompareAndApply(ref targetEntity, sourceEntity);
 
-        Assert.NotNull(targetEntity?.NestedProperty);
+        Assert.NotNull(targetEntity.NestedProperty);
         Assert.Equal("Original", targetEntity.NestedProperty.PropertyName);
         Assert.Equal(123, targetEntity.NestedProperty.PropertyValue);
     }
@@ -177,14 +177,14 @@ public class SchemaItemNestedTests
             }
         };
 
-        TestEntity? targetEntity = new()
+        TestEntity targetEntity = new()
         {
             NestedProperty = null
         };
 
         _schemaItemNested.CompareAndApply(ref targetEntity, sourceEntity);
 
-        Assert.NotNull(targetEntity?.NestedProperty);
+        Assert.NotNull(targetEntity.NestedProperty);
         Assert.Equal("Updated", targetEntity.NestedProperty.PropertyName);
         Assert.Equal(456, targetEntity.NestedProperty.PropertyValue);
     }
@@ -201,11 +201,11 @@ public class SchemaItemNestedTests
             }
         };
 
-        TestEntity? targetEntity = null;
+        TestEntity targetEntity = null!;
 
         _schemaItemNested.CompareAndApply(ref targetEntity, sourceEntity);
 
-        Assert.NotNull(targetEntity?.NestedProperty);
+        Assert.NotNull(targetEntity.NestedProperty);
         Assert.Equal("Updated", targetEntity.NestedProperty.PropertyName);
         Assert.Equal(456, targetEntity.NestedProperty.PropertyValue);
     }

@@ -17,6 +17,8 @@ namespace Barchart.BinarySerializer.Schemas.Headers;
 /// </summary>
 public interface IHeader
 {
+    #region Methods
+
     /// <summary>
     ///     An identifier for the entity that was serialized.
     /// </summary>
@@ -28,4 +30,6 @@ public interface IHeader
     ///     a "delta" and omits properties that have not changed.
     /// </summary>
     bool Snapshot { get; }
+    
+    #endregion
 }

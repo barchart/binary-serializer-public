@@ -126,7 +126,7 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     }
 
     /// <inheritdoc />
-    public void CompareAndApply(ref TEntity? target, TEntity? source)
+    public void CompareAndApply(ref TEntity target, TEntity source)
     {
         if (source == null)
         {
@@ -146,7 +146,7 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     }
 
     /// <inheritdoc />
-    public bool GetEquals(TEntity? a, TEntity? b)
+    public bool GetEquals(TEntity a, TEntity b)
     {
         if (a == null && b == null)
         {

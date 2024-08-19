@@ -137,7 +137,7 @@ public class SchemaTests
             ValueProperty = "Yes"
         };
 
-        TestEntity? target = new()
+        TestEntity target = new()
         {
             KeyProperty = "Hello",
             ValueProperty = "No"
@@ -145,8 +145,8 @@ public class SchemaTests
 
         _schema.CompareAndUpdate(ref target, source);
 
-        Assert.Equal("Hello", target?.KeyProperty);
-        Assert.Equal("Yes", target?.ValueProperty);
+        Assert.Equal("Hello", target.KeyProperty);
+        Assert.Equal("Yes", target.ValueProperty);
     }
 
     [Fact]
@@ -158,7 +158,7 @@ public class SchemaTests
             ValueProperty = "Yes"
         };
 
-        TestEntity? target = new()
+        TestEntity target = new()
         {
             KeyProperty = "World",
             ValueProperty = "Yes"
@@ -166,8 +166,8 @@ public class SchemaTests
 
         _schema.CompareAndUpdate(ref target, source);
 
-        Assert.Equal("World", target?.KeyProperty);
-        Assert.Equal("Yes", target?.ValueProperty);
+        Assert.Equal("World", target.KeyProperty);
+        Assert.Equal("Yes", target.ValueProperty);
     }
 
     [Fact]
@@ -179,7 +179,7 @@ public class SchemaTests
             ValueProperty = "Yes"
         };
 
-        TestEntity? target = null;
+        TestEntity target = null!;
 
         Exception? exception = Record.Exception(() => _schema.CompareAndUpdate(ref target, source));
         Assert.Null(exception);
@@ -194,7 +194,7 @@ public class SchemaTests
             ValueProperty = "Yes",
         };
 
-        TestEntity? target = new()
+        TestEntity target = new()
         {
             KeyProperty = "Hello",
             ValueProperty = "Yes"
@@ -202,8 +202,8 @@ public class SchemaTests
 
         _schema.CompareAndUpdate(ref target, source);
 
-        Assert.Equal("Hello", target?.KeyProperty);
-        Assert.Equal("Yes", target?.ValueProperty);
+        Assert.Equal("Hello", target.KeyProperty);
+        Assert.Equal("Yes", target.ValueProperty);
     }
 
     #endregion

@@ -34,7 +34,7 @@ public class SchemaItemListTests
         _reader = new DataBufferReader(buffer);
 
         _mockSchema = new Mock<ISchema<TestProperty>>();
-        _schemaItemList = new SchemaItemList<TestEntity, TestProperty>("CollectionProperty", entity => entity.CollectionProperty!, (entity, value) => entity.CollectionProperty = value?.ToList(), _mockSchema.Object);
+        _schemaItemList = new SchemaItemList<TestEntity, TestProperty>("CollectionProperty", entity => entity.ListProperty!, (entity, value) => entity.ListProperty = value.ToList()!, _mockSchema.Object);
     }
 
     #endregion
@@ -46,7 +46,7 @@ public class SchemaItemListTests
     {
         TestEntity testEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
@@ -64,7 +64,7 @@ public class SchemaItemListTests
     {
         TestEntity testEntity = new()
         {
-            CollectionProperty = null
+            ListProperty = null
         };
 
         _schemaItemList.Encode(_writer, testEntity);
@@ -89,7 +89,7 @@ public class SchemaItemListTests
 
         TestEntity testEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>()
+            ListProperty = new List<TestProperty?>()
         };
 
         _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>()))
@@ -99,21 +99,21 @@ public class SchemaItemListTests
                     PropertyName = "Test",
                     PropertyValue = count++
                 };
-                testEntity.CollectionProperty.Add(item);
+                testEntity.ListProperty.Add(item);
             })
-            .Returns(() => testEntity.CollectionProperty.LastOrDefault()!)
+            .Returns(() => testEntity.ListProperty.LastOrDefault()!)
             .Verifiable();
 
         _schemaItemList.Decode(_reader, testEntity);
 
         _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>()), Times.Exactly(expectedItemsCount));
 
-        Assert.NotNull(testEntity.CollectionProperty);
-        Assert.Equal(expectedItemsCount, testEntity.CollectionProperty.Count);
+        Assert.NotNull(testEntity.ListProperty);
+        Assert.Equal(expectedItemsCount, testEntity.ListProperty.Count);
         
         for (int i = 0; i < expectedItemsCount; i++)
         {
-            Assert.Equal(i + 1, testEntity.CollectionProperty.ElementAt(i)?.PropertyValue);
+            Assert.Equal(i + 1, testEntity.ListProperty.ElementAt(i)?.PropertyValue);
         }
     }
 
@@ -124,12 +124,12 @@ public class SchemaItemListTests
 
         TestEntity testEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>()
+            ListProperty = new List<TestProperty?>()
         };
 
         _schemaItemList.Decode(_reader, testEntity);
 
-        Assert.Empty(testEntity.CollectionProperty);
+        Assert.Empty(testEntity.ListProperty);
     } 
 
     #endregion
@@ -139,9 +139,9 @@ public class SchemaItemListTests
     [Fact]
     public void CompareAndApply_WithNullSourceList_DoesNothing()
     {
-        TestEntity? targetEntity = new()
+        TestEntity targetEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new()
                 {
@@ -153,28 +153,28 @@ public class SchemaItemListTests
 
         TestEntity sourceEntity = new()
         {
-            CollectionProperty = null
+            ListProperty = null
         };
 
         _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
-        Assert.NotNull(targetEntity?.CollectionProperty);
-        Assert.Single(targetEntity.CollectionProperty);
-        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
-        Assert.Equal(123, targetEntity.CollectionProperty[0]?.PropertyValue);
+        Assert.NotNull(targetEntity.ListProperty);
+        Assert.Single(targetEntity.ListProperty);
+        Assert.Equal("Test1", targetEntity.ListProperty[0]?.PropertyName);
+        Assert.Equal(123, targetEntity.ListProperty[0]?.PropertyValue);
     }
 
     [Fact]
     public void CompareAndApply_WithNullTargetList_SetsTargetToSourceList()
     {
-        TestEntity? targetEntity = new()
+        TestEntity targetEntity = new()
         {
-            CollectionProperty = null
+            ListProperty = null
         };
 
         TestEntity sourceEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
@@ -183,21 +183,20 @@ public class SchemaItemListTests
 
         _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
-        Assert.NotNull(targetEntity?.CollectionProperty);
-        Assert.Equal(2, targetEntity.CollectionProperty.Count);
-        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
-        Assert.Equal(123, targetEntity.CollectionProperty[0]?.PropertyValue);
-        Assert.Equal("Test2", targetEntity.CollectionProperty[1]?.PropertyName);
-        Assert.Equal(456, targetEntity.CollectionProperty[1]?.PropertyValue);
+        Assert.NotNull(targetEntity.ListProperty);
+        Assert.Equal(2, targetEntity.ListProperty.Count);
+        Assert.Equal("Test1", targetEntity.ListProperty[0]?.PropertyName);
+        Assert.Equal(123, targetEntity.ListProperty[0]?.PropertyValue);
+        Assert.Equal("Test2", targetEntity.ListProperty[1]?.PropertyName);
+        Assert.Equal(456, targetEntity.ListProperty[1]?.PropertyValue);
     }
 
     [Fact]
     public void CompareAndApply_WithBothListsNonNull_UpdatesTargetWithSourceValues()
     {
-        // Arrange
-        TestEntity? targetEntity = new()
+        TestEntity targetEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
@@ -206,7 +205,7 @@ public class SchemaItemListTests
 
         TestEntity sourceEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 789 },
                 new() { PropertyName = "Test2", PropertyValue = 101 }
@@ -215,20 +214,20 @@ public class SchemaItemListTests
 
         _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
-        Assert.NotNull(targetEntity?.CollectionProperty);
-        Assert.Equal(2, targetEntity.CollectionProperty.Count);
-        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
-        Assert.Equal(789, targetEntity.CollectionProperty[0]?.PropertyValue);
-        Assert.Equal("Test2", targetEntity.CollectionProperty[1]?.PropertyName);
-        Assert.Equal(101, targetEntity.CollectionProperty[1]?.PropertyValue);
+        Assert.NotNull(targetEntity.ListProperty);
+        Assert.Equal(2, targetEntity.ListProperty.Count);
+        Assert.Equal("Test1", targetEntity.ListProperty[0]?.PropertyName);
+        Assert.Equal(789, targetEntity.ListProperty[0]?.PropertyValue);
+        Assert.Equal("Test2", targetEntity.ListProperty[1]?.PropertyName);
+        Assert.Equal(101, targetEntity.ListProperty[1]?.PropertyValue);
     }
 
     [Fact]
     public void CompareAndApply_WithSourceListShorter_TruncatesTargetList()
     {
-        TestEntity? targetEntity = new()
+        TestEntity targetEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 },
@@ -238,7 +237,7 @@ public class SchemaItemListTests
 
         TestEntity sourceEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 111 },
                 new() { PropertyName = "Test2", PropertyValue = 222 }
@@ -247,20 +246,20 @@ public class SchemaItemListTests
 
         _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
-        Assert.NotNull(targetEntity?.CollectionProperty);
-        Assert.Equal(2, targetEntity.CollectionProperty.Count);
-        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
-        Assert.Equal(111, targetEntity.CollectionProperty[0]?.PropertyValue);
-        Assert.Equal("Test2", targetEntity.CollectionProperty[1]?.PropertyName);
-        Assert.Equal(222, targetEntity.CollectionProperty[1]?.PropertyValue);
+        Assert.NotNull(targetEntity.ListProperty);
+        Assert.Equal(2, targetEntity.ListProperty.Count);
+        Assert.Equal("Test1", targetEntity.ListProperty[0]?.PropertyName);
+        Assert.Equal(111, targetEntity.ListProperty[0]?.PropertyValue);
+        Assert.Equal("Test2", targetEntity.ListProperty[1]?.PropertyName);
+        Assert.Equal(222, targetEntity.ListProperty[1]?.PropertyValue);
     }
 
     [Fact]
     public void CompareAndApply_WithSourceListLonger_AddsExtraItemsToTargetList()
     {
-        TestEntity? targetEntity = new()
+        TestEntity targetEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 }
             }
@@ -268,7 +267,7 @@ public class SchemaItemListTests
 
         TestEntity sourceEntity = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 111 },
                 new() { PropertyName = "Test2", PropertyValue = 222 },
@@ -278,14 +277,14 @@ public class SchemaItemListTests
 
         _schemaItemList.CompareAndApply(ref targetEntity, sourceEntity);
 
-        Assert.NotNull(targetEntity?.CollectionProperty);
-        Assert.Equal(3, targetEntity.CollectionProperty.Count);
-        Assert.Equal("Test1", targetEntity.CollectionProperty[0]?.PropertyName);
-        Assert.Equal(111, targetEntity.CollectionProperty[0]?.PropertyValue);
-        Assert.Equal("Test2", targetEntity.CollectionProperty[1]?.PropertyName);
-        Assert.Equal(222, targetEntity.CollectionProperty[1]?.PropertyValue);
-        Assert.Equal("Test3", targetEntity.CollectionProperty[2]?.PropertyName);
-        Assert.Equal(333, targetEntity.CollectionProperty[2]?.PropertyValue);
+        Assert.NotNull(targetEntity.ListProperty);
+        Assert.Equal(3, targetEntity.ListProperty.Count);
+        Assert.Equal("Test1", targetEntity.ListProperty[0]?.PropertyName);
+        Assert.Equal(111, targetEntity.ListProperty[0]?.PropertyValue);
+        Assert.Equal("Test2", targetEntity.ListProperty[1]?.PropertyName);
+        Assert.Equal(222, targetEntity.ListProperty[1]?.PropertyValue);
+        Assert.Equal("Test3", targetEntity.ListProperty[2]?.PropertyName);
+        Assert.Equal(333, targetEntity.ListProperty[2]?.PropertyValue);
     }
 
     #endregion
@@ -297,12 +296,12 @@ public class SchemaItemListTests
     {
         TestEntity entityA = new() 
         { 
-            CollectionProperty = null
+            ListProperty = null
         };
         
         TestEntity entityB = new()
         {
-            CollectionProperty = null
+            ListProperty = null
         };
 
         bool result = _schemaItemList.GetEquals(entityA, entityB);
@@ -315,12 +314,12 @@ public class SchemaItemListTests
     {
         TestEntity entityA = new() 
         { 
-            CollectionProperty = new List<TestProperty?>() 
+            ListProperty = new List<TestProperty?>() 
         };
 
         TestEntity entityB = new() 
         { 
-            CollectionProperty = new List<TestProperty?>() 
+            ListProperty = new List<TestProperty?>() 
         };
 
         bool result = _schemaItemList.GetEquals(entityA, entityB);
@@ -333,7 +332,7 @@ public class SchemaItemListTests
     {
         TestEntity entityA = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() 
                 { 
@@ -350,7 +349,7 @@ public class SchemaItemListTests
 
         TestEntity entityB = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() 
                 { 
@@ -383,7 +382,7 @@ public class SchemaItemListTests
     {
         TestEntity entityA = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
@@ -392,7 +391,7 @@ public class SchemaItemListTests
 
         TestEntity entityB = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test3", PropertyValue = 789 },
                 new() { PropertyName = "Test4", PropertyValue = 101 }
@@ -407,10 +406,10 @@ public class SchemaItemListTests
     [Fact]
     public void GetEquals_WithOneNullList_ReturnsFalse()
     {
-        TestEntity entityA = new() { CollectionProperty = null };
+        TestEntity entityA = new() { ListProperty = null };
         TestEntity entityB = new()
         {
-            CollectionProperty = new List<TestProperty?>
+            ListProperty = new List<TestProperty?>
             {
                 new() { PropertyName = "Test1", PropertyValue = 123 }
             }
@@ -427,7 +426,7 @@ public class SchemaItemListTests
 
     public class TestEntity
     {
-        public List<TestProperty?>? CollectionProperty { get; set; }
+        public List<TestProperty?>? ListProperty { get; set; }
     }
 
     public class TestProperty

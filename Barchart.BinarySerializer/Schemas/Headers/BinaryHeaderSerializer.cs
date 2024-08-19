@@ -2,6 +2,7 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas.Exceptions;
+using Barchart.BinarySerializer.Schemas.Headers.Exceptions;
 
 #endregion
 
@@ -17,22 +18,15 @@ public class BinaryHeaderSerializer : IBinaryHeaderSerializer
     private const byte SNAPSHOT_FLAG = 128;
     
     #endregion
-    
-    #region Constructor(s)
-    
-    public BinaryHeaderSerializer()
-    {
 
-    }
-    
-    #endregion
+    #region Methods
     
     /// <inheritdoc />
     public virtual void Encode(IDataBufferWriter writer, byte entityId, bool snapshot)
     {
         if (entityId > 15)
         {
-            throw new ArgumentOutOfRangeException("entityId", "The entityId argument cannot exceed 15 because the header serializer is configured to use four bits for entityId value.");
+            throw new ArgumentOutOfRangeException(nameof(entityId), "The entityId argument cannot exceed 15 because the header serializer is configured to use four bits for entityId value.");
         }
         
         byte combined = entityId;
@@ -66,4 +60,6 @@ public class BinaryHeaderSerializer : IBinaryHeaderSerializer
         
         return new Header(entityId, snapshot);
     }
+    
+    #endregion
 }

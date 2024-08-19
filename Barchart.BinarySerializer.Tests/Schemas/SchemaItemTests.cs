@@ -163,7 +163,7 @@ public class SchemaItemTests
     {
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity? target = new()
+        TestEntity target = new()
         {
             Name = "OldValue"
         };
@@ -174,7 +174,7 @@ public class SchemaItemTests
 
         schemaItem.CompareAndApply(ref target, source);
 
-        Assert.Equal("NewValue", target?.Name);
+        Assert.Equal("NewValue", target.Name);
     }
 
     [Fact]
@@ -182,7 +182,7 @@ public class SchemaItemTests
     {
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity? target = new()
+        TestEntity target = new()
         {
             Name = "OldValue"
         };
@@ -194,7 +194,7 @@ public class SchemaItemTests
 
         schemaItem.CompareAndApply(ref target, source);
 
-        Assert.Equal("OldValue", target?.Name);
+        Assert.Equal("OldValue", target.Name);
     }
 
     [Fact]
@@ -202,7 +202,7 @@ public class SchemaItemTests
     {
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity? target = new()
+        TestEntity target = new()
         {
             Name = "SameValue"
         };
@@ -214,7 +214,7 @@ public class SchemaItemTests
 
         schemaItem.CompareAndApply(ref target, source);
 
-        Assert.Equal("SameValue", target?.Name);
+        Assert.Equal("SameValue", target.Name);
     }
 
     [Fact]
@@ -222,7 +222,7 @@ public class SchemaItemTests
     {
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity? target = new()
+        TestEntity target = new()
         {
             Name = "InitialValue"
         };
@@ -234,7 +234,7 @@ public class SchemaItemTests
 
         schemaItem.CompareAndApply(ref target, source);
 
-        Assert.Equal("UpdatedValue", target?.Name);
+        Assert.Equal("UpdatedValue", target.Name);
     }
 
     [Fact]
@@ -242,7 +242,7 @@ public class SchemaItemTests
     {
         SchemaItem<TestEntity, string> schemaItem = new("Name", false, _getter, _setter, _serializerMock.Object);
 
-        TestEntity? target = new()
+        TestEntity target = new()
         {
             Name = "InitialValue"
         };
@@ -254,7 +254,7 @@ public class SchemaItemTests
 
         schemaItem.CompareAndApply(ref target, source);
 
-        Assert.Equal("InitialValue", target?.Name);
+        Assert.Equal("InitialValue", target.Name);
     }
 
     #endregion

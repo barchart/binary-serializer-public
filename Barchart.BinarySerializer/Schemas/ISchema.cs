@@ -111,7 +111,7 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="source">
     ///     The object containing the updates.
     /// </param>
-    public void CompareAndUpdate(ref TEntity? target, TEntity? source);
+    public void CompareAndUpdate(ref TEntity target, TEntity source);
     
     /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
@@ -127,5 +127,5 @@ public interface ISchema<TEntity> where TEntity : class, new()
     ///     True, if the serializable members of the instances are equal;
     ///     otherwise false.
     /// </returns>
-    bool GetEquals(TEntity? a, TEntity? b);
+    bool GetEquals(TEntity a, TEntity b);
 }
