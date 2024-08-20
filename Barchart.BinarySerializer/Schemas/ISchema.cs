@@ -2,7 +2,6 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas.Exceptions;
-using Barchart.BinarySerializer.Schemas.Headers;
 
 #endregion
 
@@ -56,25 +55,6 @@ public interface ISchema<TEntity> where TEntity : class, new()
     byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous);
 
     /// <summary>
-    ///     Serializes a Header into the provided data buffer writer.
-    /// </summary>
-    /// <param name="writer">
-    ///     The data buffer writer to which the header will be written.
-    /// </param>
-    /// <param name="entityId">
-    ///     The entity ID to be included in the header. This ID helps identify the type of entity
-    ///     the data represents.
-    /// </param>
-    /// <param name="snapshot">
-    ///     A boolean value indicating whether the data represents a snapshot. If true, the
-    ///     snapshot flag will be set in the header.
-    /// </param>
-    /// <returns>
-    ///     The serialized header, as a byte.
-    /// </returns>
-    byte SerializeHeader(IDataBufferWriter writer, byte entityId, bool snapshot);
-
-    /// <summary>
     ///     Deserializes an entity. In other words, this method recreates the serialized
     ///     "snapshot" as a new instance of the <typeparamref name="TEntity"/> class.
     /// </summary>
@@ -106,18 +86,6 @@ public interface ISchema<TEntity> where TEntity : class, new()
     TEntity Deserialize(IDataBufferReader reader, TEntity target);
 
     /// <summary>
-    ///     Deserializes a Header from the provided data buffer reader.
-    /// </summary>
-    /// <param name="reader">
-    ///     The data buffer reader from which the header will be read.
-    /// </param>
-    /// <returns>
-    ///     An <see cref="IHeader"/> instance representing the decoded Header. The Header includes
-    ///     information such as the entity ID and whether the data is a snapshot.
-    /// </returns>
-    IHeader DeserializeHeader(IDataBufferReader reader);
-
-    /// <summary>
     ///     Deserializes a key value (only) from the <paramref name="reader" />.
     /// </summary>
     /// <param name="reader">
@@ -132,7 +100,7 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <returns>
     ///     The value of the key.
     /// </returns>
-    TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
+    public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
     
     /// <summary>
     ///     Compares two objects and applies non-null fields from the source object to the target object.
@@ -143,7 +111,7 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="source">
     ///     The object containing the updates.
     /// </param>
-    void CompareAndUpdate(ref TEntity target, TEntity source);
+    public void CompareAndUpdate(ref TEntity target, TEntity source);
     
     /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>

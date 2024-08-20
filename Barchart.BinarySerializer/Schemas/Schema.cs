@@ -2,7 +2,6 @@
 
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas.Exceptions;
-using Barchart.BinarySerializer.Schemas.Headers;
 
 #endregion
 
@@ -13,8 +12,6 @@ namespace Barchart.BinarySerializer.Schemas
     {
         #region Fields
 
-        private static readonly IBinaryHeaderSerializer _headerSerializer = new BinaryHeaderSerializer();
-        
         private readonly ISchemaItem<TEntity>[] _keyItems;
         private readonly ISchemaItem<TEntity>[] _valueItems;
         
@@ -63,14 +60,6 @@ namespace Barchart.BinarySerializer.Schemas
         
             return writer.ToBytes();
         }
-        
-        /// <inheritdoc />
-        public byte SerializeHeader(IDataBufferWriter writer, byte entityId, bool snapshot)
-        {
-            _headerSerializer.Encode(writer, entityId, snapshot);
-            
-            return writer.ToBytes()[0];
-        }
 
         /// <inheritdoc />
         public TEntity Deserialize(IDataBufferReader reader)
@@ -97,12 +86,6 @@ namespace Barchart.BinarySerializer.Schemas
             }
             
             return target;
-        }
-        
-        /// <inheritdoc />
-        public IHeader DeserializeHeader(IDataBufferReader reader)
-        {
-            return _headerSerializer.Decode(reader);
         }
 
         /// <inheritdoc />

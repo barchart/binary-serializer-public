@@ -19,7 +19,7 @@ public interface IBinaryHeaderSerializer
     #region Methods
     
     /// <summary>
-    ///     Serializes a Header into the provided data buffer writer.
+    ///     Serializes a header into the provided data buffer writer.
     /// </summary>
     /// <param name="writer">
     ///     The data buffer writer to which the header will be written.
@@ -35,13 +35,13 @@ public interface IBinaryHeaderSerializer
     void Encode(IDataBufferWriter writer, byte entityId, bool snapshot);
     
     /// <summary>
-    ///     Deserializes a Header from the provided data buffer reader.
+    ///     Deserializes a header from the provided data buffer reader.
     /// </summary>
     /// <param name="reader">
-    ///     The data buffer reader from which the Header will be read.
+    ///     The data buffer reader from which the header will be read.
     /// </param>
     /// <returns>
-    ///     An <see cref="IHeader"/> instance representing the decoded Header. The header includes
+    ///     An <see cref="IHeader"/> instance representing the decoded header. The header includes
     ///     information such as the entity ID and whether the data is a snapshot.
     /// </returns>
     IHeader Decode(IDataBufferReader reader);

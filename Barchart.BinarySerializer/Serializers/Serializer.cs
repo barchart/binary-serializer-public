@@ -4,7 +4,6 @@ using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Buffers.Factories;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Schemas.Factories;
-using Barchart.BinarySerializer.Schemas.Headers;
 
 #endregion
 
@@ -24,7 +23,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     
     private readonly IDataBufferReaderFactory _dataBufferReaderFactory;
     private readonly IDataBufferWriterFactory _dataBufferWriterFactory;
-    
+
     #endregion
     
     #region Constructor(s)
@@ -91,27 +90,6 @@ public class Serializer<TEntity> where TEntity : class, new()
     }
 
     /// <summary>
-    ///     Serializes a Header.
-    /// </summary>
-    /// <param name="entityId">
-    ///     The entity ID to be included in the header. This ID helps identify the type of entity
-    ///     the data represents.
-    /// </param>
-    /// <param name="snapshot">
-    ///     A boolean value indicating whether the data represents a snapshot. If true, the
-    ///     snapshot flag will be set in the header.
-    /// </param>
-    /// <returns>
-    ///     The serialized header, as a byte.
-    /// </returns>
-    public byte SerializeHeader(byte entityId, bool snapshot)
-    {
-        IDataBufferWriter writer = _dataBufferWriterFactory.Make();
-
-        return _schema.SerializeHeader(writer, entityId, snapshot);
-    }
-    
-    /// <summary>
     ///     Deserializes an entity. In other words, this method recreates the serialized
     ///     "snapshot" as a new instance of the <typeparamref name="TEntity"/> class.
     /// </summary>
@@ -146,23 +124,6 @@ public class Serializer<TEntity> where TEntity : class, new()
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
         
         return _schema.Deserialize(reader, target);
-    }
-
-    /// <summary>
-    ///     Deserializes a Header.
-    /// </summary>
-    /// <param name="serialized">
-    ///     A byte array containing the Header to deserialize.
-    /// </param>
-    /// <returns>
-    ///     An <see cref="IHeader"/> instance representing the decoded Header. The Header includes
-    ///     information such as the entity ID and whether the data is a snapshot.
-    /// </returns>
-    public IHeader DeserializeHeader(byte[] serialized)
-    {
-        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
-        
-        return _schema.DeserializeHeader(reader);
     }
     
     /// <summary>
