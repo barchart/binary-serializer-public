@@ -18,15 +18,14 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
 
     private const int MAXIMUM_STRING_LENGTH_IN_BYTES = ushort.MaxValue;
 
-    private static readonly Encoding DEFAULT_ENCODING = Encoding.UTF8;
-
     #endregion
 
     #region Fields
+    
+    private static readonly Encoding DEFAULT_ENCODING = Encoding.UTF8;
+    private readonly Encoding _encoding;
 
     private readonly BinarySerializerUShort _binarySerializerUShort;
-
-    private readonly Encoding _encoding;
 
     #endregion
 
@@ -39,9 +38,9 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
 
     public BinarySerializerString(Encoding encoding)
     {
-        _binarySerializerUShort = new BinarySerializerUShort();
-
         _encoding = encoding;
+
+        _binarySerializerUShort = new BinarySerializerUShort();
     }
 
     #endregion

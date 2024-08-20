@@ -12,14 +12,18 @@ namespace Barchart.BinarySerializer.Buffers;
 /// </summary>
 public class DataBufferWriter : IDataBufferWriter
 {
+    #region Constants
+
+    private const byte TRUE = 1;
+
+    #endregion
+
     #region Fields
 
     private readonly byte[] _byteArray;
 
     private int _positionByte;
     private int _positionBit;
-
-    private const byte TRUE = 1;
 
     #endregion
 

@@ -12,7 +12,7 @@ namespace Barchart.BinarySerializer.Schemas.Headers;
 /// </summary>
 public class BinaryHeaderSerializer : IBinaryHeaderSerializer
 {
-    #region Fields
+    #region Constants
     
     private const byte SNAPSHOT_FLAG = 128;
     
