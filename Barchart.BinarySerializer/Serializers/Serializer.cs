@@ -75,6 +75,33 @@ public class Serializer<TEntity> where TEntity : class, new()
     }
 
     /// <summary>
+    ///     Serializes the <paramref name="source"/> entity along with the header. In other words,
+    ///     this method creates a binary "snapshot" of the entity.
+    /// </summary>
+    /// <param name="source">
+    ///     The entity to serialize.
+    /// </param>
+    /// <param name="entityId">
+    ///     The entity ID to be included in the header. This ID helps identify the type of entity
+    ///     the data represents.
+    /// </param>
+    /// <param name="snapshot">
+    ///     A boolean value indicating whether the data represents a snapshot. If true, the
+    ///     snapshot flag will be set in the header.
+    /// </param>
+    /// <returns>
+    ///     The serialized entity, as a byte array.
+    /// </returns>
+    public byte[] SerializeWithHeader(TEntity source, byte entityId, bool snapshot)
+    {
+        IDataBufferWriter writer = _dataBufferWriterFactory.Make();
+        
+        _headerSerializer.Encode(writer, entityId, snapshot);
+        
+        return _schema.Serialize(writer, source);
+    }
+
+    /// <summary>
     ///     Serializes changes between the <paramref name="current"/> and
     ///     <paramref name="previous"/> versions of an entity. In other words,
     ///     this method creates a binary "delta" representing the state change
@@ -92,6 +119,38 @@ public class Serializer<TEntity> where TEntity : class, new()
     public byte[] Serialize(TEntity current, TEntity previous)
     {
         IDataBufferWriter writer = _dataBufferWriterFactory.Make();
+        
+        return _schema.Serialize(writer, current, previous);
+    }
+
+    /// <summary>
+    ///     Serializes changes between the <paramref name="current"/> and
+    ///     <paramref name="previous"/> versions of an entity along with the header. In other words,
+    ///     this method creates a binary "delta" representing the state change
+    ///     between two version of an entity.
+    /// </summary>
+    /// <param name="current">
+    ///     The current version of the entity.
+    /// </param>
+    /// <param name="previous">
+    ///     The previous version of the entity.
+    /// </param>
+    /// <param name="entityId">
+    ///     The entity ID to be included in the header. This ID helps identify the type of entity
+    ///     the data represents.
+    /// </param>
+    /// <param name="snapshot">
+    ///     A boolean value indicating whether the data represents a snapshot. If true, the
+    ///     snapshot flag will be set in the header.
+    /// </param>
+    /// <returns>
+    ///     The serialized changes to the entity, as a byte array.
+    /// </returns>
+    public byte[] SerializeWithHeader(TEntity current, TEntity previous, byte entityId, bool snapshot)
+    {
+        IDataBufferWriter writer = _dataBufferWriterFactory.Make();
+        
+        _headerSerializer.Encode(writer, entityId, snapshot);
         
         return _schema.Serialize(writer, current, previous);
     }
@@ -134,6 +193,22 @@ public class Serializer<TEntity> where TEntity : class, new()
     }
     
     /// <summary>
+    ///     Deserializes a header from the serialized byte array.
+    /// </summary>
+    /// <param name="serialized">
+    ///     A byte array containing the binary data to deserialize.
+    /// </param>
+    /// <returns>
+    ///      The deserialized header.
+    /// </returns>
+    public IHeader ReadHeader(byte[] serialized)
+    {
+        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
+        
+        return _headerSerializer.Decode(reader);
+    }
+    
+    /// <summary>
     ///     Deserializes a key value (only) from the <paramref name="serialized" />.
     /// </summary>
     /// <param name="serialized">
@@ -153,22 +228,6 @@ public class Serializer<TEntity> where TEntity : class, new()
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
         
         return _schema.ReadKey<TMember>(reader, name);
-    }
-
-    /// <summary>
-    ///     Deserializes a header from the serialized bytea array.
-    /// </summary>
-    /// <param name="serialized">
-    ///     A byte array containing the binary data to deserialize.
-    /// </param>
-    /// <returns>
-    ///      The deserialized header.
-    /// </returns>
-    public IHeader ReadHeader(byte[] serialized)
-    {
-        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
-        
-        return _headerSerializer.Decode(reader);
     }
 
     /// <summary>

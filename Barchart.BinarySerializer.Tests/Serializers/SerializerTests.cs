@@ -1,6 +1,9 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Schemas.Headers;
+using Barchart.BinarySerializer.Schemas.Headers.Exceptions;
 using Barchart.BinarySerializer.Serializers;
 
 #endregion
@@ -137,6 +140,51 @@ public class SerializerTests
         string result = _serializer.ReadKey<string>(serialized, keyName);
 
         Assert.Equal(expectedKey, result);
+    }
+
+    #endregion
+
+    #region Test Methods (DeserializeHeader)
+
+    [Fact]
+    public void ReadHeader_ValidSerializedData_ReturnsExpectedHeader()
+    {
+        byte entityId = 3;
+        bool isSnapshot = true;
+
+        IDataBufferWriter writer = new DataBufferWriter(new byte[100]);
+        IBinaryHeaderSerializer headerSerializer = new BinaryHeaderSerializer();
+        headerSerializer.Encode(writer, entityId, isSnapshot);
+
+        byte[] serialized = writer.ToBytes();
+
+        IHeader header = _serializer.ReadHeader(serialized);
+
+        Assert.NotNull(header);
+        Assert.Equal(entityId, header.EntityId);
+        Assert.Equal(isSnapshot, header.Snapshot);
+    }
+
+    [Fact]
+    public void ReadHeader_InvalidEntityId_ThrowsInvalidHeaderException()
+    {
+        byte invalidEntityId = 16;
+        bool isSnapshot = false;
+
+        IDataBufferWriter writer = new DataBufferWriter(new byte[100]);
+        IBinaryHeaderSerializer headerSerializer = new BinaryHeaderSerializer();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => headerSerializer.Encode(writer, invalidEntityId, isSnapshot));
+    }
+
+    [Fact]
+    public void ReadHeader_InvalidSerializedData_ThrowsInvalidHeaderException()
+    {
+        // Arrange
+        byte[] invalidSerialized = { 255 };
+
+        // Act & Assert
+        Assert.Throws<InvalidHeaderException>(() => _serializer.ReadHeader(invalidSerialized));
     }
 
     #endregion
