@@ -3,6 +3,7 @@
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers.Factories;
 using Barchart.BinarySerializer.Schemas.Factories;
+using Barchart.BinarySerializer.Schemas.Headers;
 using Barchart.BinarySerializer.Serializers;
 using Barchart.BinarySerializer.Types.Factories;
 
@@ -33,7 +34,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         #region Test Methods (WithSchemaFactory)
         
         [Fact]
-        public void WithSchemaFactory_WhenCalled_ShouldSetSchemaFactory()
+        public void WithSchemaFactory_WhenCalled_SetsSchemaFactory()
         {
             SchemaFactory schemaFactory = new();
             SerializerBuilder<TestEntity> builder = new();
@@ -45,7 +46,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         }
 
         [Fact]
-        public void WithSchemaFactory_WhenCalledWithTypeSerializerFactory_ShouldSetSchemaFactory()
+        public void WithSchemaFactory_WhenCalledWithTypeSerializerFactory_SetsSchemaFactory()
         {
             BinaryTypeSerializerFactory typeSerializerFactory = new();
             SerializerBuilder<TestEntity> builder = new();
@@ -61,7 +62,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         #region Test Methods (WithDataBufferWriterFactory)
 
         [Fact]
-        public void WithDataBufferReaderFactory_WhenCalled_ShouldSetDataBufferReaderFactory()
+        public void WithDataBufferReaderFactory_WhenCalled_SetsDataBufferReaderFactory()
         {
             DataBufferReaderFactory dataBufferReaderFactory = new();
             SerializerBuilder<TestEntity> builder = new();
@@ -73,12 +74,28 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         }
 
         [Fact]
-        public void WithDataBufferWriterFactory_WhenCalled_ShouldSetDataBufferWriterFactory()
+        public void WithDataBufferWriterFactory_WhenCalled_SetsDataBufferWriterFactory()
         {
             DataBufferWriterFactory dataBufferWriterFactory = new();
             SerializerBuilder<TestEntity> builder = new();
 
             builder.WithDataBufferWriterFactory(dataBufferWriterFactory);
+            Serializer<TestEntity> serializer = builder.Build();
+
+            Assert.NotNull(serializer);
+        }
+        
+        #endregion
+
+        #region Test Methods (WithHeaderSerializer)
+
+        [Fact]
+        public void WithHeaderSerializer_WhenCalled_SetsDataBufferReaderFactory()
+        {
+            IBinaryHeaderSerializer headerSerializer = new BinaryHeaderSerializer();
+            SerializerBuilder<TestEntity> builder = new();
+
+            builder.WithHeaderSerializer(headerSerializer);
             Serializer<TestEntity> serializer = builder.Build();
 
             Assert.NotNull(serializer);
@@ -102,7 +119,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         #region Test Methods (ForType)
 
         [Fact]
-        public void ForType_WhenCalled_ShouldReturnNewSerializerBuilderInstance()
+        public void ForType_WhenCalled_ReturnNewSerializerBuilderInstance()
         {
             SerializerBuilder<TestEntity> builder = SerializerBuilder<TestEntity>.ForType();
 
