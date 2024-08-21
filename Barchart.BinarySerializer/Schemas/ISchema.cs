@@ -103,17 +103,6 @@ public interface ISchema<TEntity> where TEntity : class, new()
     public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
     
     /// <summary>
-    ///     Compares two objects and applies non-null fields from the source object to the target object.
-    /// </summary>
-    /// <param name="target">
-    ///     The object to be updated.
-    /// </param>
-    /// <param name="source">
-    ///     The object containing the updates.
-    /// </param>
-    public void CompareAndUpdate(ref TEntity target, TEntity source);
-    
-    /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
     ///     instances.
     /// </summary>

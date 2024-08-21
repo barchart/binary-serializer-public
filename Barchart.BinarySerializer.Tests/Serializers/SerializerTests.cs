@@ -118,31 +118,6 @@ public class SerializerTests
 
     #endregion
 
-    #region Test Methods (CompareAndUpdate)
-
-    [Fact]
-    public void CompareAndUpdate_WithDifferentProperties_ShouldUpdateFirstEntity()
-    {
-        TestEntity entity1 = new() 
-        { 
-            KeyProperty = "Key", 
-            ValueProperty = "Value"
-        };
-        
-        TestEntity entity2 = new() 
-        { 
-            KeyProperty = "Key1", 
-            ValueProperty = "Value2"
-        };
-
-        _serializer.CompareAndUpdate(ref entity1!, entity2);
-
-        Assert.Equal(entity1.KeyProperty, entity2.KeyProperty);
-        Assert.Equal(entity1.ValueProperty, entity2.ValueProperty);
-    }
-
-    #endregion
-    
     #region Test Methods (ReadKey)
 
     [Fact]

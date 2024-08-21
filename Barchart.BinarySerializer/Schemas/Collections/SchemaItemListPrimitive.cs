@@ -155,38 +155,6 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     }
 
     /// <inheritdoc />
-    public void CompareAndApply(ref TEntity target, TEntity source)
-    {
-        if (source == null)
-        {
-            return;
-        }
-        
-        target ??= new TEntity();
-        
-        IList<TItem> sourceItems = _getter(source);
-        IList<TItem> targetItems = _getter(target);
-        
-        if (sourceItems == null)
-        {
-            return;
-        }
-        
-        if (targetItems == null)
-        {
-            _setter(target, sourceItems);
-            
-            return;
-        }
-
-        targetItems.Clear();
-        foreach (TItem item in sourceItems)
-        {
-            targetItems.Add(item);
-        }
-    }
-
-    /// <inheritdoc />
     public bool GetEquals(TEntity a, TEntity b)
     {
         if (a == null && b == null)

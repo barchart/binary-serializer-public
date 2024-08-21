@@ -80,17 +80,6 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     void Decode(IDataBufferReader reader, TEntity target, bool existing = false);
 
     /// <summary>
-    ///     Compares and applies non-null values from the source object to the target object.
-    /// </summary>
-    /// <param name="target">
-    ///     The object to update with non-null values from the source.
-    /// </param>
-    /// <param name="source">
-    ///     The object containing the values to be applied.
-    /// </param>
-    void CompareAndApply(ref TEntity target, TEntity source);
-    
-    /// <summary>
     ///     Indicates whether two data points, read from the entities, are equal.
     /// </summary>
     /// <param name="a">
