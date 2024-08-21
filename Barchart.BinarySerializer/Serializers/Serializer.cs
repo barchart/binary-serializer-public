@@ -4,6 +4,7 @@ using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Buffers.Factories;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Schemas.Factories;
+using Barchart.BinarySerializer.Schemas.Headers;
 
 #endregion
 
@@ -21,6 +22,8 @@ public class Serializer<TEntity> where TEntity : class, new()
 
     private readonly ISchema<TEntity> _schema;
     
+    private readonly IBinaryHeaderSerializer _headerSerializer;
+    
     private readonly IDataBufferReaderFactory _dataBufferReaderFactory;
     private readonly IDataBufferWriterFactory _dataBufferWriterFactory;
 
@@ -34,13 +37,17 @@ public class Serializer<TEntity> where TEntity : class, new()
         
         _schema = schemaFactory.Make<TEntity>();
         
+        _headerSerializer = new BinaryHeaderSerializer();
+        
         _dataBufferReaderFactory = new DataBufferReaderFactory();
         _dataBufferWriterFactory = new DataBufferWriterFactory();
     }
 
-    public Serializer(ISchema<TEntity> schema, IDataBufferReaderFactory dataBufferReaderFactory, IDataBufferWriterFactory dataBufferWriterFactory)
+    public Serializer(ISchema<TEntity> schema, IBinaryHeaderSerializer headerSerializer, IDataBufferReaderFactory dataBufferReaderFactory, IDataBufferWriterFactory dataBufferWriterFactory)
     {
         _schema = schema;
+
+        _headerSerializer = headerSerializer;
         
         _dataBufferReaderFactory = dataBufferReaderFactory;
         _dataBufferWriterFactory = dataBufferWriterFactory;
@@ -146,6 +153,22 @@ public class Serializer<TEntity> where TEntity : class, new()
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
         
         return _schema.ReadKey<TMember>(reader, name);
+    }
+
+    /// <summary>
+    ///     Deserializes a header from the serialized bytea array.
+    /// </summary>
+    /// <param name="serialized">
+    ///     A byte array containing the binary data to deserialize.
+    /// </param>
+    /// <returns>
+    ///      The deserialized header.
+    /// </returns>
+    public IHeader ReadHeader(byte[] serialized)
+    {
+        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
+        
+        return _headerSerializer.Decode(reader);
     }
 
     /// <summary>
