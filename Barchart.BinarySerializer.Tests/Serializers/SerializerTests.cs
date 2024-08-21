@@ -71,6 +71,52 @@ public class SerializerTests
 
     #endregion
 
+    #region Test Methods (SerializeWithHeader)
+    
+    [Fact]
+    public void SerializeWithHeader_SingleEntity_ReturnsSerializedData()
+    {
+        byte entityId = 3;
+        bool snapshot = true;
+        
+        TestEntity entity = new() 
+        { 
+            KeyProperty = "Key",
+            ValueProperty = "Value"
+        };
+
+        byte[] serialized = _serializer.SerializeWithHeader(entity, entityId, snapshot);
+
+        Assert.NotNull(serialized);
+        Assert.NotEmpty(serialized);
+    }
+    
+    [Fact]
+    public void SerializeWithHeader_WithPreviousEntity_ReturnsSerializedData()
+    {
+        byte entityId = 3;
+        bool snapshot = true;
+        
+        TestEntity currentEntity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value1" 
+        };
+
+        TestEntity previousEntity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value0" 
+        };
+
+        byte[] serialized = _serializer.SerializeWithHeader(currentEntity, previousEntity, entityId, snapshot);
+
+        Assert.NotNull(serialized);
+        Assert.NotEmpty(serialized);
+    }
+
+    #endregion
+
     #region Test Methods (Deserialize)
 
     [Fact]
@@ -144,7 +190,7 @@ public class SerializerTests
 
     #endregion
 
-    #region Test Methods (DeserializeHeader)
+    #region Test Methods (ReadHeader)
 
     [Fact]
     public void ReadHeader_ValidSerializedData_ReturnsExpectedHeader()
