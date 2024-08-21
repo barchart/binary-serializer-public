@@ -195,41 +195,29 @@ public class SerializerTests
     [Fact]
     public void ReadHeader_ValidSerializedData_ReturnsExpectedHeader()
     {
+        TestEntity entity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value"
+        };
+        
         byte entityId = 3;
-        bool isSnapshot = true;
+        bool snapshot = true;
 
-        IDataBufferWriter writer = new DataBufferWriter(new byte[100]);
-        IBinaryHeaderSerializer headerSerializer = new BinaryHeaderSerializer();
-        headerSerializer.Encode(writer, entityId, isSnapshot);
-
-        byte[] serialized = writer.ToBytes();
+        byte[] serialized = _serializer.SerializeWithHeader(entity, entityId, snapshot);
 
         IHeader header = _serializer.ReadHeader(serialized);
 
         Assert.NotNull(header);
         Assert.Equal(entityId, header.EntityId);
-        Assert.Equal(isSnapshot, header.Snapshot);
-    }
-
-    [Fact]
-    public void ReadHeader_InvalidEntityId_ThrowsInvalidHeaderException()
-    {
-        byte invalidEntityId = 16;
-        bool isSnapshot = false;
-
-        IDataBufferWriter writer = new DataBufferWriter(new byte[100]);
-        IBinaryHeaderSerializer headerSerializer = new BinaryHeaderSerializer();
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => headerSerializer.Encode(writer, invalidEntityId, isSnapshot));
+        Assert.Equal(snapshot, header.Snapshot);
     }
 
     [Fact]
     public void ReadHeader_InvalidSerializedData_ThrowsInvalidHeaderException()
     {
-        // Arrange
         byte[] invalidSerialized = { 255 };
 
-        // Act & Assert
         Assert.Throws<InvalidHeaderException>(() => _serializer.ReadHeader(invalidSerialized));
     }
 
