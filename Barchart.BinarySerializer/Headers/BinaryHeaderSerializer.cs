@@ -15,10 +15,10 @@ public class BinaryHeaderSerializer
     
     #endregion
     
-    #region Fields
+    #region Properties
 
-    private static BinaryHeaderSerializer _instance = new BinaryHeaderSerializer();
-    
+    public static BinaryHeaderSerializer Instance { get; } = new();
+
     #endregion
     
     #region Constructor(s)
@@ -28,12 +28,6 @@ public class BinaryHeaderSerializer
         
     }
     
-    #endregion
-
-    #region Properties
-
-    public static BinaryHeaderSerializer Instance => _instance;
-
     #endregion
     
     #region Methods

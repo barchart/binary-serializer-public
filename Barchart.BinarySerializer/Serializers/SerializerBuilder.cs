@@ -1,7 +1,6 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers.Factories;
-using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Schemas.Factories;
 using Barchart.BinarySerializer.Types.Factories;

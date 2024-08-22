@@ -13,8 +13,6 @@ namespace Barchart.BinarySerializer.Schemas
     {
         #region Fields
 
-        private readonly byte _entityId;
-        
         private readonly ISchemaItem<TEntity>[] _keyItems;
         private readonly ISchemaItem<TEntity>[] _valueItems;
 
@@ -24,7 +22,7 @@ namespace Barchart.BinarySerializer.Schemas
         
         #region Properties
 
-        public byte EntityId => _entityId;
+        public byte EntityId { get; }
 
         #endregion
         
@@ -37,7 +35,7 @@ namespace Barchart.BinarySerializer.Schemas
         
         public Schema(byte entityId, ISchemaItem<TEntity>[] items)
         {
-            _entityId = entityId;
+            EntityId = entityId;
             
             _keyItems = items.Where(i => i.Key).ToArray();
             _valueItems = items.Where(i => !i.Key).ToArray();
@@ -52,7 +50,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity source)
         {
-            _headerSerializer.Encode(writer, _entityId, true);
+            _headerSerializer.Encode(writer, EntityId, true);
             
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
@@ -70,7 +68,7 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
-            _headerSerializer.Encode(writer, _entityId, false);
+            _headerSerializer.Encode(writer, EntityId, false);
             
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
@@ -159,7 +157,7 @@ namespace Barchart.BinarySerializer.Schemas
         {
             Header header = _headerSerializer.Decode(reader);
 
-            if (header.EntityId != _entityId)
+            if (header.EntityId != EntityId)
             {
                 throw new HeaderMismatchException();
             }

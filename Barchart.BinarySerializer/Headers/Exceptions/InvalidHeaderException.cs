@@ -9,6 +9,7 @@ public class InvalidHeaderException : InvalidOperationException
     
     public InvalidHeaderException(string message) : base(message)
     {
+        
     }
     
     #endregion

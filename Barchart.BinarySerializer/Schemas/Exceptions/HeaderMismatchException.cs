@@ -6,6 +6,7 @@ public class HeaderMismatchException : InvalidOperationException
     
     public HeaderMismatchException() : base()
     {
+        
     }
     
     #endregion
