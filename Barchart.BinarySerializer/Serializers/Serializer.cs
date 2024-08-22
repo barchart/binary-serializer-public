@@ -29,11 +29,11 @@ public class Serializer<TEntity> where TEntity : class, new()
     
     #region Constructor(s)
 
-    public Serializer()
+    public Serializer(byte entityId = 0)
     {
         ISchemaFactory schemaFactory = new SchemaFactory();
         
-        _schema = schemaFactory.Make<TEntity>();
+        _schema = schemaFactory.Make<TEntity>(entityId);
         
         _dataBufferReaderFactory = new DataBufferReaderFactory();
         _dataBufferWriterFactory = new DataBufferWriterFactory();
