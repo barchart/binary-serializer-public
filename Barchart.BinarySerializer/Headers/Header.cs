@@ -1,6 +1,6 @@
 namespace Barchart.BinarySerializer.Headers;
 
-public class Header
+public struct Header
 {
     #region Properties
     
