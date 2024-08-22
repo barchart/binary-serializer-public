@@ -15,6 +15,8 @@ namespace Barchart.BinarySerializer.Schemas;
 /// </typeparam>
 public interface ISchema<TEntity> where TEntity : class, new()
 {
+    byte EntityId { get; }
+    
     /// <summary>
     ///     Serializes the <paramref name="source"/> entity. In other words,
     ///     this method creates a binary "snapshot" of the entity.

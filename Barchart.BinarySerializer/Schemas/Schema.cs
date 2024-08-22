@@ -22,6 +22,12 @@ namespace Barchart.BinarySerializer.Schemas
         
         #endregion
         
+        #region Properties
+
+        public byte EntityId => _entityId;
+
+        #endregion
+        
         #region Constructor(s)
         
         public Schema(ISchemaItem<TEntity>[] items) : this(0, items)
@@ -93,7 +99,7 @@ namespace Barchart.BinarySerializer.Schemas
 
         private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
         {
-            Header header = _headerSerializer.Decode(reader);
+            CheckHeader(reader);
             
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
@@ -113,7 +119,7 @@ namespace Barchart.BinarySerializer.Schemas
         {
             using (reader.Bookmark())
             {
-                Header header = _headerSerializer.Decode(reader);
+                CheckHeader(reader);
                 
                 TEntity target = new();
             
@@ -147,6 +153,16 @@ namespace Barchart.BinarySerializer.Schemas
             }
 
             return false;
+        }
+
+        private void CheckHeader(IDataBufferReader reader)
+        {
+            Header header = _headerSerializer.Decode(reader);
+
+            if (header.EntityId != _entityId)
+            {
+                throw new HeaderMismatchException();
+            }
         }
         
         #endregion
