@@ -25,7 +25,7 @@ public class BinaryHeaderSerializer
     #region Properties
 
     /// <summary>
-    ///     Represents the singleton instance of the <see cref="BinaryHeaderSerializer"/>.
+    ///     The singleton instance of the <see cref="BinaryHeaderSerializer"/>.
     /// </summary>
     public static BinaryHeaderSerializer Instance { get; } = new();
 
@@ -57,7 +57,7 @@ public class BinaryHeaderSerializer
     ///     snapshot flag will be set in the header.
     /// </param>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///     Thrown when the entityId argument exceeds the maximum value of 15. The header serializer
+    ///     Thrown when the entityId argument exceeds the maximum value of 15.
     /// </exception>
     public void Encode(IDataBufferWriter writer, byte entityId, bool snapshot)
     {
@@ -87,7 +87,7 @@ public class BinaryHeaderSerializer
     ///     information such as the entity ID and whether the data is a snapshot.
     /// </returns>
     /// <exception cref="InvalidHeaderException">
-    ///    Thrown when the entityId value exceeds the maximum value of 15. The header serializer
+    ///    Thrown when the entityId value exceeds the maximum value of 15.
     /// </exception>
     public Header Decode(IDataBufferReader reader)
     {
