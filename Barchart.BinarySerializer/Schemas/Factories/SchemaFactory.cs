@@ -44,6 +44,7 @@ public class SchemaFactory : ISchemaFactory
         return Make<TEntity>(0);
     }
     
+    /// <inheritdoc />
     public ISchema<TEntity> Make<TEntity>(byte entityId) where TEntity: class, new()
     {
         Type entityType = typeof(TEntity);

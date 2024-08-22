@@ -164,6 +164,10 @@ public class DataBufferReader : IDataBufferReader
 
         #region Methods
 
+        /// <summary>
+        ///     Restores the position of the <see cref="DataBufferReader"/> to the 
+        ///     position at the time this bookmark was created. 
+        /// </summary>
         public void Dispose()
         {
             if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)

@@ -15,6 +15,10 @@ namespace Barchart.BinarySerializer.Schemas;
 /// </typeparam>
 public interface ISchema<TEntity> where TEntity : class, new()
 {
+    /// <summary>
+    ///     The entity ID to be included in the header. This ID helps identify the type of entity
+    ///     the data represents.
+    /// </summary>
     byte EntityId { get; }
     
     /// <summary>
@@ -102,7 +106,7 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <returns>
     ///     The value of the key.
     /// </returns>
-    public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
+    TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
     
     /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>

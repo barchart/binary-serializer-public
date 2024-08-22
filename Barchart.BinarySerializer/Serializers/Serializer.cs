@@ -127,6 +127,16 @@ public class Serializer<TEntity> where TEntity : class, new()
         return _schema.Deserialize(reader, target);
     }
 
+    /// <summary>
+    ///     Deserializes a byte array into a <see cref="Header"/> instance.
+    /// </summary>
+    /// <param name="serialized">
+    ///     The byte array containing the serialized header data.
+    /// </param>
+    /// <returns>
+    ///     A <see cref="Header"/> instance representing the decoded header, which includes metadata such as the entity ID and snapshot information.
+    /// </returns>
+
     public Header ReadHeader(byte[] serialized)
     {
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
