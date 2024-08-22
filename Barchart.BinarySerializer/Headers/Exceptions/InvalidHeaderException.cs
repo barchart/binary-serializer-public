@@ -1,4 +1,4 @@
-namespace Barchart.BinarySerializer.Schemas.Headers.Exceptions;
+namespace Barchart.BinarySerializer.Headers.Exceptions;
 
 /// <summary>
 ///     Thrown when a serialized header cannot be parsed.

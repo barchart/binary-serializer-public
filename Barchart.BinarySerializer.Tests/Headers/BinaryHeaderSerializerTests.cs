@@ -1,12 +1,12 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
-using Barchart.BinarySerializer.Schemas.Headers;
-using Barchart.BinarySerializer.Schemas.Headers.Exceptions;
+using Barchart.BinarySerializer.Headers;
+using Barchart.BinarySerializer.Headers.Exceptions;
 
 #endregion
 
-namespace Barchart.BinarySerializer.Tests.Schemas.Headers;
+namespace Barchart.BinarySerializer.Tests.Headers;
 
 public class BinaryHeaderSerializerTests
 {
@@ -24,7 +24,7 @@ public class BinaryHeaderSerializerTests
     {
         _testOutputHelper = testOutputHelper;
 
-        _serializer = new BinaryHeaderSerializer();
+        _serializer = BinaryHeaderSerializer.Instance;
     }
     
     #endregion
@@ -106,7 +106,7 @@ public class BinaryHeaderSerializerTests
 
         mock.Setup(m => m.ReadByte()).Returns(0b00000000);
         
-        IHeader header = _serializer.Decode(mock.Object);
+        Header header = _serializer.Decode(mock.Object);
         
         Assert.Equal(0, header.EntityId);
         Assert.False(header.Snapshot);
@@ -119,7 +119,7 @@ public class BinaryHeaderSerializerTests
 
         mock.Setup(m => m.ReadByte()).Returns(0b10001111);
         
-        IHeader header = _serializer.Decode(mock.Object);
+        Header header = _serializer.Decode(mock.Object);
         
         Assert.Equal(15, header.EntityId);
         Assert.True(header.Snapshot);

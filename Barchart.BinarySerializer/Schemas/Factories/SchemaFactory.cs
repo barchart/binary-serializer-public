@@ -41,6 +41,11 @@ public class SchemaFactory : ISchemaFactory
     /// <inheritdoc />
     public ISchema<TEntity> Make<TEntity>() where TEntity: class, new()
     {
+        return Make<TEntity>(0);
+    }
+    
+    public ISchema<TEntity> Make<TEntity>(byte entityId) where TEntity: class, new()
+    {
         Type entityType = typeof(TEntity);
 
         IEnumerable<MemberInfo> members = GetMembersForType(entityType);
@@ -49,7 +54,7 @@ public class SchemaFactory : ISchemaFactory
 
         Array.Sort(schemaItems, CompareSchemaItems);
         
-        return new Schema<TEntity>(schemaItems);
+        return new Schema<TEntity>(entityId, schemaItems);
     }
 
     private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(MemberInfo memberInfo) where TEntity: class, new()

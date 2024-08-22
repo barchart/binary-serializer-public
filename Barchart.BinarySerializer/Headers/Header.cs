@@ -1,16 +1,11 @@
-namespace Barchart.BinarySerializer.Schemas.Headers;
+namespace Barchart.BinarySerializer.Headers;
 
-/// <summary>
-///     The default implementation of the <see cref="IHeader" />.
-/// </summary>
-public struct Header : IHeader
+public class Header
 {
     #region Properties
     
-    /// <inheritdoc />
     public byte EntityId { get; }
-
-    /// <inheritdoc />
+    
     public bool Snapshot { get; }
 
     #endregion

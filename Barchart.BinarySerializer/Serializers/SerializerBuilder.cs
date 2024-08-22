@@ -1,9 +1,9 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers.Factories;
+using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Schemas.Factories;
-using Barchart.BinarySerializer.Schemas.Headers;
 using Barchart.BinarySerializer.Types.Factories;
 
 #endregion
@@ -21,9 +21,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     #region Fields
 
     private ISchemaFactory _schemaFactory;
-    
-    private IBinaryHeaderSerializer _headerSerializer;
-    
+
     private IDataBufferReaderFactory _dataBufferReaderFactory;
     private IDataBufferWriterFactory _dataBufferWriterFactory;
 
@@ -38,8 +36,6 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     public SerializerBuilder()
     {
         _schemaFactory = new SchemaFactory();
-        
-        _headerSerializer = new BinaryHeaderSerializer();
         
         _dataBufferReaderFactory = new DataBufferReaderFactory();
         _dataBufferWriterFactory = new DataBufferWriterFactory();
@@ -77,22 +73,6 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     public SerializerBuilder<TEntity> WithSchemaFactory(IBinaryTypeSerializerFactory typeSerializerFactory)
     {
         _schemaFactory = new SchemaFactory(typeSerializerFactory);
-        
-        return this;
-    }
-    
-    /// <summary>
-    ///     Specifies the header serializer to be used by the serializer.
-    /// </summary>
-    /// <param name="headerSerializer">
-    ///     The header serializer to be used.
-    /// </param>
-    /// <returns>
-    ///    The current instance of <see cref="SerializerBuilder{TEntity}"/> for method chaining.
-    /// </returns>
-    public SerializerBuilder<TEntity> WithHeaderSerializer(IBinaryHeaderSerializer headerSerializer)
-    {
-        _headerSerializer = headerSerializer;
         
         return this;
     }
@@ -139,7 +119,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     {
         ISchema<TEntity> schema = _schemaFactory.Make<TEntity>();
         
-        return new Serializer<TEntity>(schema, _headerSerializer, _dataBufferReaderFactory, _dataBufferWriterFactory);
+        return new Serializer<TEntity>(schema, _dataBufferReaderFactory, _dataBufferWriterFactory);
     }
 
     /// <summary>

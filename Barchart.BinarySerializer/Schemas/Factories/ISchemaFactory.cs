@@ -27,5 +27,7 @@ public interface ISchemaFactory
     /// </remarks>
     ISchema<TEntity> Make<TEntity>() where TEntity: class, new();
 
+    ISchema<TEntity> Make<TEntity>(byte entityId) where TEntity: class, new();
+    
     #endregion
 }

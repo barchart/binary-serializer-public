@@ -1,6 +1,7 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
@@ -12,17 +13,30 @@ namespace Barchart.BinarySerializer.Schemas
     {
         #region Fields
 
+        private readonly byte _entityId;
+        
         private readonly ISchemaItem<TEntity>[] _keyItems;
         private readonly ISchemaItem<TEntity>[] _valueItems;
+
+        private readonly BinaryHeaderSerializer _headerSerializer;
         
         #endregion
         
         #region Constructor(s)
         
-        public Schema(ISchemaItem<TEntity>[] items)
+        public Schema(ISchemaItem<TEntity>[] items) : this(0, items)
         {
+
+        }
+        
+        public Schema(byte entityId, ISchemaItem<TEntity>[] items)
+        {
+            _entityId = entityId;
+            
             _keyItems = items.Where(i => i.Key).ToArray();
             _valueItems = items.Where(i => !i.Key).ToArray();
+
+            _headerSerializer = BinaryHeaderSerializer.Instance;
         }
         
         #endregion
@@ -32,6 +46,8 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity source)
         {
+            _headerSerializer.Encode(writer, _entityId, true);
+            
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Encode(writer, source);
@@ -48,6 +64,8 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
+            _headerSerializer.Encode(writer, _entityId, false);
+            
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Encode(writer, current, previous);
@@ -75,6 +93,8 @@ namespace Barchart.BinarySerializer.Schemas
 
         private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
         {
+            Header header = _headerSerializer.Decode(reader);
+            
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Decode(reader, target, existing);
@@ -93,6 +113,8 @@ namespace Barchart.BinarySerializer.Schemas
         {
             using (reader.Bookmark())
             {
+                Header header = _headerSerializer.Decode(reader);
+                
                 TEntity target = new();
             
                 for (int i = 0; i < _keyItems.Length; i++)
