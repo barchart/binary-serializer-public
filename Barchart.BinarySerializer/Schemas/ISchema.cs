@@ -1,6 +1,7 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
@@ -71,6 +72,17 @@ public interface ISchema<TEntity> where TEntity : class, new()
     ///     A new instance of the <typeparamref name="TEntity"/> class.
     /// </returns>
     TEntity Deserialize(IDataBufferReader reader);
+
+    /// <summary>
+    ///     Deserializes a byte array into a <see cref="Header"/> instance.
+    /// </summary>
+    /// <param name="reader">
+    ///     A buffer of binary data which contains the serialized header.
+    /// </param>
+    /// <returns>
+    ///     A <see cref="Header"/> instance representing the decoded header, which includes metadata such as the entity ID and snapshot information.
+    /// </returns>
+    public Header ReadHeader(IDataBufferReader reader);
 
     /// <summary>
     ///     Deserializes an entity, updating an existing instance of

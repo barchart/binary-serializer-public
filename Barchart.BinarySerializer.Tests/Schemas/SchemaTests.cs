@@ -2,6 +2,7 @@
 
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Schemas.Exceptions;
 using Barchart.BinarySerializer.Types;
@@ -13,9 +14,12 @@ namespace Barchart.BinarySerializer.Tests.Schemas;
 public class SchemaTests
 {
     #region Fields
+    
     private readonly ITestOutputHelper _testOutputHelper;
 
     private readonly ISchema<TestEntity> _schema;
+    
+    private readonly byte _entityId = 1;
 
     #endregion
 
@@ -43,7 +47,7 @@ public class SchemaTests
             serializer
         );
 
-        _schema = new Schema<TestEntity>(new ISchemaItem<TestEntity>[] { keyItem, valueItem });
+        _schema = new Schema<TestEntity>(_entityId, new ISchemaItem<TestEntity>[] { keyItem, valueItem });
     }
 
     #endregion
@@ -73,11 +77,44 @@ public class SchemaTests
     [Fact]
     public void Deserialize_WithValidData_ReadsDataCorrectly()
     {
-        DataBufferReader reader = new(new byte[100]);
+        TestEntity entity = new()
+        {
+            KeyProperty = "Key",
+            ValueProperty = "Value"
+        };
+        
+        DataBufferWriter writer = new(new byte[100]);
+        byte[] serialized =_schema.Serialize(writer, entity);
+        
+        DataBufferReader reader = new(serialized);
 
         TestEntity result = _schema.Deserialize(reader);
 
         Assert.NotNull(result);
+    }
+
+    #endregion
+
+    #region Test Methods (Read Header)
+
+    [Fact]
+    public void ReadHeader_WhenCalled_ReturnsCorrectHeader()
+    {
+        TestEntity entity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value"
+        };
+
+        DataBufferWriter writer = new(new byte[100]);
+        byte[] serialized = _schema.Serialize(writer, entity);
+
+        DataBufferReader reader = new(serialized);
+
+        Header expectedHeader = new(_entityId, true);
+        Header header = _schema.ReadHeader(reader);
+
+        Assert.Equal(expectedHeader, header);
     }
 
     #endregion

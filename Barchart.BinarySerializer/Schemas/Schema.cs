@@ -111,7 +111,13 @@ namespace Barchart.BinarySerializer.Schemas
             
             return target;
         }
-
+        
+        /// <inheritdoc />
+        public Header ReadHeader(IDataBufferReader reader)
+        {
+            return _headerSerializer.Decode(reader);
+        }
+        
         /// <inheritdoc />
         public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name)
         {

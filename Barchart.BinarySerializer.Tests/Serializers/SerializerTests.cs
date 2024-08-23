@@ -1,6 +1,7 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Headers;
 using Barchart.BinarySerializer.Serializers;
 
 #endregion
@@ -14,6 +15,8 @@ public class SerializerTests
     private readonly ITestOutputHelper _testOutputHelper;
     
     private readonly Serializer<TestEntity> _serializer;
+    
+    private readonly byte _entityId = 1;
 
     #endregion
 
@@ -21,9 +24,9 @@ public class SerializerTests
 
     public SerializerTests(ITestOutputHelper testOutputHelper)
     {
-        _testOutputHelper = testOutputHelper;
-
-       _serializer = new Serializer<TestEntity>();
+        _testOutputHelper = testOutputHelper; 
+        
+        _serializer = new Serializer<TestEntity>(_entityId);
     }
 
     #endregion
@@ -118,6 +121,28 @@ public class SerializerTests
 
     #endregion
 
+    #region Test Methods (ReadHeader)
+
+    [Fact]
+    public void ReadHeader_WhenCalled_ReturnsCorrectHeader()
+    {
+        TestEntity entity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value"
+        };
+
+        byte[] serialized = _serializer.Serialize(entity);
+
+        Header expectedHeader = new(_entityId, true);
+
+        Header header = _serializer.ReadHeader(serialized);
+
+        Assert.Equal(expectedHeader, header);
+    }
+
+    #endregion
+    
     #region Test Methods (ReadKey)
 
     [Fact]

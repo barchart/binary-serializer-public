@@ -24,6 +24,8 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     private IDataBufferReaderFactory _dataBufferReaderFactory;
     private IDataBufferWriterFactory _dataBufferWriterFactory;
 
+    private readonly byte _entityId;
+    
     #endregion
 
     #region Constructor(s)
@@ -32,12 +34,17 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     ///     Initializes a new instance of the <see cref="SerializerBuilder{TEntity}"/> class 
     ///     with default factories for schema, data buffer reader, and data buffer writer.
     /// </summary>
-    public SerializerBuilder()
+    /// <param name="entityId">
+    ///     The entity ID to be assigned to the schema.
+    /// </param>
+    public SerializerBuilder(byte entityId = 0)
     {
         _schemaFactory = new SchemaFactory();
         
         _dataBufferReaderFactory = new DataBufferReaderFactory();
         _dataBufferWriterFactory = new DataBufferWriterFactory();
+
+        _entityId = entityId;
     }
 
     #endregion
@@ -116,7 +123,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     /// </returns>
     public Serializer<TEntity> Build()
     {
-        ISchema<TEntity> schema = _schemaFactory.Make<TEntity>();
+        ISchema<TEntity> schema = _schemaFactory.Make<TEntity>(_entityId);
         
         return new Serializer<TEntity>(schema, _dataBufferReaderFactory, _dataBufferWriterFactory);
     }
@@ -124,12 +131,15 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     /// <summary>
     ///     Creates a new instance of <see cref="SerializerBuilder{TEntity}"/> for the specified entity type.
     /// </summary>
+    /// <param name="entityId">
+    ///     The entity ID to be assigned to the schema.
+    /// </param>
     /// <returns>
     ///     A new instance of <see cref="SerializerBuilder{TEntity}"/>.
     /// </returns>
-    public static SerializerBuilder<TEntity> ForType()
+    public static SerializerBuilder<TEntity> ForType(byte entityId = 0)
     {
-        return new SerializerBuilder<TEntity>();
+        return new SerializerBuilder<TEntity>(entityId);
     }
 
     #endregion

@@ -29,6 +29,14 @@ public class Serializer<TEntity> where TEntity : class, new()
     
     #region Constructor(s)
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="Serializer{TEntity}"/> class 
+    ///     using the default schema, data buffer reader, and data buffer writer factories. 
+    ///     Optionally, an entity ID can be specified.
+    /// </summary>
+    /// <param name="entityId">
+    ///     The entity ID to be assigned to the schema.
+    /// </param>
     public Serializer(byte entityId = 0)
     {
         ISchemaFactory schemaFactory = new SchemaFactory();
@@ -39,6 +47,19 @@ public class Serializer<TEntity> where TEntity : class, new()
         _dataBufferWriterFactory = new DataBufferWriterFactory();
     }
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="Serializer{TEntity}"/> class 
+    ///     using a custom schema, data buffer reader, and data buffer writer factories.
+    /// </summary>
+    /// <param name="schema">
+    ///     The schema to be used for (de)serialization.
+    /// </param>
+    /// <param name="dataBufferReaderFactory">
+    ///     The factory for creating data buffer readers.
+    /// </param>
+    /// <param name="dataBufferWriterFactory">
+    ///     The factory for creating data buffer writers.
+    /// </param>
     public Serializer(ISchema<TEntity> schema, IDataBufferReaderFactory dataBufferReaderFactory, IDataBufferWriterFactory dataBufferWriterFactory)
     {
         _schema = schema;
@@ -136,12 +157,11 @@ public class Serializer<TEntity> where TEntity : class, new()
     /// <returns>
     ///     A <see cref="Header"/> instance representing the decoded header, which includes metadata such as the entity ID and snapshot information.
     /// </returns>
-
     public Header ReadHeader(byte[] serialized)
     {
         IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
 
-        return BinaryHeaderSerializer.Instance.Decode(reader);
+        return _schema.ReadHeader(reader);
     }
     
     /// <summary>

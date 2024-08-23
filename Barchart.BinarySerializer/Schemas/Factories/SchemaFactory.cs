@@ -20,6 +20,8 @@ public class SchemaFactory : ISchemaFactory
 
     private readonly IBinaryTypeSerializerFactory _binaryTypeSerializerFactory;
 
+    private byte _entityId;
+    
     #endregion
     
     #region Constructor(s)
@@ -39,14 +41,15 @@ public class SchemaFactory : ISchemaFactory
     #region Methods
 
     /// <inheritdoc />
-    public ISchema<TEntity> Make<TEntity>() where TEntity: class, new()
+    public ISchema<TEntity> Make<TEntity>(byte entityId = 0) where TEntity: class, new()
     {
-        return Make<TEntity>(0);
-    }
-    
-    /// <inheritdoc />
-    public ISchema<TEntity> Make<TEntity>(byte entityId) where TEntity: class, new()
-    {
+        if (entityId == 0)
+        {
+            throw new ArgumentException("Entity ID cannot be 0.", nameof(entityId));
+        }
+
+        _entityId = entityId;
+        
         Type entityType = typeof(TEntity);
 
         IEnumerable<MemberInfo> members = GetMembersForType(entityType);
@@ -55,7 +58,7 @@ public class SchemaFactory : ISchemaFactory
 
         Array.Sort(schemaItems, CompareSchemaItems);
         
-        return new Schema<TEntity>(entityId, schemaItems);
+        return new Schema<TEntity>(_entityId, schemaItems);
     }
 
     private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(MemberInfo memberInfo) where TEntity: class, new()
@@ -144,7 +147,7 @@ public class SchemaFactory : ISchemaFactory
         Func<TEntity, TMember> getter = MakeMemberGetter<TEntity, TMember>(memberInfo);
         Action<TEntity, TMember> setter = MakeMemberSetter<TEntity, TMember>(memberInfo);
 
-        ISchema<TMember> schema = Make<TMember>();
+        ISchema<TMember> schema = Make<TMember>(_entityId);
 
         return new SchemaItemNested<TEntity, TMember>(name, getter, setter, schema);
     }
@@ -168,7 +171,7 @@ public class SchemaFactory : ISchemaFactory
         Func<TEntity, IList<TItem>> getter = MakeCollectionMemberGetter<TEntity, TItem>(memberInfo);
         Action<TEntity, IList<TItem>> setter = MakeCollectionMemberSetter<TEntity, TItem>(memberInfo);
 
-        ISchema<TItem> itemSchema = Make<TItem>();
+        ISchema<TItem> itemSchema = Make<TItem>(_entityId);
 
         return new SchemaItemList<TEntity, TItem>(name, getter, setter, itemSchema);
     }

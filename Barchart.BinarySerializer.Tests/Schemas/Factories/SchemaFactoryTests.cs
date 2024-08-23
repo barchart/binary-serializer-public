@@ -36,12 +36,23 @@ namespace Barchart.BinarySerializer.Tests.Schemas.Factories
         #region Test Methods
 
         [Fact]
-        public void Make_WithValidType_ReturnsSchema()
+        public void Make_WithValidTypeAndDefaultEntityId_ThrowsAnError()
         {
             _mockBinaryTypeSerializerFactory.Setup(f => f.Supports(typeof(int))).Returns(true);
             _mockBinaryTypeSerializerFactory.Setup(f => f.Make<int>()).Returns(Mock.Of<IBinaryTypeSerializer<int>>());
            
-            ISchema<TestEntity> schema = _schemaFactory.Make<TestEntity>();
+            Assert.Throws<ArgumentException>(() => _schemaFactory.Make<TestEntity>());
+        }
+        
+        [Fact]
+        public void Make_WithValidTypeAndEntityId_ReturnsSchema()
+        {
+            const byte entityId = 1;
+            
+            _mockBinaryTypeSerializerFactory.Setup(f => f.Supports(typeof(int))).Returns(true);
+            _mockBinaryTypeSerializerFactory.Setup(f => f.Make<int>()).Returns(Mock.Of<IBinaryTypeSerializer<int>>());
+           
+            ISchema<TestEntity> schema = _schemaFactory.Make<TestEntity>(entityId);
 
             Assert.NotNull(schema);
             Assert.IsType<Schema<TestEntity>>(schema);

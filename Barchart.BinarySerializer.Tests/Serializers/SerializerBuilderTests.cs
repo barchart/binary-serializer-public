@@ -17,7 +17,7 @@ namespace Barchart.BinarySerializer.Tests.Serializers
 
         private readonly ITestOutputHelper _testOutputHelper;
 
-        private readonly SerializerBuilder<TestEntity> _serializerBuilder = new();
+        private readonly SerializerBuilder<TestEntity> _serializerBuilder;
     
         #endregion
 
@@ -25,7 +25,11 @@ namespace Barchart.BinarySerializer.Tests.Serializers
 
         public SerializerBuilderTests(ITestOutputHelper testOutputHelper)
         {
+            const byte entityId = 1;
+
             _testOutputHelper = testOutputHelper;
+            
+            _serializerBuilder = new SerializerBuilder<TestEntity>(entityId);
         }
 
         #endregion
@@ -36,10 +40,9 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         public void WithSchemaFactory_WhenCalled_ShouldSetSchemaFactory()
         {
             SchemaFactory schemaFactory = new();
-            SerializerBuilder<TestEntity> builder = new();
 
-            builder.WithSchemaFactory(schemaFactory);
-            Serializer<TestEntity> serializer = builder.Build();
+            _serializerBuilder.WithSchemaFactory(schemaFactory);
+            Serializer<TestEntity> serializer = _serializerBuilder.Build();
 
             Assert.NotNull(serializer);
         }
@@ -48,10 +51,24 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         public void WithSchemaFactory_WhenCalledWithTypeSerializerFactory_ShouldSetSchemaFactory()
         {
             BinaryTypeSerializerFactory typeSerializerFactory = new();
-            SerializerBuilder<TestEntity> builder = new();
 
-            builder.WithSchemaFactory(typeSerializerFactory);
-            Serializer<TestEntity> serializer = builder.Build();
+            _serializerBuilder.WithSchemaFactory(typeSerializerFactory);
+            Serializer<TestEntity> serializer = _serializerBuilder.Build();
+
+            Assert.NotNull(serializer);
+        }
+        
+        #endregion
+
+        #region Test Methods (WithDataBufferReaderFactory)
+
+        [Fact]
+        public void WithDataBufferReaderFactory_WhenCalled_ShouldSetDataBufferReaderFactory()
+        {
+            DataBufferReaderFactory dataBufferReaderFactory = new();
+
+            _serializerBuilder.WithDataBufferReaderFactory(dataBufferReaderFactory);
+            Serializer<TestEntity> serializer = _serializerBuilder.Build();
 
             Assert.NotNull(serializer);
         }
@@ -61,25 +78,12 @@ namespace Barchart.BinarySerializer.Tests.Serializers
         #region Test Methods (WithDataBufferWriterFactory)
 
         [Fact]
-        public void WithDataBufferReaderFactory_WhenCalled_ShouldSetDataBufferReaderFactory()
-        {
-            DataBufferReaderFactory dataBufferReaderFactory = new();
-            SerializerBuilder<TestEntity> builder = new();
-
-            builder.WithDataBufferReaderFactory(dataBufferReaderFactory);
-            Serializer<TestEntity> serializer = builder.Build();
-
-            Assert.NotNull(serializer);
-        }
-
-        [Fact]
         public void WithDataBufferWriterFactory_WhenCalled_ShouldSetDataBufferWriterFactory()
         {
             DataBufferWriterFactory dataBufferWriterFactory = new();
-            SerializerBuilder<TestEntity> builder = new();
 
-            builder.WithDataBufferWriterFactory(dataBufferWriterFactory);
-            Serializer<TestEntity> serializer = builder.Build();
+            _serializerBuilder.WithDataBufferWriterFactory(dataBufferWriterFactory);
+            Serializer<TestEntity> serializer = _serializerBuilder.Build();
 
             Assert.NotNull(serializer);
         }
