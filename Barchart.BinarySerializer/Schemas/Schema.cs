@@ -97,7 +97,8 @@ namespace Barchart.BinarySerializer.Schemas
 
         private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
         {
-            CheckHeader(reader);
+            Header header = ReadHeader(reader);
+            CheckHeader(header);
             
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
@@ -123,7 +124,8 @@ namespace Barchart.BinarySerializer.Schemas
         {
             using (reader.Bookmark())
             {
-                CheckHeader(reader);
+                Header header = ReadHeader(reader);
+                CheckHeader(header);
                 
                 TEntity target = new();
             
@@ -159,10 +161,8 @@ namespace Barchart.BinarySerializer.Schemas
             return false;
         }
 
-        private void CheckHeader(IDataBufferReader reader)
+        private void CheckHeader(Header header)
         {
-            Header header = _headerSerializer.Decode(reader);
-
             if (header.EntityId != EntityId)
             {
                throw new HeaderMismatchException($"The header entity ID ({header.EntityId}) does not match the expected entity ID ({EntityId}).");
