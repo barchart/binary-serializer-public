@@ -165,7 +165,7 @@ namespace Barchart.BinarySerializer.Schemas
         {
             if (header.EntityId != EntityId)
             {
-               throw new HeaderMismatchException($"The header entity ID ({header.EntityId}) does not match the expected entity ID ({EntityId}).");
+               throw new HeaderMismatchException(header.EntityId, EntityId);
             }
         }
         

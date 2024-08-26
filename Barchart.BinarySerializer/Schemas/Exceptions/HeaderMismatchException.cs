@@ -7,7 +7,7 @@ public class HeaderMismatchException : InvalidOperationException
 {
     #region Constructor(s)
     
-    public HeaderMismatchException(string message) : base(message)
+    public HeaderMismatchException(byte entityId, byte expectedEntityId) : base($"The header entity ID ({entityId}) does not match the expected entity ID ({expectedEntityId}).")
     {
         
     }

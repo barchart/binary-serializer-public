@@ -7,7 +7,7 @@ public class InvalidHeaderException : InvalidOperationException
 {
     #region Constructor(s)
     
-    public InvalidHeaderException(string message) : base(message)
+    public InvalidHeaderException(byte maxEntityId) : base($"The entityId cannot exceed {maxEntityId} because the header serializer uses exactly four bits for entityId value.")
     {
         
     }

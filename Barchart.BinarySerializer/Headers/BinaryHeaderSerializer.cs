@@ -104,7 +104,7 @@ public class BinaryHeaderSerializer
 
         if (entityId > MAX_ENTITY_ID)
         {
-            throw new InvalidHeaderException($"The entityId cannot exceed {MAX_ENTITY_ID} because the header serializer uses exactly four bits for entityId value.");
+            throw new InvalidHeaderException(MAX_ENTITY_ID);
         }
         
         return new Header(entityId, snapshot);
