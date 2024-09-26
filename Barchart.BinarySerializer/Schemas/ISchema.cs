@@ -72,18 +72,7 @@ public interface ISchema<TEntity> where TEntity : class, new()
     ///     A new instance of the <typeparamref name="TEntity"/> class.
     /// </returns>
     TEntity Deserialize(IDataBufferReader reader);
-
-    /// <summary>
-    ///     Deserializes a byte array into a <see cref="Header"/> instance.
-    /// </summary>
-    /// <param name="reader">
-    ///     A buffer of binary data which contains the serialized header.
-    /// </param>
-    /// <returns>
-    ///     A <see cref="Header"/> instance representing the decoded header, which includes metadata such as the entity ID and snapshot information.
-    /// </returns>
-    public Header ReadHeader(IDataBufferReader reader);
-
+    
     /// <summary>
     ///     Deserializes an entity, updating an existing instance of
     ///     the <typeparamref name="TEntity"/> class.
@@ -104,6 +93,17 @@ public interface ISchema<TEntity> where TEntity : class, new()
     TEntity Deserialize(IDataBufferReader reader, TEntity target);
 
     /// <summary>
+    ///     Deserializes a byte array into a <see cref="Header"/> instance.
+    /// </summary>
+    /// <param name="reader">
+    ///     A buffer of binary data which contains the serialized header.
+    /// </param>
+    /// <returns>
+    ///     A <see cref="Header"/> instance representing the decoded header, which includes metadata such as the entity ID and snapshot information.
+    /// </returns>
+    public Header ReadHeader(IDataBufferReader reader);
+    
+    /// <summary>
     ///     Deserializes a key value (only) from the <paramref name="reader" />.
     /// </summary>
     /// <param name="reader">
@@ -112,13 +112,13 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="name">
     ///     The name of the key property.
     /// </param>
-    /// <typeparam name="TProperty">
+    /// <typeparam name="TMember">
     ///     The type of the key property.
     /// </typeparam>
     /// <returns>
     ///     The value of the key.
     /// </returns>
-    TProperty ReadKey<TProperty>(IDataBufferReader reader, string name);
+    TMember ReadKey<TMember>(IDataBufferReader reader, string name);
     
     /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
