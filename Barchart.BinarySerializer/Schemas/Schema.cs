@@ -48,10 +48,13 @@ namespace Barchart.BinarySerializer.Schemas
         #region Methods
         
         /// <inheritdoc />
-        public byte[] Serialize(IDataBufferWriter writer, TEntity source)
+        public byte[] Serialize(IDataBufferWriter writer, TEntity source, bool isNestedMember = false)
         {
-            _headerSerializer.Encode(writer, EntityId, true);
-            
+            if (!isNestedMember)
+            {
+                _headerSerializer.Encode(writer, EntityId, true);
+            }
+
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Encode(writer, source);
@@ -66,10 +69,13 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <inheritdoc />
-        public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
+        public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous, bool isNestedMember = false)
         {
-            _headerSerializer.Encode(writer, EntityId, false);
-            
+            if (!isNestedMember)
+            {
+                _headerSerializer.Encode(writer, EntityId, false);
+            }
+
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Encode(writer, current, previous);
@@ -84,21 +90,24 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public TEntity Deserialize(IDataBufferReader reader)
+        public TEntity Deserialize(IDataBufferReader reader, bool isNestedMember = false)
         {
-            return Deserialize(reader, new TEntity(), false);
+            return Deserialize(reader, new TEntity(), false, isNestedMember);
         }
 
         /// <inheritdoc />
-        public TEntity Deserialize(IDataBufferReader reader, TEntity target)
+        public TEntity Deserialize(IDataBufferReader reader, TEntity target, bool isNestedMember = false)
         {
-            return Deserialize(reader, target, true);
+            return Deserialize(reader, target, true, isNestedMember);
         }
 
-        private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
+        private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing, bool isNestedMember)
         {
-            Header header = ReadHeader(reader);
-            CheckHeader(header);
+            if (!isNestedMember)
+            {
+                Header header = ReadHeader(reader);
+                CheckHeader(header);
+            }
             
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
