@@ -1,0 +1,48 @@
+{
+	"name": "@barchart/binary-serializer-ts",
+	"description": "Barchart Binary Serializer (TypeScript)",
+	"version": "1.0.0",
+	"author": {
+		"name": "Luka Sotra",
+		"email": "luka.sotra@barchart.com",
+		"url": "https://www.barchart.com"
+	},
+	"contributors": [
+		{
+			"name": "Bryan",
+			"email": "bryan.ingle@barchart.com"
+		}
+	],
+	"scripts": {
+		"prebuild": "rm -rf dist",
+		"build": "tsc --build tsconfig.build.json",
+		"test": "vitest",
+		"lint": "eslint src/**/*.ts tests/**/*.ts"
+	},
+	"files": [
+		"dist/**/*"
+	],
+	"main": "./dist/src/index.js",
+	"types": "./dist/src/index.d.ts",
+	"exports": {
+		".": "./dist/src/index.js",
+		"./dist": "./dist/src",
+		"./dist/src/types/data_types": "./dist/src/types/data_types.js"
+	},
+	"dependencies": {
+		"decimal.js": "^10.4.3"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.10.0",
+		"@types/eslint__js": "^8.42.3",
+		"@types/node": "^22.5.5",
+		"@typescript-eslint/eslint-plugin": "^8.6.0",
+		"@typescript-eslint/parser": "^8.6.0",
+		"eslint": "^9.10.0",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.6.2",
+		"typescript-eslint": "^8.6.0",
+		"vitest": "^2.1.1"
+	},
+	"license": "UNLICENSED"
+}

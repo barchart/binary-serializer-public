@@ -8,3 +8,10 @@ Logs/
 .idea/
 
 *.DotSettings.user
+
+node_modules/
+dist/
+logs/
+**.log
+**/.nx/
+.vscode/
