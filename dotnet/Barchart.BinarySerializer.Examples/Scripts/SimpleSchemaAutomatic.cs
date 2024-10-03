@@ -16,6 +16,12 @@ namespace Barchart.BinarySerializer.Examples.Scripts;
 /// </summary>
 public class SimpleSchemaAutomatic : IScript
 {
+    #region Constants
+
+    private const int PERSON_ENTITY_ID = 1;
+    
+    #endregion
+    
     #region Properties
 
     /// <inheritdoc />
@@ -36,7 +42,7 @@ public class SimpleSchemaAutomatic : IScript
         
         Console.WriteStep(ref step, "Generating a schema for the Person class (via reflection)");
         
-        ISchema<Person> schema = schemaFactory.Make<Person>(1);
+        ISchema<Person> schema = schemaFactory.Make<Person>(PERSON_ENTITY_ID);
         
         Console.WriteStep(ref step, "Constructing a sample instance of the [Person] class");
 

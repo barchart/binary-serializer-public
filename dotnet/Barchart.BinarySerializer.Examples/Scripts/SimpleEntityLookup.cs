@@ -19,6 +19,12 @@ namespace Barchart.BinarySerializer.Examples.Scripts;
 /// </summary>
 public class SimpleEntityLookup : IScript
 {
+    #region Constants
+
+    private const int AUTOMOBILE_ENTITY_ID = 1;
+    
+    #endregion
+    
     #region Properties
 
     /// <inheritdoc />
@@ -51,7 +57,7 @@ public class SimpleEntityLookup : IScript
         Console.WriteStep(ref step, "Generating a schema for the Automobile class (via reflection)");
         
         SchemaFactory schemaFactory = new();
-        ISchema<Automobile> schema = schemaFactory.Make<Automobile>(1);
+        ISchema<Automobile> schema = schemaFactory.Make<Automobile>(AUTOMOBILE_ENTITY_ID);
         
         Console.WriteStep(ref step, "Processing an update for one of the existing automobiles");
         
