@@ -36,7 +36,7 @@ public class SimpleSchemaAutomatic : IScript
         
         Console.WriteStep(ref step, "Generating a schema for the Person class (via reflection)");
         
-        ISchema<Person> schema = schemaFactory.Make<Person>();
+        ISchema<Person> schema = schemaFactory.Make<Person>(1);
         
         Console.WriteStep(ref step, "Constructing a sample instance of the [Person] class");
 
