@@ -1,5 +1,7 @@
 #region Using Statements
 
+using Barchart.BinarySerializer.Examples.Common;
+
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Examples.Data;
 using Barchart.BinarySerializer.Schemas;
@@ -49,16 +51,16 @@ public class SimpleEntityLookup : IScript
         Console.WriteStep(ref step, "Generating a schema for the Automobile class (via reflection)");
         
         SchemaFactory schemaFactory = new();
-        ISchema<Automobile> schema = schemaFactory.Make<Automobile>();
-
+        ISchema<Automobile> schema = schemaFactory.Make<Automobile>(1);
+        
         Console.WriteStep(ref step, "Processing an update for one of the existing automobiles");
         
         var update = new byte[]
         {
-            0b00000111, 0b00000000, 0b00110001, 0b00110010,
-            0b00110011, 0b00101101, 0b01000001, 0b01000010,
-            0b01000011, 0b11001011, 0b00000000, 0b00000000,
-            0b00000000, 0b00000000
+            0b00000001, 0b00000011, 0b10000000, 0b00011000,
+            0b10011001, 0b00011001, 0b10010110, 0b10100000,
+            0b10100001, 0b00100001, 0b11100101, 0b10000000,
+            0b00000000, 0b00000000, 0b00000000
         };
 
         DataBufferReader reader = new(update);
