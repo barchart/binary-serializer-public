@@ -4,7 +4,7 @@ import { SchemaItemDefinition } from "../schema-item-definition.interface";
 import { Schema } from "../schema";
 import { SerializationSchemaFactory } from "./serialization-schema-factory.interface";
 import { SchemaField } from "../schema-field.type";
-import { BinaryTypeSerializerFactory } from '../../types/factories/binary-type-serializer-factory'
+import { BinaryTypeSerializerFactory } from '../../types/factories/binary-type-serializer-factory';
 import { SchemaItemNested } from "../schema-item-nested";
 import { SchemaItemList } from "../collections/schema-item-list";
 import { SchemaItemListPrimitive } from "../collections/schema-item-list-primitive";
@@ -92,23 +92,22 @@ export class SchemaFactory implements SerializationSchemaFactory {
     }
   
     private isNestedClass(field: SchemaField): boolean {
-        return field.type === DataType.object
+        return field.type === DataType.object;
     }
     private isListOfObjects(field: SchemaField): boolean {
-        return field.type === DataType.list && field.elementType == DataType.object
+        return field.type === DataType.list && field.elementType == DataType.object;
     }
     private isListOfPrimitiveTypes(field: SchemaField): boolean {
-        return field.type === DataType.list
+        return field.type === DataType.list;
     }
 
     private compareSchemaItems<TEntity extends object>(a: SchemaItem<TEntity, any>, b: SchemaItem<TEntity, any>): number {
         let comparison = Number(a.key) - Number(b.key);
 
         if (comparison === 0) {
-            comparison = a.name.localeCompare(b.name);
+            comparison = a.name.toLowerCase().localeCompare(b.name.toLocaleLowerCase(), undefined, { sensitivity: 'case' });
         }
 
         return comparison;
     }
-
 }
