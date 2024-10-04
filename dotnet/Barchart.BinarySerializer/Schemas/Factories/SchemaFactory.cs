@@ -330,7 +330,7 @@ public class SchemaFactory : ISchemaFactory
 
         if (comparison == 0)
         {
-            comparison = string.Compare(a.Name.ToLower(), b.Name.ToLower(), StringComparison.Ordinal);
+            comparison = string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase);
         }
 
         return comparison;

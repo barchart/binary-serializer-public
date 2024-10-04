@@ -105,7 +105,7 @@ export class SchemaFactory implements SerializationSchemaFactory {
         let comparison = Number(a.key) - Number(b.key);
 
         if (comparison === 0) {
-            comparison = a.name.toLowerCase().localeCompare(b.name.toLocaleLowerCase(), undefined, { sensitivity: 'case' });
+            comparison = a.name.localeCompare(b.name);
         }
 
         return comparison;
