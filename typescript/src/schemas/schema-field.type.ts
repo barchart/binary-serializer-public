@@ -1,7 +1,15 @@
 import { DataType } from "../types/data-types";
 
 /**
- * Represents a field in a data structure that is a simple type.
+ * Represents a nullable version of a DataType.
+ *
+ * @public
+ * @exported
+ */
+export type Nullable<T extends DataType> = T | 'nullable';
+
+/**
+ * Represents a field in a data structure that is a simple type, including support for nullable types.
  *
  * @public
  * @exported
@@ -13,9 +21,9 @@ export type SchemaPrimitiveField = {
     name: string;
 
     /**
-     * The data type of the field.
+     * The data type of the field. It can be a primitive or nullable primitive type.
      */
-    type: Exclude<DataType, DataType.list | DataType.object>;
+    type: Exclude<Nullable<DataType>, DataType.list | DataType.object>;
 
     /**
      * Indicates whether the field is a key.
@@ -31,43 +39,43 @@ export type SchemaPrimitiveField = {
  */
 export type SchemaListField =
     | {
-        /**
-         * The name of the field.
-         */
-        name: string;
+    /**
+     * The name of the field.
+     */
+    name: string;
 
-        /**
-         * The data type of the field.
-         */
-        type: DataType.list;
+    /**
+     * The data type of the field.
+     */
+    type: DataType.list;
 
-        /**
-         * The data type of the elements if the field is a list or array.
-         * This property is optional.
-         */
-        elementType: Exclude<DataType, DataType.object>;
-    }
+    /**
+     * The data type of the elements if the field is a list or array.
+     * This property is optional.
+     */
+    elementType: Exclude<DataType, DataType.object>;
+}
     | {
-        /**
-         * The name of the field.
-         */
-        name: string;
+    /**
+     * The name of the field.
+     */
+    name: string;
 
-        /**
-         * The data type of the field.
-         */
-        type: DataType.list;
+    /**
+     * The data type of the field.
+     */
+    type: DataType.list;
 
-        /**
-         * The data type of the elements if the field is a list or array.
-         */
-        elementType: DataType.object;
+    /**
+     * The data type of the elements if the field is a list or array.
+     */
+    elementType: DataType.object;
 
-        /**
-         * Nested fields if the field is an object containing other fields.
-         */
-        fields: SchemaField[];
-    };
+    /**
+     * Nested fields if the field is an object containing other fields.
+     */
+    fields: SchemaField[];
+};
 
 /**
  * Represents a field in a data structure that is an object.
