@@ -1,7 +1,7 @@
 import { ReaderBookmark } from "./data-buffer-reader";
 
 /**
- * A utilities for reading binary data from a byte array.
+ * An utilities for reading binary data from a byte array.
  *
  * @public
  * @exported

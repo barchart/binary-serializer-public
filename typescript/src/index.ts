@@ -21,17 +21,17 @@ export * from './schemas/schema-definition.interface';
 export * from './schemas/collections/schema-item-list';
 export * from './schemas/collections/schema-item-list-primitive';
 export * from './schemas/schema-item-definition.interface';
-export * from './schemas/schema-item-nested'
+export * from './schemas/schema-item-nested';
 export * from './schemas/schema-item';
 export * from './schemas/schema';
 export * from './schemas/schema-field.type';
 
-export * from './serializers/serializer'
-export * from './serializers/serializer-builder'
+export * from './serializers/serializer';
+export * from './serializers/serializer-builder';
 
 export * from './types/exceptions/unsupported-type-exception';
-export * from './types/factories/binary-type-serializer-factory'
-export * from './types/factories/serializer-factory.interface'
+export * from './types/factories/binary-type-serializer-factory';
+export * from './types/factories/serializer-factory.interface';
 export * from './types/binary-serializer-bool';
 export * from './types/binary-serializer-byte';
 export * from './types/binary-serializer-char';
@@ -43,6 +43,7 @@ export * from './types/binary-serializer-enum';
 export * from './types/binary-serializer-float';
 export * from './types/binary-serializer-int';
 export * from './types/binary-serializer-long';
+export * from './types/binary-serializer-nullable';
 export * from './types/binary-serializer-sbyte';
 export * from './types/binary-serializer-short';
 export * from './types/binary-serializer-string';

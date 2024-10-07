@@ -31,28 +31,28 @@ export class BinaryTypeSerializerFactory implements SerializerFactory {
     private static serializers: Map<DataType, BinaryTypeSerializerBase> = new Map();
 
     static initializeSerializers(){
-        this.serializers.set(DataType.bool, new BinarySerializerBool())
-        this.serializers.set(DataType.byte, new BinarySerializerByte())
-        this.serializers.set(DataType.char, new BinarySerializerChar())
-        this.serializers.set(DataType.dateonly, new BinarySerializerDateOnly())
-        this.serializers.set(DataType.datetime, new BinarySerializerDateTime())
-        this.serializers.set(DataType.decimal, new BinarySerializerDecimal())
-        this.serializers.set(DataType.double, new BinarySerializerDouble())
-        this.serializers.set(DataType.float, new BinarySerializerFloat())
-        this.serializers.set(DataType.int, new BinarySerializerInt())
-        this.serializers.set(DataType.long, new BinarySerializerLong())
-        this.serializers.set(DataType.sbyte, new BinarySerializerSByte())
-        this.serializers.set(DataType.short, new BinarySerializerShort())
-        this.serializers.set(DataType.uint, new BinarySerializerUInt())
-        this.serializers.set(DataType.ulong, new BinarySerializerULong())
-        this.serializers.set(DataType.ushort, new BinarySerializerUShort())
+        this.serializers.set(DataType.bool, new BinarySerializerBool());
+        this.serializers.set(DataType.byte, new BinarySerializerByte());
+        this.serializers.set(DataType.char, new BinarySerializerChar());
+        this.serializers.set(DataType.dateonly, new BinarySerializerDateOnly());
+        this.serializers.set(DataType.datetime, new BinarySerializerDateTime());
+        this.serializers.set(DataType.decimal, new BinarySerializerDecimal());
+        this.serializers.set(DataType.double, new BinarySerializerDouble());
+        this.serializers.set(DataType.float, new BinarySerializerFloat());
+        this.serializers.set(DataType.int, new BinarySerializerInt());
+        this.serializers.set(DataType.long, new BinarySerializerLong());
+        this.serializers.set(DataType.sbyte, new BinarySerializerSByte());
+        this.serializers.set(DataType.short, new BinarySerializerShort());
+        this.serializers.set(DataType.uint, new BinarySerializerUInt());
+        this.serializers.set(DataType.ulong, new BinarySerializerULong());
+        this.serializers.set(DataType.ushort, new BinarySerializerUShort());
         
-        this.serializers.set(DataType.string, new BinarySerializerString())
-        this.serializers.set(DataType.enum, new BinarySerializerEnum(this.serializers.get(DataType.int) as BinarySerializerInt))
+        this.serializers.set(DataType.string, new BinarySerializerString());
+        this.serializers.set(DataType.enum, new BinarySerializerEnum(this.serializers.get(DataType.int) as BinarySerializerInt));
     }
 
     static {
-        this.initializeSerializers()
+        this.initializeSerializers();
     }
 
     constructor() {
@@ -60,7 +60,7 @@ export class BinaryTypeSerializerFactory implements SerializerFactory {
     }
     
     supports(dataType: DataType): boolean {
-        return BinaryTypeSerializerFactory.serializers.has(dataType)
+        return BinaryTypeSerializerFactory.serializers.has(dataType);
     }
 
     make<T>(dataType: DataType): BinaryTypeSerializer<T> {

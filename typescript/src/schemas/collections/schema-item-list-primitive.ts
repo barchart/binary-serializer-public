@@ -92,12 +92,12 @@ export class SchemaItemListPrimitive<TEntity, TItem> implements SchemaItemDefini
             if (Serialization.readMissingFlag(reader)) {
                 items.push(currentItems[i]);
             } else {
-                const decodedItem = this.elementSerializer.decode(reader)
+                const decodedItem = this.elementSerializer.decode(reader);
 
                 if (items.length > i){
                     items[i] = decodedItem;
                 } else {
-                    items.push(decodedItem)
+                    items.push(decodedItem);
                 }
             }
         }

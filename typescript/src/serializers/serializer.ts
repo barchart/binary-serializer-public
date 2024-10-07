@@ -23,12 +23,10 @@ export class Serializer<TEntity extends object> {
     private readonly schema: SchemaDefinition<TEntity>;
     private readonly dataBufferReaderFactory: DataReaderFactory;
     private readonly dataBufferWriterFactory: DataWriterFactory;
-    private readonly entityId: number;
 
     constructor(entityId: number, fields: SchemaField[]);
     constructor(entityId: number, fields: SchemaField[], schema?: SchemaDefinition<TEntity>, dataBufferReaderFactory?: DataReaderFactory, dataBufferWriterFactory?: DataWriterFactory);
     constructor(entityId: number = 0, fields: SchemaField[], schema?: SchemaDefinition<TEntity>, dataBufferReaderFactory?: DataReaderFactory, dataBufferWriterFactory?: DataWriterFactory) {
-        this.entityId = entityId;
         if (schema && dataBufferReaderFactory && dataBufferWriterFactory) {
             this.schema = schema;
             this.dataBufferReaderFactory = dataBufferReaderFactory;
