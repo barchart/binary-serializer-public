@@ -59,7 +59,15 @@ export class SchemaFactory implements SerializationSchemaFactory {
     }
 
     private createPrimitiveMemberData<TEntity>(field: SchemaField): SchemaItemDefinition<TEntity> {
-        const serializer = this.binaryTypeSerializerFactory.make(field.type);
+        let serializer;
+
+        if ('nullable' in field && field.nullable === true) {
+            serializer = this.binaryTypeSerializerFactory.makeNullable(field.type);
+        }
+        else{
+            serializer = this.binaryTypeSerializerFactory.make(field.type);
+        }
+
         const isKey = 'isKey' in field && field.isKey === true;
 
         switch (field.type) {

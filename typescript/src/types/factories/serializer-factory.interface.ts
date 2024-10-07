@@ -25,4 +25,13 @@ export interface SerializerFactory {
      * @throws {UnsupportedTypeException} Thrown when the factory is unable to create a serializer for the specified type.
      */
     make<T>(dataType: DataType): BinaryTypeSerializer<T>;
+
+    /**
+     * Creates a binary type serializer for the specified nullable type.
+     *
+     * @public
+     * @returns An BinaryTypeSerializer for the specified type.
+     * @throws {UnsupportedTypeException} Thrown when the factory is unable to create a serializer for the specified type.
+     */
+    makeNullable<T>(dataType: DataType): BinaryTypeSerializer<T | null>;
 }

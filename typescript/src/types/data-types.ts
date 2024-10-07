@@ -23,6 +23,5 @@ export enum DataType{
     ushort = 16,
     uint = 17,
     ulong = 18,
-    object = 19,
-    nullable = 20,
+    object = 19
 }

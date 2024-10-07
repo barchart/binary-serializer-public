@@ -19,6 +19,7 @@ import { BinaryTypeSerializer, BinaryTypeSerializerBase } from "../binary-type-s
 import { DataType } from "../data-types";
 import { UnsupportedTypeException } from "../exceptions/unsupported-type-exception";
 import { SerializerFactory } from "./serializer-factory.interface";
+import { BinarySerializerNullable } from "../binary-serializer-nullable";
 
 /**
  * Defines a factory for creating binary type serializers.
@@ -30,7 +31,7 @@ import { SerializerFactory } from "./serializer-factory.interface";
 export class BinaryTypeSerializerFactory implements SerializerFactory {
     private static serializers: Map<DataType, BinaryTypeSerializerBase> = new Map();
 
-    static initializeSerializers(){
+    static initializeSerializers() {
         this.serializers.set(DataType.bool, new BinarySerializerBool());
         this.serializers.set(DataType.byte, new BinarySerializerByte());
         this.serializers.set(DataType.char, new BinarySerializerChar());
@@ -46,7 +47,6 @@ export class BinaryTypeSerializerFactory implements SerializerFactory {
         this.serializers.set(DataType.uint, new BinarySerializerUInt());
         this.serializers.set(DataType.ulong, new BinarySerializerULong());
         this.serializers.set(DataType.ushort, new BinarySerializerUShort());
-        
         this.serializers.set(DataType.string, new BinarySerializerString());
         this.serializers.set(DataType.enum, new BinarySerializerEnum(this.serializers.get(DataType.int) as BinarySerializerInt));
     }
@@ -55,21 +55,25 @@ export class BinaryTypeSerializerFactory implements SerializerFactory {
         this.initializeSerializers();
     }
 
-    constructor() {
+    constructor() {}
 
-    }
-    
     supports(dataType: DataType): boolean {
         return BinaryTypeSerializerFactory.serializers.has(dataType);
     }
 
     make<T>(dataType: DataType): BinaryTypeSerializer<T> {
         const serializer = BinaryTypeSerializerFactory.serializers.get(dataType);
-        
+
         if (!serializer) {
             throw new UnsupportedTypeException(dataType);
         }
 
         return serializer as BinaryTypeSerializer<T>;
+    }
+
+    makeNullable<T>(dataType: DataType): BinaryTypeSerializer<T | null> {
+        const serializer = this.make<T>(dataType);
+
+        return new BinarySerializerNullable<T>(serializer);
     }
 }

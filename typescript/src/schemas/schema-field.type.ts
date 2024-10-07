@@ -1,12 +1,5 @@
 import { DataType } from "../types/data-types";
 
-/**
- * Represents a nullable version of a DataType.
- *
- * @public
- * @exported
- */
-export type Nullable<T extends DataType> = T | DataType.nullable;
 
 /**
  * Represents a field in a data structure that is a simple type, including support for nullable types.
@@ -23,12 +16,17 @@ export type SchemaPrimitiveField = {
     /**
      * The data type of the field. It can be a primitive or nullable primitive type.
      */
-    type: Exclude<Nullable<DataType>, DataType.list | DataType.object>;
+    type: Exclude<DataType, DataType.list | DataType.object>;
 
     /**
      * Indicates whether the field is a key.
      */
     isKey?: boolean;
+
+    /**
+     * Indicates whether the field is nullable.
+     */
+    nullable?: boolean;
 }
 
 /**
