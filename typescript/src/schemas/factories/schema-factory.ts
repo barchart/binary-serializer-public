@@ -43,13 +43,13 @@ export class SchemaFactory implements SerializationSchemaFactory {
             return new SchemaItemNested<TEntity, any>(field.name, nestedSchema);
         }
 
-        if (this.isListOfObjects(field) && "fields" in field) {
+        if (this.isList(field) && "fields" in field) {
             const nestedSchema = this.make(entityId, field.fields);
         
             return new SchemaItemList<TEntity, any>(field.name, nestedSchema);
         }
 
-        if (this.isListOfPrimitiveTypes(field) && "elementType" in field) {
+        if (this.isListPrimitive(field) && "elementType" in field) {
             const serializer = this.binaryTypeSerializerFactory.make(field.elementType);
 
             return new SchemaItemListPrimitive<TEntity, any>(field.name, serializer);
@@ -94,10 +94,10 @@ export class SchemaFactory implements SerializationSchemaFactory {
     private isNestedClass(field: SchemaField): boolean {
         return field.type === DataType.object;
     }
-    private isListOfObjects(field: SchemaField): boolean {
+    private isList(field: SchemaField): boolean {
         return field.type === DataType.list && field.elementType == DataType.object;
     }
-    private isListOfPrimitiveTypes(field: SchemaField): boolean {
+    private isListPrimitive(field: SchemaField): boolean {
         return field.type === DataType.list;
     }
 
