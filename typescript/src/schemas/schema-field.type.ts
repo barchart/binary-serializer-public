@@ -6,7 +6,7 @@ import { DataType } from "../types/data-types";
  * @public
  * @exported
  */
-export type Nullable<T extends DataType> = T | 'nullable';
+export type Nullable<T extends DataType> = T | DataType.nullable;
 
 /**
  * Represents a field in a data structure that is a simple type, including support for nullable types.
