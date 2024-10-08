@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22.x
+
+  pre_build:
+    commands:
+      - yarn install
+
+  build:
+    commands:
+      - cd typescript
+      - yarn run build
+      - yarn run lint
+      - yarn run test
