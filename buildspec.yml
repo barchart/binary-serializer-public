@@ -7,12 +7,11 @@ phases:
 
   pre_build:
     commands:
+      - cd typescript
       - yarn install
-      - yarn global add typescript
 
   build:
     commands:
-      - cd typescript
       - yarn run build
       - yarn run lint
       - yarn run test
