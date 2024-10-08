@@ -16,7 +16,7 @@
 	"scripts": {
 		"prebuild": "rm -rf dist",
 		"build": "tsc --build tsconfig.build.json",
-		"test": "vitest",
+		"test": "vitest run",
 		"lint": "eslint src/**/*.ts tests/**/*.ts"
 	},
 	"files": [
