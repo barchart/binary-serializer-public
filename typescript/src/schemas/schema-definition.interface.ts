@@ -80,8 +80,20 @@ export interface SchemaDefinition<TEntity extends object> {
      * @param {string} name - The name of the key property.
      * @template TMember - The type of the key property.
      * @returns {TMember} The value of the key.
+     * @throws {KeyUndefinedException} - If the key schema item with the given name is not found.
      */
     readKey<TMember>(reader: DataReader, name: string): TMember;
+
+    /**
+     * Reads the value of a non-key schema item by its name.
+     *
+     * @param {DataReader} reader - A buffer of binary data which contains the serialized entity.
+     * @param {string} name - The name of the non-key property.
+     * @template TMember - The type of the non-key property.
+     * @returns {TMember} The value of the non-key item.
+     * @throws {KeyUndefinedException} - If the value schema item with the given name is not found.
+     */
+    readValue<TMember>(reader: DataReader, name: string): TMember;
 
     /**
      * Performs a deep equality check of two TEntity instances.
