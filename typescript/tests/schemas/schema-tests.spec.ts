@@ -4,7 +4,6 @@ class TestEntity {
     keyProperty: string = '';
     valueProperty: string = '';
 }
-
 describe('SchemaTests', () => {
     let schema: Schema<TestEntity>;
     const entityId = 1;
@@ -101,6 +100,36 @@ describe('SchemaTests', () => {
             const reader: DataBufferReader = new DataBufferReader(bytes);
 
             expect(() => schema.readKey<string>(reader, 'invalidKey')).toThrow(KeyUndefinedException);
+        });
+    });
+
+    describe('ReadValue', () => {
+        it('should return the expected value with a valid value property', () => {
+            const expectedValue = 'Value';
+
+            const entity = new TestEntity();
+            entity.keyProperty = 'Key';
+            entity.valueProperty = 'Value';
+
+            const writer: DataBufferWriter = new DataBufferWriter(new Uint8Array(100));
+            const bytes = schema.serialize(writer, entity);
+            const reader: DataBufferReader = new DataBufferReader(bytes);
+
+            const actualValue = schema.readValue<string>(reader, 'valueProperty');
+
+            expect(actualValue).toEqual(expectedValue);
+        });
+
+        it('should throw KeyUndefinedException with an invalid value property', () => {
+            const entity = new TestEntity();
+            entity.keyProperty = 'Key';
+            entity.valueProperty = 'Value';
+
+            const writer: DataBufferWriter = new DataBufferWriter(new Uint8Array(100));
+            const bytes = schema.serialize(writer, entity);
+            const reader: DataBufferReader = new DataBufferReader(bytes);
+
+            expect(() => schema.readValue<string>(reader, 'invalidValueProperty')).toThrow(KeyUndefinedException);
         });
     });
 
