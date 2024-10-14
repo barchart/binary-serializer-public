@@ -101,7 +101,7 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
         return this.headerSerializer.decode(reader);
     }
 
-    readKey<TProperty>(reader: DataReader, name: string): TProperty {
+    readKey<TMember>(reader: DataReader, name: string): TMember {
         const bookmark: ReaderBookmark = reader.bookmark();
 
         const header = this.readHeader(reader);
@@ -113,7 +113,7 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
             candidate.decode(reader, target, false);
 
             if (candidate.name === name && 'read' in candidate) {
-                return (candidate as SchemaItemWithKeyDefinition<TEntity, TProperty>).read(target);
+                return (candidate as SchemaItemWithKeyDefinition<TEntity, TMember>).read(target);
             }
         }
 
