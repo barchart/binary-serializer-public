@@ -133,23 +133,6 @@ public interface ISchema<TEntity> where TEntity : class, new()
     TMember ReadKey<TMember>(IDataBufferReader reader, string name);
     
     /// <summary>
-    ///     Deserializes a non-key item (only) from the <paramref name="reader" />.
-    /// </summary>
-    /// <param name="reader">
-    ///     The serialized data source from which to read the non-key item.
-    /// </param>
-    /// <param name="name">
-    ///     The name of the non-key property.
-    /// </param>
-    /// <typeparam name="TMember">
-    ///     The type of the non-key property.
-    /// </typeparam>
-    /// <returns>
-    ///     The value of the non-key item.
-    /// </returns>
-    TMember ReadValue<TMember>(IDataBufferReader reader, string name);
-    
-    /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
     ///     instances.
     /// </summary>

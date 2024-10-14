@@ -163,50 +163,6 @@ public class SchemaTests
 
     #endregion
    
-    #region Test Methods (ReadValue)
-
-    [Fact]
-    public void ReadValue_WithValidKey_ReturnsExpectedValue()
-    {
-        string expectedValue = "Value";
-
-        TestEntity entity = new()
-        {
-            KeyProperty = "Key",
-            ValueProperty = "Value"
-        };
-        
-        DataBufferWriter writer = new(new byte[100]);
-
-        byte[] bytes =_schema.Serialize(writer, entity);
-
-        DataBufferReader reader = new(bytes);
-        
-        string actualValue = _schema.ReadValue<String>(reader, "ValueProperty");
-
-        Assert.Equal(expectedValue, actualValue);
-    }
-
-    [Fact]
-    public void ReadValue_WithInvalidKey_ThrowsKeyUndefinedException()
-    {
-        TestEntity entity = new()
-        {
-            KeyProperty = "Key", 
-            ValueProperty = "Value"
-        };
-        
-        DataBufferWriter writer = new(new byte[100]);
-
-        byte[] bytes =_schema.Serialize(writer, entity);
-
-        DataBufferReader reader = new(bytes);
-        
-        Assert.Throws<KeyUndefinedException>(() => _schema.ReadValue<String>(reader, "InvalidValue"));
-    }
-
-    #endregion
-    
     #region Test Methods (GetEquals)
 
     [Fact]

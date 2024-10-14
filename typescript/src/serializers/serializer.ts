@@ -110,20 +110,6 @@ export class Serializer<TEntity extends object> {
     }
 
     /**
-     * Deserializes a non-key value (only) from the `serialized`.
-     *
-     * @public
-     * @template TMember - The type of the non-key value.
-     * @param {Uint8Array} serialized - A byte array of binary data which contains the serialized entity.
-     * @param {string} name - The name of the non-key property.
-     * @returns {TMember} The value of the non-key item.
-     */
-    readValue<TMember>(serialized: Uint8Array, name: string): TMember {
-        const reader = this.dataBufferReaderFactory.make(serialized);
-        return this.schema.readValue<TMember>(reader, name);
-    }
-
-    /**
      * Deserializes a header from the `serialized`.
      *
      * @public

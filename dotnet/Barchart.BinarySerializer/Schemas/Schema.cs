@@ -155,37 +155,6 @@ namespace Barchart.BinarySerializer.Schemas
         }
 
         /// <inheritdoc />
-        public TMember ReadValue<TMember>(IDataBufferReader reader, string name)
-        {
-            using (reader.Bookmark())
-            {
-                Header header = ReadHeader(reader);
-                CheckHeader(header);
-                
-                TEntity target = new();
-                
-                foreach (ISchemaItem<TEntity> item in _keyItems)
-                {
-                    item.Decode(reader, target, false);
-                }
-            
-                for (int i = 0; i < _valueItems.Length; i++)
-                {
-                    ISchemaItem<TEntity> candidate = _valueItems[i];
-                
-                    candidate.Decode(reader, target);
-                
-                    if (candidate.Name == name && candidate is ISchemaItem<TEntity, TMember> match)
-                    {
-                        return match.Read(target);
-                    }
-                }
-            }
-
-            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TMember));
-        }
-
-        /// <inheritdoc />
         public bool GetEquals(TEntity a, TEntity b)
         {
             if (a == null && b == null)
