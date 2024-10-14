@@ -129,7 +129,7 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <inheritdoc />
-        public TProperty ReadKey<TProperty>(IDataBufferReader reader, string name)
+        public TMember ReadKey<TMember>(IDataBufferReader reader, string name)
         {
             using (reader.Bookmark())
             {
@@ -144,16 +144,47 @@ namespace Barchart.BinarySerializer.Schemas
                 
                     candidate.Decode(reader, target);
                 
-                    if (candidate.Name == name && candidate is ISchemaItem<TEntity, TProperty> match)
+                    if (candidate.Name == name && candidate is ISchemaItem<TEntity, TMember> match)
                     {
                         return match.Read(target);
                     }
                 }
             }
 
-            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TProperty));
+            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TMember));
         }
-        
+
+        /// <inheritdoc />
+        public TMember ReadValue<TMember>(IDataBufferReader reader, string name)
+        {
+            using (reader.Bookmark())
+            {
+                Header header = ReadHeader(reader);
+                CheckHeader(header);
+                
+                TEntity target = new();
+                
+                foreach (ISchemaItem<TEntity> item in _keyItems)
+                {
+                    item.Decode(reader, target, false);
+                }
+            
+                for (int i = 0; i < _valueItems.Length; i++)
+                {
+                    ISchemaItem<TEntity> candidate = _valueItems[i];
+                
+                    candidate.Decode(reader, target);
+                
+                    if (candidate.Name == name && candidate is ISchemaItem<TEntity, TMember> match)
+                    {
+                        return match.Read(target);
+                    }
+                }
+            }
+
+            throw new KeyUndefinedException(typeof(TEntity), name, typeof(TMember));
+        }
+
         /// <inheritdoc />
         public bool GetEquals(TEntity a, TEntity b)
         {

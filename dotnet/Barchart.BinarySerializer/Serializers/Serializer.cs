@@ -185,6 +185,28 @@ public class Serializer<TEntity> where TEntity : class, new()
         
         return _schema.ReadKey<TMember>(reader, name);
     }
+    
+    /// <summary>
+    ///     Deserializes a non-key item (only) from the <paramref name="serialized" />.
+    /// </summary>
+    /// <param name="serialized">
+    ///     A byte array containing the binary data to deserialize.
+    /// </param>
+    /// <param name="name">
+    ///     The name of the non-key property
+    /// </param>
+    /// <typeparam name="TMember">
+    ///     The type of the non-key property.
+    /// </typeparam>
+    /// <returns>
+    ///     The value of the non-key item.
+    /// </returns>
+    public TMember ReadValue<TMember>(byte[] serialized, string name)
+    {
+        IDataBufferReader reader = _dataBufferReaderFactory.Make(serialized);
+        
+        return _schema.ReadValue<TMember>(reader, name);
+    }
 
     /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
