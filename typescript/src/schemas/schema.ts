@@ -129,6 +129,11 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
 
         const target = {} as TEntity;
 
+        this.keyItems.forEach(item => {
+            item.decode(reader, target, false);
+        });
+
+
         for (const candidate of this.valueItems) {
             candidate.decode(reader, target, false);
 
