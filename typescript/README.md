@@ -13,19 +13,26 @@ Here are some simple examples of the library's usage:
 ### Serialize an Object
 
 ```typescript
-import { Serializer } from '@barchart/binary-serializer-ts';
+import { Serializer, SchemaField, DataType } from '@barchart/binary-serializer-ts';
 
 class TestClass {
-    propertyName?: string;
-    propertyNumber!: number;
+    propertyName: string;
+    propertyNumber: number;
 }
+
+const entityId: number = 1;
+
+const schemaFields: SchemaField[] = [
+    { name: 'propertyName', type: DataType.string, isKey: true },
+    { name: 'propertyNumber', type: DataType.int, isKey: false }
+];
 
 const testObject = new TestClass();
 testObject.propertyName = 'Name';
 testObject.propertyNumber = 123;
 
 // Creates a instance of Serializer class for the specified class
-const serializer = new Serializer<TestClass>();
+const serializer = new Serializer<TestClass>(entityId, schemaFields);
 
 // Serialize the object into binary data
 const serialized: Uint8Array = serializer.serialize(testObject);
@@ -40,12 +47,19 @@ console.log(deserialized.propertyNumber); // Output: 123
 **Serialize Changes:**
 
 ```typescript
-import {Serializer} from '@barchart/binary-serializer-ts';
+import { Serializer, SchemaField, DataType } from '@barchart/binary-serializer-ts';
 
 class TestClass {
     propertyName: string;
     propertyNumber: number;
 }
+
+const entityId: number = 1;
+
+const schemaFields: SchemaField[] = [
+    { name: 'propertyName', type: DataType.string, isKey: true },
+    { name: 'propertyNumber', type: DataType.int, isKey: false }
+];
 
 const previousObject = new TestClass();
 previousObject.propertyName = 'Name';
@@ -56,7 +70,7 @@ currentObject.propertyName = 'Name';
 currentObject.propertyNumber = 321;
 
 // Creates a instance of Serializer class for the specified class
-const serializer = new Serializer<TestClass>();
+const serializer = new Serializer<TestClass>(entityId, schemaFields);
 
 // Serialize the changes into a binary format
 const changes: Uint8Array = serializer.serializeWithPrevious(currentObject, previousObject);
