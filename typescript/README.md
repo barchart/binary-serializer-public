@@ -4,8 +4,6 @@
 
 - **BinarySerializer**: All source code for the Binary Serializer library is in the [`src`](./src) folder. This includes the core serialization logic, attribute definitions, buffer management, schema factories, and any other utilities required for the serialization and deserialization processes.
 
-- **Scripts**: The [`scripts`](./scripts) directory includes useful scripts for running tests, building the package, and publishing it to npm. You can use `test.ts` to run unit tests and `build.ts` to generate the final bundle.
-
 - **Tests**: The [`tests`](./tests) directory contains a group of tests ensuring the library's reliability.
 
 ## Example Usage
