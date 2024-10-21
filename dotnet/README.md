@@ -1,16 +1,14 @@
 # @barchart/binary-serialization-net
 
-The Binary Serializer is a .NET library for serializing objects (into a binary format) and deserializing objects (from the binary format).
-
 ## Structure
 
-- **BinarySerializer**: All source code for the Binary Serializer library is located in the [`Barchart.BinarySerializer`](./Barchart.BinarySerializer) folder. This includes the core serialization logic, attribute definitions, buffer management, schema factories, and any other utilities required for the serialization and deserialization processes.
+- **BinarySerializer**: All source code for the Binary Serializer library is located in the [`binary serializer`](./Barchart.BinarySerializer) folder. This includes the core serialization logic, attribute definitions, buffer management, schema factories, and any other utilities required for the serialization and deserialization processes.
 
-- **Examples**: To help you get started and to demonstrate the capabilities of the Binary Serializer, example projects can be found in the [`Barchart.BinarySerializer.Examples`](./Barchart.BinarySerializer.Examples) folder. These examples cover a range of use cases, from basic serialization to more complex scenarios.
+- **Examples**: To help you get started and to demonstrate the capabilities of the Binary Serializer, example projects can be found in the [`examples`](./Barchart.BinarySerializer.Examples) folder. These examples cover a range of use cases, from basic serialization to more complex scenarios.
 
-- **Scripts**: The [`Barchart.BinarySerializer.Scripts`](./Barchart.BinarySerializer.Scripts) directory contains essential scripts that facilitate the library's operation and maintenance. This includes `test.csx` for running the tests and `publish.csx` for publishing the package.
+- **Scripts**: The [`scripts`](./Barchart.BinarySerializer.Scripts) directory contains essential scripts that facilitate the library's operation and maintenance. This includes `test.csx` for running the tests and `publish.csx` for publishing the package.
 
-- **Tests**: The [`Barchart.BinarySerializer.Tests`](./Barchart.BinarySerializer.Tests) directory contains a group of tests ensuring the library's reliability.
+- **Tests**: The [`tests`](./Barchart.BinarySerializer.Tests) directory contains a group of tests ensuring the library's reliability.
 
 ## Example Usage
 
@@ -40,7 +38,7 @@ TestClass testObject = new()
 // Creates a instance of Serializer class for the specified class
 Serializer<TestClass> serializer = new();
 
-// Serializer the object into binary data
+// Serialize the object into binary data
 byte[] serialized = serializer.Serialize(testObject);
 
 // Deserialize the binary data back into an object
@@ -65,13 +63,13 @@ public class TestClass
     public int PropertyNumber { get; set; }
 }
 
-TestClass testObjectPrevious = new()
+TestClass previousObject = new()
 {
     PropertyName = "Name",
     PropertyNumber = 123
 };
 
-TestClass testObjectCurrent = new()
+TestClass currentObject = new()
 {
     PropertyName = "Name",
     PropertyNumber = 321
@@ -80,14 +78,14 @@ TestClass testObjectCurrent = new()
 // Creates a instance of Serializer class for the specified class
 Serializer<TestClass> serializer = new();
 
-// Serialize the difference between two objects to a binary format
-byte[] changes = serializer.Serialize(testObjectCurrent, testObjectPrevious);
+// Serialize the changes into a binary format
+byte[] changes = serializer.Serialize(currentObject, previousObject);
 
 // Deserialize the binary data back into the existing object
-TestClass deserializedTestObject = serializer.Deserialize(changes, testObjectPrevious);
+TestClass deserializedObject = serializer.Deserialize(changes, previousObject);
 
-Console.WriteLine(deserializedTestObject.PropertyName); // Output: Name
-Console.WriteLine(deserializedTestObject.PropertyNumber); // Output: 321
+Console.WriteLine(deserializedObject.PropertyName); // Output: Name
+Console.WriteLine(deserializedObject.PropertyNumber); // Output: 321
 ```
 
 > [!NOTE]  
