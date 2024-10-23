@@ -1,5 +1,7 @@
 # @barchart/binary-serializer-ts
 
+[![NPM](https://img.shields.io/npm/v/@barchart/binary-serializer-ts)](https://www.npmjs.com/package/@barchart/binary-serializer-ts)
+
 ## Structure
 
 - **BinarySerializer**: All source code for the Binary Serializer library is in the [`src`](./src) folder. This includes the core serialization logic, attribute definitions, buffer management, schema factories, and any other utilities required for the serialization and deserialization processes.
