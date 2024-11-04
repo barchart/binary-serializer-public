@@ -15,9 +15,9 @@ Here are some simple examples of the library's usage:
 ### Serialize an Object
 
 ```typescript
-import { Serializer, SchemaField, DataType } from '@barchart/binary-serializer-ts';
+import {Serializer, SchemaField, DataType} from '@barchart/binary-serializer-ts';
 
-class TestClass {
+class TestEntity {
     propertyName: string;
     propertyNumber: number;
 }
@@ -25,33 +25,33 @@ class TestClass {
 const entityId: number = 1;
 
 const schemaFields: SchemaField[] = [
-    { name: 'propertyName', type: DataType.string, isKey: true },
-    { name: 'propertyNumber', type: DataType.int, isKey: false }
+    {name: 'propertyName', type: DataType.string, isKey: true},
+    {name: 'propertyNumber', type: DataType.int, isKey: false}
 ];
 
-const testObject = new TestClass();
-testObject.propertyName = 'Name';
-testObject.propertyNumber = 123;
+const entity = new TestEntity();
+entity.propertyName = 'Name';
+entity.propertyNumber = 123;
 
-// Creates a instance of Serializer class for the specified class
-const serializer = new Serializer<TestClass>(entityId, schemaFields);
+// Creates a instance of Serializer class for the specified class with provided entity id and schema fields
+const serializer = new Serializer<TestEntity>(entityId, schemaFields);
 
-// Serialize the object into binary data
-const serialized: Uint8Array = serializer.serialize(testObject);
+// Serialize the entity into a byte array
+const bytes: Uint8Array = serializer.serialize(entity);
 
-// Deserialize the binary data back into an object
-const deserialized = serializer.deserialize(serialized);
+// Deserialize the byte array back into an object
+const deserializedEntity = serializer.deserialize(bytes);
 
-console.log(deserialized.propertyName); // Output: Name
-console.log(deserialized.propertyNumber); // Output: 123
+console.log(deserializedEntity.propertyName); // Output: Name
+console.log(deserializedEntity.propertyNumber); // Output: 123
 ```
 
 **Serialize Changes:**
 
 ```typescript
-import { Serializer, SchemaField, DataType } from '@barchart/binary-serializer-ts';
+import {Serializer, SchemaField, DataType} from '@barchart/binary-serializer-ts';
 
-class TestClass {
+class TestEntity {
     propertyName: string;
     propertyNumber: number;
 }
@@ -59,27 +59,27 @@ class TestClass {
 const entityId: number = 1;
 
 const schemaFields: SchemaField[] = [
-    { name: 'propertyName', type: DataType.string, isKey: true },
-    { name: 'propertyNumber', type: DataType.int, isKey: false }
+    {name: 'propertyName', type: DataType.string, isKey: true},
+    {name: 'propertyNumber', type: DataType.int, isKey: false}
 ];
 
-const previousObject = new TestClass();
-previousObject.propertyName = 'Name';
-previousObject.propertyNumber = 123;
+const previousEntity = new TestEntity();
+previousEntity.propertyName = 'Name';
+previousEntity.propertyNumber = 123;
 
-const currentObject = new TestClass();
-currentObject.propertyName = 'Name';
-currentObject.propertyNumber = 321;
+const currentEntity = new TestEntity();
+currentEntity.propertyName = 'Name';
+currentEntity.propertyNumber = 321;
 
-// Creates a instance of Serializer class for the specified class
-const serializer = new Serializer<TestClass>(entityId, schemaFields);
+// Creates a Serializer instance for the specified class with provided entity id and schema fields
+const serializer = new Serializer<TestEntity>(entityId, schemaFields);
 
-// Serialize the changes into a binary format
-const changes: Uint8Array = serializer.serializeWithPrevious(currentObject, previousObject);
+// Serialize the changes into a byte array
+const changes: Uint8Array = serializer.serializeWithPrevious(currentEntity, previousEntity);
 
-// Deserialize the binary data back into the existing object
-const deserializedObject = serializer.deserializeInto(changes, previousObject);
+// Deserialize the changes back into an object
+const deserializedEntity = serializer.deserializeInto(changes, previousEntity);
 
-console.log(deserializedObject.propertyName); // Output: Name
-console.log(deserializedObject.propertyNumber); // Output: 321
+console.log(deserializedEntity.propertyName); // Output: Name
+console.log(deserializedEntity.propertyNumber); // Output: 321
 ```

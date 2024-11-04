@@ -29,7 +29,7 @@ public class TestEntity
     public int PropertyNumber { get; set; }
 }
 
-TestEntity currentEntity = new()
+TestEntity entity = new()
 {
     PropertyName = "Name",
     PropertyNumber = 123
@@ -41,7 +41,7 @@ const byte entityId = 1;
 Serializer<TestEntity> serializer = new(entityId);
 
 // Serialize the entity into a byte array
-byte[] bytes = serializer.Serialize(currentEntity);
+byte[] bytes = serializer.Serialize(entity);
 
 // Deserialize the byte array back into an object
 TestEntity deserializedEntity = serializer.Deserialize(bytes);
@@ -79,7 +79,7 @@ TestClass currentEntity = new()
 
 const byte entityId = 1;
 
-// Creates an instance of Serializer class for the specified class with provided entity id
+// Creates an Serializer instance for the specified class with provided entity id
 Serializer<TestEntity> serializer = new(entityId);
 
 // Serialize the changes into a byte array
