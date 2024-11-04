@@ -4,7 +4,7 @@
 
 ## Structure
 
-- **BinarySerializer**: All source code for the Binary Serializer library is in the [`src`](./src) folder. This includes the core serialization logic, attribute definitions, buffer management, schema factories, and any other utilities required for the serialization and deserialization processes.
+- **BinarySerializer**: All source code for the Binary Serializer library is in the [`src`](./src) directory. This includes the core serialization logic, attribute definitions, buffer management, schema factories, and any other utilities required for the serialization and deserialization processes.
 
 - **Tests**: The [`tests`](./tests) directory contains a group of tests ensuring the library's reliability.
 
