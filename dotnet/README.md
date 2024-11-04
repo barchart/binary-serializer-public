@@ -1,5 +1,7 @@
 # @barchart/binary-serializer-net
 
+[![NuGet](https://img.shields.io/nuget/v/Barchart.BinarySerializer)](https://www.nuget.org/packages/binary-serializer-net)
+
 ## Structure
 
 - **BinarySerializer**: All source code for the Binary Serializer library is in the [`Barchart.BinarySerializer`](./Barchart.BinarySerializer) directory. This includes the core serialization logic, attribute definitions, buffer management, schema factories, and any other utilities required for the serialization and deserialization processes.
