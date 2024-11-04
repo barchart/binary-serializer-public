@@ -20,7 +20,7 @@ Here are some simple examples of the library's usage:
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas.Factories;
 
-public class TestClass
+public class TestEntity
 {
     [Serialize(true)]
     public string? PropertyName { get; set; }
@@ -29,23 +29,25 @@ public class TestClass
     public int PropertyNumber { get; set; }
 }
 
-TestClass testObject = new()
+TestEntity currentEntity = new()
 {
     PropertyName = "Name",
     PropertyNumber = 123
 };
 
-// Creates a instance of Serializer class for the specified class
-Serializer<TestClass> serializer = new();
+const byte entityId = 1;
 
-// Serialize the object into binary data
-byte[] serialized = serializer.Serialize(testObject);
+// Creates a instance of Serializer class for the specified class with provided entity id
+Serializer<TestEntity> serializer = new(entityId);
 
-// Deserialize the binary data back into an object
-TestClass deserialized = serializer.Deserialize(serialized);
+// Serialize the entity into a byte array
+byte[] bytes = serializer.Serialize(currentEntity);
 
-Console.WriteLine(deserialized.PropertyName); // Output: Name
-Console.WriteLine(deserialized.PropertyNumber); // Output: 123
+// Deserialize the byte array back into an object
+TestEntity deserializedEntity = serializer.Deserialize(bytes);
+
+Console.WriteLine(deserializedEntity.PropertyName); // Output: Name
+Console.WriteLine(deserializedEntity.PropertyNumber); // Output: 123
 ```
 
 **Serialize Changes:**
@@ -54,7 +56,7 @@ Console.WriteLine(deserialized.PropertyNumber); // Output: 123
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Schemas.Factories;
 
-public class TestClass
+public class TestEntity
 {
     [Serialize(true)]
     public string? PropertyName { get; set; }
@@ -63,29 +65,31 @@ public class TestClass
     public int PropertyNumber { get; set; }
 }
 
-TestClass previousObject = new()
+TestClass previousEntity = new()
 {
     PropertyName = "Name",
     PropertyNumber = 123
 };
 
-TestClass currentObject = new()
+TestClass currentEntity = new()
 {
     PropertyName = "Name",
     PropertyNumber = 321
 };
 
-// Creates a instance of Serializer class for the specified class
-Serializer<TestClass> serializer = new();
+const byte entityId = 1;
 
-// Serialize the changes into a binary format
-byte[] changes = serializer.Serialize(currentObject, previousObject);
+// Creates an instance of Serializer class for the specified class with provided entity id
+Serializer<TestEntity> serializer = new(entityId);
 
-// Deserialize the binary data back into the existing object
-TestClass deserializedObject = serializer.Deserialize(changes, previousObject);
+// Serialize the changes into a byte array
+byte[] changes = serializer.Serialize(currentEntity, previousEntity);
 
-Console.WriteLine(deserializedObject.PropertyName); // Output: Name
-Console.WriteLine(deserializedObject.PropertyNumber); // Output: 321
+// Deserialize the changes back into an object
+TestEntity deserializedEntity = serializer.Deserialize(changes, previousEntity);
+
+Console.WriteLine(deserializedEntity.PropertyName); // Output: Name
+Console.WriteLine(deserializedEntity.PropertyNumber); // Output: 321
 ```
 
 > [!NOTE]  
