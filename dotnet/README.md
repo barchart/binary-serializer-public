@@ -1,4 +1,4 @@
-# @barchart/binary-serializer-net
+# @barchart/binary-serializer-public
 
 ## Structure
 
