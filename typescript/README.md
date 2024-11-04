@@ -12,7 +12,7 @@
 
 Here are some simple examples of the library's usage:
 
-### Serialize an Object
+### Serialize a Snapshot
 
 ```typescript
 import {Serializer, SchemaField, DataType} from '@barchart/binary-serializer-ts';
