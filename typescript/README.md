@@ -15,7 +15,7 @@ Here are some simple examples of the library's usage:
 ### Serialize a Snapshot
 
 ```typescript
-import {Serializer, SchemaField, DataType} from '@barchart/binary-serializer-ts';
+import { Serializer, SchemaField, DataType } from '@barchart/binary-serializer-ts';
 
 class TestEntity {
     propertyName: string;
@@ -25,15 +25,15 @@ class TestEntity {
 const entityId: number = 1;
 
 const schemaFields: SchemaField[] = [
-    {name: 'propertyName', type: DataType.string, isKey: true},
-    {name: 'propertyNumber', type: DataType.int, isKey: false}
+    { name: 'propertyName', type: DataType.string, isKey: true },
+    { name: 'propertyNumber', type: DataType.int, isKey: false }
 ];
 
 const entity = new TestEntity();
 entity.propertyName = 'Name';
 entity.propertyNumber = 123;
 
-// Creates a instance of Serializer class for the specified class with provided entity id and schema fields
+// Create a Serializer instance for the specified class with provided entity id and schema fields
 const serializer = new Serializer<TestEntity>(entityId, schemaFields);
 
 // Serialize the entity into a byte array
@@ -49,7 +49,7 @@ console.log(deserializedEntity.propertyNumber); // Output: 123
 **Serialize Changes:**
 
 ```typescript
-import {Serializer, SchemaField, DataType} from '@barchart/binary-serializer-ts';
+import { Serializer, SchemaField, DataType } from '@barchart/binary-serializer-ts';
 
 class TestEntity {
     propertyName: string;
@@ -59,8 +59,8 @@ class TestEntity {
 const entityId: number = 1;
 
 const schemaFields: SchemaField[] = [
-    {name: 'propertyName', type: DataType.string, isKey: true},
-    {name: 'propertyNumber', type: DataType.int, isKey: false}
+    { name: 'propertyName', type: DataType.string, isKey: true },
+    { name: 'propertyNumber', type: DataType.int, isKey: false }
 ];
 
 const previousEntity = new TestEntity();
@@ -71,7 +71,7 @@ const currentEntity = new TestEntity();
 currentEntity.propertyName = 'Name';
 currentEntity.propertyNumber = 321;
 
-// Creates a Serializer instance for the specified class with provided entity id and schema fields
+// Create a Serializer instance for the specified class with provided entity id and schema fields
 const serializer = new Serializer<TestEntity>(entityId, schemaFields);
 
 // Serialize the changes into a byte array
