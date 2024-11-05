@@ -4,14 +4,26 @@ phases:
   install:
     runtime-versions:
       nodejs: 22.x
+      dotnet: 6.0
 
   pre_build:
     commands:
       - cd typescript
       - yarn install
+      - cd ..
+
+      - cd dotnet
+      - dotnet restore
+      - cd ..
 
   build:
     commands:
+      - cd typescript
       - yarn run build
       - yarn run lint
       - yarn run test
+      - cd ..
+
+      - cd dotnet
+      - dotnet build
+      - dotnet test
