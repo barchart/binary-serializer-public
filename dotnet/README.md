@@ -39,7 +39,7 @@ TestEntity entity = new()
 
 const byte entityId = 1;
 
-// Creates a instance of Serializer class for the specified class with provided entity id
+// Create a Serializer instance for the specified class with provided entity id
 Serializer<TestEntity> serializer = new(entityId);
 
 // Serialize the entity into a byte array
@@ -81,7 +81,7 @@ TestClass currentEntity = new()
 
 const byte entityId = 1;
 
-// Creates an Serializer instance for the specified class with provided entity id
+// Create a Serializer instance for the specified class with provided entity id
 Serializer<TestEntity> serializer = new(entityId);
 
 // Serialize the changes into a byte array
