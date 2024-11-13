@@ -9,7 +9,7 @@
     <GenerateProgramFile>false</GenerateProgramFile>
     <IsPackable>true</IsPackable>
     <PackageId>binary-serializer-net</PackageId>
-    <Title>PackageId&gt;binary-serializer-net</Title>
+    <Title>binary-serializer-net</Title>
     <Version>0.0.1</Version>
     <Authors>Luka Sotra,Bryan Ingle</Authors>
     <Company>Barchart</Company>
