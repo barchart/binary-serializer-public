@@ -139,6 +139,7 @@ public class DataBufferReader : IDataBufferReader
     private class DataBufferReaderBookmark : IDisposable
     {
         #region Fields
+     
         private readonly DataBufferReader _reader;
         
         private readonly int _positionByte;
