@@ -2,8 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <OutputPath>bin\$(Configuration)\net6.0\</OutputPath>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputPath>bin\$(Configuration)\net8.0\</OutputPath>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateProgramFile>false</GenerateProgramFile>
