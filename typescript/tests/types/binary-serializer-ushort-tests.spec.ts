@@ -23,7 +23,8 @@ describe('BinarySerializerUShortTests', () => {
                     writeBytes: vi.fn(),
                     toBytes: vi.fn(),
                     bytesWritten: vi.fn(),
-                    bookmark: vi.fn()
+                    bookmark: vi.fn(),
+                    isAtRootNestingLevel: true
                 };
                 const bitsWritten: boolean[] = [];
                 const byteWritten: number[] = [];
@@ -64,7 +65,8 @@ describe('BinarySerializerUShortTests', () => {
                     readBytes: vi.fn(),
                     readBit: vi.fn(),
                     readByte: vi.fn(),
-                    bookmark: vi.fn()
+                    bookmark: vi.fn(),
+                    isAtRootNestingLevel: true
                 };
                 const encodedBytes = new Uint8Array(new Uint16Array([expectedValue]).buffer);
 

@@ -29,7 +29,8 @@ describe('BinarySerializerDecimalTests', () => {
                     writeBytes: vi.fn(),
                     toBytes: vi.fn(),
                     bytesWritten: vi.fn(),
-                    bookmark: vi.fn()
+                    bookmark: vi.fn(),
+                    isAtRootNestingLevel: true
                 };
                 const bitsWritten: boolean[] = [];
                 const byteWritten: number[] = [];
@@ -81,7 +82,8 @@ describe('BinarySerializerDecimalTests', () => {
                     readBytes: vi.fn(),
                     readBit: vi.fn(),
                     readByte: vi.fn(),
-                    bookmark: vi.fn()
+                    bookmark: vi.fn(),
+                    isAtRootNestingLevel: true
                 };
 
                 reader.readBytes.mockReturnValueOnce(new Uint8Array(new Int32Array([components[0]]).buffer))

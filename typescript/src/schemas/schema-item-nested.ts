@@ -38,7 +38,7 @@ export class SchemaItemNested<TEntity extends object, TMember extends object> im
         Serialization.writeNullFlag(writer, nested === null);
 
         if (nested !== null) {
-            this.schema.serialize(writer, nested, true);
+            this.schema.serialize(writer, nested);
         }
     }
 
@@ -61,9 +61,9 @@ export class SchemaItemNested<TEntity extends object, TMember extends object> im
         }
 
         if (nestedPrevious === null) {
-            this.schema.serialize(writer, nestedCurrent, true);
+            this.schema.serialize(writer, nestedCurrent);
         } else {
-            this.schema.serializeWithPrevious(writer, nestedCurrent, nestedPrevious, true);
+            this.schema.serializeWithPrevious(writer, nestedCurrent, nestedPrevious);
         }
     }
 
@@ -87,7 +87,7 @@ export class SchemaItemNested<TEntity extends object, TMember extends object> im
         } else if (nested === null) {
             target[this.name as keyof TEntity] = this.schema.deserialize(reader, true) as TEntity[keyof TEntity];
         } else {
-            this.schema.deserializeInto(reader, nested, true, true);
+            this.schema.deserializeInto(reader, nested, true);
         }
     }
 

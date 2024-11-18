@@ -42,11 +42,11 @@ describe('SchemaItemListTests', () => {
             expect(mockSchema.serialize).toHaveBeenCalledWith(writer, {
                 propertyName: 'Test1',
                 propertyValue: 123,
-            }, true);
+            });
             expect(mockSchema.serialize).toHaveBeenCalledWith(writer, {
                 propertyName: 'Test2',
                 propertyValue: 456,
-            }, true);
+            });
         });
 
         it('writes null flag when collection property is null', () => {

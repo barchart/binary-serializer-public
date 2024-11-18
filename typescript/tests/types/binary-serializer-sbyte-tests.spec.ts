@@ -24,7 +24,8 @@ describe('BinarySerializerSByteTests', () => {
                     writeBytes: vi.fn(),
                     toBytes: vi.fn(),
                     bytesWritten: vi.fn(),
-                    bookmark: vi.fn()
+                    bookmark: vi.fn(),
+                    isAtRootNestingLevel: true
                 };
                 const bitsWritten: boolean[] = [];
                 const byteWritten: number[] = [];
@@ -60,7 +61,8 @@ describe('BinarySerializerSByteTests', () => {
                     readBytes: vi.fn(),
                     readBit: vi.fn(),
                     readByte: vi.fn(),
-                    bookmark: vi.fn()
+                    bookmark: vi.fn(),
+                    isAtRootNestingLevel: true
                 };
                 reader.readByte.mockReturnValue(expectedValue);
 

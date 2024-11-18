@@ -8,6 +8,11 @@ import { ReaderBookmark } from "./data-buffer-reader";
  */
 export interface DataReader {
     /**
+     * Indicates if the reader is at the root nesting level.
+     */
+    isAtRootNestingLevel: boolean;
+    
+    /**
      * Reads a single bit from the buffer.
      *
      * @returns {boolean} The bit value read (true for 1, false for 0).

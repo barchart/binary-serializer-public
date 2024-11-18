@@ -41,7 +41,7 @@ describe('SchemaItemNestedTests', () => {
 
             schemaItemNested.encode(writer, testEntity);
 
-            expect(schema.serialize).toHaveBeenCalledWith(expect.any(DataBufferWriter), expect.objectContaining({ propertyName: "Test", propertyValue: 123 }), true);
+            expect(schema.serialize).toHaveBeenCalledWith(expect.any(DataBufferWriter), expect.objectContaining({ propertyName: "Test", propertyValue: 123 }));
         });
 
         it('should write null flag with null nested property', () => {

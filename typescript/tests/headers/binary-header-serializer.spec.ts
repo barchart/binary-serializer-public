@@ -15,7 +15,8 @@ describe('BinaryHeaderSerializerTests', () => {
                 writeBytes: vi.fn(),
                 toBytes: vi.fn(),
                 bytesWritten: vi.fn(),
-                bookmark: vi.fn()
+                bookmark: vi.fn(),
+                isAtRootNestingLevel: true
             };
 
             serializer.encode(writer, 0, false);
@@ -33,7 +34,8 @@ describe('BinaryHeaderSerializerTests', () => {
                 writeBytes: vi.fn(),
                 toBytes: vi.fn(),
                 bytesWritten: vi.fn(),
-                bookmark: vi.fn()
+                bookmark: vi.fn(),
+                isAtRootNestingLevel: true
             };
 
             serializer.encode(writer, 15, true);
@@ -51,7 +53,8 @@ describe('BinaryHeaderSerializerTests', () => {
                 writeBytes: vi.fn(),
                 toBytes: vi.fn(),
                 bytesWritten: vi.fn(),
-                bookmark: vi.fn()
+                bookmark: vi.fn(),
+                isAtRootNestingLevel: true
             };
 
             expect(() => serializer.encode(writer, 16, true)).toThrow(RangeError);
@@ -64,7 +67,8 @@ describe('BinaryHeaderSerializerTests', () => {
                 readByte: vi.fn().mockReturnValue(0b00000000),
                 readBit: vi.fn(),
                 readBytes: vi.fn(),
-                bookmark: vi.fn()
+                bookmark: vi.fn(),
+                isAtRootNestingLevel: true
             };
 
             const header = serializer.decode(reader);
@@ -78,7 +82,8 @@ describe('BinaryHeaderSerializerTests', () => {
                 readByte: vi.fn().mockReturnValue(0b10001111),
                 readBit: vi.fn(),
                 readBytes: vi.fn(),
-                bookmark: vi.fn()
+                bookmark: vi.fn(),
+                isAtRootNestingLevel: true
             };
 
             const header = serializer.decode(reader);
@@ -92,7 +97,8 @@ describe('BinaryHeaderSerializerTests', () => {
                 readByte: vi.fn().mockReturnValue(0b10010000),
                 readBit: vi.fn(),
                 readBytes: vi.fn(),
-                bookmark: vi.fn()
+                bookmark: vi.fn(),
+                isAtRootNestingLevel: true
             };
 
             expect(() => serializer.decode(reader)).toThrow(InvalidHeaderException);

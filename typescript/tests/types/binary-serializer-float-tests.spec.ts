@@ -30,7 +30,8 @@ describe('BinarySerializerFloatTests', () => {
           writeBytes: vi.fn(),
           toBytes: vi.fn(),
           bytesWritten: vi.fn(),
-          bookmark: vi.fn()
+          bookmark: vi.fn(),
+          isAtRootNestingLevel: true
         };
 
         serializer.encode(writer, value);
@@ -61,7 +62,8 @@ describe('BinarySerializerFloatTests', () => {
           readBytes: vi.fn(),
           readBit: vi.fn(),
           readByte: vi.fn(),
-          bookmark: vi.fn()
+          bookmark: vi.fn(),
+          isAtRootNestingLevel: true
         };
         reader.readBytes.mockReturnValue(bytes);
 

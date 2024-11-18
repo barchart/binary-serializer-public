@@ -44,9 +44,11 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
         this.headerSerializer = BinaryHeaderSerializer.Instance;
     }
 
-    serialize(writer: DataWriter, source: TEntity, isNestedMember: boolean = false): Uint8Array {
-        if (!isNestedMember) {
+    serialize(writer: DataWriter, source: TEntity): Uint8Array {
+        if (writer.isAtRootNestingLevel) {
             this.headerSerializer.encode(writer, this.entityId, true);
+
+            writer.isAtRootNestingLevel = false;
         }
 
         this.keyItems.forEach(item => {
@@ -60,9 +62,11 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
         return writer.toBytes();
     }
 
-    serializeWithPrevious(writer: DataWriter, current: TEntity, previous: TEntity, isNestedMember: boolean = false): Uint8Array {
-        if (!isNestedMember) {
+    serializeWithPrevious(writer: DataWriter, current: TEntity, previous: TEntity): Uint8Array {
+        if (writer.isAtRootNestingLevel) {
             this.headerSerializer.encode(writer, this.entityId, false);
+
+            writer.isAtRootNestingLevel = false;
         }
 
         this.keyItems.forEach(item => {
@@ -76,14 +80,16 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
         return writer.toBytes();
     }
 
-    deserialize(reader: DataReader, isNestedMember: boolean = false): TEntity {
-        return this.deserializeInto(reader, {} as TEntity, false, isNestedMember);
+    deserialize(reader: DataReader): TEntity {
+        return this.deserializeInto(reader, {} as TEntity, false);
     }
 
-    deserializeInto(reader: DataReader, target: TEntity, existing: boolean = true, isNestedMember: boolean = false): TEntity {
-        if (!isNestedMember) {
+    deserializeInto(reader: DataReader, target: TEntity, existing: boolean = true): TEntity {
+        if (reader.isAtRootNestingLevel) {
             const header = this.readHeader(reader);
             this.checkHeader(header);
+
+            reader.isAtRootNestingLevel = false;
         }
 
         this.keyItems.forEach(item => {

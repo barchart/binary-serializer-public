@@ -24,7 +24,8 @@ describe('BinarySerializerDateTimeTests', () => {
                     writeBytes: vi.fn(),
                     toBytes: vi.fn(),
                     bytesWritten: vi.fn(),
-                    bookmark: vi.fn()
+                    bookmark: vi.fn(),
+                    isAtRootNestingLevel: true
                 };
                 const bitsWritten: boolean[] = [];
                 const byteWritten: number[] = [];
@@ -64,7 +65,8 @@ describe('BinarySerializerDateTimeTests', () => {
                     readBytes: vi.fn(),
                     readBit: vi.fn(),
                     readByte: vi.fn(),
-                    bookmark: vi.fn()
+                    bookmark: vi.fn(),
+                    isAtRootNestingLevel: true
                 };
                 const value = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
                 const expectedMilliseconds = value.getTime();

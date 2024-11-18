@@ -17,13 +17,18 @@ export class DataBufferWriter implements DataWriter {
     private positionByte: number;
     private positionBit: number;
 
+    isAtRootNestingLevel: boolean;
+
     constructor(byteArray: Uint8Array) {
+        this.isAtRootNestingLevel = true;
+        
         this.byteArray = byteArray;
 
         this.positionByte = 0;
         this.positionBit = 0;
     }
-  
+
+
     writeBit(value: boolean): void {
         if (this.capacityWouldBeExceeded(0)) {
             throw new InsufficientCapacityException(true);

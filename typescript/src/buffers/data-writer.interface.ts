@@ -8,6 +8,11 @@ import { WriterBookmark } from "./data-buffer-writer";
  */
 export interface DataWriter {
     /**
+     * Indicates if the writer is at the root nesting level.
+     */
+    isAtRootNestingLevel: boolean;
+
+    /**
      * Writes a bit to the buffer.
      *
      * @param {boolean} value - The boolean value to write.
