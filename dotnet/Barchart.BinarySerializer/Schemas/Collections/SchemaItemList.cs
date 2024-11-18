@@ -81,7 +81,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
             {
                 Serialization.WriteNullFlag(writer, false);
 
-                _itemSchema.Serialize(writer, item, true);
+                _itemSchema.Serialize(writer, item);
             }
             else
             {
@@ -128,12 +128,12 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
             if (previousItems[i] != null)
             {
-                _itemSchema.Serialize(writer, currentItems[i], previousItems[i], true);
+                _itemSchema.Serialize(writer, currentItems[i], previousItems[i]);
             }
 
             else
             {
-                _itemSchema.Serialize(writer, currentItems[i], true);
+                _itemSchema.Serialize(writer, currentItems[i]);
             }
         }
     }
@@ -169,11 +169,11 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
             {
                 if (currentItems != null && currentItems.Count > i)
                 {
-                    items.Add(_itemSchema.Deserialize(reader, currentItems[i], true));
+                    items.Add(_itemSchema.Deserialize(reader, currentItems[i]));
                 }
                 else
                 {
-                    items.Add(_itemSchema.Deserialize(reader, true));
+                    items.Add(_itemSchema.Deserialize(reader));
                 }
             }
         }

@@ -8,6 +8,11 @@ public interface IDataBufferReader
     #region Methods
     
     /// <summary>
+    ///     Indicates if the reader is at the root nesting level.
+    /// </summary>
+    bool IsAtRootNestingLevel { get; set; }
+    
+    /// <summary>
     ///     Reads a single bit from the internal storage.
     /// </summary>
     /// <returns>

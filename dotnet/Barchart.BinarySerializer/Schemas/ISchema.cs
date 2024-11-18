@@ -32,13 +32,10 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="source">
     ///     The entity to serialize.
     /// </param>
-    /// <param name="isNestedMember">
-    ///     A flag indicating whether the entity is a nested member of another entity.
-    /// </param>
     /// <returns>
     ///     The serialized entity, as a byte array.
     /// </returns>
-    byte[] Serialize(IDataBufferWriter writer, TEntity source, bool isNestedMember = false);
+    byte[] Serialize(IDataBufferWriter writer, TEntity source);
 
     /// <summary>
     ///     Serializes changes between the <paramref name="current"/> and
@@ -55,9 +52,6 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="previous">
     ///     The previous version of the entity.
     /// </param>
-    /// <param name="isNestedMember">
-    ///     A flag indicating whether the entity is a nested member of another entity.
-    /// </param>
     /// <exception cref="KeyMismatchException">
     ///     Thrown when the <paramref name="current"/> and <paramref name="previous"/>
     ///     instances have different key values.
@@ -65,7 +59,7 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <returns>
     ///     The serialized changes to the entity, as a byte array.
     /// </returns>
-    byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous, bool isNestedMember = false);
+    byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous);
 
     /// <summary>
     ///     Deserializes an entity. In other words, this method recreates the serialized
@@ -74,13 +68,10 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="reader">
     ///     A buffer of binary data which contains the serialized entity.
     /// </param>
-    /// <param name="isNestedMember">
-    ///     A flag indicating whether the entity is a nested member of another entity.
-    /// </param>
     /// <returns>
     ///     A new instance of the <typeparamref name="TEntity"/> class.
     /// </returns>
-    TEntity Deserialize(IDataBufferReader reader, bool isNestedMember = false);
+    TEntity Deserialize(IDataBufferReader reader);
 
     /// <summary>
     ///     Deserializes an entity, updating an existing instance of
@@ -92,9 +83,6 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="target">
     ///     The target entity to assign the deserialized values to.
     /// </param>
-    /// <param name="isNestedMember">
-    ///     A flag indicating whether the entity is a nested member of another entity.
-    /// </param>
     /// <exception cref="KeyMismatchException">
     ///     Thrown when key, read from the serialized binary data, does not
     ///     match the key of the <paramref name="target"/> instance.
@@ -102,7 +90,7 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <returns>
     ///     The reference to the <paramref name="target"/> instance.
     /// </returns>
-    TEntity Deserialize(IDataBufferReader reader, TEntity target, bool isNestedMember = false);
+    TEntity Deserialize(IDataBufferReader reader, TEntity target);
 
     /// <summary>
     ///     Deserializes a byte array into a <see cref="Header"/> instance.

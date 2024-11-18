@@ -55,7 +55,7 @@ public class SchemaItemNestedTests
 
         _schemaItemNested.Encode(_writer, testEntity);
 
-        _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test" && p.PropertyValue == 123), true), Times.Once);
+        _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test" && p.PropertyValue == 123)), Times.Once);
     }
 
     [Fact]
@@ -87,8 +87,8 @@ public class SchemaItemNestedTests
             }
         };
 
-        _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>(), true))
-                .Callback((IDataBufferReader _, TestProperty property, bool _) =>
+        _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()))
+                .Callback((IDataBufferReader _, TestProperty property) =>
                 {
                     property.PropertyName = "Test";
                     property.PropertyValue = 123;
@@ -99,7 +99,7 @@ public class SchemaItemNestedTests
 
         _schemaItemNested.Decode(_reader, testEntity);
 
-        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>(), true), Times.Once);
+        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()), Times.Once);
         Assert.NotNull(testEntity.NestedProperty);
         Assert.Equal("Test", testEntity.NestedProperty.PropertyName);
         Assert.Equal(123, testEntity.NestedProperty.PropertyValue);
@@ -133,7 +133,7 @@ public class SchemaItemNestedTests
 
         _schemaItemNested.Decode(_reader, testEntity);
 
-        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>(), true), Times.Never);
+        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), It.IsAny<TestProperty>()), Times.Never);
         Assert.NotNull(testEntity.NestedProperty);
     }
 

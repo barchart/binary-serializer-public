@@ -68,7 +68,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
 
         if (nested != null)
         {
-            _schema.Serialize(writer, nested, true);
+            _schema.Serialize(writer, nested);
         }
     }
 
@@ -96,12 +96,12 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
         
         if (nestedPrevious == null)
         {
-            _schema.Serialize(writer, nestedCurrent, true);
+            _schema.Serialize(writer, nestedCurrent);
 
         }
         else
         { 
-            _schema.Serialize(writer, nestedCurrent, nestedPrevious, true);
+            _schema.Serialize(writer, nestedCurrent, nestedPrevious);
         }
     }
 
@@ -124,11 +124,11 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
         } 
         else if (nested == null)
         {
-            _setter(target, _schema.Deserialize(reader, true));
+            _setter(target, _schema.Deserialize(reader));
         }
         else
         {
-            _schema.Deserialize(reader, nested, true);
+            _schema.Deserialize(reader, nested);
         }
     }
 

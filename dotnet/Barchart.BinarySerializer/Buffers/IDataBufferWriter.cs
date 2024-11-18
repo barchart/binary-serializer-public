@@ -8,6 +8,11 @@ public interface IDataBufferWriter
     #region Methods
 
     /// <summary>
+    ///     Indicates if the writer is at the root nesting level.
+    /// </summary>
+    bool IsAtRootNestingLevel { get; set; }
+    
+    /// <summary>
     ///     Writes a single bit to the internal storage.
     /// </summary>
     /// <param name="value">
@@ -65,6 +70,6 @@ public interface IDataBufferWriter
     ///     of the internal storage to be reset.
     /// </returns>
     IDisposable Bookmark();
-
+    
     #endregion
 }

@@ -19,12 +19,19 @@ public class DataBufferWriter : IDataBufferWriter
     #endregion
 
     #region Fields
-
+    
     private readonly byte[] _byteArray;
 
     private int _positionByte;
     private int _positionBit;
 
+    #endregion
+
+    #region Properties
+    
+    /// <inheritdoc />
+    public bool IsAtRootNestingLevel { get; set; }
+    
     #endregion
 
     #region Constructor(s)
@@ -37,6 +44,8 @@ public class DataBufferWriter : IDataBufferWriter
     /// </param>
     public DataBufferWriter(byte[] byteArray)
     {
+        IsAtRootNestingLevel = true;
+        
         _byteArray = byteArray;
 
         _positionByte = 0;

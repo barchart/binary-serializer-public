@@ -9,7 +9,7 @@ using Barchart.BinarySerializer.Schemas.Exceptions;
 namespace Barchart.BinarySerializer.Schemas
 {
     /// <inheritdoc />
-    public class Schema<TEntity> : ISchema<TEntity> where TEntity: class, new()
+    public class Schema<TEntity> : ISchema<TEntity> where TEntity : class, new()
     {
         #region Fields
 
@@ -17,49 +17,50 @@ namespace Barchart.BinarySerializer.Schemas
         private readonly ISchemaItem<TEntity>[] _valueItems;
 
         private readonly BinaryHeaderSerializer _headerSerializer;
-        
+
         #endregion
-        
+
         #region Properties
 
         public byte EntityId { get; }
 
         #endregion
-        
+
         #region Constructor(s)
-        
+
         public Schema(ISchemaItem<TEntity>[] items) : this(0, items)
         {
-
         }
-        
+
         public Schema(byte entityId, ISchemaItem<TEntity>[] items)
         {
             EntityId = entityId;
-            
+
             _keyItems = items.Where(i => i.Key).ToArray();
             _valueItems = items.Where(i => !i.Key).ToArray();
 
             _headerSerializer = BinaryHeaderSerializer.Instance;
         }
-        
+
         #endregion
-        
+
         #region Methods
-        
+
         /// <inheritdoc />
-        public byte[] Serialize(IDataBufferWriter writer, TEntity source, bool isNestedMember = false)
+        public byte[] Serialize(IDataBufferWriter writer, TEntity source)
         {
-            if (!isNestedMember)
+            if (writer.IsAtRootNestingLevel)
             {
                 _headerSerializer.Encode(writer, EntityId, true);
+                
+                writer.IsAtRootNestingLevel = false;
             }
 
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Encode(writer, source);
             }
-            
+
             foreach (ISchemaItem<TEntity> item in _valueItems)
             {
                 item.Encode(writer, source);
@@ -67,13 +68,15 @@ namespace Barchart.BinarySerializer.Schemas
 
             return writer.ToBytes();
         }
-        
+
         /// <inheritdoc />
-        public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous, bool isNestedMember = false)
+        public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
-            if (!isNestedMember)
+            if (writer.IsAtRootNestingLevel)
             {
                 _headerSerializer.Encode(writer, EntityId, false);
+                
+                writer.IsAtRootNestingLevel = false;
             }
 
             foreach (ISchemaItem<TEntity> item in _keyItems)
@@ -85,49 +88,51 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 item.Encode(writer, current, previous);
             }
-        
+
             return writer.ToBytes();
         }
 
         /// <inheritdoc />
-        public TEntity Deserialize(IDataBufferReader reader, bool isNestedMember = false)
+        public TEntity Deserialize(IDataBufferReader reader)
         {
-            return Deserialize(reader, new TEntity(), false, isNestedMember);
+            return Deserialize(reader, new TEntity(), false);
         }
 
         /// <inheritdoc />
-        public TEntity Deserialize(IDataBufferReader reader, TEntity target, bool isNestedMember = false)
+        public TEntity Deserialize(IDataBufferReader reader, TEntity target)
         {
-            return Deserialize(reader, target, true, isNestedMember);
+            return Deserialize(reader, target, true);
         }
 
-        private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing, bool isNestedMember)
+        private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
         {
-            if (!isNestedMember)
+            if (reader.IsAtRootNestingLevel)
             {
                 Header header = ReadHeader(reader);
                 CheckHeader(header);
+                
+                reader.IsAtRootNestingLevel = false;
             }
-            
+
             foreach (ISchemaItem<TEntity> item in _keyItems)
             {
                 item.Decode(reader, target, existing);
             }
-            
+
             foreach (ISchemaItem<TEntity> item in _valueItems)
             {
                 item.Decode(reader, target, existing);
             }
-            
+
             return target;
         }
-        
+
         /// <inheritdoc />
         public Header ReadHeader(IDataBufferReader reader)
         {
             return _headerSerializer.Decode(reader);
         }
-        
+
         /// <inheritdoc />
         public TMember ReadKey<TMember>(IDataBufferReader reader, string name)
         {
@@ -135,15 +140,15 @@ namespace Barchart.BinarySerializer.Schemas
             {
                 Header header = ReadHeader(reader);
                 CheckHeader(header);
-                
+
                 TEntity target = new();
-            
+
                 for (int i = 0; i < _keyItems.Length; i++)
                 {
                     ISchemaItem<TEntity> candidate = _keyItems[i];
-                
+
                     candidate.Decode(reader, target);
-                
+
                     if (candidate.Name == name && candidate is ISchemaItem<TEntity, TMember> match)
                     {
                         return match.Read(target);
@@ -174,10 +179,10 @@ namespace Barchart.BinarySerializer.Schemas
         {
             if (header.EntityId != EntityId)
             {
-               throw new HeaderMismatchException(header.EntityId, EntityId);
+                throw new HeaderMismatchException(header.EntityId, EntityId);
             }
         }
-        
+
         #endregion
     }
 }

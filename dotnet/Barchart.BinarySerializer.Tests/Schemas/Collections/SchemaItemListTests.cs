@@ -55,8 +55,8 @@ public class SchemaItemListTests
 
         _schemaItemList.Encode(_writer, testEntity);
 
-        _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test1" && p.PropertyValue == 123),true), Times.Once);
-        _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test2" && p.PropertyValue == 456), true), Times.Once);
+        _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test1" && p.PropertyValue == 123)), Times.Once);
+        _mockSchema.Verify(schema => schema.Serialize(It.IsAny<IDataBufferWriter>(), It.Is<TestProperty>(p => p.PropertyName == "Test2" && p.PropertyValue == 456)), Times.Once);
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public class SchemaItemListTests
             ListProperty = new List<TestProperty?>()
         };
 
-        _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), true))
+        _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>()))
             .Callback(() => {
                 TestProperty item = new()
                 {
@@ -106,7 +106,7 @@ public class SchemaItemListTests
 
         _schemaItemList.Decode(_reader, testEntity);
 
-        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>(), true), Times.Exactly(expectedItemsCount));
+        _mockSchema.Verify(schema => schema.Deserialize(It.IsAny<IDataBufferReader>()), Times.Exactly(expectedItemsCount));
 
         Assert.NotNull(testEntity.ListProperty);
         Assert.Equal(expectedItemsCount, testEntity.ListProperty.Count);
