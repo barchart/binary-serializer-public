@@ -62,14 +62,5 @@ public interface IDataBufferWriter
     /// </returns>
     int BytesWritten();
 
-    /// <summary>
-    ///     Records the current read position of the internal storage.
-    /// </summary>
-    /// <returns>
-    ///     An <see cref="IDisposable"/> that causes the write position
-    ///     of the internal storage to be reset.
-    /// </returns>
-    IDisposable Bookmark();
-    
     #endregion
 }

@@ -47,7 +47,7 @@ public interface IDataBufferReader
     ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
     /// </exception>
     byte[] ReadBytes(int size);
-
+    
     /// <summary>
     ///     Records the current read position of the internal storage.
     /// </summary>

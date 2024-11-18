@@ -98,7 +98,7 @@ public class DataBufferReader : IDataBufferReader
         
         return bytes;
     }
-    
+
     private byte ReadByteUnchecked()
     {
         if (_positionBit == 0)
