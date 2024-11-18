@@ -477,7 +477,7 @@ public class DataBufferWriterTests
         byte[] byteArray = new byte[2];
         DataBufferWriter dataBuffer = new(byteArray);
 
-        Assert.Equal(0, dataBuffer.BytesWritten());
+        Assert.Equal(0, dataBuffer.BytesWritten);
     } 
     
     [Fact]
@@ -488,7 +488,7 @@ public class DataBufferWriterTests
         
         dataBuffer.WriteBit(true);
         
-        Assert.Equal(1, dataBuffer.BytesWritten());
+        Assert.Equal(1, dataBuffer.BytesWritten);
     } 
     
     [Fact]
@@ -499,7 +499,7 @@ public class DataBufferWriterTests
         
         dataBuffer.WriteByte(0b00000000);
         
-        Assert.Equal(1, dataBuffer.BytesWritten());
+        Assert.Equal(1, dataBuffer.BytesWritten);
     } 
     
     [Fact]
@@ -511,7 +511,7 @@ public class DataBufferWriterTests
         dataBuffer.WriteByte(0b00000000);
         dataBuffer.WriteBit(true);
         
-        Assert.Equal(2, dataBuffer.BytesWritten());
+        Assert.Equal(2, dataBuffer.BytesWritten);
     } 
 
     #endregion

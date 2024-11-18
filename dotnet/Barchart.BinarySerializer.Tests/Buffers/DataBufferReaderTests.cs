@@ -395,7 +395,7 @@ public class DataBufferReaderTests
         byte[] byteArray = new byte[2];
         DataBufferReader dataBuffer = new(byteArray);
 
-        Assert.Equal(0, dataBuffer.BytesRead());
+        Assert.Equal(0, dataBuffer.BytesRead);
     } 
     
     [Fact]
@@ -406,7 +406,7 @@ public class DataBufferReaderTests
         
         dataBuffer.ReadBit();
         
-        Assert.Equal(1, dataBuffer.BytesRead());
+        Assert.Equal(1, dataBuffer.BytesRead);
     } 
     
     [Fact]
@@ -417,7 +417,7 @@ public class DataBufferReaderTests
         
         dataBuffer.ReadByte();
         
-        Assert.Equal(1, dataBuffer.BytesRead());
+        Assert.Equal(1, dataBuffer.BytesRead);
     } 
     
     [Fact]
@@ -429,7 +429,7 @@ public class DataBufferReaderTests
         dataBuffer.ReadByte();
         dataBuffer.ReadBit();
         
-        Assert.Equal(2, dataBuffer.BytesRead());
+        Assert.Equal(2, dataBuffer.BytesRead);
     } 
     
     [Fact]
@@ -443,7 +443,7 @@ public class DataBufferReaderTests
             dataBuffer.ReadBit();
         }
         
-        Assert.Equal(0, dataBuffer.BytesRead());
+        Assert.Equal(0, dataBuffer.BytesRead);
     } 
     
     [Fact]
@@ -457,7 +457,7 @@ public class DataBufferReaderTests
             dataBuffer.ReadByte();
         }
         
-        Assert.Equal(0, dataBuffer.BytesRead());
+        Assert.Equal(0, dataBuffer.BytesRead);
     } 
 
     #endregion
