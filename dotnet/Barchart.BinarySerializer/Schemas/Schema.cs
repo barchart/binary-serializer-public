@@ -49,11 +49,9 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity source)
         {
-            if (writer.IsAtRootNestingLevel)
+            if (writer.BytesWritten() == 0)
             {
                 _headerSerializer.Encode(writer, EntityId, true);
-                
-                writer.IsAtRootNestingLevel = false;
             }
 
             foreach (ISchemaItem<TEntity> item in _keyItems)
@@ -72,11 +70,9 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
-            if (writer.IsAtRootNestingLevel)
+            if (writer.BytesWritten() == 0)
             {
                 _headerSerializer.Encode(writer, EntityId, false);
-                
-                writer.IsAtRootNestingLevel = false;
             }
 
             foreach (ISchemaItem<TEntity> item in _keyItems)
@@ -106,12 +102,10 @@ namespace Barchart.BinarySerializer.Schemas
 
         private TEntity Deserialize(IDataBufferReader reader, TEntity target, bool existing)
         {
-            if (reader.IsAtRootNestingLevel)
+            if (reader.BytesRead() == 0)
             {
                 Header header = ReadHeader(reader);
                 CheckHeader(header);
-                
-                reader.IsAtRootNestingLevel = false;
             }
 
             foreach (ISchemaItem<TEntity> item in _keyItems)

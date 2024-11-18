@@ -387,6 +387,81 @@ public class DataBufferReaderTests
    
     #endregion
     
+    #region Test Methods (BytesRead)
+
+    [Fact]
+    public void BytesRead_NewDataBufferReader_ReturnsZero()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferReader dataBuffer = new(byteArray);
+
+        Assert.Equal(0, dataBuffer.BytesRead());
+    } 
+    
+    [Fact]
+    public void BytesRead_ReadBit_ReturnsOne()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferReader dataBuffer = new(byteArray);
+        
+        dataBuffer.ReadBit();
+        
+        Assert.Equal(1, dataBuffer.BytesRead());
+    } 
+    
+    [Fact]
+    public void BytesRead_ReadByte_ReturnsOne()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferReader dataBuffer = new(byteArray);
+        
+        dataBuffer.ReadByte();
+        
+        Assert.Equal(1, dataBuffer.BytesRead());
+    } 
+    
+    [Fact]
+    public void BytesRead_ReadByteReadBit_ReturnsTwo()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferReader dataBuffer = new(byteArray);
+        
+        dataBuffer.ReadByte();
+        dataBuffer.ReadBit();
+        
+        Assert.Equal(2, dataBuffer.BytesRead());
+    } 
+    
+    [Fact]
+    public void BytesRead_BookmarkReadBit_ReturnsZero()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferReader dataBuffer = new(byteArray);
+        
+        using (dataBuffer.Bookmark())
+        {
+            dataBuffer.ReadBit();
+        }
+        
+        Assert.Equal(0, dataBuffer.BytesRead());
+    } 
+    
+    [Fact]
+    public void BytesRead_BookmarkReadByte_ReturnsZero()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferReader dataBuffer = new(byteArray);
+        
+        using (dataBuffer.Bookmark())
+        {
+            dataBuffer.ReadByte();
+        }
+        
+        Assert.Equal(0, dataBuffer.BytesRead());
+    } 
+
+    #endregion
+    
     #region Test Methods (Bookmark)
     
     [Fact]

@@ -21,13 +21,6 @@ public class DataBufferReader : IDataBufferReader
 
     #endregion
 
-    #region Properties
-    
-    /// <inheritdoc />
-    public bool IsAtRootNestingLevel { get; set; }
-    
-    #endregion
-    
     #region Constructor(s)
 
     /// <summary>
@@ -38,8 +31,6 @@ public class DataBufferReader : IDataBufferReader
     /// </param>
     public DataBufferReader(byte[] byteArray)
     {
-        IsAtRootNestingLevel = true;
-        
         _byteArray = byteArray;
 
         _positionByte = 0;
@@ -97,6 +88,12 @@ public class DataBufferReader : IDataBufferReader
         }
         
         return bytes;
+    }
+
+    /// <inheritdoc />
+    public int BytesRead()
+    {
+        return _positionBit == 0 ? _positionByte : _positionByte + 1;
     }
 
     private byte ReadByteUnchecked()

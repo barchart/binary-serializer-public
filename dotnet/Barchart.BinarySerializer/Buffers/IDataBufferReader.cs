@@ -8,11 +8,6 @@ public interface IDataBufferReader
     #region Methods
     
     /// <summary>
-    ///     Indicates if the reader is at the root nesting level.
-    /// </summary>
-    bool IsAtRootNestingLevel { get; set; }
-    
-    /// <summary>
     ///     Reads a single bit from the internal storage.
     /// </summary>
     /// <returns>
@@ -47,6 +42,14 @@ public interface IDataBufferReader
     ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
     /// </exception>
     byte[] ReadBytes(int size);
+
+    /// <summary>
+    ///     Gets the total number of bytes read from the buffer.
+    /// </summary>
+    /// <returns>
+    ///     The total number of bytes read.
+    /// </returns>
+    int BytesRead();
     
     /// <summary>
     ///     Records the current read position of the internal storage.
