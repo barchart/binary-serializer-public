@@ -27,6 +27,13 @@ public class DataBufferWriter : IDataBufferWriter
 
     #endregion
 
+    #region Properties
+    
+    /// <inheritdoc />
+    public int BytesWritten => _positionBit == 0 ? _positionByte : _positionByte + 1;
+
+    #endregion
+
     #region Constructor(s)
 
     /// <summary>
@@ -158,12 +165,6 @@ public class DataBufferWriter : IDataBufferWriter
         int byteCount = _positionByte + (_positionBit == 0 ? 0 : 1);
 
         return _byteArray.Take(byteCount).ToArray();
-    }
-
-    /// <inheritdoc />
-    public int BytesWritten()
-    {
-        return _positionBit == 0 ? _positionByte : _positionByte + 1;
     }
     
     private void AdvanceBit()

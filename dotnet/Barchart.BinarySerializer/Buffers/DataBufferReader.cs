@@ -21,6 +21,13 @@ public class DataBufferReader : IDataBufferReader
 
     #endregion
 
+    #region Properties
+    
+    /// <inheritdoc />
+    public int BytesRead => _positionBit == 0 ? _positionByte : _positionByte + 1;
+    
+    #endregion
+    
     #region Constructor(s)
 
     /// <summary>
@@ -88,12 +95,6 @@ public class DataBufferReader : IDataBufferReader
         }
         
         return bytes;
-    }
-
-    /// <inheritdoc />
-    public int BytesRead()
-    {
-        return _positionBit == 0 ? _positionByte : _positionByte + 1;
     }
 
     private byte ReadByteUnchecked()

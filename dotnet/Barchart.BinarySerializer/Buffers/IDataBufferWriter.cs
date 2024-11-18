@@ -5,6 +5,18 @@ namespace Barchart.BinarySerializer.Buffers;
 /// </summary>
 public interface IDataBufferWriter
 {
+    #region Properties
+
+    /// <summary>
+    ///     Gets the total number of bytes written to the buffer.
+    /// </summary>
+    /// <returns>
+    ///     The total number of bytes written.
+    /// </returns>
+    int BytesWritten { get; }
+
+    #endregion
+    
     #region Methods
 
     /// <summary>
@@ -48,14 +60,6 @@ public interface IDataBufferWriter
     ///     A byte array containing the data up to the current offset.
     /// </returns>
     byte[] ToBytes();
-
-    /// <summary>
-    ///     Gets the total number of bytes written to the buffer.
-    /// </summary>
-    /// <returns>
-    ///     The total number of bytes written.
-    /// </returns>
-    int BytesWritten();
 
     #endregion
 }

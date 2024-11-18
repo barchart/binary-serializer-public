@@ -5,6 +5,18 @@ namespace Barchart.BinarySerializer.Buffers;
 /// </summary>
 public interface IDataBufferReader
 {
+    #region Properties
+    
+    /// <summary>
+    ///     Gets the total number of bytes read from the buffer.
+    /// </summary>
+    /// <returns>
+    ///     The total number of bytes read.
+    /// </returns>
+    int BytesRead { get; }
+    
+    #endregion
+    
     #region Methods
     
     /// <summary>
@@ -42,14 +54,6 @@ public interface IDataBufferReader
     ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
     /// </exception>
     byte[] ReadBytes(int size);
-
-    /// <summary>
-    ///     Gets the total number of bytes read from the buffer.
-    /// </summary>
-    /// <returns>
-    ///     The total number of bytes read.
-    /// </returns>
-    int BytesRead();
     
     /// <summary>
     ///     Records the current read position of the internal storage.
