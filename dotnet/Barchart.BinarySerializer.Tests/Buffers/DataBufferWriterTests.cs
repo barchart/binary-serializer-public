@@ -468,6 +468,53 @@ public class DataBufferWriterTests
     }
 
     #endregion
+
+    #region Test Methods (BytesWritten)
+
+    [Fact]
+    public void BytesWritten_NewDataBufferWriter_ReturnsZero()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
+
+        Assert.Equal(0, dataBuffer.BytesWritten());
+    } 
+    
+    [Fact]
+    public void BytesWritten_WriteBit_ReturnsOne()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteBit(true);
+        
+        Assert.Equal(1, dataBuffer.BytesWritten());
+    } 
+    
+    [Fact]
+    public void BytesWritten_WriteByte_ReturnsOne()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteByte(0b00000000);
+        
+        Assert.Equal(1, dataBuffer.BytesWritten());
+    } 
+    
+    [Fact]
+    public void BytesWritten_WriteByteWriteBit_ReturnsTwo()
+    {
+        byte[] byteArray = new byte[2];
+        DataBufferWriter dataBuffer = new(byteArray);
+        
+        dataBuffer.WriteByte(0b00000000);
+        dataBuffer.WriteBit(true);
+        
+        Assert.Equal(2, dataBuffer.BytesWritten());
+    } 
+
+    #endregion
     
     #region Test Methods (Bug: Populated Array)
     
