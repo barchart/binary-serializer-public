@@ -79,8 +79,8 @@ export class DataBufferReader implements DataReader {
         return (byteStart | byteEnd) & 0xFF;
     }
 
-    bookmark(): ReaderBookmark {
-        return new ReaderBookmark(this, this.positionByte, this.positionBit);
+    bookmark(): Bookmark {
+        return new Bookmark(this, this.positionByte, this.positionBit);
     }
 
     private advanceBit(): void {
@@ -106,7 +106,7 @@ export class DataBufferReader implements DataReader {
  * @param {number} positionByte - The byte position of the reader.
  * @param {number} positionBit - The bit position of the reader.
  */
-export class ReaderBookmark {
+export class Bookmark {
     private readonly reader: DataBufferReader;
 
     private readonly positionByte: number;

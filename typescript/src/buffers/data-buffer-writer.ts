@@ -120,10 +120,6 @@ export class DataBufferWriter implements DataWriter {
         return this.positionBit === 0 ? this.positionByte : this.positionByte + 1;
     }
 
-    bookmark(): WriterBookmark {
-        return new WriterBookmark(this, this.positionByte, this.positionBit);
-    }
-
     private advanceBit(): void {
         if (this.positionBit === 7) {
             this.positionBit = 0;
@@ -135,48 +131,5 @@ export class DataBufferWriter implements DataWriter {
 
     private capacityWouldBeExceeded(additionalBytes: number): boolean {
         return this.positionByte + additionalBytes >= this.byteArray.length;
-    }
-}
-
-/**
- * A bookmark for a `DataBufferWriter` which can be used to reset the writing position of the writer.
- *
- * @public
- * @exported
- * @param {DataBufferWriter} writer The writer to bookmark.
- * @param {number} positionByte The byte position to bookmark.
- * @param {number} positionBit The bit position to bookmark.
- */
-export class WriterBookmark {
-    private readonly writer: DataBufferWriter;
-
-    private readonly positionByte: number;
-    private readonly positionBit: number;
-
-    private disposed: boolean;
-
-    constructor(writer: DataBufferWriter, positionByte: number, positionBit: number) {
-        this.writer = writer;
-
-        this.positionByte = positionByte;
-        this.positionBit = positionBit;
-
-        this.disposed = false;
-    }
-
-    /**
-     * Resets the writer to the position of the bookmark.
-     *
-     * @public
-     */
-    dispose(): void {
-        if (this.disposed) {
-            return;
-        }
-
-        this.disposed = true;
-
-        this.writer['positionByte'] = this.positionByte;
-        this.writer['positionBit'] = this.positionBit;
     }
 }

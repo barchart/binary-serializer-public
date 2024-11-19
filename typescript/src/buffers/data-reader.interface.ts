@@ -1,4 +1,4 @@
-import { ReaderBookmark } from "./data-buffer-reader";
+import { Bookmark } from "./data-buffer-reader";
 
 /**
  * An utilities for reading binary data from a byte array.
@@ -40,5 +40,5 @@ export interface DataReader {
      *
      * @returns {Disposable} An `Disposable` that causes the read position of the internal storage to be reset.
      */
-    bookmark(): ReaderBookmark;
+    bookmark(): Bookmark;
 }

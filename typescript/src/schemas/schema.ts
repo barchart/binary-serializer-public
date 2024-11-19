@@ -6,7 +6,7 @@ import { DataReader } from "../buffers/data-reader.interface";
 import { Header } from "../headers/header";
 import { HeaderMismatchException } from "./exceptions/header-mismatch-exception";
 import { KeyUndefinedException } from "./exceptions/key-undefined-exception";
-import { ReaderBookmark } from "../buffers/data-buffer-reader";
+import { Bookmark } from "../buffers/data-buffer-reader";
 
 /**
  * Serializes and deserializes instances of the TEntity class.
@@ -108,7 +108,7 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     }
 
     readKey<TMember>(reader: DataReader, name: string): TMember {
-        const bookmark: ReaderBookmark = reader.bookmark();
+        const bookmark: Bookmark = reader.bookmark();
 
         const header = this.readHeader(reader);
         this.checkHeader(header);

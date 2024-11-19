@@ -1,5 +1,3 @@
-import { WriterBookmark } from "./data-buffer-writer";
-
 /**
  * An utilities for writing binary data to a byte array.
  *
@@ -46,11 +44,4 @@ export interface DataWriter {
      * @returns {number} The total number of bytes written.
      */
     bytesWritten() : number;
-
-     /**
-     * Records the current read position of the internal storage.
-     *
-     * @returns {Disposable} An `Disposable` that causes the read position of the internal storage to be reset.
-     */
-     bookmark(): WriterBookmark;
 }
