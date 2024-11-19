@@ -5,7 +5,7 @@ describe('BinarySerializerNullable Tests', () => {
     describe('Encode', () => {
         it('should write the expected bits and bytes for non-null value', () => {
             const typeSerializer = {
-                encode: vi.fn((writer: DataWriter, value: any) => { writer.writeByte(0xAB); }),
+                encode: vi.fn((writer: DataWriter) => { writer.writeByte(0xAB); }),
                 decode: vi.fn(),
                 getEquals: vi.fn()
             };

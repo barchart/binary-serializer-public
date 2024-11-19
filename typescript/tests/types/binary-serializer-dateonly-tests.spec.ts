@@ -23,9 +23,8 @@ describe('BinarySerializerDateOnlyTests', () => {
                     writeByte: vi.fn(),
                     writeBytes: vi.fn(),
                     toBytes: vi.fn(),
-                    bytesWritten: vi.fn(),
                     bookmark: vi.fn(),
-                    isAtRootNestingLevel: true
+                    bytesWritten: 0
                 };
                 const value = new Date(Date.UTC(year, month, day));
 
@@ -57,7 +56,7 @@ describe('BinarySerializerDateOnlyTests', () => {
                     readBit: vi.fn(),
                     readByte: vi.fn(),
                     bookmark: vi.fn(),
-                    isAtRootNestingLevel: true
+                    bytesRead: 0
                 };
                 reader.readBytes.mockReturnValue(new Uint8Array(new Int32Array([daysSinceEpoch]).buffer));
 

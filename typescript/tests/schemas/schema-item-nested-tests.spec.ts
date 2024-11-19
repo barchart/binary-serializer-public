@@ -1,4 +1,5 @@
-import { DataBufferWriter, DataBufferReader, SchemaItemNested } from "../../src";
+import { DataBufferWriter, DataBufferReader, SchemaItemNested, SchemaDefinition } from "../../src";
+import { Mock } from "vitest";
 
 class TestEntity {
     nestedProperty?: TestProperty | null;
@@ -9,11 +10,22 @@ class TestProperty {
     propertyValue: number = 0;
 }
 
+interface TestSchema extends SchemaDefinition<TestProperty> {
+    entityId: number;
+    serialize: Mock;
+    serializeWithPrevious: Mock;
+    deserialize: Mock;
+    deserializeInto: Mock;
+    readHeader: Mock;
+    readKey: Mock;
+    getEquals: Mock;
+}
+
 describe('SchemaItemNestedTests', () => {
     let writer: DataBufferWriter;
     let reader: DataBufferReader;
     let buffer: Uint8Array;
-    let schema: any;
+    let schema: TestSchema;
     let schemaItemNested: SchemaItemNested<TestEntity, TestProperty>;
 
     beforeEach(() => {
@@ -21,6 +33,7 @@ describe('SchemaItemNestedTests', () => {
         writer = new DataBufferWriter(buffer);
         reader = new DataBufferReader(buffer);
         schema = {
+            entityId: 1,
             serialize: vi.fn(),
             serializeWithPrevious: vi.fn(),
             deserialize: vi.fn(),

@@ -6,9 +6,11 @@
  */
 export interface DataWriter {
     /**
-     * Indicates if the writer is at the root nesting level.
+     * Gets the total number of bytes written to the buffer.
+     *
+     * @returns {number} The total number of bytes written.
      */
-    isAtRootNestingLevel: boolean;
+    get bytesWritten(): number;
 
     /**
      * Writes a bit to the buffer.
@@ -37,11 +39,4 @@ export interface DataWriter {
      * @returns {Uint8Array} The array of bytes representing the buffer's content.
      */
     toBytes(): Uint8Array;
-
-    /**
-     * Gets the total number of bytes written to the buffer.
-     *
-     * @returns {number} The total number of bytes written.
-     */
-    bytesWritten() : number;
 }

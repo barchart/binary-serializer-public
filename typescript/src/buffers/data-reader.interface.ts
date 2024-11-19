@@ -7,10 +7,13 @@ import { Bookmark } from "./data-buffer-reader";
  * @exported
  */
 export interface DataReader {
+
     /**
-     * Indicates if the reader is at the root nesting level.
+     * Gets the total number of bytes read from the buffer.
+     *
+     * @returns {number} The total number of bytes read.
      */
-    isAtRootNestingLevel: boolean;
+    get bytesRead(): number;
     
     /**
      * Reads a single bit from the buffer.

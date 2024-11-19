@@ -21,9 +21,8 @@ describe('BinarySerializerStringTests', () => {
                     writeByte: vi.fn(),
                     writeBytes: vi.fn(),
                     toBytes: vi.fn(),
-                    bytesWritten: vi.fn(),
                     bookmark: vi.fn(),
-                   isAtRootNestingLevel: true
+                    bytesWritten: 0
                };
                const bytesWritten: Uint8Array[] = [];
 
@@ -56,7 +55,7 @@ describe('BinarySerializerStringTests', () => {
                     readBit: vi.fn(),
                     readByte: vi.fn(),
                     bookmark: vi.fn(),
-                    isAtRootNestingLevel: true
+                    bytesRead: 0
                 };
                 const encodedLengthBytes = new Uint8Array(new Int16Array([expectedValue.length]).buffer);
                 const encodedContentBytes = new TextEncoder().encode(expectedValue);

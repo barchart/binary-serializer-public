@@ -17,17 +17,16 @@ export class DataBufferWriter implements DataWriter {
     private positionByte: number;
     private positionBit: number;
 
-    isAtRootNestingLevel: boolean;
+    public get bytesWritten(): number {
+        return this.positionBit === 0 ? this.positionByte : this.positionByte + 1;
+    }
 
     constructor(byteArray: Uint8Array) {
-        this.isAtRootNestingLevel = true;
-        
         this.byteArray = byteArray;
 
         this.positionByte = 0;
         this.positionBit = 0;
     }
-
 
     writeBit(value: boolean): void {
         if (this.capacityWouldBeExceeded(0)) {
@@ -114,10 +113,6 @@ export class DataBufferWriter implements DataWriter {
         const byteCount: number = this.positionByte + (this.positionBit === 0 ? 0 : 1);
         
         return this.byteArray.slice(0, byteCount);
-    }
-
-    bytesWritten(): number {
-        return this.positionBit === 0 ? this.positionByte : this.positionByte + 1;
     }
 
     private advanceBit(): void {

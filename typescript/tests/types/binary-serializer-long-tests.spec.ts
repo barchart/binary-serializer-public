@@ -23,9 +23,8 @@ describe('BinarySerializerLongTests', () => {
                     writeByte: vi.fn(),
                     writeBytes: vi.fn(),
                     toBytes: vi.fn(),
-                    bytesWritten: vi.fn(),
                     bookmark: vi.fn(),
-                    isAtRootNestingLevel: true
+                    bytesWritten: 0
                 };
                 const bitsWritten: boolean[] = [];
                 const bytesWritten: number[] = [];
@@ -63,7 +62,7 @@ describe('BinarySerializerLongTests', () => {
                     readBit: vi.fn(),
                     readByte: vi.fn(),
                     bookmark: vi.fn(),
-                    isAtRootNestingLevel: true
+                    bytesRead: 0
                 };
                 reader.readBytes.mockReturnValue(new Uint8Array(new BigInt64Array([BigInt(expectedValue)]).buffer));
 

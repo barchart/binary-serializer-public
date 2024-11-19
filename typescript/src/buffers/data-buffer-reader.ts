@@ -15,11 +15,11 @@ export class DataBufferReader implements DataReader {
     private positionByte: number;
     private positionBit: number;
 
-    isAtRootNestingLevel: boolean;
+    public get bytesRead(): number {
+        return this.positionBit === 0 ? this.positionByte : this.positionByte + 1;
+    }
 
     constructor(byteArray: Uint8Array) {
-        this.isAtRootNestingLevel = true;
-
         this.byteArray = byteArray;
 
         this.positionByte = 0;

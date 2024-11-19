@@ -45,10 +45,8 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     }
 
     serialize(writer: DataWriter, source: TEntity): Uint8Array {
-        if (writer.isAtRootNestingLevel) {
+        if (writer.bytesWritten === 0) {
             this.headerSerializer.encode(writer, this.entityId, true);
-
-            writer.isAtRootNestingLevel = false;
         }
 
         this.keyItems.forEach(item => {
@@ -63,10 +61,8 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     }
 
     serializeWithPrevious(writer: DataWriter, current: TEntity, previous: TEntity): Uint8Array {
-        if (writer.isAtRootNestingLevel) {
+        if (writer.bytesWritten === 0) {
             this.headerSerializer.encode(writer, this.entityId, false);
-
-            writer.isAtRootNestingLevel = false;
         }
 
         this.keyItems.forEach(item => {
@@ -85,11 +81,9 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     }
 
     deserializeInto(reader: DataReader, target: TEntity, existing: boolean = true): TEntity {
-        if (reader.isAtRootNestingLevel) {
+        if (reader.bytesRead === 0) {
             const header = this.readHeader(reader);
             this.checkHeader(header);
-
-            reader.isAtRootNestingLevel = false;
         }
 
         this.keyItems.forEach(item => {

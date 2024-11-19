@@ -25,9 +25,8 @@ describe('BinarySerializerCharTests', () => {
                 writeByte: vi.fn(),
                 writeBytes: vi.fn(),
                 toBytes: vi.fn(),
-                bytesWritten: vi.fn(),
                 bookmark: vi.fn(),
-                isAtRootNestingLevel: true
+                bytesWritten: 0
             };
             serializer.encode(writer, value);
 
@@ -57,7 +56,7 @@ describe('BinarySerializerCharTests', () => {
                 readBit: vi.fn(),
                 readByte: vi.fn(),
                 bookmark: vi.fn(),
-                isAtRootNestingLevel: true
+                bytesRead: 0
             };
             reader.readBytes.mockReturnValue(new Uint8Array(new Uint16Array([charCode]).buffer));
 

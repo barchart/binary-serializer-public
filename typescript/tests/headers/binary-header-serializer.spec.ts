@@ -14,9 +14,8 @@ describe('BinaryHeaderSerializerTests', () => {
                 writeBit: vi.fn(),
                 writeBytes: vi.fn(),
                 toBytes: vi.fn(),
-                bytesWritten: vi.fn(),
                 bookmark: vi.fn(),
-                isAtRootNestingLevel: true
+                bytesWritten: 0
             };
 
             serializer.encode(writer, 0, false);
@@ -33,9 +32,8 @@ describe('BinaryHeaderSerializerTests', () => {
                 writeBit: vi.fn(),
                 writeBytes: vi.fn(),
                 toBytes: vi.fn(),
-                bytesWritten: vi.fn(),
+                bytesWritten: 0,
                 bookmark: vi.fn(),
-                isAtRootNestingLevel: true
             };
 
             serializer.encode(writer, 15, true);
@@ -52,9 +50,8 @@ describe('BinaryHeaderSerializerTests', () => {
                 writeBit: vi.fn(),
                 writeBytes: vi.fn(),
                 toBytes: vi.fn(),
-                bytesWritten: vi.fn(),
                 bookmark: vi.fn(),
-                isAtRootNestingLevel: true
+                bytesWritten: 0
             };
 
             expect(() => serializer.encode(writer, 16, true)).toThrow(RangeError);
@@ -68,7 +65,7 @@ describe('BinaryHeaderSerializerTests', () => {
                 readBit: vi.fn(),
                 readBytes: vi.fn(),
                 bookmark: vi.fn(),
-                isAtRootNestingLevel: true
+                bytesRead: 0
             };
 
             const header = serializer.decode(reader);
@@ -83,7 +80,7 @@ describe('BinaryHeaderSerializerTests', () => {
                 readBit: vi.fn(),
                 readBytes: vi.fn(),
                 bookmark: vi.fn(),
-                isAtRootNestingLevel: true
+                bytesRead: 0
             };
 
             const header = serializer.decode(reader);
@@ -98,7 +95,7 @@ describe('BinaryHeaderSerializerTests', () => {
                 readBit: vi.fn(),
                 readBytes: vi.fn(),
                 bookmark: vi.fn(),
-                isAtRootNestingLevel: true
+                bytesRead: 0
             };
 
             expect(() => serializer.decode(reader)).toThrow(InvalidHeaderException);
