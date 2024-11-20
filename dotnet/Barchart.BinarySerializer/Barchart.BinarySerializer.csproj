@@ -14,8 +14,4 @@
     <Authors>Luka Sotra,Bryan Ingle</Authors>
     <Company>Barchart</Company>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-    <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.1-dev-00077" />
-  </ItemGroup>
 </Project>
