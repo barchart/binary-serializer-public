@@ -8,8 +8,8 @@
     <Nullable>enable</Nullable>
     <GenerateProgramFile>false</GenerateProgramFile>
     <IsPackable>true</IsPackable>
-    <PackageId>binary-serializer-net</PackageId>
-    <Title>binary-serializer-net</Title>
+    <PackageId>Barchart.BinarySerializer.DotNet</PackageId>
+    <Title>binary-serializer-dotnet</Title>
     <Version>0.0.1</Version>
     <Authors>Luka Sotra,Bryan Ingle</Authors>
     <Company>Barchart</Company>
