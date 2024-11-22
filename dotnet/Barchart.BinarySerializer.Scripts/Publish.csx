@@ -8,8 +8,6 @@
 #r "nuget: Newtonsoft.Json, 13.0.1"
 #r "nuget: System.CommandLine, 2.0.0-beta1"
 
-#region Using Statements
-
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -20,9 +18,6 @@ using System.Xml.Linq;
 
 using Process = System.Diagnostics.Process;
 
-#endregion
-
-#region Methods
 void RunCommand(string command, string args)
 {
     var process = new Process
@@ -107,8 +102,6 @@ void CommitAndPushChanges()
     RunCommand("git", "commit -m \"Chore: Bump project version\"");
     RunCommand("git", "push origin main");
 }
-
-#endregion
 
 string projectDirectory = "../Barchart.BinarySerializer";
 string csprojPath = $"{projectDirectory}/Barchart.BinarySerializer.csproj";
