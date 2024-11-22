@@ -42,7 +42,7 @@ export class SchemaItemNested<TEntity extends object, TMember extends object> im
         }
     }
 
-    encodeCompare(writer: DataWriter, current: TEntity, previous: TEntity): void {
+    encodeChanges(writer: DataWriter, current: TEntity, previous: TEntity): void {
         const unchanged = this.getEquals(current, previous);
 
         Serialization.writeMissingFlag(writer, unchanged);
@@ -63,7 +63,7 @@ export class SchemaItemNested<TEntity extends object, TMember extends object> im
         if (nestedPrevious === null) {
             this.schema.serialize(writer, nestedCurrent);
         } else {
-            this.schema.serializeWithPrevious(writer, nestedCurrent, nestedPrevious);
+            this.schema.serializeChanges(writer, nestedCurrent, nestedPrevious);
         }
     }
 
@@ -87,7 +87,7 @@ export class SchemaItemNested<TEntity extends object, TMember extends object> im
         } else if (nested === null) {
             target[this.name as keyof TEntity] = this.schema.deserialize(reader, true) as TEntity[keyof TEntity];
         } else {
-            this.schema.deserializeInto(reader, nested, true);
+            this.schema.deserializeChanges(reader, nested, true);
         }
     }
 

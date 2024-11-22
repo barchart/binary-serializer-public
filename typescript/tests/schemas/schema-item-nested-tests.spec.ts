@@ -13,9 +13,9 @@ class TestProperty {
 interface TestSchema extends SchemaDefinition<TestProperty> {
     entityId: number;
     serialize: Mock;
-    serializeWithPrevious: Mock;
+    serializeChanges: Mock;
     deserialize: Mock;
-    deserializeInto: Mock;
+    deserializeChanges: Mock;
     readHeader: Mock;
     readKey: Mock;
     getEquals: Mock;
@@ -35,9 +35,9 @@ describe('SchemaItemNestedTests', () => {
         schema = {
             entityId: 1,
             serialize: vi.fn(),
-            serializeWithPrevious: vi.fn(),
+            serializeChanges: vi.fn(),
             deserialize: vi.fn(),
-            deserializeInto: vi.fn(),
+            deserializeChanges: vi.fn(),
             readHeader: vi.fn(),
             readKey: vi.fn(),
             getEquals: vi.fn()
@@ -75,7 +75,7 @@ describe('SchemaItemNestedTests', () => {
             testEntity.nestedProperty.propertyName = "Test";
             testEntity.nestedProperty.propertyValue = 123;
 
-            schema.deserializeInto.mockImplementation((_reader: DataBufferReader, property: TestProperty) => {
+            schema.deserializeChanges.mockImplementation((_reader: DataBufferReader, property: TestProperty) => {
                 property.propertyName = "Test";
                 property.propertyValue = 123;
                 return property;
@@ -86,7 +86,7 @@ describe('SchemaItemNestedTests', () => {
 
             schemaItemNested.decode(reader, testEntity);
 
-            expect(schema.deserializeInto).toHaveBeenCalled();
+            expect(schema.deserializeChanges).toHaveBeenCalled();
             expect(testEntity.nestedProperty).toEqual(expect.objectContaining({ propertyName: "Test", propertyValue: 123 }));
         });
 

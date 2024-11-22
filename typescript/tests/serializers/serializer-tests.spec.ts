@@ -39,7 +39,7 @@ describe('SerializerTests', () => {
             previousEntity.keyProperty = "Key";
             previousEntity.valueProperty = "Value0";
 
-            const serialized = serializer.serializeWithPrevious(currentEntity, previousEntity);
+            const serialized = serializer.serializeChanges(currentEntity, previousEntity);
 
             expect(serialized).not.toBeNull();
             expect(serialized.length).not.toBe(0);
@@ -70,7 +70,7 @@ describe('SerializerTests', () => {
             targetEntity.keyProperty = "Key";
             targetEntity.valueProperty = "";
 
-            const deserializedEntity = serializer.deserializeInto(serialized, targetEntity);
+            const deserializedEntity = serializer.deserializeChanges(serialized, targetEntity);
 
             expect(deserializedEntity).not.toBeNull();
             expect(deserializedEntity).toEqual(targetEntity);

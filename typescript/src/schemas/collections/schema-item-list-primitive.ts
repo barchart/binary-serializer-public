@@ -52,7 +52,7 @@ export class SchemaItemListPrimitive<TEntity, TItem> implements SchemaItemDefini
         });
     }
 
-    encodeCompare(writer: DataWriter, current: TEntity, previous: TEntity): void {
+    encodeChanges(writer: DataWriter, current: TEntity, previous: TEntity): void {
         if (this.getEquals(current, previous)) {
             Serialization.writeMissingFlag(writer, true);
 

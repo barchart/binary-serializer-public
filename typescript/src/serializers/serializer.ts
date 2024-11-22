@@ -63,9 +63,9 @@ export class Serializer<TEntity extends object> {
      * @param {TEntity} previous - The previous version of the entity.
      * @returns {Uint8Array} The serialized changes to the entity, as a byte array.
      */
-    serializeWithPrevious(current: TEntity, previous: TEntity): Uint8Array {
+    serializeChanges(current: TEntity, previous: TEntity): Uint8Array {
         const writer = this.dataBufferWriterFactory.make();
-        return this.schema.serializeWithPrevious(writer, current, previous);
+        return this.schema.serializeChanges(writer, current, previous);
     }
 
     /**
@@ -90,9 +90,9 @@ export class Serializer<TEntity extends object> {
      * @param {TEntity} target - The target entity to populate with deserialized data.
      * @returns {TEntity} The reference to the `target` instance.
      */
-    deserializeInto(serialized: Uint8Array, target: TEntity): TEntity {
+    deserializeChanges(serialized: Uint8Array, target: TEntity): TEntity {
         const reader = this.dataBufferReaderFactory.make(serialized);
-        return this.schema.deserializeInto(reader, target);
+        return this.schema.deserializeChanges(reader, target);
     }
 
     /**

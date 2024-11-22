@@ -56,7 +56,7 @@ export class SchemaItemList<TEntity extends object, TItem extends object> implem
         });
     }
 
-    encodeCompare(writer: DataWriter, current: TEntity, previous: TEntity): void {
+    encodeChanges(writer: DataWriter, current: TEntity, previous: TEntity): void {
         if (this.getEquals(current, previous)) {
             Serialization.writeMissingFlag(writer, true);
 
@@ -85,7 +85,7 @@ export class SchemaItemList<TEntity extends object, TItem extends object> implem
             Serialization.writeNullFlag(writer, false);
 
             if (previousItems != null && previousItems[index] !== null) {
-                this.itemSchema.serializeWithPrevious(writer, item, previousItems[index]);
+                this.itemSchema.serializeChanges(writer, item, previousItems[index]);
             } else {
                 this.itemSchema.serialize(writer, item);
             }
@@ -114,7 +114,7 @@ export class SchemaItemList<TEntity extends object, TItem extends object> implem
             } 
             else {
                 if(currentItems != null && currentItems.length > i) {
-                    items.push(this.itemSchema.deserializeInto(reader, currentItems[i], true));
+                    items.push(this.itemSchema.deserializeChanges(reader, currentItems[i], true));
                 } else {
                     items.push(this.itemSchema.deserialize(reader, true));
                 }

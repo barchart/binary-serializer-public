@@ -37,7 +37,7 @@ describe('SchemaItemTests', () => {
             const previous = new TestEntity();
             previous.name = "PreviousValue";
 
-            expect(() => schemaItem.encodeCompare(writer, current, previous)).toThrow(KeyMismatchException);
+            expect(() => schemaItem.encodeChanges(writer, current, previous)).toThrow(KeyMismatchException);
         });
 
         it('should write data with identical key values', () => {
@@ -50,7 +50,7 @@ describe('SchemaItemTests', () => {
 
             serializerMock.getEquals = vi.fn().mockReturnValue(true);
 
-            schemaItem.encodeCompare(writer, current, previous);
+            schemaItem.encodeChanges(writer, current, previous);
 
             expect(serializerMock.encode).toHaveBeenCalledWith(expect.any(DataBufferWriter), value);
         });

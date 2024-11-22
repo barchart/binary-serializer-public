@@ -43,7 +43,7 @@ export class SchemaItem<TEntity, TMember> implements SchemaItemWithKeyDefinition
         this.serializer.encode(writer, member);
     }
 
-    encodeCompare(writer: DataWriter, current: TEntity, previous: TEntity): void {
+    encodeChanges(writer: DataWriter, current: TEntity, previous: TEntity): void {
         const valuesEqual = this.getEquals(current, previous);
 
         if (this.key && !valuesEqual) {

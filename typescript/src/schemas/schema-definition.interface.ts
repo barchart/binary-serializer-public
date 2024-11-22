@@ -37,7 +37,7 @@ export interface SchemaDefinition<TEntity extends object> {
      * @param {TEntity} previous - The previous version of the entity.
      * @returns {Uint8Array} The serialized changes to the entity, as a byte array.
      */
-    serializeWithPrevious(writer: DataWriter, current: TEntity, previous: TEntity): Uint8Array;
+    serializeChanges(writer: DataWriter, current: TEntity, previous: TEntity): Uint8Array;
 
     /**
      * Deserializes an entity. In other words, this method recreates the serialized "snapshot" as a new instance of the TEntity class.
@@ -58,7 +58,7 @@ export interface SchemaDefinition<TEntity extends object> {
      * @param {boolean} [existing] - Optional flag to indicate if the target entity is an existing instance.
      * @returns {TEntity} The reference to the target instance.
      */
-    deserializeInto(reader: DataReader, target: TEntity, existing?: boolean): TEntity;
+    deserializeChanges(reader: DataReader, target: TEntity, existing?: boolean): TEntity;
 
     /**
      * Deserializes a header from the reader.

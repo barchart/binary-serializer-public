@@ -40,7 +40,7 @@ export interface SchemaItemDefinition<TEntity> {
      * @param {TEntity} current - The current object to read data from.
      * @param {TEntity} previous - The previous object to read data from.
      */
-    encodeCompare(writer: DataWriter, current: TEntity, previous: TEntity): void;
+    encodeChanges(writer: DataWriter, current: TEntity, previous: TEntity): void;
 
     /**
      * Decodes the member value from the provided binary data reader and assigns it to the container.

@@ -60,27 +60,27 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
         return writer.toBytes();
     }
 
-    serializeWithPrevious(writer: DataWriter, current: TEntity, previous: TEntity): Uint8Array {
+    serializeChanges(writer: DataWriter, current: TEntity, previous: TEntity): Uint8Array {
         if (writer.bytesWritten === 0) {
             this.headerSerializer.encode(writer, this.entityId, false);
         }
 
         this.keyItems.forEach(item => {
-            item.encodeCompare(writer, current, previous);
+            item.encodeChanges(writer, current, previous);
         });
 
         this.valueItems.forEach(item => {
-            item.encodeCompare(writer, current, previous);
+            item.encodeChanges(writer, current, previous);
         });
 
         return writer.toBytes();
     }
 
     deserialize(reader: DataReader): TEntity {
-        return this.deserializeInto(reader, {} as TEntity, false);
+        return this.deserializeChanges(reader, {} as TEntity, false);
     }
 
-    deserializeInto(reader: DataReader, target: TEntity, existing: boolean = true): TEntity {
+    deserializeChanges(reader: DataReader, target: TEntity, existing: boolean = true): TEntity {
         if (reader.bytesRead === 0) {
             const header = this.readHeader(reader);
             this.checkHeader(header);
