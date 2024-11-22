@@ -13,9 +13,9 @@ describe('SchemaItemListTests', () => {
 
         mockSchema = {
             serialize: vi.fn(),
-            serializeWithPrevious: vi.fn(),
+            serializeChanges: vi.fn(),
             deserialize: vi.fn(),
-            deserializeInto: vi.fn(),
+            deserializeChanges: vi.fn(),
             readHeader: vi.fn(),
             readKey: vi.fn(),
             getEquals: vi.fn()

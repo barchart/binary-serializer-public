@@ -30,7 +30,7 @@ describe('SerializerTests', () => {
             expect(serialized.length).not.toBe(0);
         });
 
-        it('Serialize_WithPreviousEntity_ReturnsSerializedData', () => {
+        it('Serialize_Changes_ReturnsSerializedData', () => {
             const currentEntity = new TestEntity();
             currentEntity.keyProperty = "Key";
             currentEntity.valueProperty = "Value1";

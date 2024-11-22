@@ -75,10 +75,10 @@ currentEntity.propertyNumber = 321;
 const serializer = new Serializer<TestEntity>(entityId, schemaFields);
 
 // Serialize the changes into a byte array
-const changes: Uint8Array = serializer.serializeWithPrevious(currentEntity, previousEntity);
+const changes: Uint8Array = serializer.serializeChanges(currentEntity, previousEntity);
 
 // Deserialize the changes back into an object
-const deserializedEntity = serializer.deserializeInto(changes, previousEntity);
+const deserializedEntity = serializer.deserializeChanges(changes, previousEntity);
 
 console.log(deserializedEntity.propertyName); // Output: Name
 console.log(deserializedEntity.propertyNumber); // Output: 321
