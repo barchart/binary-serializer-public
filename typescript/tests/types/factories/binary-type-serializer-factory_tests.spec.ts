@@ -35,7 +35,7 @@ describe("BinaryTypeSerializerFactoryTests", () => {
   const unsupportedDataTypes = [
     DataType.list,
     DataType.object
-  ]
+  ];
 
   supportedDataTypes.forEach(({ type, serializer }) => {
     it(`should support the ${DataType[type]} data type`, () => {
