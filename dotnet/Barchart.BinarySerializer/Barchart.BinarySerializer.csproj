@@ -1,5 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../CodeSigningProperties.targets" />
+
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,6 +13,29 @@
     <Title>binary-serializer-dotnet</Title>
     <Version>0.0.1</Version>
     <Authors>Luka Sotra,Bryan Ingle</Authors>
-    <Company>Barchart</Company>
+    <Company>Barchart.com, Inc.</Company>
+    <PackageProjectUrl>https://github.com/barchart/binary-serializer-public</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/barchart/binary-serializer-public</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>BinarySerializer;Barchart;barchart.com</PackageTags>
+    <SignAssembly>true</SignAssembly>
+    <Configurations>Debug;Release;Publish</Configurations>
+    <Copyright>Copyright © 2024 Barchart.com, Inc.</Copyright>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetsTriggeredByCompilation>Sign</TargetsTriggeredByCompilation>
+  </PropertyGroup>
+  
+  <Target Name="Sign" Condition="'$(Configuration)' == 'Publish'">
+    <SignFile CertificateThumbprint="$(CertificateThumbprint)" SigningTarget="@(IntermediateAssembly)" TimestampUrl="$(TimestampUrl)" />
+  </Target>
+
+  <Target Name="SignAfterPack" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Publish'">
+    <Exec Command="nuget sign $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -CertificateFingerprint $(CertificateThumbprint) -Timestamper $(TimestampUrl)" />
+  </Target>
+
+  <Target Name="PublishToNuGet" DependsOnTargets="SignAfterPack" Condition="'$(Configuration)' == 'Publish'">
+    <Exec Command="nuget push $(OutputPath)..\$(PackageId).$(PackageVersion).nupkg -ApiKey $(NuGetApiKey) -Source https://api.nuget.org/v3/index.json" />
+  </Target>
 </Project>
