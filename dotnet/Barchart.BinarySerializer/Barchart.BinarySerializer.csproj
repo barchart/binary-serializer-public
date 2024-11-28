@@ -5,6 +5,7 @@
     <OutputType>Library</OutputType>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <OutputPath>bin\$(Configuration)\net8.0\</OutputPath>
+    <PackageIcon>BarchartLogo.png</PackageIcon>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateProgramFile>false</GenerateProgramFile>
@@ -22,10 +23,16 @@
     <Configurations>Debug;Release;Publish</Configurations>
     <Copyright>Copyright © 2024 Barchart.com, Inc.</Copyright>
   </PropertyGroup>
-
+  
   <PropertyGroup>
     <TargetsTriggeredByCompilation>Sign</TargetsTriggeredByCompilation>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\BarchartLogo.png" PackagePath="">
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
   
   <Target Name="Sign" Condition="'$(Configuration)' == 'Publish'">
     <SignFile CertificateThumbprint="$(CertificateThumbprint)" SigningTarget="@(IntermediateAssembly)" TimestampUrl="$(TimestampUrl)" />
