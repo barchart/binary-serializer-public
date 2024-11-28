@@ -1,6 +1,6 @@
 # @barchart/binary-serializer-net
 
-[![NuGet](https://img.shields.io/nuget/v/Barchart.BinarySerializer)](https://www.nuget.org/packages/binary-serializer-net)
+[![NuGet](https://img.shields.io/nuget/v/Barchart.BinarySerializer)](https://www.nuget.org/packages/Barchart.BinarySerializer)
 
 ## Structure
 
