@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputPath>bin\$(Configuration)\net8.0\</OutputPath>
     <PackageIcon>BarchartLogo.png</PackageIcon>
     <ImplicitUsings>enable</ImplicitUsings>
