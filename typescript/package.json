@@ -1,7 +1,7 @@
 {
 	"name": "@barchart/binary-serializer-ts",
 	"description": "Barchart Binary Serializer (TypeScript)",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"author": {
 		"name": "Luka Sotra",
 		"email": "luka.sotra@barchart.com",
@@ -13,6 +13,10 @@
 			"email": "bryan.ingle@barchart.com"
 		}
 	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/barchart/binary-serializer-public.git"
+	},
 	"scripts": {
 		"prebuild": "rm -rf dist",
 		"build": "tsc --build tsconfig.build.json",
@@ -44,5 +48,10 @@
 		"typescript-eslint": "^8.15.0",
 		"vitest": "^2.1.5"
 	},
-	"license": "MIT"
+	"license": "MIT",
+	"keywords": [
+		"Binary Serializer",
+		"Typescript",
+		"Barchart"
+	]
 }
