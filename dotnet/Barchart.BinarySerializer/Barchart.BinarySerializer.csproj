@@ -4,7 +4,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <OutputPath>bin\$(Configuration)\net8.0\</OutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
     <PackageIcon>BarchartLogo.png</PackageIcon>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -39,10 +39,10 @@
   </Target>
 
   <Target Name="SignAfterPack" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Publish'">
-    <Exec Command="nuget sign $(OutputPath)$(PackageId).$(PackageVersion).nupkg -CertificateFingerprint $(CertificateThumbprint) -Timestamper $(TimestampUrl)" />
+    <Exec Command="nuget sign bin\$(Configuration)\$(PackageId).$(PackageVersion).nupkg -CertificateFingerprint $(CertificateThumbprint) -Timestamper $(TimestampUrl)" />
   </Target>
 
   <Target Name="PublishToNuGet" DependsOnTargets="SignAfterPack" Condition="'$(Configuration)' == 'Publish'">
-    <Exec Command="nuget push $(OutputPath)$(PackageId).$(PackageVersion).nupkg -ApiKey $(NuGetApiKey) -Source https://api.nuget.org/v3/index.json" />
+    <Exec Command="nuget push bin\$(Configuration)\$(PackageId).$(PackageVersion).nupkg -ApiKey $(NuGetApiKey) -Source https://api.nuget.org/v3/index.json" />
   </Target>
 </Project>
