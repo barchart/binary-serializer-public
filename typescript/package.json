@@ -24,7 +24,9 @@
 		"lint": "yarn eslint 'src/**/*.ts' 'tests/**/*.ts'"
 	},
 	"files": [
-		"dist/**/*"
+		"dist/**/*",
+		"README.md",
+		"LICENSE"
 	],
 	"main": "./dist/src/index.js",
 	"types": "./dist/src/index.d.ts",
