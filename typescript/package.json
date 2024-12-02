@@ -36,7 +36,8 @@
 		"./dist/src/types/data_types": "./dist/src/types/data_types.js"
 	},
 	"dependencies": {
-		"decimal.js": "^10.4.3"
+		"decimal.js": "^10.4.3",
+		"@barchart/common-js": "^4.46.1"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.15.0",
