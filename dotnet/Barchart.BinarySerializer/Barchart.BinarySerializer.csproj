@@ -22,11 +22,18 @@
     <SignAssembly>true</SignAssembly>
     <Configurations>Debug;Release;Publish</Configurations>
     <Copyright>Copyright © 2024 Barchart.com, Inc.</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   
   <PropertyGroup>
     <TargetsTriggeredByCompilation>Sign</TargetsTriggeredByCompilation>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" PackagePath="">
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\BarchartLogo.png" PackagePath="">
