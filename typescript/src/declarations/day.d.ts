@@ -2,6 +2,10 @@ declare module '@barchart/common-js/lang/Day' {
     export default class Day {
         constructor(year: number, month: number, day: number);
 
+        get year(): number;
+        get month(): number;
+        get day(): number;
+
         addDays(days: number, inverse?: boolean): Day;
         subtractDays(days: number): Day;
         addMonths(months: number, inverse?: boolean): Day;
@@ -15,9 +19,6 @@ declare module '@barchart/common-js/lang/Day' {
         getIsContained(first?: Day, last?: Day): boolean;
         getIsEqual(other: Day): boolean;
         getName(): string;
-        get year(): number;
-        get month(): number;
-        get day(): number;
         format(): string;
         toJSON(): string;
 
