@@ -1,4 +1,5 @@
 import { BinarySerializerDateOnly } from "../../src";
+import Day from "@barchart/common-js/lang/Day";
 
 describe('BinarySerializerDateOnlyTests', () => {
     let serializer: BinarySerializerDateOnly;
@@ -26,7 +27,7 @@ describe('BinarySerializerDateOnlyTests', () => {
                     bookmark: vi.fn(),
                     bytesWritten: 0
                 };
-                const value = new Date(Date.UTC(year, month, day));
+                const value = new Day(year, month, day);
 
                 serializer.encode(writer, value);
 
@@ -49,7 +50,7 @@ describe('BinarySerializerDateOnlyTests', () => {
 
         testCases.forEach(({ year, month, day }) => {
             it(`should return expected value for ${year}-${month}-${day}`, () => {
-                const value = new Date(Date.UTC(year, month, day));
+                const value = new Day(year, month, day);
                 const daysSinceEpoch = serializer.getDaysSinceEpoch(value);
                 const reader = {
                     readBytes: vi.fn(),
@@ -78,11 +79,11 @@ describe('BinarySerializerDateOnlyTests', () => {
 
         testCases.forEach(([year1, month1, day1, year2, month2, day2]) => {
             it(`should match equals output for ${year1}-${month1}-${day1} and ${year2}-${month2}-${day2}`, () => {
-                const date1 = new Date(Date.UTC(year1, month1, day1));
-                const date2 = new Date(Date.UTC(year2, month2, day2));
+                const date1 = new Day(year1, month1, day1);
+                const date2 = new Day(year2, month2, day2);
 
                 const actual = serializer.getEquals(date1, date2);
-                const expected = date1.getTime() === date2.getTime();
+                const expected = date1.day === date2.day && date1.month === date2.month && date1.year === date2.year;
 
                 expect(actual).toBe(expected);
             });
