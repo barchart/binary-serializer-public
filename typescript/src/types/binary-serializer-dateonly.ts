@@ -2,15 +2,16 @@ import { DataReader } from "../buffers/data-reader.interface";
 import { DataWriter } from "../buffers/data-writer.interface";
 import { BinarySerializerInt } from "./binary-serializer-int";
 import { BinaryTypeSerializer } from "./binary-type-serializer.interface";
+import Day from "@barchart/common-js/lang/Day";
 
 /**
  * Reads (and writes) dateonly values to (and from) a binary data source.
  *
  * @public
  * @exported
- * @implements {BinaryTypeSerializer<Date>}
+ * @implements {BinaryTypeSerializer<Day>}
  */
-export class BinarySerializerDateOnly implements BinaryTypeSerializer<Date> {
+export class BinarySerializerDateOnly implements BinaryTypeSerializer<Day> {
     private binarySerializerInt: BinarySerializerInt;
 
     constructor() {
@@ -21,28 +22,26 @@ export class BinarySerializerDateOnly implements BinaryTypeSerializer<Date> {
         return 4;
     }
 
-    encode(writer: DataWriter, value: Date): void {
+    encode(writer: DataWriter, value: Day): void {
         this.binarySerializerInt.encode(writer, this.getDaysSinceEpoch(value));
     }
 
-    decode(reader: DataReader): Date {
+    decode(reader: DataReader): Day {
         const daysSinceEpoch = this.binarySerializerInt.decode(reader);
-        return this.addDaysToDate(new Date('0001-01-01T00:00:00Z'), daysSinceEpoch);
+        return this.addDaysToEpoch(daysSinceEpoch);
     }
 
-    getEquals(a: Date, b: Date): boolean {
-        return a.getTime() === b.getTime();
+    getEquals(a: Day, b: Day): boolean {
+        return a.getIsEqual(b);
     }
 
-    getDaysSinceEpoch(value: Date): number {
-        const epoch = new Date('0001-01-01T00:00:00Z');
-        const diff = value.getTime() - epoch.getTime();
-        return Math.floor(diff / (1000 * 60 * 60 * 24));
+    getDaysSinceEpoch(value: Day): number {
+        const epoch = new Day(1, 1, 1);
+        return Day.countDaysBetween(epoch, value);
     }
 
-    private addDaysToDate(date: Date, days: number): Date {
-        const result = new Date(date);
-        result.setTime(result.getTime() + days * 24 * 60 * 60 * 1000);
-        return result;
+    private addDaysToEpoch(days: number): Day {
+        const epoch = new Day(1, 1, 1);
+        return epoch.addDays(days);
     }
 }
