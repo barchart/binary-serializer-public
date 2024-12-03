@@ -40,6 +40,10 @@
       <Pack>True</Pack>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Barchart.Common" Version="1.0.0" />
+  </ItemGroup>
   
   <Target Name="Sign" Condition="'$(Configuration)' == 'Publish'">
     <SignFile CertificateThumbprint="$(CertificateThumbprint)" SigningTarget="@(IntermediateAssembly)" TimestampUrl="$(TimestampUrl)" />
