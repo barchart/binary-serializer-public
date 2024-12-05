@@ -61,21 +61,21 @@ namespace Barchart.BinarySerializer.Tests.Schemas.Factories
 
         #endregion
 
-        // [Fact]
-        // public void InheritanceTest()
-        // {
-        //     TestEntityB testEntity = new()
-        //     {
-        //         SerializedProperty = 6,
-        //         SerializedPropertyB = 2
-        //     };
-        //     
-        //     Serializer<TestEntity> serializer = new(1);
-        //     byte[] bytes = serializer.Serialize(testEntity);
-        //        
-        //     
-        //     TestEntity result = serializer.Deserialize(bytes);
-        // }
+        [Fact]
+        public void InheritanceTest()
+        {
+            TestEntityB testEntity = new()
+            {
+                SerializedProperty = 6,
+                SerializedPropertyB = 2
+            };
+            
+            Serializer<TestEntity> serializer = new(1);
+            byte[] bytes = serializer.Serialize(testEntity);
+               
+            
+            TestEntity result = serializer.Deserialize(bytes);
+        }
         
         #region Nested Types
 

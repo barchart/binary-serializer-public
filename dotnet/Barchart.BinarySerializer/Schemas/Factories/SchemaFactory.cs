@@ -41,7 +41,7 @@ public class SchemaFactory : ISchemaFactory
     #region Methods
 
     /// <inheritdoc />
-    public ISchema<TEntity> Make<TEntity>(byte entityId = 0) where TEntity: class, new()
+    public ISchema<TEntity> Make<TEntity>(byte entityId = 0) where TEntity : class, new()
     {
         if (entityId == 0)
         {
@@ -72,7 +72,7 @@ public class SchemaFactory : ISchemaFactory
         
         if (IsTypeSupported(memberType))
         {
-            typeParameters = new [] { typeof(TEntity), memberType };
+            typeParameters = [typeof(TEntity), memberType];
 
             unboundMethod = methods.Single(GetMakeSchemaItemPredicate(typeParameters));
         }
@@ -89,7 +89,7 @@ public class SchemaFactory : ISchemaFactory
                 itemType = memberType.GetGenericArguments()[0];
             }
 
-            typeParameters = new[] { typeof(TEntity), itemType! };
+            typeParameters = [typeof(TEntity), itemType!];
 
             if (_binaryTypeSerializerFactory.Supports(itemType!))
             {
@@ -102,7 +102,7 @@ public class SchemaFactory : ISchemaFactory
         }
         else if (IsNestedClass(memberType))
         {
-            typeParameters = new [] { typeof(TEntity), memberType };
+            typeParameters = [typeof(TEntity), memberType];
 
             unboundMethod = methods.Single(GetMakeSchemaItemNestedPredicate(typeParameters));
         }
@@ -113,7 +113,7 @@ public class SchemaFactory : ISchemaFactory
         
         MethodInfo boundMethod = unboundMethod.MakeGenericMethod(typeParameters);
 
-        object[] methodParameters = { memberInfo };
+        object[] methodParameters = [memberInfo];
         
         object? schemaItem = boundMethod.Invoke(this, methodParameters);
         
@@ -239,9 +239,10 @@ public class SchemaFactory : ISchemaFactory
 
     private static Func<TEntity, TMember> MakeMemberGetter<TEntity, TMember>(MemberInfo memberInfo)
     {
-        ParameterExpression[] typeParameterExpressions = {
+        ParameterExpression[] typeParameterExpressions =
+        [
             Expression.Parameter(typeof(TEntity))
-        };
+        ];
         
         MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
         
@@ -250,9 +251,10 @@ public class SchemaFactory : ISchemaFactory
 
     private static Func<TEntity, IList<TItem>> MakeCollectionMemberGetter<TEntity, TItem>(MemberInfo memberInfo)
     {
-        ParameterExpression[] typeParameterExpressions = {
+        ParameterExpression[] typeParameterExpressions =
+        [
             Expression.Parameter(typeof(TEntity))
-        };
+        ];
 
         MemberExpression memberAccess = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
 
@@ -278,10 +280,11 @@ public class SchemaFactory : ISchemaFactory
     
     private static Action<TEntity, TMember> MakeMemberSetter<TEntity, TMember>(MemberInfo memberInfo)
     {
-        ParameterExpression[] typeParameterExpressions = {
+        ParameterExpression[] typeParameterExpressions =
+        [
             Expression.Parameter(typeof(TEntity)),
             Expression.Parameter(typeof(TMember))
-        };
+        ];
         
         MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
         BinaryExpression propertyAssignmentExpression = Expression.Assign(propertyAccessExpression, typeParameterExpressions[1]);
@@ -291,10 +294,11 @@ public class SchemaFactory : ISchemaFactory
     
     private static Action<TEntity, IList<TItem>> MakeCollectionMemberSetter<TEntity, TItem>(MemberInfo memberInfo)
     {
-        ParameterExpression[] typeParameterExpressions = {
+        ParameterExpression[] typeParameterExpressions =
+        [
             Expression.Parameter(typeof(TEntity)),
             Expression.Parameter(typeof(IList<TItem>))
-        };
+        ];
 
         MemberExpression memberAccess = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
 
