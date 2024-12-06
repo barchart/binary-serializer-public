@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Barchart.Common" Version="1.0.2" />
+    <PackageReference Include="Barchart.Common" Version="1.0.3" />
   </ItemGroup>
   
   <Target Name="Sign" Condition="'$(Configuration)' == 'Publish'">
