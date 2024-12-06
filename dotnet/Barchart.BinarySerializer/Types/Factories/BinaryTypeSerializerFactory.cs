@@ -10,14 +10,14 @@ namespace Barchart.BinarySerializer.Types.Factories;
 public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
 {
     #region Fields
-
-    private static readonly IDictionary<Type, IBinaryTypeSerializer> Serializers = new Dictionary<Type, IBinaryTypeSerializer>();
-
+    
+    private readonly IDictionary<Type, IBinaryTypeSerializer> _serializers = new Dictionary<Type, IBinaryTypeSerializer>();
+    
     #endregion
 
     #region Constructor(s)
     
-    static BinaryTypeSerializerFactory()
+    public BinaryTypeSerializerFactory()
     {
         InitializeSerializers();
     }
@@ -29,7 +29,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     /// <inheritdoc />
     public virtual bool Supports(Type type)
     {
-        return Serializers.ContainsKey(type) || type.IsEnum || IsNullableEnum(type);
+        return _serializers.ContainsKey(type) || type.IsEnum || IsNullableEnum(type);
     }
     
     /// <inheritdoc />
@@ -41,7 +41,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     /// <inheritdoc />
     public virtual IBinaryTypeSerializer<T> Make<T>()
     {
-        if (Serializers.TryGetValue(typeof(T), out IBinaryTypeSerializer? serializer))
+        if (_serializers.TryGetValue(typeof(T), out IBinaryTypeSerializer? serializer))
         {
             return (IBinaryTypeSerializer<T>)serializer;
         }
@@ -49,7 +49,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         return (IBinaryTypeSerializer<T>)CreateSerializer(typeof(T));
     }
 
-    private static void InitializeSerializers()
+    private void InitializeSerializers()
     {
         AddStructSerializer(new BinarySerializerBool());
         AddStructSerializer(new BinarySerializerByte());
@@ -68,21 +68,21 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         AddStructSerializer(new BinarySerializerUShort());
         
         AddSerializer(new BinarySerializerString());
-        AddEnumSerializer((BinarySerializerInt)Serializers[typeof(int)]);
+        AddEnumSerializer((BinarySerializerInt)_serializers[typeof(int)]);
     }
     
-    private static void AddSerializer<T>(IBinaryTypeSerializer<T> serializer)
+    private void AddSerializer<T>(IBinaryTypeSerializer<T> serializer)
     {
-        Serializers[typeof(T)] = serializer;
+        _serializers[typeof(T)] = serializer;
     }
     
-    private static void AddStructSerializer<T>(IBinaryTypeSerializer<T> serializer) where T: struct
+    private void AddStructSerializer<T>(IBinaryTypeSerializer<T> serializer) where T: struct
     {
         AddSerializer(serializer);
         AddSerializer(new BinarySerializerNullable<T>(serializer));
     }
 
-    private static void AddEnumSerializer(BinarySerializerInt serializer)
+    private void AddEnumSerializer(BinarySerializerInt serializer)
     {
         AddSerializer(serializer);
         AddSerializer(new BinarySerializerNullable<int>(serializer));
@@ -106,7 +106,7 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     private IBinaryTypeSerializer CreateEnumSerializer(Type enumType)
     {
         Type serializerType = typeof(BinarySerializerEnum<>).MakeGenericType(enumType);
-        return (IBinaryTypeSerializer)Activator.CreateInstance(serializerType, Serializers[typeof(int)])!;
+        return (IBinaryTypeSerializer)Activator.CreateInstance(serializerType, _serializers[typeof(int)])!;
     }
 
     private IBinaryTypeSerializer CreateNullableEnumSerializer(Type nullableEnumType)
