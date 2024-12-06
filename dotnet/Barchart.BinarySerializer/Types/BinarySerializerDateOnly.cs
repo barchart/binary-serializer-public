@@ -1,6 +1,7 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.Common.Extensions;
 
 #endregion
 
@@ -22,7 +23,7 @@ public class BinarySerializerDateOnly : IBinaryTypeSerializer<DateOnly>
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, DateOnly value)
     {
-        _binarySerializerInt.Encode(writer, GetDaysSinceEpoch(value));
+        _binarySerializerInt.Encode(writer, value.GetDaysSinceEpoch());
     }
 
     /// <inheritdoc />
@@ -37,11 +38,6 @@ public class BinarySerializerDateOnly : IBinaryTypeSerializer<DateOnly>
     public bool GetEquals(DateOnly a, DateOnly b)
     {
         return a.Equals(b);
-    }
-    
-    private static int GetDaysSinceEpoch(DateOnly value)
-    {
-        return value.DayNumber - DateOnly.MinValue.DayNumber;
     }
 
     #endregion

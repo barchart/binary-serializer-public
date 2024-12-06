@@ -1,6 +1,7 @@
 ﻿#region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.Common.Extensions;
 
 #endregion
 
@@ -22,7 +23,7 @@ public class BinarySerializerDateTime : IBinaryTypeSerializer<DateTime>
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, DateTime value)
     {
-        _binarySerializerLong.Encode(writer, GetMillisecondsSinceEpoch(value));
+        _binarySerializerLong.Encode(writer, value.GetMillisecondsSinceUnixEpoch());
     }
 
     /// <inheritdoc />
@@ -37,13 +38,6 @@ public class BinarySerializerDateTime : IBinaryTypeSerializer<DateTime>
     public bool GetEquals(DateTime a, DateTime b)
     {
         return a.Equals(b);
-    }
-
-    private static long GetMillisecondsSinceEpoch(DateTime value)
-    {
-        TimeSpan timeSpan = value - DateTime.UnixEpoch;
-
-        return Convert.ToInt64(timeSpan.TotalMilliseconds);
     }
 
     #endregion
