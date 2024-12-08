@@ -31,9 +31,9 @@ public class BinarySerializerEnumTests
     #region Test Methods (Encode)
     
     [Theory]
-    [InlineData(TestEnum.Value1)]
-    [InlineData(TestEnum.Value2)]
-    [InlineData(TestEnum.Value3)]
+    [InlineData(TestEnum.ValueOne)]
+    [InlineData(TestEnum.ValueOneMillion)]
+    [InlineData(TestEnum.ValueOneBillion)]
     public void Encode_Various_WritesExpectedBytes(TestEnum value)
     {
         Mock<IDataBufferWriter> mock = new();
@@ -71,9 +71,9 @@ public class BinarySerializerEnumTests
     #region Test Methods (Decode)
 
     [Theory]
-    [InlineData(TestEnum.Value1)]
-    [InlineData(TestEnum.Value2)]
-    [InlineData(TestEnum.Value3)]
+    [InlineData(TestEnum.ValueOne)]
+    [InlineData(TestEnum.ValueOneMillion)]
+    [InlineData(TestEnum.ValueOneBillion)]
     public void Decode_VariousEncoded_ReturnsExpectedValue(TestEnum expectedValue)
     {
         int intValue = Convert.ToInt32(expectedValue);
@@ -91,12 +91,12 @@ public class BinarySerializerEnumTests
     #region Test Methods (GetEquals)
 
     [Theory]
-    [InlineData(new[] { TestEnum.Value1, TestEnum.Value1 })]
-    [InlineData(new[] { TestEnum.Value2, TestEnum.Value2 })]
-    [InlineData(new[] { TestEnum.Value3, TestEnum.Value3 })]
-    [InlineData(new[] { TestEnum.Value1, TestEnum.Value2 })]
-    [InlineData(new[] { TestEnum.Value2, TestEnum.Value3 })]
-    [InlineData(new[] { TestEnum.Value1, TestEnum.Value3 })]
+    [InlineData(new[] { TestEnum.ValueOne, TestEnum.ValueOne })]
+    [InlineData(new[] { TestEnum.ValueOneMillion, TestEnum.ValueOneMillion })]
+    [InlineData(new[] { TestEnum.ValueOneBillion, TestEnum.ValueOneBillion })]
+    [InlineData(new[] { TestEnum.ValueOne, TestEnum.ValueOneMillion })]
+    [InlineData(new[] { TestEnum.ValueOneMillion, TestEnum.ValueOneBillion })]
+    [InlineData(new[] { TestEnum.ValueOne, TestEnum.ValueOneBillion })]
     public void GetEquals_Various_ReturnsExpectedResult(TestEnum[] testEnums)
     {
         bool actual = _serializer.GetEquals(testEnums[0], testEnums[1]);
@@ -111,9 +111,9 @@ public class BinarySerializerEnumTests
     
     public enum TestEnum
     {
-        Value1,
-        Value2,
-        Value3
+        ValueOne = 1,
+        ValueOneMillion = 1000000,
+        ValueOneBillion = 1000000000
     }
     
     #endregion

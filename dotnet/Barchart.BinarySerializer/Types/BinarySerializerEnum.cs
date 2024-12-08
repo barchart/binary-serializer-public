@@ -8,6 +8,9 @@ namespace Barchart.BinarySerializer.Types;
 
 /// <summary>
 ///     Reads (and writes) enumeration values to (and from) a binary data source.
+///     Serialization uses a 32-bit integer (with a maximum of 2.1 billion items).
+///     In other words, this serializer probably uses too much bandwidth considering
+///     that most enumerations contain relatively few items.
 /// </summary>
 /// <typeparam name="T">
 ///     The enumeration type.

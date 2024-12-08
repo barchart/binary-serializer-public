@@ -208,6 +208,14 @@ public class BinaryTypeSerializerFactoryTests
     }
     
     [Fact]
+    public void Make_EnumByte_ReturnsTypedSerializer()
+    {
+        IBinaryTypeSerializer<TestEnumByte> serializer = _factory.Make<TestEnumByte>();
+
+        Assert.IsAssignableFrom<IBinaryTypeSerializer<TestEnumByte>>(serializer);
+    }
+    
+    [Fact]
     public void Make_Single_ReturnsTypedSerializer()
     {
         IBinaryTypeSerializer<float> serializer = _factory.Make<float>();
@@ -304,6 +312,13 @@ public class BinaryTypeSerializerFactoryTests
         Value3
     }
 
+    private enum TestEnumByte : byte
+    {
+        Value1,
+        Value2,
+        Value3
+    }
+    
     private class TestClass
     {
         
