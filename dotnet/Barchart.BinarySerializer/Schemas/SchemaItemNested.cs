@@ -8,8 +8,10 @@ using Barchart.BinarySerializer.Utilities;
 namespace Barchart.BinarySerializer.Schemas;
 
 /// <summary>
-///     Provides a mechanism for handling the serialization and deserialization of nested properties within an entity,
-///     facilitating the conversion to and from a binary format while managing nullability and presence flags for optimized storage efficiency.
+///     Provides a mechanism for handling the serialization and deserialization of
+///     nested properties within an entity, facilitating the conversion to and from
+///     a binary format while managing nullability and presence flags for optimized
+///     storage efficiency.
 /// </summary>
 /// <typeparam name="TEntity">
 ///     The type which contains the data to be serialized. In other words,
