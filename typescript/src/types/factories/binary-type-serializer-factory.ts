@@ -60,20 +60,21 @@ export class BinaryTypeSerializerFactory implements SerializerFactory {
     }
 
     make<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum): BinaryTypeSerializer<T> {
+        const serializer = this.serializers.get(dataType);
+
+        if (serializer){
+            return serializer as BinaryTypeSerializer<T>;
+        }
+
         if (dataType === DataType.enum) {
             if (!enumType) {
                 throw new Error("Enum type is required for DataType.enum");
             }
+
             return this.createEnumSerializer(enumType) as BinaryTypeSerializer<T>;
         }
 
-        const serializer = this.serializers.get(dataType);
-
-        if (!serializer) {
-            throw new UnsupportedTypeException(dataType);
-        }
-
-        return serializer as BinaryTypeSerializer<T>;
+        throw new UnsupportedTypeException(dataType);
     }
 
     makeNullable<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum): BinaryTypeSerializer<T | null> {
