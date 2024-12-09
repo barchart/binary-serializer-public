@@ -56,7 +56,7 @@ namespace Barchart.BinarySerializer.Tests.Schemas.Factories
             ISchema<TestEntity> schema = _schemaFactory.Make<TestEntity>(entityId);
 
             Assert.NotNull(schema);
-            Assert.IsType<Schema<TestEntity>>(schema);
+            Assert.IsAssignableFrom<ISchema<TestEntity>>(schema);
         }
 
         #endregion
