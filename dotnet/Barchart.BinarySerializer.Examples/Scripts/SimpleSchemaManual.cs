@@ -34,7 +34,7 @@ public class SimpleSchemaManual : IScript
         
         Schema<Person> schema = new(new ISchemaItem<Person>[]
         {
-            new SchemaItem<Person, string>("Name", false, (p) => p.Name, (p, value) => p.Name = value, new BinarySerializerString()!),
+            new SchemaItem<Person, string>("Name", false, (p) => p.Name, (p, value) => p.Name = value, new BinarySerializerString()),
             new SchemaItem<Person, ushort>("Age", false, (p) => p.Age, (p, value) => p.Age = value, new BinarySerializerUShort()),
             new SchemaItem<Person, bool>("IsProgrammer", false, (p) => p.IsProgrammer, (p, value) => p.IsProgrammer = value, new BinarySerializerBool())
         });
