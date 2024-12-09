@@ -97,7 +97,6 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
         if (nestedPrevious == null)
         {
             _schema.Serialize(writer, nestedCurrent);
-
         }
         else
         { 
