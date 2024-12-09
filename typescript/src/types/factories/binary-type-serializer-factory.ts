@@ -29,9 +29,9 @@ import { BinarySerializerNullable } from "../binary-serializer-nullable";
  * @implements {SerializerFactory}
  */
 export class BinaryTypeSerializerFactory implements SerializerFactory {
-    private static serializers: Map<DataType, BinaryTypeSerializerBase> = new Map();
+    private readonly serializers: Map<DataType, BinaryTypeSerializerBase> = new Map();
 
-    static initializeSerializers() {
+    initializeSerializers() {
         this.serializers.set(DataType.bool, new BinarySerializerBool());
         this.serializers.set(DataType.byte, new BinarySerializerByte());
         this.serializers.set(DataType.char, new BinarySerializerChar());
@@ -51,18 +51,16 @@ export class BinaryTypeSerializerFactory implements SerializerFactory {
         this.serializers.set(DataType.enum, new BinarySerializerEnum(this.serializers.get(DataType.int) as BinarySerializerInt));
     }
 
-    static {
+    constructor() {
         this.initializeSerializers();
     }
 
-    constructor() {}
-
     supports(dataType: DataType): boolean {
-        return BinaryTypeSerializerFactory.serializers.has(dataType);
+        return this.serializers.has(dataType);
     }
 
     make<T>(dataType: DataType): BinaryTypeSerializer<T> {
-        const serializer = BinaryTypeSerializerFactory.serializers.get(dataType);
+        const serializer = this.serializers.get(dataType);
 
         if (!serializer) {
             throw new UnsupportedTypeException(dataType);
