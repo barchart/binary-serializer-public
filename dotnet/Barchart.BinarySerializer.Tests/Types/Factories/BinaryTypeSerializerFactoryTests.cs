@@ -116,7 +116,7 @@ public class BinaryTypeSerializerFactoryTests
     }
     
     [Fact]
-    public void Supports_TestClass_ReturnsTrue()
+    public void Supports_TestClass_ReturnsFalse()
     {
         Assert.False(_factory.Supports<TestClass>());
     }
