@@ -9,6 +9,7 @@ import { SchemaItemNested } from "../schema-item-nested";
 import { SchemaItemList } from "../collections/schema-item-list";
 import { SchemaItemListPrimitive } from "../collections/schema-item-list-primitive";
 import { SchemaDefinition } from "../schema-definition.interface";
+import { SerializerFactory } from "../../types/factories/serializer-factory.interface";
 
 /**
  * Defines a factory for creating schemas for entities.
@@ -19,9 +20,9 @@ import { SchemaDefinition } from "../schema-definition.interface";
  * @param {BinaryTypeSerializerFactory} binarySerializerFactory - The factory used to create binary serializers for the schema.
  */
 export class SchemaFactory implements SerializationSchemaFactory {
-    private readonly binaryTypeSerializerFactory: BinaryTypeSerializerFactory;
+    private readonly binaryTypeSerializerFactory: SerializerFactory;
 
-    constructor(binarySerializerFactory: BinaryTypeSerializerFactory = new BinaryTypeSerializerFactory()) {
+    constructor(binarySerializerFactory: SerializerFactory = new BinaryTypeSerializerFactory()) {
         this.binaryTypeSerializerFactory = binarySerializerFactory;
     }
    
