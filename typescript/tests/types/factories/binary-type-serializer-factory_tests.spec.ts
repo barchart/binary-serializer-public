@@ -4,6 +4,7 @@ import {
   BinarySerializerInt, BinarySerializerLong, BinarySerializerSByte, BinarySerializerString, BinarySerializerUInt, BinarySerializerULong,
   BinarySerializerUShort, UnsupportedTypeException
 } from "../../../src";
+import Enum from "@barchart/common-js/lang/Enum";
 
 describe("BinaryTypeSerializerFactoryTests", () => {
   let factory: BinaryTypeSerializerFactory;
@@ -44,7 +45,8 @@ describe("BinaryTypeSerializerFactoryTests", () => {
     });
 
     it(`should create a serializer for the ${DataType[type]} data type`, () => {
-      const createdSerializer = factory.make(type);
+      const createdSerializer = factory.make(type, type === DataType.enum ? Enum : undefined);
+
       expect(createdSerializer).toBeDefined();
       expect(createdSerializer).toBeInstanceOf(serializer);
     });

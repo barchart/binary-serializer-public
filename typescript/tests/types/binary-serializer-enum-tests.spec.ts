@@ -1,7 +1,13 @@
-enum TestEnum {
-    Value1 = 1,
-    Value2 = 2,
-    Value3 = 3
+import Enum from "@barchart/common-js/lang/Enum";
+
+class TestEnum extends Enum {
+    static Value1 = new TestEnum('Value1', 'Description for Value1', 1);
+    static Value2 = new TestEnum('Value2', 'Description for Value2', 2);
+    static Value3 = new TestEnum('Value3', 'Description for Value3', 3);
+
+    constructor(code: string, description: string, mapping: number) {
+        super(code, description, mapping);
+    }
 }
 
 import { BinarySerializerEnum, BinarySerializerInt } from "../../src";
@@ -10,7 +16,7 @@ describe('BinarySerializerEnumTests', () => {
     let serializer: BinarySerializerEnum<TestEnum>;
 
     beforeEach(() => {
-        serializer = new BinarySerializerEnum<TestEnum>(new BinarySerializerInt());
+        serializer = new BinarySerializerEnum<TestEnum>(new BinarySerializerInt(), TestEnum);
     });
 
     describe('Encode', () => {
@@ -21,7 +27,7 @@ describe('BinarySerializerEnumTests', () => {
         ];
 
         testCases.forEach((value) => {
-            it(`should write expected bytes for ${TestEnum[value]}`, () => {
+            it(`should write expected bytes for ${value.code}`, () => {
                 const writer = {
                     writeBit: vi.fn(),
                     writeByte: vi.fn(),
@@ -43,7 +49,7 @@ describe('BinarySerializerEnumTests', () => {
                 expect(bitsWritten.length).toBe(0);
                 expect(byteWritten.length).toBe(0);
 
-                const intValue = value as number;
+                const intValue = value.mapping as number;
                 const expectedBytes = new Uint8Array(new Int32Array([intValue]).buffer);
 
                 expect(bytesWritten.length).toBe(1);
@@ -64,8 +70,8 @@ describe('BinarySerializerEnumTests', () => {
         ];
 
         testCases.forEach((expectedValue) => {
-            it(`should return expected value for ${TestEnum[expectedValue]}`, () => {
-                const intValue = expectedValue as number;
+            it(`should return expected value for ${expectedValue.code}`, () => {
+                const intValue = expectedValue.mapping as number;
                 const reader = {
                     readBytes: vi.fn(),
                     readBit: vi.fn(),
@@ -93,7 +99,7 @@ describe('BinarySerializerEnumTests', () => {
         ];
 
         testCases.forEach(([first, second]) => {
-            it(`should return expected result for ${TestEnum[first]} and ${TestEnum[second]}`, () => {
+            it(`should return expected result for ${first.code} and ${second.code}`, () => {
                 const actual = serializer.getEquals(first, second);
                 const expected = first === second;
 

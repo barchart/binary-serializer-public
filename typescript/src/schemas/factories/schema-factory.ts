@@ -3,7 +3,7 @@ import { SchemaItem } from "../schema-item";
 import { SchemaItemDefinition } from "../schema-item-definition.interface";
 import { Schema } from "../schema";
 import { SerializationSchemaFactory } from "./serialization-schema-factory.interface";
-import { SchemaField } from "../schema-field.type";
+import { SchemaField, SchemaPrimitiveField } from "../schema-field.type";
 import { BinaryTypeSerializerFactory } from '../../types/factories/binary-type-serializer-factory';
 import { SchemaItemNested } from "../schema-item-nested";
 import { SchemaItemList } from "../collections/schema-item-list";
@@ -25,7 +25,7 @@ export class SchemaFactory implements SerializationSchemaFactory {
     constructor(binarySerializerFactory: SerializerFactory = new BinaryTypeSerializerFactory()) {
         this.binaryTypeSerializerFactory = binarySerializerFactory;
     }
-   
+
     make<TEntity extends object>(entityId: number = 0, fields: SchemaField[]): SchemaDefinition<TEntity> {
         const memberDataContainer: SchemaItemDefinition<TEntity>[] = fields.map(field => {
             return this.createMemberDataDefinition<TEntity>(entityId, field);
@@ -37,16 +37,16 @@ export class SchemaFactory implements SerializationSchemaFactory {
     }
 
     private createMemberDataDefinition<TEntity extends object>(entityId: number, field: SchemaField ): SchemaItemDefinition<TEntity> {
-        
+
         if (this.isNestedClass(field) && "fields" in field) {
             const nestedSchema = this.make(entityId, field.fields);
-           
+
             return new SchemaItemNested<TEntity, any>(field.name, nestedSchema);
         }
 
         if (this.isList(field) && "fields" in field) {
             const nestedSchema = this.make(entityId, field.fields);
-        
+
             return new SchemaItemList<TEntity, any>(field.name, nestedSchema);
         }
 
@@ -56,17 +56,16 @@ export class SchemaFactory implements SerializationSchemaFactory {
             return new SchemaItemListPrimitive<TEntity, any>(field.name, serializer);
         }
 
-        return this.createPrimitiveMemberData<TEntity>(field);
+        return this.createPrimitiveMemberData<TEntity>(field as SchemaPrimitiveField);
     }
 
-    private createPrimitiveMemberData<TEntity>(field: SchemaField): SchemaItemDefinition<TEntity> {
+    private createPrimitiveMemberData<TEntity>(field: SchemaPrimitiveField): SchemaItemDefinition<TEntity> {
         let serializer;
 
         if ('nullable' in field && field.nullable === true) {
-            serializer = this.binaryTypeSerializerFactory.makeNullable(field.type);
-        }
-        else{
-            serializer = this.binaryTypeSerializerFactory.make(field.type);
+            serializer = this.binaryTypeSerializerFactory.makeNullable(field.type, field.enumType);
+        } else {
+            serializer = this.binaryTypeSerializerFactory.make(field.type, field.enumType);
         }
 
         const isKey = 'isKey' in field && field.isKey === true;
@@ -99,7 +98,7 @@ export class SchemaFactory implements SerializationSchemaFactory {
                 throw new Error(`Unsupported data type: ${field.type}`);
         }
     }
-  
+
     private isNestedClass(field: SchemaField): boolean {
         return field.type === DataType.object;
     }

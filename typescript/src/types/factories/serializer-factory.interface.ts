@@ -1,5 +1,6 @@
 import { BinaryTypeSerializer } from "../binary-type-serializer.interface";
 import { DataType } from "../data-types";
+import Enum from "@barchart/common-js/lang/Enum";
 
 /**
  * Defines a factory for creating binary type serializers.
@@ -21,17 +22,21 @@ export interface SerializerFactory {
      * Creates a binary type serializer for the specified type.
      *
      * @public
+     * @param {DataType} dataType - The type to create a serializer for.
+     * @param {new (...args: any[]) => Enum} [enumType] - Optional, the enumeration type (if the specified type is an enumeration).
      * @returns An BinaryTypeSerializer for the specified type.
      * @throws {UnsupportedTypeException} Thrown when the factory is unable to create a serializer for the specified type.
      */
-    make<T>(dataType: DataType): BinaryTypeSerializer<T>;
+    make<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum): BinaryTypeSerializer<T>;
 
     /**
      * Creates a binary type serializer for the specified nullable type.
      *
      * @public
+     * @param {DataType} dataType - The type to create a serializer for.
+     * @param {new (...args: any[]) => Enum} [enumType] - Optional, the enumeration type (if the specified type is an enumeration).
      * @returns An BinaryTypeSerializer for the specified type.
      * @throws {UnsupportedTypeException} Thrown when the factory is unable to create a serializer for the specified type.
      */
-    makeNullable<T>(dataType: DataType): BinaryTypeSerializer<T | null>;
+    makeNullable<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum): BinaryTypeSerializer<T | null>;
 }

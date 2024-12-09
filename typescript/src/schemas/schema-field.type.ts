@@ -1,5 +1,5 @@
 import { DataType } from "../types/data-types";
-
+import Enum from "@barchart/common-js/lang/Enum";
 
 /**
  * Represents a field in a data structure that is a simple type, including support for nullable types.
@@ -27,6 +27,11 @@ export type SchemaPrimitiveField = {
      * Indicates whether the field is nullable.
      */
     nullable?: boolean;
+
+    /**
+     * The enumeration type if the field is an enumeration.
+     */
+    enumType?: new (...args: any[]) => Enum;
 }
 
 /**
