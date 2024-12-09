@@ -33,8 +33,7 @@ public class SchemaItemNestedTests
         _reader = new DataBufferReader(buffer);
 
         _mockSchema = new Mock<ISchema<TestProperty>>();
-        _schemaItemNested = new SchemaItemNested<TestEntity, TestProperty>("NestedProperty", entity => entity.NestedProperty!,
-            (entity, value) => entity.NestedProperty = value, _mockSchema.Object);
+        _schemaItemNested = new SchemaItemNested<TestEntity, TestProperty>("NestedProperty", entity => entity.NestedProperty!, (entity, value) => entity.NestedProperty = value, _mockSchema.Object);
     }
 
     #endregion
