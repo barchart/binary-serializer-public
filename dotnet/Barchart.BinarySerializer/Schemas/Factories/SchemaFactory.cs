@@ -261,6 +261,7 @@ public class SchemaFactory : ISchemaFactory
         Type memberType = memberInfo is PropertyInfo propertyInfo ? propertyInfo.PropertyType : (memberInfo as FieldInfo)!.FieldType;
 
         Expression conversion;
+        
         if (IsArrayType(memberType))
         {
             MethodInfo toListMethod = typeof(Enumerable).GetMethod("ToList")!.MakeGenericMethod(memberType.GetElementType()!);
@@ -307,6 +308,7 @@ public class SchemaFactory : ISchemaFactory
         Expression nullCheckExpression = Expression.Equal(typeParameterExpressions[1], Expression.Constant(null, typeof(IList<TItem>)));
 
         Expression assignmentExpression;
+        
         if (IsArrayType(memberType))
         {
             MethodInfo toArrayMethod = typeof(Enumerable).GetMethod("ToArray")!.MakeGenericMethod(memberType.GetElementType()!);
