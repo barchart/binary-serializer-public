@@ -19,7 +19,23 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
     
     public BinaryTypeSerializerFactory()
     {
-        InitializeSerializers();
+        AddStructSerializer(new BinarySerializerBool());
+        AddStructSerializer(new BinarySerializerByte());
+        AddStructSerializer(new BinarySerializerChar());
+        AddStructSerializer(new BinarySerializerDateOnly());
+        AddStructSerializer(new BinarySerializerDateTime());
+        AddStructSerializer(new BinarySerializerDecimal());
+        AddStructSerializer(new BinarySerializerDouble());
+        AddStructSerializer(new BinarySerializerFloat());
+        AddStructSerializer(new BinarySerializerInt());
+        AddStructSerializer(new BinarySerializerLong());
+        AddStructSerializer(new BinarySerializerSByte());
+        AddStructSerializer(new BinarySerializerShort());
+        AddStructSerializer(new BinarySerializerUInt());
+        AddStructSerializer(new BinarySerializerULong());
+        AddStructSerializer(new BinarySerializerUShort());
+        
+        AddSerializer(new BinarySerializerString());
     }
 
     #endregion
@@ -47,27 +63,6 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
         }
 
         return (IBinaryTypeSerializer<T>)CreateSerializer(typeof(T));
-    }
-
-    private void InitializeSerializers()
-    {
-        AddStructSerializer(new BinarySerializerBool());
-        AddStructSerializer(new BinarySerializerByte());
-        AddStructSerializer(new BinarySerializerChar());
-        AddStructSerializer(new BinarySerializerDateOnly());
-        AddStructSerializer(new BinarySerializerDateTime());
-        AddStructSerializer(new BinarySerializerDecimal());
-        AddStructSerializer(new BinarySerializerDouble());
-        AddStructSerializer(new BinarySerializerFloat());
-        AddStructSerializer(new BinarySerializerInt());
-        AddStructSerializer(new BinarySerializerLong());
-        AddStructSerializer(new BinarySerializerSByte());
-        AddStructSerializer(new BinarySerializerShort());
-        AddStructSerializer(new BinarySerializerUInt());
-        AddStructSerializer(new BinarySerializerULong());
-        AddStructSerializer(new BinarySerializerUShort());
-        
-        AddSerializer(new BinarySerializerString());
     }
     
     private void AddSerializer<T>(IBinaryTypeSerializer<T> serializer)
