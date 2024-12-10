@@ -3,7 +3,7 @@ import { SchemaItem } from "../schema-item";
 import { SchemaItemDefinition } from "../schema-item-definition.interface";
 import { Schema } from "../schema";
 import { SerializationSchemaFactory } from "./serialization-schema-factory.interface";
-import { SchemaField, SchemaPrimitiveField } from "../schema-field.type";
+import { SchemaField, SchemaListField, SchemaPrimitiveField } from "../schema-field.type";
 import { BinaryTypeSerializerFactory } from '../../types/factories/binary-type-serializer-factory';
 import { SchemaItemNested } from "../schema-item-nested";
 import { SchemaItemList } from "../collections/schema-item-list";
@@ -36,7 +36,7 @@ export class SchemaFactory implements SerializationSchemaFactory {
         return new Schema(entityId, memberDataContainer);
     }
 
-    private createMemberDataDefinition<TEntity extends object>(entityId: number, field: SchemaField ): SchemaItemDefinition<TEntity> {
+    private createMemberDataDefinition<TEntity extends object>(entityId: number, field: SchemaField): SchemaItemDefinition<TEntity> {
 
         if (this.isNestedClass(field) && "fields" in field) {
             const nestedSchema = this.make(entityId, field.fields);
@@ -51,7 +51,9 @@ export class SchemaFactory implements SerializationSchemaFactory {
         }
 
         if (this.isListPrimitive(field) && "elementType" in field) {
-            const serializer = this.binaryTypeSerializerFactory.make(field.elementType);
+            field = field as SchemaListField;
+
+            const serializer = field.elementType === DataType.enum ? this.binaryTypeSerializerFactory.make(field.elementType, field.enumType) : this.binaryTypeSerializerFactory.make(field.elementType);
 
             return new SchemaItemListPrimitive<TEntity, any>(field.name, serializer);
         }

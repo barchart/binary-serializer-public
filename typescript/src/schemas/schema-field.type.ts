@@ -56,7 +56,7 @@ export type SchemaListField =
      * The data type of the elements if the field is a list or array.
      * This property is optional.
      */
-    elementType: Exclude<DataType, DataType.object>;
+    elementType: Exclude<DataType, DataType.object | DataType.enum>;
 }
     | {
     /**
@@ -78,6 +78,27 @@ export type SchemaListField =
      * Nested fields if the field is an object containing other fields.
      */
     fields: SchemaField[];
+}
+    | {
+    /**
+     * The name of the field.
+     */
+    name: string;
+
+    /**
+     * The data type of the field.
+     */
+    type: DataType.list;
+
+    /**
+     * The data type of the elements if the field is a list or array.
+     */
+    elementType: DataType.enum;
+
+    /**
+     * The enumeration type if the field is a list of enumerations.
+     */
+    enumType: new (...args: any[]) => Enum;
 };
 
 /**
