@@ -47,7 +47,7 @@ public class SchemaTests
             serializer
         );
 
-        _schema = new Schema<TestEntity>(_entityId, new ISchemaItem<TestEntity>[] { keyItem, valueItem });
+        _schema = new Schema<TestEntity>(_entityId, [keyItem, valueItem]);
     }
 
     #endregion

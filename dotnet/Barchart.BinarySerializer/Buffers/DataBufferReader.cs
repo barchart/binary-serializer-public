@@ -79,7 +79,7 @@ public class DataBufferReader : IDataBufferReader
     {
         if (size == 0)
         {
-            return Array.Empty<byte>();
+            return [];
         }
         
         if (CapacityWouldBeExceeded(_positionBit == 0 ? size - 1 : size))

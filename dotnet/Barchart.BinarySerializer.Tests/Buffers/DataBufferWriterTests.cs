@@ -125,7 +125,7 @@ public class DataBufferWriterTests
         byte[] byteArray = new byte[3];
         DataBufferWriter dataBuffer = new(byteArray);
         
-        byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
+        byte[] valuesToWrite = [0xAC, 0xBD, 0xCE];
         
         dataBuffer.WriteBytes(valuesToWrite.ToArray());
 
@@ -138,7 +138,7 @@ public class DataBufferWriterTests
         byte[] byteArray = new byte[2];
         DataBufferWriter dataBuffer = new(byteArray);
         
-        byte[] valuesToWrite = { 0xAC, 0xBD, 0xCE };
+        byte[] valuesToWrite = [0xAC, 0xBD, 0xCE];
 
         Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteBytes(valuesToWrite));
     }
@@ -231,7 +231,7 @@ public class DataBufferWriterTests
         DataBufferWriter dataBuffer = new(byteArray);
 
         dataBuffer.WriteBit(true);
-        dataBuffer.WriteBytes(new byte[] { 0b00000011 });
+        dataBuffer.WriteBytes([0b00000011]);
 
         Assert.Equal(0b10000001, byteArray[0]);
         Assert.Equal(0b10000000, byteArray[1]);
@@ -244,7 +244,7 @@ public class DataBufferWriterTests
         DataBufferWriter dataBuffer = new(byteArray);
 
         dataBuffer.WriteBit(true);
-        dataBuffer.WriteBytes(new byte[] { 0b00000011, 0b00000111 });
+        dataBuffer.WriteBytes([0b00000011, 0b00000111]);
 
         Assert.Equal(0b10000001, byteArray[0]);
         Assert.Equal(0b10000011, byteArray[1]);
@@ -258,7 +258,7 @@ public class DataBufferWriterTests
         DataBufferWriter dataBuffer = new(byteArray);
 
         dataBuffer.WriteBit(true);
-        dataBuffer.WriteBytes(new byte[] { 0b00000011, 0b00000111, 0b11111110 });
+        dataBuffer.WriteBytes([0b00000011, 0b00000111, 0b11111110]);
 
         Assert.Equal(0b10000001, byteArray[0]);
         Assert.Equal(0b10000011, byteArray[1]);
@@ -272,7 +272,7 @@ public class DataBufferWriterTests
         byte[] byteArray = new byte[3];
         DataBufferWriter dataBuffer = new(byteArray);
 
-        dataBuffer.WriteBytes(new byte[] { 0b10000001, 0b10000011 });
+        dataBuffer.WriteBytes([0b10000001, 0b10000011]);
         dataBuffer.WriteBit(true);
 
         Assert.Equal(0b10000001, byteArray[0]);
@@ -286,7 +286,7 @@ public class DataBufferWriterTests
         byte[] byteArray = new byte[4];
         DataBufferWriter dataBuffer = new(byteArray);
 
-        dataBuffer.WriteBytes(new byte[] { 0b10000001, 0b10000011, 0b11111111 });
+        dataBuffer.WriteBytes([0b10000001, 0b10000011, 0b11111111]);
         dataBuffer.WriteBit(false);
 
         Assert.Equal(0b10000001, byteArray[0]);
@@ -303,7 +303,7 @@ public class DataBufferWriterTests
 
         dataBuffer.WriteBit(true);
         
-        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteBytes(new byte[] { 0b00000011, 0b00000111 }));
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteBytes([0b00000011, 0b00000111]));
     }
     
     [Fact]
@@ -314,7 +314,7 @@ public class DataBufferWriterTests
 
         dataBuffer.WriteBit(true);
 
-        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteBytes(new byte[] { 0b00000011, 0b00000111, 0b11111110 }));
+        Assert.Throws<InsufficientCapacityException>(() => dataBuffer.WriteBytes([0b00000011, 0b00000111, 0b11111110]));
     }
 
     #endregion
@@ -328,7 +328,7 @@ public class DataBufferWriterTests
         DataBufferWriter dataBuffer = new(byteArray);
 
         dataBuffer.WriteByte(0b10000001);
-        dataBuffer.WriteBytes(new byte[] { 0b10000011, 0b11111111 });
+        dataBuffer.WriteBytes([0b10000011, 0b11111111]);
 
         Assert.Equal(0b10000001, byteArray[0]);
         Assert.Equal(0b10000011, byteArray[1]);
@@ -342,7 +342,7 @@ public class DataBufferWriterTests
         byte[] byteArray = new byte[4];
         DataBufferWriter dataBuffer = new(byteArray);
 
-        dataBuffer.WriteBytes(new byte[] { 0xBD, 0xCE });
+        dataBuffer.WriteBytes([0xBD, 0xCE]);
         dataBuffer.WriteByte(0xAC);
 
         Assert.Equal(0xBD, byteArray[0]);
@@ -359,7 +359,7 @@ public class DataBufferWriterTests
 
         dataBuffer.WriteByte(0b10000001);
         dataBuffer.WriteByte(0b10000011);
-        dataBuffer.WriteBytes(new byte[] { 0b11111111, 0b00000000 });
+        dataBuffer.WriteBytes([0b11111111, 0b00000000]);
 
         Assert.Equal(0b10000001, byteArray[0]);
         Assert.Equal(0b10000011, byteArray[1]);
@@ -379,7 +379,7 @@ public class DataBufferWriterTests
 
         dataBuffer.WriteBit(true);
         dataBuffer.WriteByte(0b11111111);
-        dataBuffer.WriteBytes(new byte[] { 0b10101100, 0b10111101 });
+        dataBuffer.WriteBytes([0b10101100, 0b10111101]);
         dataBuffer.WriteBit(false);
 
         Assert.Equal(0b11111111, byteArray[0]);
@@ -521,7 +521,7 @@ public class DataBufferWriterTests
     [Fact]
     public void Write_PopulatedArrayOneBitOneByte_ModifiesBuffer()
     {
-        byte[] byteArray = { 0b11111111, 0b11111111 };
+        byte[] byteArray = [0b11111111, 0b11111111];
         DataBufferWriter dataBuffer = new(byteArray);
         
         dataBuffer.WriteBit(false);
@@ -530,7 +530,7 @@ public class DataBufferWriterTests
         Assert.Equal(0b01010101, byteArray[0]);
         Assert.Equal(0b00000000, byteArray[1]);
         
-        byteArray = new byte[] { 0b11111111, 0b11111111 };
+        byteArray = [0b11111111, 0b11111111];
         dataBuffer = new(byteArray);
         
         dataBuffer.WriteBit(true);
@@ -543,7 +543,7 @@ public class DataBufferWriterTests
     [Fact]
     public void Write_PopulatedArrayTwoBitsOneByte_ModifiesBuffer()
     {
-        byte[] byteArray = { 0b11111111, 0b11111111 };
+        byte[] byteArray = [0b11111111, 0b11111111];
         DataBufferWriter dataBuffer = new(byteArray);
         
         dataBuffer.WriteBit(false);
@@ -560,14 +560,14 @@ public class DataBufferWriterTests
     [Fact]
     public void Write_PopulatedArrayThreeBitsTwoBytes_ModifiesBuffer()
     {
-        byte[] byteArray = { 0b11111111, 0b11111111, 0b11111111 };
+        byte[] byteArray = [0b11111111, 0b11111111, 0b11111111];
         DataBufferWriter dataBuffer = new(byteArray);
         
         dataBuffer.WriteBit(false);
         dataBuffer.WriteBit(true);
         dataBuffer.WriteBit(false);
         
-        dataBuffer.WriteBytes(new byte[] { 0b10101010, 0b10101010 });
+        dataBuffer.WriteBytes([0b10101010, 0b10101010]);
         
         Assert.Equal(0b01010101, byteArray[0]);
         Assert.Equal(0b01010101, byteArray[1]);

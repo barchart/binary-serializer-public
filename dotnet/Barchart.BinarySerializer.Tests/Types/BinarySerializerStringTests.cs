@@ -36,9 +36,9 @@ public class BinarySerializerStringTests
     {
         Mock<IDataBufferWriter> mock = new();
 
-        List<bool> bitsWritten = new();
-        List<byte> byteWritten = new();
-        List<byte[]> bytesWritten = new();
+        List<bool> bitsWritten = [];
+        List<byte> byteWritten = [];
+        List<byte[]> bytesWritten = [];
             
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
         mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
@@ -61,9 +61,9 @@ public class BinarySerializerStringTests
     {
         Mock<IDataBufferWriter> mock = new();
 
-        List<bool> bitsWritten = new();
-        List<byte> byteWritten = new();
-        List<byte[]> bytesWritten = new();
+        List<bool> bitsWritten = [];
+        List<byte> byteWritten = [];
+        List<byte[]> bytesWritten = [];
             
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
         mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
@@ -130,13 +130,13 @@ public class BinarySerializerStringTests
     #region Test Methods (GetEquals)
 
     [Theory]
-    [InlineData(new object[] { new[] { "Test", "Test" }})]
-    [InlineData(new object[] { new[] { "String", "string" }})]
-    [InlineData(new object[] { new[] { "", "" }})]
-    [InlineData(new object[] { new[] { "Binary", "Serialization" }})]
-    [InlineData(new object[] { new[] { "a", null }})]
-    [InlineData(new object[] { new[] { null, "b" }})]
-    [InlineData(new object[] { new[] { null, null, "hack" }})]
+    [InlineData([new[] { "Test", "Test" }])]
+    [InlineData([new[] { "String", "string" }])]
+    [InlineData([new[] { "", "" }])]
+    [InlineData([new[] { "Binary", "Serialization" }])]
+    [InlineData([new[] { "a", null }])]
+    [InlineData([new[] { null, "b" }])]
+    [InlineData([new[] { null, null, "hack" }])]
     public void GetEquals_Various_MatchesIEquatableOutput(string[] strings)
     {
         string a = strings[0];

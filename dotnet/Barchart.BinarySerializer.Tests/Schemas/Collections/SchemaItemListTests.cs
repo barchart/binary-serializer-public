@@ -46,11 +46,11 @@ public class SchemaItemListTests
     {
         TestEntity testEntity = new()
         {
-            ListProperty = new List<TestProperty?>
-            {
+            ListProperty =
+            [
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
-            }
+            ]
         };
 
         _schemaItemList.Encode(_writer, testEntity);
@@ -89,7 +89,7 @@ public class SchemaItemListTests
 
         TestEntity testEntity = new()
         {
-            ListProperty = new List<TestProperty?>()
+            ListProperty = []
         };
 
         _mockSchema.Setup(schema => schema.Deserialize(It.IsAny<IDataBufferReader>()))
@@ -124,7 +124,7 @@ public class SchemaItemListTests
 
         TestEntity testEntity = new()
         {
-            ListProperty = new List<TestProperty?>()
+            ListProperty = []
         };
 
         _schemaItemList.Decode(_reader, testEntity);
@@ -159,12 +159,12 @@ public class SchemaItemListTests
     {
         TestEntity entityA = new() 
         { 
-            ListProperty = new List<TestProperty?>() 
+            ListProperty = []
         };
 
         TestEntity entityB = new() 
         { 
-            ListProperty = new List<TestProperty?>() 
+            ListProperty = []
         };
 
         bool result = _schemaItemList.GetEquals(entityA, entityB);
@@ -177,36 +177,38 @@ public class SchemaItemListTests
     {
         TestEntity entityA = new()
         {
-            ListProperty = new List<TestProperty?>
-            {
-                new() 
-                { 
-                    PropertyName = "Test1", 
-                    PropertyValue = 123 
+            ListProperty =
+            [
+                new()
+                {
+                    PropertyName = "Test1",
+                    PropertyValue = 123
                 },
-                new() 
-                { 
+
+                new()
+                {
                     PropertyName = "Test2",
-                    PropertyValue = 456 
+                    PropertyValue = 456
                 }
-            }
+            ]
         };
 
         TestEntity entityB = new()
         {
-            ListProperty = new List<TestProperty?>
-            {
-                new() 
-                { 
-                    PropertyName = "Test1", 
-                    PropertyValue = 123 
+            ListProperty =
+            [
+                new()
+                {
+                    PropertyName = "Test1",
+                    PropertyValue = 123
                 },
-                new() 
-                { 
-                    PropertyName = "Test2", 
-                    PropertyValue = 456 
+
+                new()
+                {
+                    PropertyName = "Test2",
+                    PropertyValue = 456
                 }
-            }
+            ]
         };
 
         _mockSchema.Setup(schema => schema.GetEquals(It.Is<TestProperty>(p => p.PropertyName == "Test1" && p.PropertyValue == 123), 
@@ -227,20 +229,20 @@ public class SchemaItemListTests
     {
         TestEntity entityA = new()
         {
-            ListProperty = new List<TestProperty?>
-            {
+            ListProperty =
+            [
                 new() { PropertyName = "Test1", PropertyValue = 123 },
                 new() { PropertyName = "Test2", PropertyValue = 456 }
-            }
+            ]
         };
 
         TestEntity entityB = new()
         {
-            ListProperty = new List<TestProperty?>
-            {
+            ListProperty =
+            [
                 new() { PropertyName = "Test3", PropertyValue = 789 },
                 new() { PropertyName = "Test4", PropertyValue = 101 }
-            }
+            ]
         };
 
         bool result = _schemaItemList.GetEquals(entityA, entityB);
@@ -254,10 +256,7 @@ public class SchemaItemListTests
         TestEntity entityA = new() { ListProperty = null };
         TestEntity entityB = new()
         {
-            ListProperty = new List<TestProperty?>
-            {
-                new() { PropertyName = "Test1", PropertyValue = 123 }
-            }
+            ListProperty = [new() { PropertyName = "Test1", PropertyValue = 123 }]
         };
 
         bool result = _schemaItemList.GetEquals(entityA, entityB);

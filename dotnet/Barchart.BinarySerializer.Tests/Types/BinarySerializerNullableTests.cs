@@ -32,8 +32,8 @@ public class BinarySerializerNullableTests
     {
         BinarySerializerNullable<T> serializer = new(innerSerializer);
         Mock<IDataBufferWriter> mock = new();
-        List<bool> bitsWritten = new();
-        List<byte> bytesWritten = new();
+        List<bool> bitsWritten = [];
+        List<byte> bytesWritten = [];
 
         mock.Setup(m => m.WriteBit(Capture.In(bitsWritten)));
         mock.Setup(m => m.WriteByte(Capture.In(bytesWritten)));
@@ -73,15 +73,15 @@ public class BinarySerializerNullableTests
         BinarySerializerNullable<T> serializer = new(innerSerializer);
         Mock<IDataBufferReader> mock = new();
         
-        List<bool> bitsToRead = new();
+        List<bool> bitsToRead = [];
         byte byteToRead = new();
-        List<byte> bytesToRead = new();
+        List<byte> bytesToRead = [];
 
         if (expectedValue.HasValue)
         {
             bitsToRead.Add(false);
 
-            List<byte> buffer = new();
+            List<byte> buffer = [];
             Mock<IDataBufferWriter> bufferWriterMock = new();
 
             bufferWriterMock.Setup(m => m.WriteBit(It.IsAny<bool>())).Callback<bool>(b => bitsToRead.Add(b));
@@ -150,179 +150,181 @@ public class BinarySerializerNullableTests
 
     public static IEnumerable<object[]> GetEncodeTestData()
     {
-        yield return new object[] { new BinarySerializerBool(), null! };
-        yield return new object[] { new BinarySerializerBool(), (bool?)true };
+        yield return [new BinarySerializerBool(), null!];
+        yield return [new BinarySerializerBool(), (bool?)true];
         
-        yield return new object[] { new BinarySerializerByte(), null! };
-        yield return new object[] { new BinarySerializerByte(), (byte?)255 };
+        yield return [new BinarySerializerByte(), null!];
+        yield return [new BinarySerializerByte(), (byte?)255];
         
-        yield return new object[] { new BinarySerializerChar(), null! };
-        yield return new object[] { new BinarySerializerChar(), (char?)'A' };
+        yield return [new BinarySerializerChar(), null!];
+        yield return [new BinarySerializerChar(), (char?)'A'];
         
-        yield return new object[] { new BinarySerializerDateOnly(), null! };
-        yield return new object[] { new BinarySerializerDateOnly(), (DateOnly?) new DateOnly(2000, 2, 29) };
+        yield return [new BinarySerializerDateOnly(), null!];
+        yield return [new BinarySerializerDateOnly(), (DateOnly?) new DateOnly(2000, 2, 29)];
         
-        yield return new object[] { new BinarySerializerDateTime(), null! };
-        yield return new object[] { new BinarySerializerDateTime(), (DateTime?) new DateTime(2023, 1, 1, 12, 0, 0)};
+        yield return [new BinarySerializerDateTime(), null!];
+        yield return [new BinarySerializerDateTime(), (DateTime?) new DateTime(2023, 1, 1, 12, 0, 0)];
         
-        yield return new object[] { new BinarySerializerDecimal(), null! };
-        yield return new object[] { new BinarySerializerDecimal(), (decimal?)123.45m };
+        yield return [new BinarySerializerDecimal(), null!];
+        yield return [new BinarySerializerDecimal(), (decimal?)123.45m];
         
-        yield return new object[] { new BinarySerializerDouble(), null! };
-        yield return new object[] { new BinarySerializerDouble(), (double?)2.71828 };
+        yield return [new BinarySerializerDouble(), null!];
+        yield return [new BinarySerializerDouble(), (double?)2.71828];
         
-        yield return new object[] { new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), null! };
-        yield return new object[] { new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), (TestEnum?)TestEnum.Value2 };
+        yield return [new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), null!];
+        yield return [new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), (TestEnum?)TestEnum.Value2];
         
-        yield return new object[] { new BinarySerializerFloat(), null! };
-        yield return new object[] { new BinarySerializerFloat(), (float?)3.14f };
+        yield return [new BinarySerializerFloat(), null!];
+        yield return [new BinarySerializerFloat(), (float?)3.14f];
         
-        yield return new object[] { new BinarySerializerInt(), null! };
-        yield return new object[] { new BinarySerializerInt(), (int?)42 };
+        yield return [new BinarySerializerInt(), null!];
+        yield return [new BinarySerializerInt(), (int?)42];
     
-        yield return new object[] { new BinarySerializerLong(), null! };
-        yield return new object[] { new BinarySerializerLong(), (long?)123456789L };
+        yield return [new BinarySerializerLong(), null!];
+        yield return [new BinarySerializerLong(), (long?)123456789L];
        
-        yield return new object[] { new BinarySerializerSByte(), null! };
-        yield return new object[] { new BinarySerializerSByte(), (sbyte?)-128 };
+        yield return [new BinarySerializerSByte(), null!];
+        yield return [new BinarySerializerSByte(), (sbyte?)-128];
         
-        yield return new object[] { new BinarySerializerShort(), null! };
-        yield return new object[] { new BinarySerializerShort(), (short?)12345 };
+        yield return [new BinarySerializerShort(), null!];
+        yield return [new BinarySerializerShort(), (short?)12345];
         
-        yield return new object[] { new BinarySerializerUInt(), null! };
-        yield return new object[] { new BinarySerializerUInt(), (uint?)uint.MaxValue };
+        yield return [new BinarySerializerUInt(), null!];
+        yield return [new BinarySerializerUInt(), (uint?)uint.MaxValue];
 
-        yield return new object[] { new BinarySerializerULong(), null! };
-        yield return new object[] { new BinarySerializerULong(), (ulong?)ulong.MaxValue };
+        yield return [new BinarySerializerULong(), null!];
+        yield return [new BinarySerializerULong(), (ulong?)ulong.MaxValue];
       
-        yield return new object[] { new BinarySerializerUShort(), null! };
-        yield return new object[] { new BinarySerializerUShort(), (ushort?)ushort.MaxValue };
+        yield return [new BinarySerializerUShort(), null!];
+        yield return [new BinarySerializerUShort(), (ushort?)ushort.MaxValue];
     }
 
     public static IEnumerable<object[]> GetDecodeTestData()
     {
-        yield return new object[] { new BinarySerializerBool(), null! };
-        yield return new object[] { new BinarySerializerBool(), (bool?)true };
+        yield return [new BinarySerializerBool(), null!];
+        yield return [new BinarySerializerBool(), (bool?)true];
         
-        yield return new object[] { new BinarySerializerByte(), null! };
-        yield return new object[] { new BinarySerializerByte(), (byte?)255 };
+        yield return [new BinarySerializerByte(), null!];
+        yield return [new BinarySerializerByte(), (byte?)255];
         
-        yield return new object[] { new BinarySerializerChar(), null! };
-        yield return new object[] { new BinarySerializerChar(), (char?)'A' };
+        yield return [new BinarySerializerChar(), null!];
+        yield return [new BinarySerializerChar(), (char?)'A'];
         
-        yield return new object[] { new BinarySerializerDateOnly(), null! };
-        yield return new object[] { new BinarySerializerDateOnly(), (DateOnly?) new DateOnly(2000, 2, 29) };
+        yield return [new BinarySerializerDateOnly(), null!];
+        yield return [new BinarySerializerDateOnly(), (DateOnly?) new DateOnly(2000, 2, 29)];
         
-        yield return new object[] { new BinarySerializerDateTime(), null! };
-        yield return new object[] { new BinarySerializerDateTime(), (DateTime?) new DateTime(2023, 1, 1, 12, 0, 0) };
+        yield return [new BinarySerializerDateTime(), null!];
+        yield return [new BinarySerializerDateTime(), (DateTime?) new DateTime(2023, 1, 1, 12, 0, 0)];
         
-        yield return new object[] { new BinarySerializerDecimal(), null! };
-        yield return new object[] { new BinarySerializerDecimal(), (decimal?)123.45m };
+        yield return [new BinarySerializerDecimal(), null!];
+        yield return [new BinarySerializerDecimal(), (decimal?)123.45m];
         
-        yield return new object[] { new BinarySerializerDouble(), null! };
-        yield return new object[] { new BinarySerializerDouble(), (double?)2.71828 };
+        yield return [new BinarySerializerDouble(), null!];
+        yield return [new BinarySerializerDouble(), (double?)2.71828];
         
-        yield return new object[] { new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), null! };
-        yield return new object[] { new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), (TestEnum?)TestEnum.Value2 };
+        yield return [new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), null!];
+        yield return [new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), (TestEnum?)TestEnum.Value2];
         
-        yield return new object[] { new BinarySerializerFloat(), null! };
-        yield return new object[] { new BinarySerializerFloat(), (float?)3.14f };
+        yield return [new BinarySerializerFloat(), null!];
+        yield return [new BinarySerializerFloat(), (float?)3.14f];
         
-        yield return new object[] { new BinarySerializerInt(), null! };
-        yield return new object[] { new BinarySerializerInt(), (int?)42 };
+        yield return [new BinarySerializerInt(), null!];
+        yield return [new BinarySerializerInt(), (int?)42];
     
-        yield return new object[] { new BinarySerializerLong(), null! };
-        yield return new object[] { new BinarySerializerLong(), (long?)123456789L };
+        yield return [new BinarySerializerLong(), null!];
+        yield return [new BinarySerializerLong(), (long?)123456789L];
        
-        yield return new object[] { new BinarySerializerSByte(), null! };
-        yield return new object[] { new BinarySerializerSByte(), (sbyte?)-128 };
+        yield return [new BinarySerializerSByte(), null!];
+        yield return [new BinarySerializerSByte(), (sbyte?)-128];
         
-        yield return new object[] { new BinarySerializerShort(), null! };
-        yield return new object[] { new BinarySerializerShort(), (short?)12345 };
+        yield return [new BinarySerializerShort(), null!];
+        yield return [new BinarySerializerShort(), (short?)12345];
         
-        yield return new object[] { new BinarySerializerUInt(), null! };
-        yield return new object[] { new BinarySerializerUInt(), (uint?)uint.MaxValue };
+        yield return [new BinarySerializerUInt(), null!];
+        yield return [new BinarySerializerUInt(), (uint?)uint.MaxValue];
 
-        yield return new object[] { new BinarySerializerULong(), null! };
-        yield return new object[] { new BinarySerializerULong(), (ulong?)ulong.MaxValue };
+        yield return [new BinarySerializerULong(), null!];
+        yield return [new BinarySerializerULong(), (ulong?)ulong.MaxValue];
       
-        yield return new object[] { new BinarySerializerUShort(), null! };
-        yield return new object[] { new BinarySerializerUShort(), (ushort?)ushort.MaxValue };
+        yield return [new BinarySerializerUShort(), null!];
+        yield return [new BinarySerializerUShort(), (ushort?)ushort.MaxValue];
     }
 
     public static IEnumerable<object[]> GetEqualsTestData()
     {
-        yield return new object[] { new BinarySerializerBool(), (bool?)true, (bool?)true };
-        yield return new object[] { new BinarySerializerBool(), null!, null! };
-        yield return new object[] { new BinarySerializerBool(), (bool?)true, null! };
-        yield return new object[] { new BinarySerializerBool(), null!, (bool?)true };
+        yield return [new BinarySerializerBool(), (bool?)true, (bool?)true];
+        yield return [new BinarySerializerBool(), null!, null!];
+        yield return [new BinarySerializerBool(), (bool?)true, null!];
+        yield return [new BinarySerializerBool(), null!, (bool?)true];
 
-        yield return new object[] { new BinarySerializerByte(), (byte?)255, (byte?)255 };
-        yield return new object[] { new BinarySerializerByte(), null!, null! };
-        yield return new object[] { new BinarySerializerByte(), (byte?)255, null! };
-        yield return new object[] { new BinarySerializerByte(), null!, (byte?)255 };
+        yield return [new BinarySerializerByte(), (byte?)255, (byte?)255];
+        yield return [new BinarySerializerByte(), null!, null!];
+        yield return [new BinarySerializerByte(), (byte?)255, null!];
+        yield return [new BinarySerializerByte(), null!, (byte?)255];
 
-        yield return new object[] { new BinarySerializerChar(), (char?)'A', (char?)'A' };
-        yield return new object[] { new BinarySerializerChar(), null!, null! };
-        yield return new object[] { new BinarySerializerChar(), (char?)'A', null! };
-        yield return new object[] { new BinarySerializerChar(), null!, (char?)'A' };
+        yield return [new BinarySerializerChar(), (char?)'A', (char?)'A'];
+        yield return [new BinarySerializerChar(), null!, null!];
+        yield return [new BinarySerializerChar(), (char?)'A', null!];
+        yield return [new BinarySerializerChar(), null!, (char?)'A'];
 
-        yield return new object[] { new BinarySerializerDateOnly(), (DateOnly?)DateOnly.FromDateTime(DateTime.Now), (DateOnly?)DateOnly.FromDateTime(DateTime.Now) };
-        yield return new object[] { new BinarySerializerDateOnly(), null!, null! };
-        yield return new object[] { new BinarySerializerDateOnly(), (DateOnly?)DateOnly.FromDateTime(DateTime.Now), null! };
-        yield return new object[] { new BinarySerializerDateOnly(), null!, (DateOnly?)DateOnly.FromDateTime(DateTime.Now) };
+        yield return [new BinarySerializerDateOnly(), (DateOnly?)DateOnly.FromDateTime(DateTime.Now), (DateOnly?)DateOnly.FromDateTime(DateTime.Now)
+        ];
+        yield return [new BinarySerializerDateOnly(), null!, null!];
+        yield return [new BinarySerializerDateOnly(), (DateOnly?)DateOnly.FromDateTime(DateTime.Now), null!];
+        yield return [new BinarySerializerDateOnly(), null!, (DateOnly?)DateOnly.FromDateTime(DateTime.Now)];
 
-        yield return new object[] { new BinarySerializerDateTime(), (DateTime?)DateTime.Now, (DateTime?)DateTime.Now };
-        yield return new object[] { new BinarySerializerDateTime(), null!, null! };
-        yield return new object[] { new BinarySerializerDateTime(), (DateTime?)DateTime.Now, null! };
-        yield return new object[] { new BinarySerializerDateTime(), null!, (DateTime?)new DateTime(2023, 1, 1, 12, 0, 0) };
+        yield return [new BinarySerializerDateTime(), (DateTime?)DateTime.Now, (DateTime?)DateTime.Now];
+        yield return [new BinarySerializerDateTime(), null!, null!];
+        yield return [new BinarySerializerDateTime(), (DateTime?)DateTime.Now, null!];
+        yield return [new BinarySerializerDateTime(), null!, (DateTime?)new DateTime(2023, 1, 1, 12, 0, 0)];
 
-        yield return new object[] { new BinarySerializerDecimal(), (decimal?)123.45m, (decimal?)123.45m };
-        yield return new object[] { new BinarySerializerDecimal(), null!, null! };
-        yield return new object[] { new BinarySerializerDecimal(), (decimal?)123.45m, null! };
-        yield return new object[] { new BinarySerializerDecimal(), null!, (decimal?)123.45m };
+        yield return [new BinarySerializerDecimal(), (decimal?)123.45m, (decimal?)123.45m];
+        yield return [new BinarySerializerDecimal(), null!, null!];
+        yield return [new BinarySerializerDecimal(), (decimal?)123.45m, null!];
+        yield return [new BinarySerializerDecimal(), null!, (decimal?)123.45m];
 
-        yield return new object[] { new BinarySerializerDouble(), (double?)2.71828, (double?)2.71828 };
-        yield return new object[] { new BinarySerializerDouble(), null!, null! };
-        yield return new object[] { new BinarySerializerDouble(), (double?)2.71828, null! };
-        yield return new object[] { new BinarySerializerDouble(), null!, (double?)2.71828 };
+        yield return [new BinarySerializerDouble(), (double?)2.71828, (double?)2.71828];
+        yield return [new BinarySerializerDouble(), null!, null!];
+        yield return [new BinarySerializerDouble(), (double?)2.71828, null!];
+        yield return [new BinarySerializerDouble(), null!, (double?)2.71828];
 
-        yield return new object[] { new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), (TestEnum?)TestEnum.Value2, (TestEnum?)TestEnum.Value2 };
-        yield return new object[] { new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), null!, null! };
-        yield return new object[] { new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), (TestEnum?)TestEnum.Value2, null! };
-        yield return new object[] { new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), null!, (TestEnum?)TestEnum.Value2 };
+        yield return [new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), (TestEnum?)TestEnum.Value2, (TestEnum?)TestEnum.Value2
+        ];
+        yield return [new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), null!, null!];
+        yield return [new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), (TestEnum?)TestEnum.Value2, null!];
+        yield return [new BinarySerializerEnum<TestEnum>(new BinarySerializerInt()), null!, (TestEnum?)TestEnum.Value2];
 
-        yield return new object[] { new BinarySerializerFloat(), (float?)3.14f, (float?)3.14f };
+        yield return [new BinarySerializerFloat(), (float?)3.14f, (float?)3.14f];
 
-        yield return new object[] { new BinarySerializerLong(), (long?)123456789L, (long?)123456789L };
-        yield return new object[] { new BinarySerializerLong(), null!, null! };
-        yield return new object[] { new BinarySerializerLong(), (long?)123456789L, null! };
-        yield return new object[] { new BinarySerializerLong(), null!, (long?)123456789L };
+        yield return [new BinarySerializerLong(), (long?)123456789L, (long?)123456789L];
+        yield return [new BinarySerializerLong(), null!, null!];
+        yield return [new BinarySerializerLong(), (long?)123456789L, null!];
+        yield return [new BinarySerializerLong(), null!, (long?)123456789L];
 
-        yield return new object[] { new BinarySerializerSByte(), (sbyte?)-128, (sbyte?)-128 };
-        yield return new object[] { new BinarySerializerSByte(), null!, null! };
-        yield return new object[] { new BinarySerializerSByte(), (sbyte?)-128, null! };
-        yield return new object[] { new BinarySerializerSByte(), null!, (sbyte?)-128 };
+        yield return [new BinarySerializerSByte(), (sbyte?)-128, (sbyte?)-128];
+        yield return [new BinarySerializerSByte(), null!, null!];
+        yield return [new BinarySerializerSByte(), (sbyte?)-128, null!];
+        yield return [new BinarySerializerSByte(), null!, (sbyte?)-128];
 
-        yield return new object[] { new BinarySerializerShort(), (short?)12345, (short?)12345 };
-        yield return new object[] { new BinarySerializerShort(), null!, null! };
-        yield return new object[] { new BinarySerializerShort(), (short?)12345, null! };
-        yield return new object[] { new BinarySerializerShort(), null!, (short?)12345 };
+        yield return [new BinarySerializerShort(), (short?)12345, (short?)12345];
+        yield return [new BinarySerializerShort(), null!, null!];
+        yield return [new BinarySerializerShort(), (short?)12345, null!];
+        yield return [new BinarySerializerShort(), null!, (short?)12345];
 
-        yield return new object[] { new BinarySerializerUInt(), (uint?)uint.MaxValue, (uint?)uint.MaxValue };
-        yield return new object[] { new BinarySerializerUInt(), null!, null! };
-        yield return new object[] { new BinarySerializerUInt(), (uint?)uint.MaxValue, null! };
-        yield return new object[] { new BinarySerializerUInt(), null!, (uint?)uint.MaxValue };
+        yield return [new BinarySerializerUInt(), (uint?)uint.MaxValue, (uint?)uint.MaxValue];
+        yield return [new BinarySerializerUInt(), null!, null!];
+        yield return [new BinarySerializerUInt(), (uint?)uint.MaxValue, null!];
+        yield return [new BinarySerializerUInt(), null!, (uint?)uint.MaxValue];
 
-        yield return new object[] { new BinarySerializerULong(), (ulong?)ulong.MaxValue, (ulong?)ulong.MaxValue };
-        yield return new object[] { new BinarySerializerULong(), null!, null! };
-        yield return new object[] { new BinarySerializerULong(), (ulong?)ulong.MaxValue, null! };
-        yield return new object[] { new BinarySerializerULong(), null!, (ulong?)ulong.MaxValue };
+        yield return [new BinarySerializerULong(), (ulong?)ulong.MaxValue, (ulong?)ulong.MaxValue];
+        yield return [new BinarySerializerULong(), null!, null!];
+        yield return [new BinarySerializerULong(), (ulong?)ulong.MaxValue, null!];
+        yield return [new BinarySerializerULong(), null!, (ulong?)ulong.MaxValue];
 
-        yield return new object[] { new BinarySerializerUShort(), (ushort?)ushort.MaxValue, (ushort?)ushort.MaxValue };
-        yield return new object[] { new BinarySerializerUShort(), null!, null! };
-        yield return new object[] { new BinarySerializerUShort(), (ushort?)ushort.MaxValue, null! };
-        yield return new object[] { new BinarySerializerUShort(), null!, (ushort?)ushort.MaxValue };
+        yield return [new BinarySerializerUShort(), (ushort?)ushort.MaxValue, (ushort?)ushort.MaxValue];
+        yield return [new BinarySerializerUShort(), null!, null!];
+        yield return [new BinarySerializerUShort(), (ushort?)ushort.MaxValue, null!];
+        yield return [new BinarySerializerUShort(), null!, (ushort?)ushort.MaxValue];
     }
 
     #endregion

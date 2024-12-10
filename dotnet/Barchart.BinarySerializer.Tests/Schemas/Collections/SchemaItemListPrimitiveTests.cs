@@ -45,7 +45,7 @@ public class SchemaItemListPrimitiveTests
     {
         TestEntity testEntity = new()
         {
-            IntListProperty = new List<int> { 1, 2, 3 }
+            IntListProperty = [1, 2, 3]
         };
 
         _schemaItemListPrimitive.Encode(_writer, testEntity);
@@ -97,7 +97,7 @@ public class SchemaItemListPrimitiveTests
 
         TestEntity testEntity = new()
         {
-            IntListProperty = new List<int> { 1, 2, 3 }
+            IntListProperty = [1, 2, 3]
         };
 
         _schemaItemListPrimitive.Decode(_reader, testEntity);
@@ -122,7 +122,7 @@ public class SchemaItemListPrimitiveTests
     
         TestEntity testEntity = new()
         {
-            IntListProperty = new List<int> { 1, 2, 3 }
+            IntListProperty = [1, 2, 3]
         };
 
         TestEntity decodedEntity = new();
@@ -141,18 +141,12 @@ public class SchemaItemListPrimitiveTests
     {
         TestEntity entity1 = new() 
         { 
-            IntListProperty = new List<int> 
-            { 
-                1, 2, 3 
-            } 
+            IntListProperty = [1, 2, 3]
         };
 
         TestEntity entity2 = new() 
         { 
-            IntListProperty = new List<int> 
-            { 
-                1, 2, 3 
-            } 
+            IntListProperty = [1, 2, 3]
         };
 
         bool result = _schemaItemListPrimitive.GetEquals(entity1, entity2);
@@ -165,18 +159,12 @@ public class SchemaItemListPrimitiveTests
     {
         TestEntity entity1 = new() 
         { 
-            IntListProperty = new List<int> 
-            { 
-                1, 2, 3 
-            } 
+            IntListProperty = [1, 2, 3]
         };
 
         TestEntity entity2 = new() 
         { 
-            IntListProperty = new List<int> 
-            { 
-                4, 5, 6 
-            } 
+            IntListProperty = [4, 5, 6]
         };
 
         bool result = _schemaItemListPrimitive.GetEquals(entity1, entity2);
@@ -212,7 +200,7 @@ public class SchemaItemListPrimitiveTests
         
         TestEntity entity2 = new() 
         { 
-            IntListProperty = new List<int> { 1, 2, 3 } 
+            IntListProperty = [1, 2, 3]
         };
 
         bool result = _schemaItemListPrimitive.GetEquals(entity1, entity2);

@@ -34,12 +34,12 @@ public class BinarySerializerDecimal : IBinaryTypeSerializer<decimal>
     public decimal Decode(IDataBufferReader reader)
     {
         int[] components =
-        {
+        [
             _binarySerializerInt.Decode(reader),
             _binarySerializerInt.Decode(reader),
             _binarySerializerInt.Decode(reader),
             _binarySerializerInt.Decode(reader)
-        };
+        ];
 
         return new decimal(components);
     }
