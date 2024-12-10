@@ -4,7 +4,7 @@ import { BinaryTypeSerializer } from './binary-type-serializer.interface';
 import Enum from '@barchart/common-js/lang/Enum';
 
 /**
- *  Reads (and writes) enumeration values to (and from) a binary data source.
+ * Reads (and writes) enumeration values to (and from) a binary data source.
  *
  * @public
  * @exported
