@@ -5,7 +5,6 @@ using Barchart.BinarySerializer.Types.Factories;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Types;
 using Barchart.BinarySerializer.Attributes;
-using Barchart.BinarySerializer.Serializers;
 
 #endregion
 
@@ -60,22 +59,6 @@ namespace Barchart.BinarySerializer.Tests.Schemas.Factories
         }
 
         #endregion
-
-        // [Fact]
-        // public void InheritanceTest()
-        // {
-        //     TestEntityB testEntity = new()
-        //     {
-        //         SerializedProperty = 6,
-        //         SerializedPropertyB = 2
-        //     };
-        //     
-        //     Serializer<TestEntity> serializer = new(1);
-        //     byte[] bytes = serializer.Serialize(testEntity);
-        //        
-        //     
-        //     TestEntity result = serializer.Deserialize(bytes);
-        // }
         
         #region Nested Types
 
@@ -85,18 +68,6 @@ namespace Barchart.BinarySerializer.Tests.Schemas.Factories
             public int SerializedProperty { get; set; }
         }
         
-        // private class TestEntityA: TestEntity
-        // {
-        //     [Serialize]
-        //     public float SerializedPropertyA { get; set; }
-        // }
-        //
-        // private class TestEntityB: TestEntity
-        // {
-        //     [Serialize]
-        //     public float SerializedPropertyB { get; set; }
-        // }
-
         #endregion
     }
 }
