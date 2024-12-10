@@ -24,10 +24,10 @@ public class Person
     public string Name { get; set; } = "";
     
     [Serialize]
-    public bool IsProgrammer { get; set; } = false;
-    
-    [Serialize]
     public ushort Age { get; set; } = 0;
+      
+    [Serialize]
+    public bool IsProgrammer { get; set; } = false;  
 }
 ``` 
 
@@ -39,10 +39,28 @@ Here is an example of what the byte representation might look like:
 ### Byte Representation:
 
 - **10000000**: Represents a `Header` byte. The first bit (1) indicates whether the data is a `Snapshot`. If the bit is set to 1, it means the data is a snapshot; otherwise, it is not. The last four bits (0000) represent the `EntityId`, which helps identify the type of entity the data represents. The `EntityId` can range from 0 to 15 (4 bits).
-- **00000001**: Represents the length of the `Name` property value.
-- **01000000 00010000 10011100 10011110 01011000 01011011**: Represents the ASCII values of the characters in the `Name` property value.
-- **10000110 00100000**: Represents a flag and the boolean value for the `IsProgrammer` property.
-- **00001000**: Represents the integer value for the `Age` property.
+- **00000001 01000000 00xxxxxx**: First two bits (00) represent the `IsMissing` and `IsNull` flags. The next two bytes (xx000001 01000000 000100xx) represents the string `length`.
+- **xx010000 10011100 10011110 01011000 01011011 10xxxxxx**: Represents the encoded values of the characters in the `Name` property value using UTF-8 encoding by default (or any other encoding specified).
+- **xx000110 00100000 000xxxxx**: First bit (0) represent the `IsMissing` flag. Tne next 2 bytes represents the ushort value for the `Age` property.
+- **xxx01000**: First bit (0) represent the `IsMissing` flag. Tne next bit (1) represents a boolean value for the `IsProgrammer` property.
+
+### Property Flags: IsMissing and IsNull
+
+For each non-key nullable property, two bits are reserved to indicate its state:
+
+* IsMissing (1 bit):
+
+    * If set to 1, the property is absent from the serialized data.
+
+    * If set to 0, the property is included in the serialized data.
+
+* IsNull (1 bit):
+
+    * If set to 1, the property is present but its value is null.
+
+    * If set to 0, the property has a valid, non-null value.
+
+> Key properties and non-nullable value types (e.g., int, bool, etc.) have a different binary representation. They are always present so they do not have an `IsMissing flag`, only an `IsNull` flag.
 
 ### License
 
