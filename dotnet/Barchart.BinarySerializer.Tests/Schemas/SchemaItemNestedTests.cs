@@ -141,7 +141,7 @@ public class SchemaItemNestedTests
     #region Test Methods (GetEquals)
 
     [Fact]
-    public void Equals_WithSameReference_ReturnsTrue()
+    public void GetEquals_WithSameReference_ReturnsTrue()
     {
         TestEntity testEntity = new()
         {
@@ -165,7 +165,7 @@ public class SchemaItemNestedTests
     }
 
     [Fact]
-    public void Equals_WithDifferentValues_ReturnsFalse()
+    public void GetEquals_WithDifferentValues_ReturnsFalse()
     {
         TestEntity testEntity1 = new()
         {
@@ -196,7 +196,7 @@ public class SchemaItemNestedTests
     }
 
     [Fact]
-    public void Equals_WithSameValues_ReturnsTrue()
+    public void GetEquals_WithSameValues_ReturnsTrue()
     {
         TestEntity testEntity1 = new()
         {
