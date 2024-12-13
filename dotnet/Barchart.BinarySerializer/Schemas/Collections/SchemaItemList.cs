@@ -93,7 +93,9 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity current, TEntity previous)
     {
-        if (GetEquals(current, previous))
+        bool unchanged = GetEquals(current, previous);
+        
+        if (unchanged)
         {
             Serialization.WriteMissingFlag(writer, true);
 

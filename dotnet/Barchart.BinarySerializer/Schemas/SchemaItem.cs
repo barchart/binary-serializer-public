@@ -74,14 +74,14 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity current, TEntity previous)
     {
-        bool valuesAreEqual = GetEquals(current, previous);
+        bool unchanged = GetEquals(current, previous);
         
-        if (Key && !valuesAreEqual)
+        if (Key && !unchanged)
         {
             throw new KeyMismatchException(typeof(TEntity), Name, true);
         }
 
-        if (Key || !valuesAreEqual)
+        if (Key || !unchanged)
         {
             Encode(writer, current);
         }
