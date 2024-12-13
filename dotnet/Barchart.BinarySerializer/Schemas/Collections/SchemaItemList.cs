@@ -120,7 +120,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
             
         for (int i = 0; i < numberOfElements; i++)
         {
-            if (currentItems[i] == null)
+            if (currentItems != null && currentItems.Count > i && currentItems[i] == null)
             {
                 Serialization.WriteNullFlag(writer, true);
                     
@@ -129,7 +129,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
             Serialization.WriteNullFlag(writer, false);
 
-            if (previousItems[i] != null)
+            if (previousItems != null && previousItems.Count > i && previousItems[i] != null)
             {
                 _itemSchema.Serialize(writer, currentItems[i], previousItems[i]);
             }

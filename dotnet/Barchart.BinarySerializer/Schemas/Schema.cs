@@ -49,6 +49,8 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity source)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             if (writer.BytesWritten == 0)
             {
                 _headerSerializer.Encode(writer, EntityId, true);
@@ -70,6 +72,11 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous)
         {
+            if (previous == null)
+            {
+                return Serialize(writer, current);
+            }
+            
             if (writer.BytesWritten == 0)
             {
                 _headerSerializer.Encode(writer, EntityId, false);
@@ -97,6 +104,8 @@ namespace Barchart.BinarySerializer.Schemas
         /// <inheritdoc />
         public TEntity Deserialize(IDataBufferReader reader, TEntity target)
         {
+            ArgumentNullException.ThrowIfNull(target);
+            
             return Deserialize(reader, target, true);
         }
 

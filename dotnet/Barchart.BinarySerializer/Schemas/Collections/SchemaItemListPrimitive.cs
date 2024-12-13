@@ -137,7 +137,14 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         {
             if (Serialization.ReadMissingFlag(reader))
             {
-                items.Add(currentItems[i]);
+                if (currentItems != null && i < currentItems.Count)
+                {
+                    items.Add(currentItems[i]);
+                }
+                else
+                {
+                    items.Add(default!);
+                }
             }
             else
             {
