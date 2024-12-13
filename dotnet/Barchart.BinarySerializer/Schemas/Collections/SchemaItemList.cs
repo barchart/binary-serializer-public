@@ -104,7 +104,8 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
         IList<TItem> currentItems = _getter(current);
         IList<TItem> previousItems = _getter(previous);
-
+        Serialization.NormalizeListSizes(currentItems, previousItems);
+        
         Serialization.WriteMissingFlag(writer, false);
         Serialization.WriteNullFlag(writer, currentItems == null);
 
@@ -169,7 +170,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
             }
             else
             {
-                if (currentItems != null && currentItems.Count > i)
+                if (currentItems != null && currentItems.Count > i && currentItems[i] != null)
                 {
                     items.Add(_itemSchema.Deserialize(reader, currentItems[i]));
                 }
