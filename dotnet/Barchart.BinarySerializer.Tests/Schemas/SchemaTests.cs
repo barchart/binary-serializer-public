@@ -166,7 +166,7 @@ public class SchemaTests
     #region Test Methods (GetEquals)
 
     [Fact]
-    public void GetEquals_WithEqualEntities_ReturnsTrue()
+    public void GetEquals_SameEntitySameValues_ReturnsTrue()
     {
         TestEntity entityA = new()
         {
@@ -186,7 +186,27 @@ public class SchemaTests
     }
 
     [Fact]
-    public void GetEquals_WithDifferentEntities_ReturnsFalse()
+    public void GetEquals_SameEntityDiferentValues_ReturnsFalse()
+    {
+        TestEntity entityA = new()
+        {
+            KeyProperty = "value", 
+            ValueProperty = "value"
+        };
+        
+        TestEntity entityB = new()
+        {
+            KeyProperty = "value",
+            ValueProperty = "changed"
+        };
+
+        bool result = _schema.GetEquals(entityA, entityB);
+
+        Assert.False(result);
+    }
+    
+    [Fact]
+    public void GetEquals_DifferentEntitiesSameValues_ReturnsFalse()
     {
         TestEntity entityA = new()
         {
