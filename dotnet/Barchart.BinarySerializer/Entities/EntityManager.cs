@@ -33,18 +33,21 @@ public class EntityManager<TEntity> where TEntity : class, new()
     
     #region Methods
     
-    public byte[] Snapshot(TEntity entity)
+    public byte[] Snapshot(TEntity entity, bool checkpoint = true)
     {
         IEntityKey<TEntity> key = ExtractKey(entity);
         
         byte[] snapshot = _serializer.Serialize(entity);
-        
-        _snapshots[key] = snapshot;
-        
+
+        if (checkpoint)
+        {
+            _snapshots[key] = snapshot;
+        }
+
         return snapshot;
     }
     
-    public byte[] Difference(TEntity entity)
+    public byte[] Difference(TEntity entity, bool checkpoint = true)
     {
         IEntityKey<TEntity> key = ExtractKey(entity);
 
@@ -61,8 +64,11 @@ public class EntityManager<TEntity> where TEntity : class, new()
             return new byte[0];
         }
 
-        _snapshots[key] = _serializer.Serialize(current);
-
+        if (checkpoint)
+        {
+            _snapshots[key] = _serializer.Serialize(current);
+        }
+        
         return _serializer.Serialize(current, previous);
     }
 
