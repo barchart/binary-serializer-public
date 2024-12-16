@@ -98,7 +98,6 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
         IList<TItem> currentItems = _getter(current);
         IList<TItem> previousItems = _getter(previous);
-        Serialization.NormalizeListSizes(currentItems, previousItems);
         
         Serialization.WriteMissingFlag(writer, false);
         Serialization.WriteNullFlag(writer, currentItems == null);

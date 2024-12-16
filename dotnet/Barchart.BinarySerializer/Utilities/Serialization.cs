@@ -29,26 +29,5 @@ internal static class Serialization
         writer.WriteBit(flag);
     }
     
-    internal static void NormalizeListSizes<TItem>(IList<TItem>? currentItems, IList<TItem>? previousItems)
-    {
-        int maxCount = Math.Max(currentItems?.Count ?? 0, previousItems?.Count ?? 0);
-
-        if (currentItems != null)
-        {
-            while (currentItems.Count < maxCount)
-            {
-                currentItems.Add(default!);
-            }
-        }
-
-        if (previousItems != null)
-        {
-            while (previousItems.Count < maxCount)
-            {
-                previousItems.Add(default!);
-            }
-        }
-    }
-    
     #endregion
 }
