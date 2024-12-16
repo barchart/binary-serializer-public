@@ -34,7 +34,7 @@ namespace Barchart.BinarySerializer.Tests.Schemas.Factories
 
         #endregion
         
-        #region Test Methods
+        #region Test Methods (Make)
 
         [Fact]
         public void Make_WithValidTypeAndDefaultEntityId_ThrowsAnError()

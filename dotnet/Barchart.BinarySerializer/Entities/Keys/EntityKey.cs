@@ -1,7 +1,7 @@
 namespace Barchart.BinarySerializer.Entities.Keys;
 
 /// <summary>
-///     Represents a key for an entity.
+///     Represents a unique key for an entity used in (de)serialization process.
 /// </summary>
 /// <typeparam name="TEntity">
 ///     The type of the entity.
@@ -10,13 +10,13 @@ public class EntityKey<TEntity> : IEntityKey<TEntity>, IEquatable<EntityKey<TEnt
 {
     #region Fields
     
-    private readonly Object _key;
+    private readonly object _key;
     
     #endregion
     
     #region Construtor(s)
     
-    public EntityKey(Object key)
+    public EntityKey(object key)
     {
         _key = key;
     }
