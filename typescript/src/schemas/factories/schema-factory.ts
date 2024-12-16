@@ -27,8 +27,17 @@ export class SchemaFactory implements SerializationSchemaFactory {
     }
 
     make<TEntity extends object>(entityId: number = 0, fields: SchemaField[]): SchemaDefinition<TEntity> {
+        return this.makeInternal<TEntity>(entityId, fields, false);
+    }
+
+    private makeInternal<TEntity extends object>(entityId: number, fields: SchemaField[], nested: boolean): SchemaDefinition<TEntity> {
+        if (!nested && entityId == 0)
+        {
+            throw new Error("Entity ID cannot be [ 0 ].");
+        }
+
         const memberDataContainer: SchemaItemDefinition<TEntity>[] = fields.map(field => {
-            return this.createMemberDataDefinition<TEntity>(entityId, field);
+            return this.createMemberDataDefinition<TEntity>(field);
         });
 
         memberDataContainer.sort((a, b) => this.compareSchemaItems(a as SchemaItem<TEntity, any>, b as SchemaItem<TEntity, any>));
@@ -36,16 +45,16 @@ export class SchemaFactory implements SerializationSchemaFactory {
         return new Schema(entityId, memberDataContainer);
     }
 
-    private createMemberDataDefinition<TEntity extends object>(entityId: number, field: SchemaField): SchemaItemDefinition<TEntity> {
+    private createMemberDataDefinition<TEntity extends object>(field: SchemaField): SchemaItemDefinition<TEntity> {
 
         if (this.isNestedClass(field) && "fields" in field) {
-            const nestedSchema = this.make(entityId, field.fields);
+            const nestedSchema = this.makeInternal(0, field.fields, true);
 
             return new SchemaItemNested<TEntity, any>(field.name, nestedSchema);
         }
 
         if (this.isList(field) && "fields" in field) {
-            const nestedSchema = this.make(entityId, field.fields);
+            const nestedSchema = this.makeInternal(0, field.fields, true);
 
             return new SchemaItemList<TEntity, any>(field.name, nestedSchema);
         }
