@@ -21,6 +21,7 @@ public class EntityManagerFactory
 
     public EntityManagerFactory()
     {
+        
     }
 
     #endregion
