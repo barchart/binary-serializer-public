@@ -3,7 +3,7 @@ namespace Barchart.BinarySerializer.Examples.Common;
 /// <summary>
 ///     Provides helper methods for common operations related to binary serialization.
 /// </summary>
-public static class Helper
+public static class Binary
 {
     #region Methods
 

@@ -1,4 +1,4 @@
-#region Usings Statements
+#region Using Statements
 
 using Barchart.BinarySerializer.Attributes;
 

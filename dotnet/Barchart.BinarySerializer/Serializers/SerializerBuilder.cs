@@ -52,10 +52,10 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     #region Methods
 
     /// <summary>
-    ///     Specifies the schema factory to be used by the serializer.
+    ///     Specifies the schema factory.
     /// </summary>
     /// <param name="schemaFactory">
-    ///     The schema factory to be used.
+    ///     The schema factory.
     /// </param>
     /// <returns>
     ///     The current instance of <see cref="SerializerBuilder{TEntity}"/> for method chaining.
@@ -68,10 +68,10 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     }
 
     /// <summary>
-    ///     Specifies the schema factory using a type serializer factory.
+    ///     Specifies the binary type factory.
     /// </summary>
     /// <param name="typeSerializerFactory">
-    ///     The type serializer factory to be used for creating the schema factory.
+    ///     The binary type serializer factory.
     /// </param>
     /// <returns>
     ///     The current instance of <see cref="SerializerBuilder{TEntity}"/> for method chaining.
@@ -116,7 +116,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
     }
 
     /// <summary>
-    ///     Builds and returns a configured instance of <see cref="Serializer{TEntity}"/>.
+    ///     Builds and returns an instance of <see cref="Serializer{TEntity}"/>.
     /// </summary>
     /// <returns>
     ///     An instance of <see cref="Serializer{TEntity}"/> configured with the specified factories.
@@ -127,7 +127,7 @@ public class SerializerBuilder<TEntity> where TEntity: class, new()
         
         return new Serializer<TEntity>(schema, _dataBufferReaderFactory, _dataBufferWriterFactory);
     }
-
+    
     /// <summary>
     ///     Creates a new instance of <see cref="SerializerBuilder{TEntity}"/> for the specified entity type.
     /// </summary>

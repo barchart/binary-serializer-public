@@ -1,5 +1,6 @@
 #region Using Statements
 
+using System.Runtime.CompilerServices;
 using Barchart.BinarySerializer.Schemas.Factories;
 using Barchart.BinarySerializer.Types.Factories;
 using Barchart.BinarySerializer.Schemas;
@@ -57,7 +58,7 @@ namespace Barchart.BinarySerializer.Tests.Schemas.Factories
             Assert.NotNull(schema);
             Assert.IsAssignableFrom<ISchema<TestEntity>>(schema);
         }
-
+        
         #endregion
         
         #region Nested Types
@@ -67,6 +68,20 @@ namespace Barchart.BinarySerializer.Tests.Schemas.Factories
             [Serialize]
             public int SerializedProperty { get; set; }
         }
+        
+        
+        private class TestEntityTwo
+        {
+            [Serialize(true)]
+            public int KeyOne { get; set; }
+            
+            [Serialize(true)]
+            public required string KeyTwo { get; set; }
+            
+            [Serialize()]
+            public required string PropertyOne { get; set; }
+        }
+        
         
         #endregion
     }

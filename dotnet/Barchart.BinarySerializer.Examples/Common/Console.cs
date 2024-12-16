@@ -104,7 +104,7 @@ public static class Console
                     builder.Append('\t');
                 }
             
-                builder.Append(Helper.PrintBits(bytes[i]));
+                builder.Append(Binary.PrintBits(bytes[i]));
                 builder.Append(' ');
             }
         }

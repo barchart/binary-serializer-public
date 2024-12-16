@@ -8,6 +8,7 @@ using Barchart.BinarySerializer.Schemas.Collections;
 using Barchart.BinarySerializer.Types;
 using Barchart.BinarySerializer.Types.Exceptions;
 using Barchart.BinarySerializer.Types.Factories;
+using Barchart.BinarySerializer.Utilities;
 
 #endregion
 
@@ -53,7 +54,7 @@ public class SchemaFactory : ISchemaFactory
         
         Type entityType = typeof(TEntity);
 
-        IEnumerable<MemberInfo> members = GetMembersForType(entityType);
+        IEnumerable<MemberInfo> members = Reflection.GetMembersForType(entityType);
 
         ISchemaItem<TEntity>[] schemaItems = members.Select(MakeSchemaItem<TEntity>).ToArray();
 
@@ -64,7 +65,8 @@ public class SchemaFactory : ISchemaFactory
 
     private ISchemaItem<TEntity> MakeSchemaItem<TEntity>(MemberInfo memberInfo) where TEntity: class, new()
     {
-        Type memberType = GetMemberType(memberInfo);
+        Type memberType = Reflection.GetMemberType(memberInfo);
+        
         Type[] typeParameters;
 
         MethodInfo[] methods = typeof(SchemaFactory).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
@@ -197,35 +199,6 @@ public class SchemaFactory : ISchemaFactory
         return methodInfo => methodInfo.Name == nameof(MakeSchemaItemCollectionObject) && methodInfo.GetGenericArguments().Length == typeParameters.Length;
     }
     
-    private static Type GetMemberType(MemberInfo memberInfo)
-    {
-        if (memberInfo is PropertyInfo propertyInfo)
-        {
-            return propertyInfo.PropertyType;
-        }
-
-        if (memberInfo is FieldInfo fieldInfo)
-        {
-            return fieldInfo.FieldType;
-        }
-        
-        throw new ArgumentException("When using reflection to build a Schema<T>, the serializable members must be fields or properties");
-    }
-
-    private IEnumerable<MemberInfo> GetMembersForType(Type entityType)
-    {
-        IEnumerable<MemberInfo> fields = entityType
-            .GetFields(BindingFlags.Instance | BindingFlags.Public)
-            .Where(FieldCanBeWritten)
-            .Where(FieldHasSerializeAttribute);
-
-        IEnumerable<MemberInfo> properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(PropertyCanBeWritten)
-            .Where(PropertyHasSerializeAttribute);
-
-        return fields.Concat(properties);
-    }
-    
     private static SerializeAttribute GetSerializeAttribute(MemberInfo memberInfo)
     {
         SerializeAttribute? serializeAttribute = memberInfo.GetCustomAttribute<SerializeAttribute>();
@@ -341,31 +314,6 @@ public class SchemaFactory : ISchemaFactory
         }
 
         return comparison;
-    }
-
-    private static bool PropertyCanBeWritten(PropertyInfo propertyInfo)
-    {
-        return propertyInfo.GetSetMethod() != null;
-    }
-
-    private static bool FieldCanBeWritten(FieldInfo fieldInfo)
-    {
-        return fieldInfo is { IsInitOnly: false, IsLiteral: false };
-    }
-
-    private static bool PropertyHasSerializeAttribute(PropertyInfo propertyInfo)
-    {
-        return MemberHasSerializeAttribute(propertyInfo);
-    }
-    
-    private static bool FieldHasSerializeAttribute(FieldInfo fieldInfo)
-    {
-        return MemberHasSerializeAttribute(fieldInfo);
-    }
-    
-    private static bool MemberHasSerializeAttribute(MemberInfo memberInfo)
-    {
-        return memberInfo.GetCustomAttribute<SerializeAttribute>() != null;
     }
 
     private static bool IsCollectionType(Type type)
