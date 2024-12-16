@@ -1,5 +1,11 @@
 namespace Barchart.BinarySerializer.Entities.Keys;
 
+/// <summary>
+///     Represents a key for an entity.
+/// </summary>
+/// <typeparam name="TEntity">
+///     The type of the entity.
+/// </typeparam>
 public class EntityKey<TEntity> : IEntityKey<TEntity>, IEquatable<EntityKey<TEntity>> where TEntity : class, new()
 {
     #region Fields
@@ -31,9 +37,7 @@ public class EntityKey<TEntity> : IEntityKey<TEntity>, IEquatable<EntityKey<TEnt
 
     public override bool Equals(object? obj)
     {
-        var other = obj as EntityKey<TEntity>;
-
-        if (other == null)
+        if (obj is not EntityKey<TEntity> other)
         {
             return false;
         }

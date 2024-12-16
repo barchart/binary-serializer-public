@@ -1,7 +1,17 @@
+#region Using Statements
+
 using Barchart.BinarySerializer.Entities.Keys;
+
+#endregion
 
 namespace Barchart.BinarySerializer.Entities.Exceptions;
 
+/// <summary>
+///     Thrown when an entity is not found in the entity manager.
+/// </summary>
+/// <typeparam name="TEntity">
+///     The type of the entity.
+/// </typeparam>
 public class EntityNotFoundException<TEntity> : InvalidOperationException where TEntity : class, new()
 {
     #region Properties
