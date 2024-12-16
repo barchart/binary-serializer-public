@@ -12,7 +12,7 @@ namespace Barchart.BinarySerializer.Entities;
 ///     Manages entities by providing functionality for creating snapshots, calculating differences, and maintaining historical state.
 /// </summary>
 /// <typeparam name="TEntity">
-///    The entity type.
+///    The type of the entity.
 /// </typeparam>
 public class EntityManager<TEntity> where TEntity : class, new()
 {
@@ -43,7 +43,7 @@ public class EntityManager<TEntity> where TEntity : class, new()
     ///     Creates a snapshot of the given entity, serializing its current state. Optionally stores the snapshot in the internal checkpoint system.
     /// </summary>
     /// <param name="entity">
-    ///    The entity type.
+    ///     The current state of the entity.
     /// </param>
     /// <param name="checkpoint">
     ///     If true, the snapshot is stored in the internal checkpoint system.
@@ -71,7 +71,7 @@ public class EntityManager<TEntity> where TEntity : class, new()
     ///     Optionally updates the checkpoint with the current state.
     /// </summary>
     /// <param name="entity">
-    ///     The entity type.
+    ///     The current state of the entity.
     /// </param>
     /// <param name="checkpoint">
     ///     If true, the current state replaces the previous checkpoint.
@@ -111,7 +111,7 @@ public class EntityManager<TEntity> where TEntity : class, new()
     ///     Removes the snapshot of the specified entity from the internal storage.
     /// </summary>
     /// <param name="entity">
-    ///    The entity type.
+    ///     The entity object.
     /// </param>
     /// <returns>
     ///     <c>true</c> if the snapshot was successfully removed; otherwise, <c>false</c>.
@@ -127,7 +127,7 @@ public class EntityManager<TEntity> where TEntity : class, new()
     ///     Extracts the unique key for the given entity using the provided key extraction function.
     /// </summary>
     /// <param name="entity">
-    ///     The entity type.
+    ///     The entity object.
     /// </param>
     /// <returns>
     ///     The unique key for the entity.

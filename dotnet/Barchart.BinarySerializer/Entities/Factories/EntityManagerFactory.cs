@@ -32,7 +32,7 @@ public class EntityManagerFactory
     ///     Creates an instance of <see cref="EntityManager{TEntity}"/> for the specified entity type.
     /// </summary>
     /// <typeparam name="TEntity">
-    ///    The entity type.
+    ///     The type of the entity.
     /// </typeparam>
     /// <param name="serializer">
     ///     The serializer used for serializing and deserializing entities.
@@ -49,7 +49,7 @@ public class EntityManagerFactory
     ///     Generates a function that extracts the key of an entity based on its members marked with the <see cref="SerializeAttribute"/>.
     /// </summary>
     /// <typeparam name="TEntity">
-    ///    The entity type.
+    ///    The type of the entity.
     /// </typeparam>
     /// <returns>
     ///     A function that takes an entity of type <typeparamref name="TEntity"/> and returns an instance of <see cref="IEntityKey{TEntity}"/>.

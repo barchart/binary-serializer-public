@@ -1,6 +1,5 @@
 #region Constructors
 
-using System.Text;
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Entities;
 using Barchart.BinarySerializer.Entities.Exceptions;
@@ -33,13 +32,34 @@ public class EntityManagerTests
     [Fact]
     public void Snapshot_SingleInstance_ReturnsByteArray()
     {
-        EntityManager<TestEntity> entityManager = CreateEntityManager();
+        EntityManager<TestEntity> entityManager = CreateTestEntityManager();
         
-        TestEntity entity = new TestEntity() { Key = 0b11110000, Value = 0b00001111 };
+        TestEntity entity = new TestEntity
+        {
+            Key = 0b11110000,
+            Value = 0b00001111
+        };
 
         byte[] snapshot = entityManager.Snapshot(entity);
         
         Assert.Equal(4, snapshot.Length);
+    }
+
+    [Fact]
+    public void Snapshot_CompoundKey_ReturnsByteArray()
+    {
+        EntityManager<TestEntityTwo> entityManager = CreateTestEntityTwoManager();
+        
+        TestEntityTwo entity = new TestEntityTwo
+        {
+            Key = 0b11110000,
+            KeyTwo = "KeyTwo",
+            Value = 0b00001111
+        };
+
+        byte[] snapshot = entityManager.Snapshot(entity);
+        
+        Assert.Equal(12, snapshot.Length);
     }
     
     #endregion
@@ -49,21 +69,62 @@ public class EntityManagerTests
     [Fact]
     public void Difference_WithoutSnapshot_Throws()
     {
-        EntityManager<TestEntity> entityManager = CreateEntityManager();
+        EntityManager<TestEntity> entityManager = CreateTestEntityManager();
         
-        TestEntity entity = new TestEntity() { Key = 0b11110000, Value = 0b00001111 };
+        TestEntity entity = new TestEntity
+        {
+            Key = 0b11110000,
+            Value = 0b00001111
+        };
         
         Assert.Throws<EntityNotFoundException<TestEntity>>(() => entityManager.Difference(entity));
     }
     
     [Fact]
+    public void Difference_CompoundKeyEntityWithoutSnapshot_Throws()
+    {
+        EntityManager<TestEntityTwo> entityManager = CreateTestEntityTwoManager();
+        
+        TestEntityTwo entity = new TestEntityTwo
+        {
+            Key = 0b11110000,
+            KeyTwo = "KeyTwo",
+            Value = 0b00001111
+        };
+        
+        Assert.Throws<EntityNotFoundException<TestEntityTwo>>(() => entityManager.Difference(entity));
+    }
+    
+    [Fact]
     public void Difference_WithSnapshot_ReturnsEmptyByteArray()
     {
-        EntityManager<TestEntity> entityManager = CreateEntityManager();
+        EntityManager<TestEntity> entityManager = CreateTestEntityManager();
         
-        TestEntity entity = new TestEntity() { Key = 0b11110000, Value = 0b00001111 };
+        TestEntity entity = new TestEntity
+        {
+            Key = 0b11110000, 
+            Value = 0b00001111
+        };
 
-        byte[] snapshpt = entityManager.Snapshot(entity);
+        byte[] snapshot = entityManager.Snapshot(entity);
+        byte[] difference = entityManager.Difference(entity);
+
+        Assert.Empty(difference);
+    }
+    
+    [Fact]
+    public void Difference_CompoundKeyEntityWithSnapshot_ReturnsEmptyByteArray()
+    {
+        EntityManager<TestEntityTwo> entityManager = CreateTestEntityTwoManager();
+        
+        TestEntityTwo entity = new TestEntityTwo
+        {
+            Key = 0b11110000,
+            KeyTwo = "KeyTwo",
+            Value = 0b00001111
+        };
+
+        byte[] snapshot = entityManager.Snapshot(entity);
         byte[] difference = entityManager.Difference(entity);
 
         Assert.Empty(difference);
@@ -72,9 +133,13 @@ public class EntityManagerTests
     [Fact]
     public void Difference_WithSnapshotThenMutate_ReturnsByteArray()
     {
-        EntityManager<TestEntity> entityManager = CreateEntityManager();
+        EntityManager<TestEntity> entityManager = CreateTestEntityManager();
         
-        TestEntity entity = new TestEntity() { Key = 0b11110000, Value = 0b00001111 };
+        TestEntity entity = new TestEntity
+        {
+            Key = 0b11110000, 
+            Value = 0b00001111
+        };
 
         entityManager.Snapshot(entity);
 
@@ -86,11 +151,37 @@ public class EntityManagerTests
     }
     
     [Fact]
+    public void Difference_CompoundKeyEntityWithSnapshotThenMutate_ReturnsByteArray()
+    {
+        EntityManager<TestEntityTwo> entityManager = CreateTestEntityTwoManager();
+        
+        TestEntityTwo entity = new TestEntityTwo
+        {
+            Key = 0b11110000, 
+            KeyTwo = "KeyTwo",
+            Value = 0b00001111
+        };
+
+        entityManager.Snapshot(entity);
+
+        entity.Value = 0b11111000;
+
+        byte[] difference = entityManager.Difference(entity);
+
+        Assert.Equal(12, difference.Length);
+    }
+
+    
+    [Fact]
     public void Difference_WithSnapshotThenMutateThenDifference_ReturnsEmptyByteArray()
     {
-        EntityManager<TestEntity> entityManager = CreateEntityManager();
+        EntityManager<TestEntity> entityManager = CreateTestEntityManager();
         
-        TestEntity entity = new TestEntity() { Key = 0b11110000, Value = 0b00001111 };
+        TestEntity entity = new TestEntity
+        {
+            Key = 0b11110000, 
+            Value = 0b00001111
+        };
 
         entityManager.Snapshot(entity);
 
@@ -105,9 +196,13 @@ public class EntityManagerTests
     [Fact]
     public void Difference_WithSnapshotThenMutateThenDifferenceThenDifference_ReturnsEmptyByteArray()
     {
-        EntityManager<TestEntity> entityManager = CreateEntityManager();
+        EntityManager<TestEntity> entityManager = CreateTestEntityManager();
         
-        TestEntity entity = new TestEntity() { Key = 0b11110000, Value = 0b00001111 };
+        TestEntity entity = new TestEntity
+        {
+            Key = 0b11110000, 
+            Value = 0b00001111
+        };
 
         entityManager.Snapshot(entity);
 
@@ -122,9 +217,13 @@ public class EntityManagerTests
     [Fact]
     public void Difference_WithSnapshotThenMutateThenDifferenceThenMutateThenDifference_ReturnsEmptyByteArray()
     {
-        EntityManager<TestEntity> entityManager = CreateEntityManager();
+        EntityManager<TestEntity> entityManager = CreateTestEntityManager();
         
-        TestEntity entity = new TestEntity() { Key = 0b11110000, Value = 0b00001111 };
+        TestEntity entity = new TestEntity
+        {
+            Key = 0b11110000, 
+            Value = 0b00001111
+        };
 
         entityManager.Snapshot(entity);
 
@@ -140,15 +239,77 @@ public class EntityManagerTests
     }
     
     #endregion
+
+    #region Test Methods (Remove)
+
+    [Fact]
+    public void Remove_WithoutSnapshot_ReturnsFalse()
+    {
+        EntityManager<TestEntity> entityManager = CreateTestEntityManager();
+        
+        TestEntity entity = new TestEntity
+        {
+            Key = 0b11110000,
+            Value = 0b00001111
+        };
+        
+        Assert.False(entityManager.Remove(entity));
+    }
+    
+    [Fact]
+    public void Remove_CompoundKeyEntityWithoutSnapshot_ReturnsFalse()
+    {
+        EntityManager<TestEntityTwo> entityManager = CreateTestEntityTwoManager();
+        
+        TestEntityTwo entity = new TestEntityTwo
+        {
+            Key = 0b11110000,
+            KeyTwo = "KeyTwo",
+            Value = 0b00001111
+        };
+        
+        Assert.False(entityManager.Remove(entity));
+    }
+    
+    [Fact]
+    public void Remove_WithSnapshot_ReturnsEmptyByteArray()
+    {
+        EntityManager<TestEntity> entityManager = CreateTestEntityManager();
+        
+        TestEntity entity = new TestEntity
+        {
+            Key = 0b11110000, 
+            Value = 0b00001111
+        };
+
+        entityManager.Snapshot(entity);
+        entityManager.Remove(entity);
+        
+        Assert.Throws<EntityNotFoundException<TestEntity>>(() => entityManager.Difference(entity));
+    }
+
+    #endregion
     
     #region Helper Methods
     
-    private EntityManager<TestEntity> CreateEntityManager()
+    private static EntityManager<TestEntity> CreateTestEntityManager()
     {
         // 2024/12/15, BRI. We should be mocking these dependencies. We are incorrectly
         // testing these objects too.
         
         SerializerBuilder<TestEntity> serializerBuilder = new SerializerBuilder<TestEntity>(1);
+
+        EntityManagerFactory entityManagerFactory = new EntityManagerFactory();
+        
+        return entityManagerFactory.Make(serializerBuilder.Build());
+    }
+    
+    private static EntityManager<TestEntityTwo> CreateTestEntityTwoManager()
+    {
+        // 2024/12/15, BRI. We should be mocking these dependencies. We are incorrectly
+        // testing these objects too.
+        
+        SerializerBuilder<TestEntityTwo> serializerBuilder = new SerializerBuilder<TestEntityTwo>(2);
 
         EntityManagerFactory entityManagerFactory = new EntityManagerFactory();
         
@@ -167,6 +328,19 @@ public class EntityManagerTests
         [Serialize(false)]
         public byte Value { get; set; }
     }
+    
+    public class TestEntityTwo
+    {
+        [Serialize(true)]
+        public byte Key { get; set; }
+
+        [Serialize(true)] 
+        public string KeyTwo { get; set; } = "";
+        
+        [Serialize(false)]
+        public byte Value { get; set; }
+    }
+
 
     #endregion
 }

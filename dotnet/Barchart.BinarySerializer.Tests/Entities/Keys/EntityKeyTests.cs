@@ -26,7 +26,7 @@ public class EntityKeyTests
     #region Test Methods (Equals with object)
     
     [Fact]
-    public void Equals_object_SameObjectReturnsTrue()
+    public void Equals_Object_SameObjectReturnsTrue()
     {
         object same = new();
         
@@ -37,7 +37,7 @@ public class EntityKeyTests
     }
     
     [Fact]
-    public void Equals_object_DifferentObjectsReturnsFalse()
+    public void Equals_Object_DifferentObjectsReturnsFalse()
     {
         object keyOne = new EntityKey<TestEntity>(new object());
         object keyTwo = new EntityKey<TestEntity>(new object());
@@ -50,7 +50,7 @@ public class EntityKeyTests
     #region Test Methods (Equals<T> with object)
     
     [Fact]
-    public void IEquatableEquals_object_SameObjectReturnsTrue()
+    public void IEquatableEquals_Object_SameObjectReturnsTrue()
     {
         object same = new();
         
@@ -61,7 +61,7 @@ public class EntityKeyTests
     }
     
     [Fact]
-    public void IEquatableEquals_object_DifferentObjectsReturnsFalse()
+    public void IEquatableEquals_Object_DifferentObjectsReturnsFalse()
     {
         object keyOne = new EntityKey<TestEntity>(new object());
         object keyTwo = new EntityKey<TestEntity>(new object());
@@ -140,7 +140,7 @@ public class EntityKeyTests
     #region Test Methods (ToString)
     
     [Fact]
-    public void ToString_EndsWithKeyToString()
+    public void ToString_WhenCalled_EndsWithKeyToString()
     {
         Mock<object> mock = new();
         
