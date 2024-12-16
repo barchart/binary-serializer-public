@@ -1,7 +1,7 @@
 import { DataReader } from "../buffers/data-reader.interface";
 import { DataWriter } from "../buffers/data-writer.interface";
 import { BinaryTypeSerializer } from "./binary-type-serializer.interface";
-import { Serialization } from "../utilities/utilities";
+import { Serialization } from "../utilities/serialization";
 
 /**
  * Reads (and writes) nullable values to (and from) a binary data source.

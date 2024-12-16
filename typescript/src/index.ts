@@ -53,4 +53,4 @@ export * from './types/binary-serializer-ushort';
 export * from './types/binary-type-serializer.interface';
 export * from './types/data-types';
 
-export * from './utilities/utilities';
+export * from './utilities/serialization';

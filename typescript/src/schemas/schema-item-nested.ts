@@ -2,7 +2,7 @@ import { DataReader } from "../buffers/data-reader.interface";
 import { DataWriter } from "../buffers/data-writer.interface";
 import { SchemaDefinition } from "./schema-definition.interface";
 import { SchemaItemDefinition } from "./schema-item-definition.interface";
-import { Serialization } from "../utilities/utilities";
+import { Serialization } from "../utilities/serialization";
 
 /**
  * Provides a mechanism for handling the serialization and deserialization of nested properties within an entity,

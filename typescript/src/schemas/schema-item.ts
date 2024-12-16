@@ -3,7 +3,7 @@ import { SchemaItemWithKeyDefinition } from "./schema-item-definition.interface"
 import { DataWriter } from "../buffers/data-writer.interface";
 import { DataReader } from "../buffers/data-reader.interface";
 import { KeyMismatchException } from "./exceptions/key-mismatch-exception";
-import { Serialization } from "../utilities/utilities";
+import { Serialization } from "../utilities/serialization";
 
 /**
  * Information regarding a single piece of data that can be serialized

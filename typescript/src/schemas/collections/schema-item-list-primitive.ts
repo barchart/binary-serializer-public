@@ -2,7 +2,7 @@ import { DataReader } from "../../buffers/data-reader.interface";
 import { DataWriter } from "../../buffers/data-writer.interface";
 import { BinaryTypeSerializer } from "../../types/binary-type-serializer.interface";
 import { SchemaItemDefinition } from "../schema-item-definition.interface";
-import { Serialization } from "../../utilities/utilities";
+import { Serialization } from "../../utilities/serialization";
 
 /**
  * Manages the serialization and deserialization of a list or array of primitive declarations associated with an entity
