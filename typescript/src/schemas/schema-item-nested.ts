@@ -85,7 +85,7 @@ export class SchemaItemNested<TEntity extends object, TMember extends object> im
                 target[this.name as keyof TEntity] = null as TEntity[keyof TEntity];
             }
         } else if (nested === null) {
-            target[this.name as keyof TEntity] = this.schema.deserialize(reader, true) as TEntity[keyof TEntity];
+            target[this.name as keyof TEntity] = this.schema.deserialize(reader) as TEntity[keyof TEntity];
         } else {
             this.schema.deserializeChanges(reader, nested, true);
         }

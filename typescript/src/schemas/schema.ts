@@ -89,6 +89,10 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     }
 
     deserializeChanges(reader: DataReader, target: TEntity, existing: boolean = true): TEntity {
+        if (target === null) {
+            throw new Error("target cannot be null");
+        }
+
         if (reader.bytesRead === 0) {
             const header = this.readHeader(reader);
             this.checkHeader(header);

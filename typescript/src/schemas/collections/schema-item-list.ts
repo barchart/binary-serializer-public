@@ -76,7 +76,7 @@ export class SchemaItemList<TEntity extends object, TItem extends object> implem
         writer.writeBytes(new Uint8Array(new Uint32Array([currentItems.length]).buffer));
 
         currentItems.forEach((item, index) => {
-            if (currentItems[index] === null) {
+            if (currentItems[index] === null && currentItems.length > index && currentItems[index] === null) {
                 Serialization.writeNullFlag(writer, true);
 
                 return;
@@ -84,7 +84,7 @@ export class SchemaItemList<TEntity extends object, TItem extends object> implem
 
             Serialization.writeNullFlag(writer, false);
 
-            if (previousItems != null && previousItems[index] !== null) {
+            if (previousItems != null && previousItems.length > index && previousItems[index] !== null) {
                 this.itemSchema.serializeChanges(writer, item, previousItems[index]);
             } else {
                 this.itemSchema.serialize(writer, item);
@@ -113,10 +113,10 @@ export class SchemaItemList<TEntity extends object, TItem extends object> implem
                 items.push(null as unknown as TItem);
             } 
             else {
-                if(currentItems != null && currentItems.length > i) {
+                if (currentItems != null && currentItems.length > i && currentItems[i] !== null) {
                     items.push(this.itemSchema.deserializeChanges(reader, currentItems[i], true));
                 } else {
-                    items.push(this.itemSchema.deserialize(reader, true));
+                    items.push(this.itemSchema.deserialize(reader));
                 }
             }
         }

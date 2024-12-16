@@ -44,10 +44,9 @@ export interface SchemaDefinition<TEntity extends object> {
      *
      * @public
      * @param {DataReader} reader - A buffer of binary data which contains the serialized entity.
-     * @param {boolean} [isNestedMember] - Optional flag to indicate if the entity is a nested member.
      * @returns {TEntity} A new instance of the TEntity class.
      */
-    deserialize(reader: DataReader, isNestedMember?: boolean): TEntity;
+    deserialize(reader: DataReader): TEntity;
 
     /**
      * Deserializes an entity, updating an existing instance of the TEntity class.
