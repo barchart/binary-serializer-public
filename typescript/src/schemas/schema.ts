@@ -45,6 +45,10 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     }
 
     serialize(writer: DataWriter, source: TEntity): Uint8Array {
+        if (source === null) {
+            throw new Error("source cannot be null");
+        }
+
         if (writer.bytesWritten === 0) {
             this.headerSerializer.encode(writer, this.entityId, true);
         }
@@ -61,6 +65,10 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     }
 
     serializeChanges(writer: DataWriter, current: TEntity, previous: TEntity): Uint8Array {
+        if (previous === null) {
+            return this.serialize(writer, current);
+        }
+
         if (writer.bytesWritten === 0) {
             this.headerSerializer.encode(writer, this.entityId, false);
         }
