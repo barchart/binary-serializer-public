@@ -12,7 +12,7 @@
     <IsPackable>true</IsPackable>
     <PackageId>Barchart.BinarySerializer</PackageId>
     <Title>binary-serializer-dotnet</Title>
-    <Version>1.0.2</Version>
+    <Version>1.1.0</Version>
     <Authors>Luka Sotra,Bryan Ingle</Authors>
     <Company>Barchart.com, Inc.</Company>
     <PackageProjectUrl>https://github.com/barchart/binary-serializer-public</PackageProjectUrl>
