@@ -36,13 +36,13 @@ describe('EntityKey', () => {
             expect(keyOne.equals(keyTwo)).toBe(true);
         });
 
-        it('should return false for different arrays with different key value', () => {
+        it('should return false for different arrays with different string value', () => {
             const keyOne = new EntityKey<TestEntity>(['Luka', 1]);
             const keyTwo = new EntityKey<TestEntity>(['Bryan', 1]);
             expect(keyOne.equals(keyTwo)).toBe(false);
         });
 
-        it('should return false for different arrays with different key value', () => {
+        it('should return false for different arrays with different number value', () => {
             const keyOne = new EntityKey<TestEntity>(['Luka', 1]);
             const keyTwo = new EntityKey<TestEntity>(['Luka', 2]);
             expect(keyOne.equals(keyTwo)).toBe(false);

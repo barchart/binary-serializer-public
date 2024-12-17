@@ -17,10 +17,19 @@ export class EntityKey<TEntity extends object> implements EntityKeyDefinition<TE
             return false;
         }
 
-        return this._key === other._key;
+        if (this._key === other._key) {
+            return true;
+        }
+
+        return !this.isEmptyObject(this._key) && !this.isEmptyObject(other._key) && JSON.stringify(this._key) === JSON.stringify(other._key);
     }
 
     toString(): string {
         return `${Object.prototype.toString.call(this)}, (key=${this._key})`;
     }
+
+    private isEmptyObject(obj: object): boolean {
+        return Object.keys(obj).length === 0 && obj.constructor === Object;
+    }
+
 }
