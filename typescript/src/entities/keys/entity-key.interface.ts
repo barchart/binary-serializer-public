@@ -1,0 +1,1 @@
+export type EntityKeyDefinition<TEntity extends object> = object
