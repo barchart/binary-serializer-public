@@ -7,9 +7,7 @@ import { EntityKeyDefinition } from "../keys/entity-key.interface";
  */
 export class EntityNotFoundException<TEntity extends object> extends Error {
     constructor(key: EntityKeyDefinition<TEntity>) {
-        const message = `The entity manager does not contain the desired entity [ ${key} ].`;
-
-        super(message);
+        super(`The entity manager does not contain the desired entity [ ${key} ].`);
 
         Object.setPrototypeOf(this, EntityNotFoundException.prototype);
     }

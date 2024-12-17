@@ -49,19 +49,19 @@ export class EntityManager<TEntity extends object> {
     difference(entity: TEntity, checkpoint: boolean = true): Uint8Array {
         const key = this.extractKey(entity);
 
-        if (!this._snapshots.has(key)) {
+        if (!this.isSnapshotAvailable(key)) {
             throw new EntityNotFoundException<TEntity>(key);
         }
 
         const current = entity;
-        const previous = this._serializer.deserialize(this._snapshots.get(key)!);
+        const previous = this._serializer.deserialize(this.getSnapshot(key)!);
 
         if (this._serializer.getEquals(current, previous)) {
             return new Uint8Array(0); // No changes
         }
 
         if (checkpoint) {
-            this._snapshots.set(key, this._serializer.serialize(current));
+            this.setSnapshot(key, current);
         }
 
         return this._serializer.serializeChanges(current, previous);
@@ -75,10 +75,51 @@ export class EntityManager<TEntity extends object> {
      */
     remove(entity: TEntity): boolean {
         const key = this.extractKey(entity);
-        return this._snapshots.delete(key);
+        return this.removeSnapshot(key);
     }
 
     private extractKey(entity: TEntity): EntityKeyDefinition<TEntity> {
         return this._keyExtractor(entity);
+    }
+
+    private getSnapshot(key: EntityKeyDefinition<TEntity>): Uint8Array | undefined {
+        for (const [snapshotKey, value] of this._snapshots.entries()) {
+            if (key.equals(snapshotKey)) {
+                return value;
+            }
+        }
+        return undefined;
+    }
+
+    private setSnapshot(key: EntityKeyDefinition<TEntity>, entity: TEntity): void {
+        const serializedEntity = this._serializer.serialize(entity);
+
+        for (const snapshotKey of this._snapshots.keys()) {
+            if (key.equals(snapshotKey)) {
+                this._snapshots.delete(snapshotKey);
+                break;
+            }
+        }
+
+        this._snapshots.set(key, serializedEntity);
+    }
+
+    private removeSnapshot(key: EntityKeyDefinition<TEntity>): boolean {
+        for (const snapshotKey of this._snapshots.keys()) {
+            if (key.equals(snapshotKey)) {
+                return this._snapshots.delete(snapshotKey);
+            }
+        }
+        return false;
+    }
+
+    private isSnapshotAvailable(key: EntityKeyDefinition<TEntity>): boolean {
+        for (const snapshotKey of this._snapshots.keys()) {
+            if (key.equals(snapshotKey)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
