@@ -1,7 +1,4 @@
-import { SchemaField } from "../../schemas/schema-field.type";
-import { Serializer } from "../../serializers/serializer";
-import { EntityManager } from "../entity-manager";
-import { EntityKey } from "../keys/entity-key";
+import { SchemaField, Serializer, EntityKey, EntityManager } from "../../../src";
 
 /**
  * A factory for creating entity managers.
