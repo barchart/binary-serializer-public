@@ -8,6 +8,12 @@ export * from './buffers/data-buffer-writer';
 export * from './buffers/data-reader.interface';
 export * from './buffers/data-writer.interface';
 
+export * from './entities/exceptions/entity-not-found-exception';
+export * from './entities/factories/entity-manager-factory';
+export * from './entities/keys/entity-key.interface';
+export * from './entities/keys/entity-key';
+export * from './entities/entity-manager';
+
 export * from './headers/header';
 export * from './headers/binary-header-serializer';
 export * from './headers/exceptions/invalid-header-exception';
