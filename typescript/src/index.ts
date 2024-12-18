@@ -18,19 +18,19 @@ export * from './headers/header';
 export * from './headers/binary-header-serializer';
 export * from './headers/exceptions/invalid-header-exception';
 
-export * from './schemas/exceptions/key-mismatch-exception';
-export * from './schemas/exceptions/key-undefined-exception';
-export * from './schemas/factories/schema-factory';
-export * from './schemas/factories/serialization-schema-factory.interface';
-
-export * from './schemas/schema-definition.interface';
 export * from './schemas/collections/schema-item-list';
 export * from './schemas/collections/schema-item-list-primitive';
+export * from './schemas/exceptions/key-mismatch-exception';
+export * from './schemas/exceptions/key-undefined-exception';
+export * from './schemas/exceptions/header-mismatch-exception';
+export * from './schemas/factories/schema-factory';
+export * from './schemas/factories/serialization-schema-factory.interface';
+export * from './schemas/schema';
+export * from './schemas/schema-definition.interface';
+export * from './schemas/schema-field.type';
+export * from './schemas/schema-item';
 export * from './schemas/schema-item-definition.interface';
 export * from './schemas/schema-item-nested';
-export * from './schemas/schema-item';
-export * from './schemas/schema';
-export * from './schemas/schema-field.type';
 
 export * from './serializers/serializer';
 export * from './serializers/serializer-builder';
