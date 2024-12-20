@@ -62,7 +62,7 @@ public class EntityManager<TEntity> where TEntity : class, new()
             _snapshots[key] = snapshot;
         }
 
-        return snapshot;
+        return (byte[])snapshot.Clone();
     }
 
     /// <summary>
