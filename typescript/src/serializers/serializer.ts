@@ -122,19 +122,6 @@ export class Serializer<TEntity extends object> {
     }
 
     /**
-     * Sets the non-nullable properties from the `source` entity to the `target` entity.
-     *
-     * @public
-     * @template TEntity - The type of the entity.
-     * @param {TEntity} target - The entity to update.
-     * @param {TEntity} source - The entity to update from.
-     * @throws {Error} If the keys of the `source` and `target` entities are not equal.
-     */
-    applyChanges(target: TEntity, source: TEntity): void {
-        this.schema.applyChanges(target, source);
-    }
-
-    /**
      * Performs a deep equality check of two `TEntity` instances.
      *
      * @public

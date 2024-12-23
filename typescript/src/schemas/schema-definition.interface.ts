@@ -80,19 +80,6 @@ export interface SchemaDefinition<TEntity extends object> {
      */
     readKey<TMember>(reader: DataReader, name: string): TMember;
 
-
-    /**
-     * Synchronizes the `target` entity with the `source` entity.
-     * In other words, this method sets the non-nullable properties from the `source` entity to the `target` entity.
-     *
-     * @public
-     * @param target - The entity to update.
-     * @param source - The entity to update from.
-     * @template TEntity - The type of the entity.
-     * @throws {Error} - If the keys of the `source` and `target` entities are not equal.
-     */
-     applyChanges(target: TEntity, source: TEntity): TEntity;
-
     /**
      * Performs a deep equality check of two TEntity instances.
      *

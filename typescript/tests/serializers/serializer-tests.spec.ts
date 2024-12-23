@@ -1,22 +1,12 @@
 import { DataType, SchemaField, Serializer } from "../../src";
-import {expect} from "vitest";
 
 class TestEntity {
     keyProperty: string = "";
     valueProperty: string = "";
 }
 
-class TestEntityTwo {
-    keyProperty: string = "";
-    valueProperty: string = "";
-    testEntity?: TestEntity;
-    intList: number[] = [];
-    testEntities: TestEntity[] = [];
-}
-
 describe('SerializerTests', () => {
     let serializer: Serializer<TestEntity>;
-    let serializerEntityTwo: Serializer<TestEntityTwo>;
 
     const entityId = 1;
     const fields: SchemaField[] = [
@@ -24,17 +14,8 @@ describe('SerializerTests', () => {
         { name: 'valueProperty', type: DataType.string, isKey: false }
     ];
 
-    const fieldsEntityTwo: SchemaField[] = [
-        { name: 'keyProperty', type: DataType.string, isKey: true },
-        { name: 'valueProperty', type: DataType.string, isKey: false },
-        { name: 'testEntity', type: DataType.object, fields: fields },
-        { name: 'intList', type: DataType.list, elementType: DataType.int },
-        { name: 'testEntities', type: DataType.list, elementType: DataType.object, fields: fields }
-    ];
-
     beforeEach(() => {
         serializer = new Serializer<TestEntity>(entityId, fields);
-        serializerEntityTwo = new Serializer<TestEntityTwo>(entityId, fieldsEntityTwo);
     });
 
     describe('Serialize', () => {
@@ -158,69 +139,6 @@ describe('SerializerTests', () => {
             const result = serializer.getEquals(entityA, entityB);
 
             expect(result).toBe(false);
-        });
-    });
-
-    describe('ApplyChanges', () => {
-        it('ApplyChanges_UpdatesTargetEntity', () => {
-            const targetEntity = new TestEntityTwo();
-            targetEntity.keyProperty = "Key";
-            targetEntity.valueProperty = "OldValue";
-            targetEntity.intList = [1, 2, 3];
-            targetEntity.testEntity = new TestEntity();
-            targetEntity.testEntity.keyProperty = "Key";
-            targetEntity.testEntity.valueProperty = "OldValue";
-            targetEntity.testEntities = [
-                {
-                    keyProperty: "Key",
-                    valueProperty: "Old"
-                },
-                {
-                    keyProperty: "Key",
-                    valueProperty: "Old"
-                }
-            ];
-
-            const sourceEntity = new TestEntityTwo();
-            sourceEntity.keyProperty = "Key";
-            sourceEntity.valueProperty = "NewValue";
-            sourceEntity.intList = [4, 5, 6];
-            sourceEntity.testEntity = new TestEntity();
-            sourceEntity.testEntity.keyProperty = "Key";
-            sourceEntity.testEntity.valueProperty = "NewValue";
-            sourceEntity.testEntities = [
-                {
-                    keyProperty: "Key",
-                    valueProperty: "New"
-                },
-                {
-                    keyProperty: "Key",
-                    valueProperty: "New"
-                }
-            ];
-
-            serializerEntityTwo.applyChanges(targetEntity, sourceEntity);
-
-            expect(targetEntity.keyProperty).toBe(sourceEntity.keyProperty);
-            expect(targetEntity.valueProperty).toBe(sourceEntity.valueProperty);
-            expect(targetEntity.intList).toEqual(sourceEntity.intList);
-            expect(targetEntity.testEntity).toEqual(sourceEntity.testEntity);
-            expect(targetEntity.testEntities).toEqual(sourceEntity.testEntities);
-        });
-
-        it('ApplyChanges_SkipNullProperty', () => {
-            const targetEntity = new TestEntityTwo();
-            targetEntity.keyProperty = "OldKey";
-            targetEntity.valueProperty = "OldValue";
-
-            const sourceEntity = new TestEntityTwo();
-            sourceEntity.keyProperty = "OldKey";
-            sourceEntity.valueProperty = null!;
-
-            serializerEntityTwo.applyChanges(targetEntity, sourceEntity);
-
-            expect(targetEntity.keyProperty).toBe("OldKey");
-            expect(targetEntity.valueProperty).toBe("OldValue");
         });
     });
 });

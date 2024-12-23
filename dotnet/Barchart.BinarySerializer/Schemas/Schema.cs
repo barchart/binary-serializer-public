@@ -163,28 +163,6 @@ namespace Barchart.BinarySerializer.Schemas
         }
         
         /// <inheritdoc />
-        public void ApplyChanges(TEntity target, TEntity source)
-        {
-            foreach (ISchemaItem<TEntity> keyItem in _keyItems)
-            {
-                if (!keyItem.GetEquals(target, source))
-                {
-                    throw new InvalidOperationException("The keys of the target and source entities do not match.");
-                }
-            }
-            
-            foreach (ISchemaItem<TEntity> item in _keyItems)
-            { 
-                item.ApplyChanges(target, source);
-            }
-
-            foreach (ISchemaItem<TEntity> item in _valueItems)
-            {
-                item.ApplyChanges(target, source);
-            }
-        }
-        
-        /// <inheritdoc />
         public bool GetEquals(TEntity a, TEntity b)
         {
             if (a == null && b == null)

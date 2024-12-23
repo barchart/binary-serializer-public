@@ -182,47 +182,6 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
         _setter(target, items);
     }
-    
-    /// <inheritdoc />
-    public void ApplyChanges(TEntity target, TEntity source)
-    {
-        if (source == null)
-        {
-            return;
-        }
-        
-        IList<TItem> sourceItems = _getter(source);
-        
-        if (sourceItems == null)
-        {
-            return;
-        }
-        
-        if (target == null)
-        {
-            target = new TEntity();
-        }
-        
-        IList<TItem> targetItems = _getter(target);
-
-        if (targetItems == null)
-        {
-            targetItems = new List<TItem>();
-            _setter(target, targetItems);
-        }
-
-        for (int i = 0; i < sourceItems.Count; i++)
-        {
-            if (i < targetItems.Count)
-            {
-                _itemSchema.ApplyChanges(targetItems[i], sourceItems[i]);
-            }
-            else
-            {
-                targetItems.Add(sourceItems[i]);
-            }
-        }
-    }
 
     /// <inheritdoc />
     public bool GetEquals(TEntity a, TEntity b)

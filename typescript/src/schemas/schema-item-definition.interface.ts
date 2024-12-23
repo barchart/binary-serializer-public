@@ -52,16 +52,6 @@ export interface SchemaItemDefinition<TEntity> {
      */
     decode(reader: DataReader, target: TEntity, existing?: boolean): void;
 
-
-    /**
-     * Sets the non-nullable properties from the source entity to the target entity.
-     *
-     * @public
-     * @param {TEntity} target - The entity to update.
-     * @param {TEntity} source - The entity to update from.
-     */
-    applyChanges(target: TEntity, source: TEntity): void;
-
     /**
      * Indicates whether two data points, read from the entities, are equal.
      *

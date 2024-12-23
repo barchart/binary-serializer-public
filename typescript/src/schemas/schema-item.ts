@@ -79,24 +79,6 @@ export class SchemaItem<TEntity, TMember> implements SchemaItemWithKeyDefinition
         }
     }
 
-    applyChanges(target: TEntity, source: TEntity) {
-        if (source == null) {
-            return;
-        }
-
-        const sourceValue: TMember = source[this.name as keyof TEntity] as TMember;
-
-        if (sourceValue == null) {
-            return;
-        }
-
-        if (target == null) {
-            target = {} as TEntity;
-        }
-
-        target[this.name as keyof TEntity] = sourceValue as unknown as TEntity[keyof TEntity];
-    }
-
     getEquals(a: TEntity, b: TEntity): boolean {
         if (!a && !b) {
             return true;
