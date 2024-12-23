@@ -80,6 +80,17 @@ public interface ISchemaItem<TEntity> where TEntity: class, new()
     void Decode(IDataBufferReader reader, TEntity target, bool existing = false);
 
     /// <summary>
+    ///     Sets the non-nullable properties from the source entity to the target entity.
+    /// </summary>
+    /// <param name="target">
+    ///     The entity to update.
+    /// </param>
+    /// <param name="source">
+    ///     The entity to update from.
+    /// </param>
+    void ApplyChanges(TEntity target, TEntity source);
+    
+    /// <summary>
     ///     Indicates whether two data points, read from the entities, are equal.
     /// </summary>
     /// <param name="a">

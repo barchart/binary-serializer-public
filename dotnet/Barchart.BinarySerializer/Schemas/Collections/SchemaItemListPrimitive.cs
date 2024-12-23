@@ -164,6 +164,29 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     }
 
     /// <inheritdoc />
+    public void ApplyChanges(TEntity target, TEntity source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+        
+        IList<TItem> sourceItems = _getter(source);
+
+        if (sourceItems == null)
+        {
+            return;
+        }
+        
+        if (target == null)
+        {
+            target = new TEntity();
+        }
+
+        _setter(target, sourceItems);
+    }
+    
+    /// <inheritdoc />
     public bool GetEquals(TEntity a, TEntity b)
     {
         if (a == null && b == null)

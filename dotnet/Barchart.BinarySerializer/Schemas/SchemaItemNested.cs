@@ -132,6 +132,37 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
             _schema.Deserialize(reader, nested);
         }
     }
+    
+    /// <inheritdoc />
+    public void ApplyChanges(TEntity target, TEntity source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+        
+        TMember sourceValue = _getter(source);
+      
+        if (sourceValue == null)
+        {
+            return;
+        }
+        
+        if (target == null)
+        {
+            target = new TEntity();
+        }
+        
+        TMember targetValue = _getter(target);
+        
+        if (targetValue == null)
+        {
+            targetValue = new TMember();
+            _setter(target, targetValue);
+        }
+
+        _schema.ApplyChanges(targetValue, sourceValue);
+    }
 
     /// <inheritdoc />
     public bool GetEquals(TEntity a, TEntity b)

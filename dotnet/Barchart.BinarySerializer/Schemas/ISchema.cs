@@ -121,6 +121,18 @@ public interface ISchema<TEntity> where TEntity : class, new()
     TMember ReadKey<TMember>(IDataBufferReader reader, string name);
     
     /// <summary>
+    ///     Synchronizes the <paramref name="target"/> entity with the <paramref name="source"/> entity.
+    ///     In other words, this method sets the non-nullable properties from the <paramref name="source"/> entity to the <paramref name="target"/> entity.
+    /// </summary>
+    /// <param name="target">
+    ///     The entity to update.
+    /// </param>
+    /// <param name="source">
+    ///     The entity to update from.
+    /// </param>
+    void ApplyChanges(TEntity target, TEntity source);
+    
+    /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
     ///     instances.
     /// </summary>

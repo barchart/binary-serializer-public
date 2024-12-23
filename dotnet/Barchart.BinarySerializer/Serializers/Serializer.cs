@@ -187,6 +187,20 @@ public class Serializer<TEntity> where TEntity : class, new()
     }
     
     /// <summary>
+    ///    Sets the non-nullable properties from the <paramref name="source"/> entity to the <paramref name="target"/> entity.
+    /// </summary>
+    /// <param name="target">
+    ///    The entity to update.
+    /// </param>
+    /// <param name="source">
+    ///    The entity to update from.
+    /// </param>
+    public void ApplyChanges(TEntity target, TEntity source)
+    {
+        _schema.ApplyChanges(target, source);
+    }
+    
+    /// <summary>
     ///     Performs a deep equality check of two <typeparamref name="TEntity"/>
     ///     instances.
     /// </summary>
