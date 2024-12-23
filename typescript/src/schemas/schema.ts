@@ -133,6 +133,24 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
         throw new KeyUndefinedException(name);
     }
 
+    applyChanges(target: TEntity, source: TEntity): TEntity {
+        this.keyItems.forEach(item => {
+            if (!item.getEquals(target, source)) {
+                throw new Error("The keys of the target and source entities do not match.");
+            }
+        });
+
+        this.keyItems.forEach(item => {
+            item.applyChanges(target, source);
+        });
+
+        this.valueItems.forEach(item => {
+            item.applyChanges(target, source);
+        });
+
+        return target;
+    }
+
     getEquals(a: TEntity, b: TEntity): boolean {
         if (!a && !b) {
             return true;

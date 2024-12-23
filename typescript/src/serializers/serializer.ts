@@ -96,6 +96,18 @@ export class Serializer<TEntity extends object> {
     }
 
     /**
+     * Deserializes a header from the `serialized`.
+     *
+     * @public
+     * @param {Uint8Array} serialized - A byte array of binary data which contains the serialized entity.
+     * @returns {Header} The header of the entity.
+     */
+    readHeader(serialized: Uint8Array): Header {
+        const reader = this.dataBufferReaderFactory.make(serialized);
+        return this.schema.readHeader(reader);
+    }
+
+    /**
      * Deserializes a key value (only) from the `serialized`.
      *
      * @public
@@ -110,15 +122,16 @@ export class Serializer<TEntity extends object> {
     }
 
     /**
-     * Deserializes a header from the `serialized`.
+     * Sets the non-nullable properties from the `source` entity to the `target` entity.
      *
      * @public
-     * @param {Uint8Array} serialized - A byte array of binary data which contains the serialized entity.
-     * @returns {Header} The header of the entity.
+     * @template TEntity - The type of the entity.
+     * @param {TEntity} target - The entity to update.
+     * @param {TEntity} source - The entity to update from.
+     * @throws {Error} If the keys of the `source` and `target` entities are not equal.
      */
-    readHeader(serialized: Uint8Array): Header {
-        const reader = this.dataBufferReaderFactory.make(serialized);
-        return this.schema.readHeader(reader);
+    applyChanges(target: TEntity, source: TEntity): void {
+        this.schema.applyChanges(target, source);
     }
 
     /**

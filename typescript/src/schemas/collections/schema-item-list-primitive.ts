@@ -105,6 +105,24 @@ export class SchemaItemListPrimitive<TEntity, TItem> implements SchemaItemDefini
         target[this.name as keyof TEntity] = items as TEntity[keyof TEntity];
     }
 
+    applyChanges(target: TEntity, source: TEntity): void {
+        if (source == null) {
+            return;
+        }
+
+        const sourceItems: TItem[] = source[this.name as keyof TEntity] as TItem[];
+
+        if (sourceItems == null) {
+            return;
+        }
+
+        if (target == null) {
+            target = {} as TEntity;
+        }
+
+        target[this.name as keyof TEntity] = sourceItems as unknown as TEntity[keyof TEntity];
+    }
+
     getEquals(a: TEntity, b: TEntity): boolean {
         if (!a && !b) {
             return true;

@@ -124,6 +124,38 @@ export class SchemaItemList<TEntity extends object, TItem extends object> implem
         target[this.name as keyof TEntity] = items as TEntity[keyof TEntity];
     }
 
+    applyChanges(target: TEntity, source: TEntity): void {
+        if (source == null) {
+            return;
+        }
+
+        const sourceItems: TItem[] = source[this.name as keyof TEntity] as TItem[];
+
+        if (sourceItems == null) {
+            return;
+        }
+
+        if (target == null) {
+            target = {} as TEntity;
+        }
+
+        let targetItems: TItem[] = target[this.name as keyof TEntity] as TItem[];
+
+        if (targetItems == null) {
+            targetItems = [];
+
+            target[this.name as keyof TEntity] = targetItems as unknown as TEntity[keyof TEntity];
+        }
+
+        for (let i = 0; i < sourceItems.length; i++) {
+            if (i < targetItems.length) {
+                this.itemSchema.applyChanges(targetItems[i], sourceItems[i]);
+            } else {
+                targetItems.push(sourceItems[i]);
+            }
+        }
+    }
+
     getEquals(a: TEntity, b: TEntity): boolean {
         if (!a && !b) {
             return true;

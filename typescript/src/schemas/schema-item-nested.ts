@@ -91,6 +91,32 @@ export class SchemaItemNested<TEntity extends object, TMember extends object> im
         }
     }
 
+    applyChanges(target: TEntity, source: TEntity) {
+        if (source == null) {
+            return;
+        }
+
+        const sourceValue: TMember = source[this.name as keyof TEntity] as TMember;
+
+        if (sourceValue == null) {
+            return;
+        }
+
+        if (target == null) {
+            target = {} as TEntity;
+        }
+
+        let targetValue: TMember = target[this.name as keyof TEntity] as TMember;
+
+        if (targetValue == null) {
+            targetValue = {} as TMember;
+
+            target[this.name as keyof TEntity] = targetValue as unknown as TEntity[keyof TEntity];
+        }
+
+        this.schema.applyChanges(targetValue, sourceValue);
+    }
+
     getEquals(a: TEntity, b: TEntity): boolean {
         if (!a && !b) {
             return true;
