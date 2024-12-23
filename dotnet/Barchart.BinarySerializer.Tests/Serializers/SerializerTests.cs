@@ -324,6 +324,50 @@ public class SerializerTests
 
     #endregion
 
+    #region Test Methods (ApplyChanges)
+
+    [Fact]
+    public void ApplyChanges_WhenCalled_UpdatesTargetEntity()
+    {
+        TestEntity targetEntity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value"
+        };
+
+        TestEntity sourceEntity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "NewValue"
+        };
+
+        _serializer.ApplyChanges(targetEntity, sourceEntity);
+
+        Assert.Equal(sourceEntity.ValueProperty, targetEntity.ValueProperty);
+    }
+    
+    [Fact]
+    public void ApplyChanges_WhenCalledWithNullSource_UpdatesTargetEntity()
+    {
+        TestEntity targetEntity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = "Value"
+        };
+
+        TestEntity sourceEntity = new() 
+        { 
+            KeyProperty = "Key", 
+            ValueProperty = null!
+        };
+
+        _serializer.ApplyChanges(targetEntity, sourceEntity);
+
+        Assert.Equal("Value", targetEntity.ValueProperty);
+    }
+
+    #endregion
+    
     #region Test Methods (GetEquals)
 
     [Fact]
