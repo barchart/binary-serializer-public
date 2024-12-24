@@ -72,6 +72,9 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     }
 
     /// <inheritdoc />
+    /// <exception cref="KeyMismatchException">
+    ///     Thrown when the key value of the current object does not match the key value of the previous object.
+    /// </exception>
     public void Encode(IDataBufferWriter writer, TEntity current, TEntity previous)
     {
         bool unchanged = GetEquals(current, previous);
@@ -92,6 +95,9 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
     }
 
     /// <inheritdoc />
+    /// <exception cref="KeyMismatchException">
+    ///     Thrown when the key value of the current object does not match the key value of the previous object.
+    /// </exception>
     public void Decode(IDataBufferReader reader, TEntity target, bool existing = false)
     {
         bool missing;
