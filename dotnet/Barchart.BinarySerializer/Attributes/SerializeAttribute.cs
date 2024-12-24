@@ -19,6 +19,12 @@ public class SerializeAttribute : Attribute
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Creates a new <see cref="SerializeAttribute"/> instance.
+    /// </summary>
+    /// <param name="key">
+    ///     Indicates if the member is the unique key or part of a compound key.
+    /// </param>
     public SerializeAttribute(bool key = false)
     {
         Key = key;

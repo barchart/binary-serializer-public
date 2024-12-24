@@ -158,6 +158,18 @@ public class DataBufferReader : IDataBufferReader
         
         #region Constructor(s)
 
+        /// <summary>
+        ///     Creates a new <see cref="DataBufferReaderBookmark"/> instance.
+        /// </summary>
+        /// <param name="reader">
+        ///     The <see cref="DataBufferReader"/> instance to create a bookmark for.
+        /// </param>
+        /// <param name="positionByte">
+        ///     The byte position of the <see cref="DataBufferReader"/> at the time of bookmark creation.
+        /// </param>
+        /// <param name="positionBit">
+        ///     The bit position of the <see cref="DataBufferReader"/> at the time of bookmark creation.
+        /// </param>
         public DataBufferReaderBookmark(DataBufferReader reader, int positionByte, int positionBit)
         {
             _reader = reader;

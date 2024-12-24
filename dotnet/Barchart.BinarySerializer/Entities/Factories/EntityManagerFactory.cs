@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Entities.Exceptions;
 using Barchart.BinarySerializer.Entities.Keys;
 using Barchart.BinarySerializer.Serializers;
 using Barchart.BinarySerializer.Utilities;
@@ -54,7 +55,7 @@ public class EntityManagerFactory
     /// <returns>
     ///     A function that takes an entity of type <typeparamref name="TEntity"/> and returns an instance of <see cref="IEntityKey{TEntity}"/>.
     /// </returns>
-    /// <exception cref="InvalidOperationException">
+    /// <exception cref="MissingKeyMembersException">
     ///     Thrown if the entity type does not have any properties or fields marked as keys with the <see cref="SerializeAttribute"/>.
     /// </exception>
     public Func<TEntity, IEntityKey<TEntity>> MakeKeyExtractor<TEntity>() where TEntity : class, new()
@@ -65,7 +66,7 @@ public class EntityManagerFactory
 
         if (keyMembers.Length == 0)
         {
-            throw new InvalidOperationException($"The [ {nameof(TEntity)} ] type has no properties or fields marked as keys with the [ {nameof(SerializeAttribute)} ]");
+            throw new MissingKeyMembersException(entityType);
         }
 
         Type[] keyTypes = keyMembers.Select(Reflection.GetMemberType).ToArray();

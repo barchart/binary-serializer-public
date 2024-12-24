@@ -27,6 +27,15 @@ public class EntityManager<TEntity> where TEntity : class, new()
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="EntityManager{TEntity}"/> class.
+    /// </summary>
+    /// <param name="serializer">
+    ///     The serializer used for serializing and deserializing entities.
+    /// </param>
+    /// <param name="keyExtractor">
+    ///     The function that extracts the unique key for an entity.
+    /// </param>
     public EntityManager(Serializer<TEntity> serializer, Func<TEntity, IEntityKey<TEntity>> keyExtractor)
     {
         _serializer = serializer;

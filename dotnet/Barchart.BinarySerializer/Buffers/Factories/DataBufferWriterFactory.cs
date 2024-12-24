@@ -1,3 +1,5 @@
+using Barchart.BinarySerializer.Buffers.Exceptions;
+
 namespace Barchart.BinarySerializer.Buffers.Factories;
 
 /// <summary>
@@ -24,16 +26,26 @@ public class DataBufferWriterFactory : IDataBufferWriterFactory
     
     #region Constructor(s)
 
+    /// <inheritdoc cref="DataBufferWriterFactory(int)"/>
     public DataBufferWriterFactory() : this(DEFAULT_BYTE_ARRAY_LENGTH)
     {
         
     }
     
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="DataBufferWriterFactory"/> class.
+    /// </summary>
+    /// <param name="byteArrayLength">
+    ///     The length of the byte array to use for each <see cref="IDataBufferWriter"/>.
+    /// </param>
+    /// <exception cref="InvalidByteArrayLength">
+    ///     Thrown if the <paramref name="byteArrayLength"/> is less than 1.
+    /// </exception>
     public DataBufferWriterFactory(int byteArrayLength)
     {
         if (byteArrayLength < 1)
         {
-            throw new ArgumentOutOfRangeException(nameof(byteArrayLength), byteArrayLength, "The byte array length must be positive.");
+            throw new InvalidByteArrayLength(byteArrayLength);
         }
         
         _byteArrayLength = byteArrayLength;

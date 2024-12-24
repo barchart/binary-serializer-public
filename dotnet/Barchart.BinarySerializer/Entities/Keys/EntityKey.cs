@@ -16,8 +16,19 @@ public class EntityKey<TEntity> : IEntityKey<TEntity>, IEquatable<EntityKey<TEnt
     
     #region Construtor(s)
     
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="EntityKey{TEntity}"/> class.
+    /// </summary>
+    /// <param name="key">
+    ///     The key value.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    ///     Thrown if the specified key is <see langword="null"/>.
+    /// </exception>
     public EntityKey(object key)
     {
+        ArgumentNullException.ThrowIfNull(key, nameof(key));
+        
         _key = key;
     }
     
@@ -25,6 +36,7 @@ public class EntityKey<TEntity> : IEntityKey<TEntity>, IEquatable<EntityKey<TEnt
     
     #region Methods
 
+    /// <inheritdoc />
     public bool Equals(EntityKey<TEntity>? other)
     {
         if (other == null)
@@ -35,6 +47,7 @@ public class EntityKey<TEntity> : IEntityKey<TEntity>, IEquatable<EntityKey<TEnt
         return _key.Equals(other._key);
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (obj is not EntityKey<TEntity> other)
@@ -45,11 +58,13 @@ public class EntityKey<TEntity> : IEntityKey<TEntity>, IEquatable<EntityKey<TEnt
         return Equals(other);
     }
     
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return _key.GetHashCode();
     }
 
+    /// <inheritdoc />
     public override string ToString()
     {
         return $"{base.ToString()}, (key={_key})";

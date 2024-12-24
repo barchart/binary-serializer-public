@@ -1,3 +1,9 @@
+#region Using Statements
+
+using Barchart.BinarySerializer.Buffers.Exceptions;
+
+#endregion
+
 namespace Barchart.BinarySerializer.Buffers;
 
 /// <summary>
@@ -25,7 +31,7 @@ public interface IDataBufferReader
     /// <returns>
     ///     The next bit from the internal storage.
     /// </returns>
-    /// <exception cref="InvalidOperationException">
+    /// <exception cref="InsufficientCapacityException">
     ///     Thrown when the internal storage has been read completely.
     /// </exception>
     bool ReadBit();
@@ -36,7 +42,7 @@ public interface IDataBufferReader
     /// <returns>
     ///     The next byte from the internal storage.
     /// </returns>
-    /// <exception cref="InvalidOperationException">
+    /// <exception cref="InsufficientCapacityException">
     ///     Thrown when the internal storage has less than one byte remaining.
     /// </exception>
     byte ReadByte();
@@ -50,7 +56,7 @@ public interface IDataBufferReader
     /// <returns>
     ///     A byte array, with length of <paramref name="size"/>, with data from the internal storage.
     /// </returns>
-    /// <exception cref="InvalidOperationException">
+    /// <exception cref="InsufficientCapacityException">
     ///     Thrown when the internal storage has less remaining space than the <paramref name="size"/> requested.
     /// </exception>
     byte[] ReadBytes(int size);

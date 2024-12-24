@@ -1,3 +1,9 @@
+#region Using Statements
+
+using Barchart.BinarySerializer.Buffers.Exceptions;
+
+#endregion
+
 namespace Barchart.BinarySerializer.Buffers;
 
 /// <summary>
@@ -25,7 +31,7 @@ public interface IDataBufferWriter
     /// <param name="value">
     ///     Value of the bit to write.
     /// </param>
-    /// <exception cref="InvalidOperationException">
+    /// <exception cref="InsufficientCapacityException">
     ///     Thrown when internal storage is full.
     /// </exception>
     void WriteBit(bool value);
@@ -36,7 +42,7 @@ public interface IDataBufferWriter
     /// <param name="value">
     ///     Value of the byte to write.
     /// </param>
-    /// <exception cref="InvalidOperationException">
+    /// <exception cref="InsufficientCapacityException">
     ///     Thrown when remaining internal storage is less than one byte.
     /// </exception>
     void WriteByte(byte value);
@@ -47,7 +53,7 @@ public interface IDataBufferWriter
     /// <param name="value">
     ///     Value of the bytes to write.
     /// </param>
-    /// <exception cref="InvalidOperationException">
+    /// <exception cref="InsufficientCapacityException">
     ///     Thrown when remaining internal storage is less than the number of bytes to write.
     /// </exception>
     void WriteBytes(byte[] value);
