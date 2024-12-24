@@ -23,6 +23,7 @@
     <Configurations>Debug;Release;Publish</Configurations>
     <Copyright>Copyright © 2024 Barchart.com, Inc.</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   
   <PropertyGroup>
