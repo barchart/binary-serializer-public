@@ -34,7 +34,7 @@ public class SchemaItemListTests
         _reader = new DataBufferReader(buffer);
 
         _mockSchema = new Mock<ISchema<TestProperty>>();
-        _schemaItemList = new SchemaItemList<TestEntity, TestProperty>("CollectionProperty", entity => entity.ListProperty!, (entity, value) => entity.ListProperty = value.ToList()!, _mockSchema.Object);
+        _schemaItemList = new SchemaItemList<TestEntity, TestProperty>("CollectionProperty", entity => entity.ListProperty!, (entity, value) => entity.ListProperty = value!.ToList()!, _mockSchema.Object);
     }
 
     #endregion

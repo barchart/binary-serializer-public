@@ -158,7 +158,7 @@ public class SchemaFactory : ISchemaFactory
         string name = memberInfo.Name;
 
         Func<TEntity, TMember> getter = MakeMemberGetter<TEntity, TMember>(memberInfo);
-        Action<TEntity, TMember> setter = MakeMemberSetter<TEntity, TMember>(memberInfo);
+        Action<TEntity, TMember?> setter = MakeMemberSetter<TEntity, TMember>(memberInfo);
 
         ISchema<TMember> schema = Make<TMember>(0, true);
 
@@ -169,20 +169,20 @@ public class SchemaFactory : ISchemaFactory
     {
         string name = memberInfo.Name;
 
-        Func<TEntity, IList<TItem>> getter = MakeCollectionMemberGetter<TEntity, TItem>(memberInfo);
-        Action<TEntity, IList<TItem>> setter = MakeCollectionMemberSetter<TEntity, TItem>(memberInfo);
+        Func<TEntity, IList<TItem?>?> getter = MakeCollectionMemberGetter<TEntity, TItem>(memberInfo);
+        Action<TEntity, IList<TItem?>?> setter = MakeCollectionMemberSetter<TEntity, TItem>(memberInfo);
 
         IBinaryTypeSerializer<TItem> itemSerializer = _binaryTypeSerializerFactory.Make<TItem>();
         
-        return new SchemaItemListPrimitive<TEntity, TItem>(name, getter, setter, itemSerializer);
+        return new SchemaItemListPrimitive<TEntity, TItem>(name, getter!, setter!, itemSerializer);
     }
 
     private ISchemaItem<TEntity> MakeSchemaItemCollectionObject<TEntity, TItem>(MemberInfo memberInfo) where TEntity : class, new() where TItem : class, new()
     {
         string name = memberInfo.Name;
 
-        Func<TEntity, IList<TItem>> getter = MakeCollectionMemberGetter<TEntity, TItem>(memberInfo);
-        Action<TEntity, IList<TItem>> setter = MakeCollectionMemberSetter<TEntity, TItem>(memberInfo);
+        Func<TEntity, IList<TItem?>?> getter = MakeCollectionMemberGetter<TEntity, TItem>(memberInfo);
+        Action<TEntity, IList<TItem?>?> setter = MakeCollectionMemberSetter<TEntity, TItem>(memberInfo);
 
         ISchema<TItem> itemSchema = Make<TItem>(0, true);
 
@@ -233,7 +233,7 @@ public class SchemaFactory : ISchemaFactory
         return Expression.Lambda<Func<TEntity, TMember>>(propertyAccessExpression, typeParameterExpressions).Compile();
     }
 
-    private static Func<TEntity, IList<TItem>> MakeCollectionMemberGetter<TEntity, TItem>(MemberInfo memberInfo)
+    private static Func<TEntity, IList<TItem?>?> MakeCollectionMemberGetter<TEntity, TItem>(MemberInfo memberInfo)
     {
         ParameterExpression[] typeParameterExpressions =
         [
@@ -260,10 +260,10 @@ public class SchemaFactory : ISchemaFactory
 
         Expression nullCheckExpression = Expression.Condition(Expression.Equal(memberAccess, Expression.Constant(null, memberAccess.Type)), Expression.Constant(null, typeof(IList<TItem>)), conversion);
 
-        return Expression.Lambda<Func<TEntity, IList<TItem>>>(nullCheckExpression, typeParameterExpressions[0]).Compile();
+        return Expression.Lambda<Func<TEntity, IList<TItem?>?>>(nullCheckExpression, typeParameterExpressions[0]).Compile();
     }
     
-    private static Action<TEntity, TMember> MakeMemberSetter<TEntity, TMember>(MemberInfo memberInfo)
+    private static Action<TEntity, TMember?> MakeMemberSetter<TEntity, TMember>(MemberInfo memberInfo)
     {
         ParameterExpression[] typeParameterExpressions =
         [
@@ -274,10 +274,10 @@ public class SchemaFactory : ISchemaFactory
         MemberExpression propertyAccessExpression = Expression.MakeMemberAccess(typeParameterExpressions[0], memberInfo);
         BinaryExpression propertyAssignmentExpression = Expression.Assign(propertyAccessExpression, typeParameterExpressions[1]);
 
-        return Expression.Lambda<Action<TEntity, TMember>>(propertyAssignmentExpression, typeParameterExpressions).Compile();
+        return Expression.Lambda<Action<TEntity, TMember?>>(propertyAssignmentExpression, typeParameterExpressions).Compile();
     }
     
-    private static Action<TEntity, IList<TItem>> MakeCollectionMemberSetter<TEntity, TItem>(MemberInfo memberInfo)
+    private static Action<TEntity, IList<TItem?>?> MakeCollectionMemberSetter<TEntity, TItem>(MemberInfo memberInfo)
     {
         ParameterExpression[] typeParameterExpressions =
         [
@@ -311,7 +311,7 @@ public class SchemaFactory : ISchemaFactory
 
         Expression assignToMember = Expression.Assign(memberAccess, assignmentExpression);
    
-        return Expression.Lambda<Action<TEntity, IList<TItem>>>(assignToMember, typeParameterExpressions[0], typeParameterExpressions[1]).Compile();
+        return Expression.Lambda<Action<TEntity, IList<TItem?>?>>(assignToMember, typeParameterExpressions[0], typeParameterExpressions[1]).Compile();
     }
 
     private static int CompareSchemaItems<TEntity>(ISchemaItem<TEntity> a, ISchemaItem<TEntity> b) where TEntity: class, new()

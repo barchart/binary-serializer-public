@@ -31,19 +31,19 @@ public class SchemaTests
 
         BinarySerializerString serializer = new();
 
-        SchemaItem<TestEntity, string> keyItem = new(
+        SchemaItem<TestEntity, string?> keyItem = new(
             "KeyProperty",
             true,
             entity => entity.KeyProperty,
-            (entity, value) => entity.KeyProperty = value,
+            (entity, value) => entity.KeyProperty = value!,
             serializer
         );
 
-        SchemaItem<TestEntity, string> valueItem = new(
+        SchemaItem<TestEntity, string?> valueItem = new(
             "ValueProperty",
             false,
             entity => entity.ValueProperty,
-            (entity, value) => entity.ValueProperty = value,
+            (entity, value) => entity.ValueProperty = value!,
             serializer
         );
 

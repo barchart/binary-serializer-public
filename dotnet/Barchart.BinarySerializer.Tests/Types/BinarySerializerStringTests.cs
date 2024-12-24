@@ -108,7 +108,7 @@ public class BinarySerializerStringTests
         mock.Setup(m => m.ReadBytes(2)).Returns(serializedLengthBytes);
         mock.Setup(m => m.ReadBytes(value.Length)).Returns(serializedContentBytes);
 
-        string deserialized = _serializer.Decode(mock.Object);
+        string? deserialized = _serializer.Decode(mock.Object);
 
         Assert.Equal(value, deserialized);
     }
@@ -120,7 +120,7 @@ public class BinarySerializerStringTests
         
         mock.Setup(m => m.ReadBit()).Returns(true);
 
-        string deserialized = _serializer.Decode(mock.Object);
+        string? deserialized = _serializer.Decode(mock.Object);
 
         Assert.Null(deserialized);
     }
