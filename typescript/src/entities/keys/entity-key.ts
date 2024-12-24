@@ -3,7 +3,11 @@ import { EntityKeyDefinition } from "./entity-key.interface";
 /**
  * Represents a unique key for an entity used in (de)serialization process.
  *
- * @typeparam TEntity - The type of the entity.
+ * @public
+ * @exported
+ * @template TEntity - The type of the entity.
+ * @implements EntityKeyDefinition<TEntity>
+ * @param {object} key - The unique key of the entity.
  */
 export class EntityKey<TEntity extends object> implements EntityKeyDefinition<TEntity> {
     private readonly _key: object;

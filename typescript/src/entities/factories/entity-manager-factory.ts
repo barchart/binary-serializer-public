@@ -11,6 +11,7 @@ export class EntityManagerFactory {
 
     /**
      * Creates a new entity manager for the given serializer and fields.
+     *
      * @template TEntity - The type of the entity.
      * @param {Serializer<TEntity>} serializer - The serializer used to serialize and deserialize entities.
      * @param {SchemaField[]} fields - The fields of the entity schema.

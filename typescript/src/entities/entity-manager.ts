@@ -5,7 +5,12 @@ import { EntityNotFoundException } from "./exceptions/entity-not-found-exception
 /**
  * Manages entities by providing functionality for creating snapshots, calculating differences, and maintaining historical state.
  *
- * @typeparam TEntity - The type of the entity.
+ * @public
+ * @exported
+ * @template TEntity - The type of the entity.
+ * @param {Serializer<TEntity>} serializer - The serializer used to serialize and deserialize entities.
+ * @param {(entity: TEntity) => EntityKeyDefinition<TEntity>} keyExtractor - A function that extracts the key from an entity.
+ *
  */
 export class EntityManager<TEntity extends object> {
     private readonly _serializer: Serializer<TEntity>;
@@ -21,9 +26,10 @@ export class EntityManager<TEntity extends object> {
     /**
      * Creates a snapshot of the given entity, serializing its current state. Optionally stores the snapshot in the internal checkpoint system.
      *
-     * @param entity - The current state of the entity.
-     * @param checkpoint - If true, the snapshot is stored in the internal checkpoint system.
-     * @returns The serialized byte array representing the snapshot of the entity.
+     * @public
+     * @param {TEntity} entity - The current state of the entity.
+     * @param {boolean} [checkpoint] - Optional, if true, the snapshot is stored in the internal checkpoint system.
+     * @returns {Uint8Array} The serialized byte array representing the snapshot of the entity.
      */
     snapshot(entity: TEntity, checkpoint: boolean = true): Uint8Array {
         const key = this.extractKey(entity);
@@ -41,9 +47,10 @@ export class EntityManager<TEntity extends object> {
      * If the entity has changed, the difference is serialized and returned.
      * Optionally updates the checkpoint with the current state.
      *
-     * @param entity - The current state of the entity.
-     * @param checkpoint - If true, the current state replaces the previous checkpoint.
-     * @returns A byte array representing the serialized difference, or an empty array if there are no changes.
+     * @public
+     * @param {TEntity} entity - The current state of the entity.
+     * @param  {boolean} [checkpoint] - Optional, if true, the current state replaces the previous checkpoint.
+     * @returns {Uint8Array} A byte array representing the serialized difference, or an empty array if there are no changes.
      * @throws EntityNotFoundException<TEntity> - Thrown if the entity does not have a corresponding checkpoint.
      */
     difference(entity: TEntity, checkpoint: boolean = true): Uint8Array {
@@ -70,8 +77,9 @@ export class EntityManager<TEntity extends object> {
     /**
      * Removes the snapshot of the specified entity from the internal storage.
      *
-     * @param entity - The entity object.
-     * @returns true if the snapshot was successfully removed; otherwise, false.
+     * @public
+     * @param {TEntity} entity - The entity object.
+     * @returns {boolean} true if the snapshot was successfully removed; otherwise, false.
      */
     remove(entity: TEntity): boolean {
         const key = this.extractKey(entity);
