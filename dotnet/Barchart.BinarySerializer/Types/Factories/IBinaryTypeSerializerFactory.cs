@@ -45,12 +45,12 @@ public interface IBinaryTypeSerializerFactory
     /// <typeparam name="T">
     ///     The type for which to create a serializer.
     /// </typeparam>
-    /// <exception cref="UnsupportedTypeException">
-    ///     Thrown when the factory is unable to create a serializer for the specified type.
-    /// </exception>
     /// <returns>
     ///     An <see cref="IBinaryTypeSerializer{T}"/> for the specified type.
     /// </returns>
+    /// <exception cref="UnsupportedTypeException">
+    ///     Thrown when the factory is unable to create a serializer for the specified type.
+    /// </exception>
     IBinaryTypeSerializer<T> Make<T>();
 
     #endregion

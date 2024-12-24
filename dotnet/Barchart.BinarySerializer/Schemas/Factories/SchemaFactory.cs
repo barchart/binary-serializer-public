@@ -5,6 +5,7 @@ using System.Reflection;
 
 using Barchart.BinarySerializer.Attributes;
 using Barchart.BinarySerializer.Schemas.Collections;
+using Barchart.BinarySerializer.Schemas.Exceptions;
 using Barchart.BinarySerializer.Types;
 using Barchart.BinarySerializer.Types.Exceptions;
 using Barchart.BinarySerializer.Types.Factories;
@@ -25,11 +26,20 @@ public class SchemaFactory : ISchemaFactory
     
     #region Constructor(s)
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="SchemaFactory"/> class.
+    /// </summary>
+    /// <param name="binarySerializerFactory">
+    ///     The factory for creating binary type serializers.
+    /// </param>
     public SchemaFactory(IBinaryTypeSerializerFactory binarySerializerFactory)
     {
         _binaryTypeSerializerFactory = binarySerializerFactory;
     }
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="SchemaFactory"/> class with a default binary type serializer factory.
+    /// </summary>
     public SchemaFactory() : this(new BinaryTypeSerializerFactory())
     {
         
@@ -49,7 +59,7 @@ public class SchemaFactory : ISchemaFactory
     {
         if (!nested && entityId == 0)
         {
-            throw new ArgumentException("Entity ID cannot be [ 0 ].", nameof(entityId));
+            throw new InvalidEntityIdException();
         }
         
         Type entityType = typeof(TEntity);

@@ -3,6 +3,7 @@
 using System.Text;
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Types.Exceptions;
 using Barchart.BinarySerializer.Utilities;
 
 #endregion
@@ -48,7 +49,7 @@ public class BinarySerializerString : IBinaryTypeSerializer<string?>
     #region Methods
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentException">
+    /// <exception cref="InvalidStringLengthException">
     ///     Thrown when the serialized string would require more than <see cref="MAXIMUM_STRING_LENGTH_IN_BYTES"/> bytes.
     /// </exception>
     public void Encode(IDataBufferWriter writer, string? value)
@@ -64,7 +65,7 @@ public class BinarySerializerString : IBinaryTypeSerializer<string?>
 
         if (bytes.Length > MAXIMUM_STRING_LENGTH_IN_BYTES)
         {
-            throw new ArgumentException( $"Unable to serialize string. Serialized string would require {bytes.Length} bytes; however, the maximum size of a serialized string is {MAXIMUM_STRING_LENGTH_IN_BYTES}", nameof(value));
+            throw new InvalidStringLengthException(bytes.Length, MAXIMUM_STRING_LENGTH_IN_BYTES);
         }
 
         _binarySerializerUShort.Encode(writer, Convert.ToUInt16(bytes.Length));

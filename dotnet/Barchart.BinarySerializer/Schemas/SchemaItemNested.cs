@@ -45,6 +45,21 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Creates a new instance of the <see cref="SchemaItemNested{TEntity,TMember}"/> class.
+    /// </summary>
+    /// <param name="name">
+    ///     The name of the member (property, field, etc.) from which data is
+    /// </param>
+    /// <param name="getter">
+    ///     A function that reads the data from the source object.
+    /// </param>
+    /// <param name="setter">
+    ///     A function that writes the data to the source object.
+    /// </param>
+    /// <param name="schema">
+    ///     The schema that describes how to serialize and deserialize the nested data.
+    /// </param>
     public SchemaItemNested(string name, Func<TEntity, TMember?> getter, Action<TEntity, TMember?> setter, ISchema<TMember> schema)
     {
         Name = name;

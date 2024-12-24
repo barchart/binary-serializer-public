@@ -45,6 +45,24 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Creates a new instance of the <see cref="SchemaItem{TEntity,TMember}"/> class.
+    /// </summary>
+    /// <param name="name">
+    ///     The name of the member (property, field, etc.) from which data is
+    /// </param>
+    /// <param name="key">
+    ///     Indicates if the schema item is the primary key or part of a composite key.
+    /// </param>
+    /// <param name="getter">
+    ///     A function that reads the data from the source object.
+    /// </param>
+    /// <param name="setter">
+    ///     A function that assigns the deserialized data to the source object.
+    /// </param>
+    /// <param name="serializer">
+    ///     The serializer that will be used to encode and decode the data.
+    /// </param>
     public SchemaItem(string name, bool key, Func<TEntity, TMember> getter, Action<TEntity, TMember> setter, IBinaryTypeSerializer<TMember> serializer)
     {
         Name = name;

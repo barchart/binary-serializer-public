@@ -45,6 +45,21 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Creates a new instance of the <see cref="SchemaItemList{TEntity,TItem}"/> class.
+    /// </summary>
+    /// <param name="name">
+    ///     The name of the member (property, field, etc.) from which data is
+    /// </param>
+    /// <param name="getter">
+    ///     A function that reads the data from the source object.
+    /// </param>
+    /// <param name="setter">
+    ///     A function that writes the data to the source object.
+    /// </param>
+    /// <param name="itemSchema">
+    ///     The schema for the items within the list.
+    /// </param>
     public SchemaItemList(string name, Func<TEntity, IList<TItem?>?> getter, Action<TEntity, IList<TItem?>?> setter, ISchema<TItem> itemSchema)
     {
         Name = name;

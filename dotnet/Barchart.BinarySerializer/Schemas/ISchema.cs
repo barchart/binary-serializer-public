@@ -16,11 +16,17 @@ namespace Barchart.BinarySerializer.Schemas;
 /// </typeparam>
 public interface ISchema<TEntity> where TEntity : class, new()
 {
+    #region Properties
+    
     /// <summary>
     ///     The entity ID to be included in the header. This ID helps identify the type of entity
     ///     the data represents.
     /// </summary>
     byte EntityId { get; }
+
+    #endregion
+
+    #region Methods
 
     /// <summary>
     ///     Serializes the <paramref name="source"/> entity. In other words,
@@ -35,6 +41,9 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <returns>
     ///     The serialized entity, as a byte array.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    ///     Thrown when the <paramref name="source"/> entity is null.
+    /// </exception>
     byte[] Serialize(IDataBufferWriter writer, TEntity source);
 
     /// <summary>
@@ -52,13 +61,13 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="previous">
     ///     The previous version of the entity.
     /// </param>
+    /// <returns>
+    ///     The serialized changes to the entity, as a byte array.
+    /// </returns>
     /// <exception cref="KeyMismatchException">
     ///     Thrown when the <paramref name="current"/> and <paramref name="previous"/>
     ///     instances have different key values.
     /// </exception>
-    /// <returns>
-    ///     The serialized changes to the entity, as a byte array.
-    /// </returns>
     byte[] Serialize(IDataBufferWriter writer, TEntity current, TEntity previous);
 
     /// <summary>
@@ -71,6 +80,9 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <returns>
     ///     A new instance of the <typeparamref name="TEntity"/> class.
     /// </returns>
+    /// <exception cref="HeaderMismatchException">
+    ///     Thrown when the header from serialized the byte array is invalid.
+    /// </exception>
     TEntity Deserialize(IDataBufferReader reader);
 
     /// <summary>
@@ -83,13 +95,19 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <param name="target">
     ///     The target entity to assign the deserialized values to.
     /// </param>
+    /// <returns>
+    ///     The reference to the <paramref name="target"/> instance.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    ///     Thrown when the <paramref name="target"/> entity is null.
+    /// </exception>
+    /// <exception cref="HeaderMismatchException">
+    ///     Thrown when the header from serialized the byte array is invalid.
+    /// </exception>
     /// <exception cref="KeyMismatchException">
     ///     Thrown when key, read from the serialized binary data, does not
     ///     match the key of the <paramref name="target"/> instance.
     /// </exception>
-    /// <returns>
-    ///     The reference to the <paramref name="target"/> instance.
-    /// </returns>
     TEntity Deserialize(IDataBufferReader reader, TEntity target);
 
     /// <summary>
@@ -106,18 +124,24 @@ public interface ISchema<TEntity> where TEntity : class, new()
     /// <summary>
     ///     Deserializes a key value (only) from the <paramref name="reader" />.
     /// </summary>
+    /// <typeparam name="TMember">
+    ///     The type of the key property.
+    /// </typeparam>
     /// <param name="reader">
     ///     The serialized data source from which to read the key.
     /// </param>
     /// <param name="name">
     ///     The name of the key property.
     /// </param>
-    /// <typeparam name="TMember">
-    ///     The type of the key property.
-    /// </typeparam>
     /// <returns>
     ///     The value of the key.
     /// </returns>
+    /// <exception cref="HeaderMismatchException">
+    ///     Thrown when the header from serialized the byte array is invalid.
+    /// </exception>
+    /// <exception cref="KeyUndefinedException">
+    ///     Thrown when the key property is not found in the schema.
+    /// </exception>
     TMember ReadKey<TMember>(IDataBufferReader reader, string name);
     
     /// <summary>
@@ -135,4 +159,6 @@ public interface ISchema<TEntity> where TEntity : class, new()
     ///     otherwise false.
     /// </returns>
     bool GetEquals(TEntity? a, TEntity? b);
+    
+    #endregion
 }

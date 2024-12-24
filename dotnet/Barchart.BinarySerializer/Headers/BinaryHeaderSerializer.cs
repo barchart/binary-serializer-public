@@ -56,14 +56,14 @@ public class BinaryHeaderSerializer
     ///     A boolean value indicating whether the data represents a snapshot. If true, the
     ///     snapshot flag will be set in the header.
     /// </param>
-    /// <exception cref="ArgumentOutOfRangeException">
+    /// <exception cref="InvalidHeaderException">
     ///     Thrown when the entityId argument exceeds the maximum value of 15.
     /// </exception>
     public void Encode(IDataBufferWriter writer, byte entityId, bool snapshot)
     {
         if (entityId > MAX_ENTITY_ID)
         {
-            throw new ArgumentOutOfRangeException(nameof(entityId), $"The entityId argument cannot exceed {MAX_ENTITY_ID} because the header serializer uses exactly four bits for entityId value.");
+            throw new InvalidHeaderException(entityId);
         }
         
         byte combined = entityId;

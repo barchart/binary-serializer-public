@@ -1,5 +1,8 @@
 namespace Barchart.BinarySerializer.Headers;
 
+/// <summary>
+///     Single byte representing the header of the entity.
+/// </summary>
 public struct Header
 {
     #region Properties

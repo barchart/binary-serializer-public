@@ -46,6 +46,21 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Creates a new instance of the <see cref="SchemaItemListPrimitive{TEntity,TItem}"/> class.
+    /// </summary>
+    /// <param name="name">
+    ///     The name of the member (property, field, etc.) from which data is
+    /// </param>
+    /// <param name="getter">
+    ///     A function that reads the data from the source object.
+    /// </param>
+    /// <param name="setter">
+    ///     A function that writes the data to the source object.
+    /// </param>
+    /// <param name="elementSerializer">
+    ///     The serializer for the elements within the list.
+    /// </param>
     public SchemaItemListPrimitive(string name, Func<TEntity, IList<TItem>?> getter, Action<TEntity, IList<TItem>?> setter, IBinaryTypeSerializer<TItem> elementSerializer)
     {
         Name = name;
