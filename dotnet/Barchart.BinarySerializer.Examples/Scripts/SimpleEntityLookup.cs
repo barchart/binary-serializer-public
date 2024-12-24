@@ -1,11 +1,8 @@
 #region Using Statements
 
-using Barchart.BinarySerializer.Examples.Common;
-
 using Barchart.BinarySerializer.Buffers;
 using Barchart.BinarySerializer.Examples.Data;
 using Barchart.BinarySerializer.Schemas;
-using Barchart.BinarySerializer.Schemas.Exceptions;
 using Barchart.BinarySerializer.Schemas.Factories;
 
 using Console = Barchart.BinarySerializer.Examples.Common.Console;

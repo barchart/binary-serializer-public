@@ -1,11 +1,11 @@
 #region Using Statements
 
-using System.Runtime.CompilerServices;
 using Barchart.BinarySerializer.Schemas.Factories;
 using Barchart.BinarySerializer.Types.Factories;
 using Barchart.BinarySerializer.Schemas;
 using Barchart.BinarySerializer.Types;
 using Barchart.BinarySerializer.Attributes;
+using Barchart.BinarySerializer.Schemas.Exceptions;
 
 #endregion
 
@@ -37,12 +37,12 @@ public class SchemaFactoryTests
     #region Test Methods (Make)
 
     [Fact]
-    public void Make_WithValidTypeAndDefaultEntityId_ThrowsAnError()
+    public void Make_WithValidTypeAndDefaultEntityId_ThrowsInvalidEntityIdException()
     {
         _mockBinaryTypeSerializerFactory.Setup(f => f.Supports(typeof(int))).Returns(true);
         _mockBinaryTypeSerializerFactory.Setup(f => f.Make<int>()).Returns(Mock.Of<IBinaryTypeSerializer<int>>());
            
-        Assert.Throws<ArgumentException>(() => _schemaFactory.Make<TestEntity>());
+        Assert.Throws<InvalidEntityIdException>(() => _schemaFactory.Make<TestEntity>());
     }
         
     [Fact]

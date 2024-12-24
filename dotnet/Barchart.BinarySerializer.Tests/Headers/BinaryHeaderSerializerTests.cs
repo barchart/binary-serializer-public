@@ -80,7 +80,7 @@ public class BinaryHeaderSerializerTests
     }
     
     [Fact]
-    public void Encode_SixteenTrue_Throws()
+    public void Encode_SixteenTrue_ThrowsInvalidHeaderException()
     {
         Mock<IDataBufferWriter> mock = new();
 
@@ -92,7 +92,7 @@ public class BinaryHeaderSerializerTests
         mock.Setup(m => m.WriteByte(Capture.In(byteWritten)));
         mock.Setup(m => m.WriteBytes(Capture.In(bytesWritten)));
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => _serializer.Encode(mock.Object, 16, true));
+        Assert.Throws<InvalidHeaderException>(() => _serializer.Encode(mock.Object, 16, true));
     }
     
     #endregion
