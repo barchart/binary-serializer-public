@@ -12,7 +12,7 @@ namespace Barchart.BinarySerializer.Types;
 /// <summary>
 ///     Reads (and writes) string values to (and from) a binary data source.
 /// </summary>
-public class BinarySerializerString : IBinaryTypeSerializer<string>
+public class BinarySerializerString : IBinaryTypeSerializer<string?>
 {
     #region Constants
 
@@ -48,7 +48,10 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
     #region Methods
 
     /// <inheritdoc />
-    public void Encode(IDataBufferWriter writer, string value)
+    /// <exception cref="ArgumentException">
+    ///     Thrown when the serialized string would require more than <see cref="MAXIMUM_STRING_LENGTH_IN_BYTES"/> bytes.
+    /// </exception>
+    public void Encode(IDataBufferWriter writer, string? value)
     {
         Serialization.WriteNullFlag(writer, value == null);
         
@@ -70,18 +73,18 @@ public class BinarySerializerString : IBinaryTypeSerializer<string>
     }
 
     /// <inheritdoc />
-    public string Decode(IDataBufferReader reader)
+    public string? Decode(IDataBufferReader reader)
     {
         if (Serialization.ReadNullFlag(reader))
         {
-            return null!;
+            return null;
         }
 
         return _encoding.GetString(reader.ReadBytes(_binarySerializerUShort.Decode(reader)));
     }
 
     /// <inheritdoc />
-    public bool GetEquals(string a, string b)
+    public bool GetEquals(string? a, string? b)
     {
         if (a == null && b == null)
         {

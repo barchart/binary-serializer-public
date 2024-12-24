@@ -134,5 +134,5 @@ public interface ISchema<TEntity> where TEntity : class, new()
     ///     True, if the serializable members of the instances are equal;
     ///     otherwise false.
     /// </returns>
-    bool GetEquals(TEntity a, TEntity b);
+    bool GetEquals(TEntity? a, TEntity? b);
 }

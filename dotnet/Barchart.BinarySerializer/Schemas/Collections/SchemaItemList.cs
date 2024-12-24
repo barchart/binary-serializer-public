@@ -26,8 +26,8 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 {
     #region Fields
 
-    private readonly Func<TEntity, IList<TItem>> _getter;
-    private readonly Action<TEntity, IList<TItem>> _setter;
+    private readonly Func<TEntity, IList<TItem?>?> _getter;
+    private readonly Action<TEntity, IList<TItem?>?> _setter;
 
     private readonly ISchema<TItem> _itemSchema;
     
@@ -45,7 +45,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
     #region Constructor(s)
 
-    public SchemaItemList(string name, Func<TEntity, IList<TItem>> getter, Action<TEntity, IList<TItem>> setter, ISchema<TItem> itemSchema)
+    public SchemaItemList(string name, Func<TEntity, IList<TItem?>?> getter, Action<TEntity, IList<TItem?>?> setter, ISchema<TItem> itemSchema)
     {
         Name = name;
         Key = false;
@@ -63,7 +63,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
-        IList<TItem> items = _getter(source);
+        IList<TItem?>? items = _getter(source);
 
         Serialization.WriteMissingFlag(writer, false);
         Serialization.WriteNullFlag(writer, items == null);
@@ -75,7 +75,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
         
         writer.WriteBytes(BitConverter.GetBytes(items.Count));
 
-        foreach (TItem item in items)
+        foreach (TItem? item in items)
         {
             if (item != null)
             {
@@ -102,8 +102,8 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
             return;
         }
 
-        IList<TItem> currentItems = _getter(current);
-        IList<TItem> previousItems = _getter(previous);
+        IList<TItem?>? currentItems = _getter(current);
+        IList<TItem?>? previousItems = _getter(previous);
         
         Serialization.WriteMissingFlag(writer, false);
         Serialization.WriteNullFlag(writer, currentItems == null);
@@ -119,7 +119,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
             
         for (int i = 0; i < numberOfElements; i++)
         {
-            if (currentItems != null && currentItems.Count > i && currentItems[i] == null)
+            if (currentItems.Count > i && currentItems[i] == null)
             {
                 Serialization.WriteNullFlag(writer, true);
                     
@@ -130,12 +130,12 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
 
             if (previousItems != null && previousItems.Count > i && previousItems[i] != null)
             {
-                _itemSchema.Serialize(writer, currentItems[i], previousItems[i]);
+                _itemSchema.Serialize(writer, currentItems[i]!, previousItems[i]!);
             }
 
             else
             {
-                _itemSchema.Serialize(writer, currentItems[i]);
+                _itemSchema.Serialize(writer, currentItems[i]!);
             }
         }
     }
@@ -155,11 +155,11 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
             return;
         }
 
-        IList<TItem> currentItems = _getter(target);
+        IList<TItem?>? currentItems = _getter(target);
 
         int count = BitConverter.ToInt32(reader.ReadBytes(sizeof(int)));
         
-        List<TItem> items = new();
+        List<TItem?> items = new();
 
         for (int i = 0; i < count; i++)
         {
@@ -171,7 +171,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
             {
                 if (currentItems != null && currentItems.Count > i && currentItems[i] != null)
                 {
-                    items.Add(_itemSchema.Deserialize(reader, currentItems[i]));
+                    items.Add(_itemSchema.Deserialize(reader, currentItems[i]!));
                 }
                 else
                 {
@@ -184,7 +184,7 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
     }
 
     /// <inheritdoc />
-    public bool GetEquals(TEntity a, TEntity b)
+    public bool GetEquals(TEntity? a, TEntity? b)
     {
         if (a == null && b == null)
         {
@@ -196,8 +196,8 @@ public class SchemaItemList<TEntity, TItem> : ISchemaItem<TEntity> where TEntity
             return false;
         }
         
-        IList<TItem> listA = _getter(a);
-        IList<TItem> listB = _getter(b);
+        IList<TItem?>? listA = _getter(a);
+        IList<TItem?>? listB = _getter(b);
 
         if (listA == null && listB == null)
         {

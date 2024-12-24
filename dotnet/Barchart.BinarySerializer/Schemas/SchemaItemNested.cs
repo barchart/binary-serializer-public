@@ -26,8 +26,8 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
 {
     #region Fields
 
-    private readonly Func<TEntity, TMember> _getter;
-    private readonly Action<TEntity, TMember> _setter;
+    private readonly Func<TEntity, TMember?> _getter;
+    private readonly Action<TEntity, TMember?> _setter;
 
     private readonly ISchema<TMember> _schema;
     
@@ -45,7 +45,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
 
     #region Constructor(s)
 
-    public SchemaItemNested(string name, Func<TEntity, TMember> getter, Action<TEntity, TMember> setter, ISchema<TMember> schema)
+    public SchemaItemNested(string name, Func<TEntity, TMember?> getter, Action<TEntity, TMember?> setter, ISchema<TMember> schema)
     {
         Name = name;
         Key = false;
@@ -63,7 +63,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
-        TMember nested = _getter(source);
+        TMember? nested = _getter(source);
         
         Serialization.WriteMissingFlag(writer, false);
         Serialization.WriteNullFlag(writer, nested == null);
@@ -86,8 +86,8 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
             return;
         }
         
-        TMember nestedCurrent = _getter(current);
-        TMember nestedPrevious = _getter(previous);
+        TMember? nestedCurrent = _getter(current);
+        TMember? nestedPrevious = _getter(previous);
         
         Serialization.WriteNullFlag(writer, nestedCurrent == null);
 
@@ -114,7 +114,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
             return;
         }
 
-        TMember nested = _getter(target);
+        TMember? nested = _getter(target);
         
         if (Serialization.ReadNullFlag(reader))
         {
@@ -134,7 +134,7 @@ public class SchemaItemNested<TEntity, TMember> : ISchemaItem<TEntity> where TEn
     }
 
     /// <inheritdoc />
-    public bool GetEquals(TEntity a, TEntity b)
+    public bool GetEquals(TEntity? a, TEntity? b)
     {
         if (a == null && b == null)
         {

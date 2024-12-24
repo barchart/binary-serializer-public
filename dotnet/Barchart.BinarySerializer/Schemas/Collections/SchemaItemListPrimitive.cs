@@ -27,8 +27,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 {
     #region Fields
 
-    private readonly Func<TEntity, IList<TItem>> _getter;
-    private readonly Action<TEntity, IList<TItem>> _setter;
+    private readonly Func<TEntity, IList<TItem>?> _getter;
+    private readonly Action<TEntity, IList<TItem>?> _setter;
 
     private readonly IBinaryTypeSerializer<TItem> _elementSerializer;
     
@@ -46,7 +46,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
     #region Constructor(s)
 
-    public SchemaItemListPrimitive(string name, Func<TEntity, IList<TItem>> getter, Action<TEntity, IList<TItem>> setter, IBinaryTypeSerializer<TItem> elementSerializer)
+    public SchemaItemListPrimitive(string name, Func<TEntity, IList<TItem>?> getter, Action<TEntity, IList<TItem>?> setter, IBinaryTypeSerializer<TItem> elementSerializer)
     {
         Name = name;
         Key = false;
@@ -64,7 +64,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     /// <inheritdoc />
     public void Encode(IDataBufferWriter writer, TEntity source)
     {
-        IList<TItem> items = _getter(source);
+        IList<TItem>? items = _getter(source);
         
         Serialization.WriteMissingFlag(writer, false);
         Serialization.WriteNullFlag(writer, items == null);
@@ -76,7 +76,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         
         writer.WriteBytes(BitConverter.GetBytes(items.Count));
 
-        foreach (var item in items)
+        foreach (TItem item in items)
         {
             Serialization.WriteMissingFlag(writer, false);
 
@@ -96,8 +96,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
             return;
         }
 
-        IList<TItem> currentItems = _getter(current);
-        IList<TItem> previousItems = _getter(previous);
+        IList<TItem>? currentItems = _getter(current);
+        IList<TItem>? previousItems = _getter(previous);
         
         Serialization.WriteMissingFlag(writer, false);
         Serialization.WriteNullFlag(writer, currentItems == null);
@@ -116,13 +116,13 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
             return;
         }
 
-        IList<TItem> currentItems = _getter(target);
+        IList<TItem>? currentItems = _getter(target);
         
         if (Serialization.ReadNullFlag(reader))
         {
             if (currentItems != null)
             {
-                _setter(target, null!);
+                _setter(target, null);
             }
             
             return;
@@ -164,7 +164,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
     }
     
     /// <inheritdoc />
-    public bool GetEquals(TEntity a, TEntity b)
+    public bool GetEquals(TEntity? a, TEntity? b)
     {
         if (a == null && b == null)
         {
@@ -176,8 +176,8 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
             return false;
         }
         
-        IList<TItem> listA = _getter(a);
-        IList<TItem> listB = _getter(b);
+        IList<TItem>? listA = _getter(a);
+        IList<TItem>? listB = _getter(b);
 
         if (listA == null && listB == null)
         {
@@ -205,7 +205,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
         return true;
     }
 
-    private void WriteItems(IDataBufferWriter writer, IList<TItem> currentItems, IList<TItem> previousItems)
+    private void WriteItems(IDataBufferWriter writer, IList<TItem> currentItems, IList<TItem>? previousItems)
     {
         int numberOfElements = currentItems.Count;
         writer.WriteBytes(BitConverter.GetBytes(numberOfElements));

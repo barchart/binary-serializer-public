@@ -11,7 +11,7 @@ public class Person
     #region Properties
 
     [Serialize]
-    public string Name { get; set; }
+    public string? Name { get; set; }
     
     [Serialize]
     public bool IsProgrammer { get; set; }
