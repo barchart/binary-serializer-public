@@ -38,14 +38,14 @@ public class DataBufferWriterFactory : IDataBufferWriterFactory
     /// <param name="byteArrayLength">
     ///     The length of the byte array to use for each <see cref="IDataBufferWriter"/>.
     /// </param>
-    /// <exception cref="InvalidByteArrayLength">
+    /// <exception cref="InvalidByteArrayLengthException">
     ///     Thrown if the <paramref name="byteArrayLength"/> is less than 1.
     /// </exception>
     public DataBufferWriterFactory(int byteArrayLength)
     {
         if (byteArrayLength < 1)
         {
-            throw new InvalidByteArrayLength(byteArrayLength);
+            throw new InvalidByteArrayLengthException(byteArrayLength);
         }
         
         _byteArrayLength = byteArrayLength;

@@ -1,6 +1,7 @@
 #region Using Statements
 
 using Barchart.BinarySerializer.Buffers;
+using Barchart.BinarySerializer.Buffers.Exceptions;
 using Barchart.BinarySerializer.Buffers.Factories;
 
 #endregion
@@ -31,15 +32,15 @@ public class DataBufferWriterFactoryTests
     #region Test Methods (Constructor)
 
     [Fact]
-    public void Instantiate_UsingZeroByteArraySize_ThrowsException()
+    public void Instantiate_UsingZeroByteArraySize_ThrowsInvalidByteArrayLengthException()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new DataBufferWriterFactory(0));
+        Assert.Throws<InvalidByteArrayLengthException>(() => new DataBufferWriterFactory(0));
     }
     
     [Fact]
-    public void Instantiate_UsingNegativeByteArraySize_ThrowsException()
+    public void Instantiate_UsingNegativeByteArraySize_ThrowsInvalidByteArrayLengthException()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new DataBufferWriterFactory(-1));
+        Assert.Throws<InvalidByteArrayLengthException>(() => new DataBufferWriterFactory(-1));
     }
     
     #endregion
