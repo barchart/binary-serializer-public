@@ -10,20 +10,24 @@ export * from './buffers/data-reader.interface';
 export * from './buffers/data-writer.interface';
 
 export * from './entities/exceptions/entity-not-found-exception';
+export * from './entities/exceptions/missing-key-members-exception';
 export * from './entities/factories/entity-manager-factory';
 export * from './entities/keys/entity-key.interface';
 export * from './entities/keys/entity-key';
 export * from './entities/entity-manager';
 
-export * from './headers/header';
-export * from './headers/binary-header-serializer';
+export * from './exceptions/argument-null-exception';
+
 export * from './headers/exceptions/invalid-header-exception';
+export * from './headers/binary-header-serializer';
+export * from './headers/header';
 
 export * from './schemas/collections/schema-item-list';
 export * from './schemas/collections/schema-item-list-primitive';
+export * from './schemas/exceptions/header-mismatch-exception';
+export * from './schemas/exceptions/invalid-entity-id-exception';
 export * from './schemas/exceptions/key-mismatch-exception';
 export * from './schemas/exceptions/key-undefined-exception';
-export * from './schemas/exceptions/header-mismatch-exception';
 export * from './schemas/factories/schema-factory';
 export * from './schemas/factories/serialization-schema-factory.interface';
 export * from './schemas/schema';
@@ -37,6 +41,7 @@ export * from './serializers/serializer';
 export * from './serializers/serializer-builder';
 
 export * from './types/exceptions/unsupported-type-exception';
+export * from './types/exceptions/invalid-string-length-exception';
 export * from './types/factories/binary-type-serializer-factory';
 export * from './types/factories/serializer-factory.interface';
 export * from './types/binary-serializer-bool';
