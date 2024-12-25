@@ -10,6 +10,7 @@ export interface DataWriterFactory {
      /**
      * Creates a new DataWriter instance.
      *
+     * @public
      * @returns A new DataWriter instance.
      */
     make(): DataWriter;

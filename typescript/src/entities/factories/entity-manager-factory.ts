@@ -1,4 +1,5 @@
 import { SchemaField, Serializer, EntityKey, EntityManager } from "../../../src";
+import { MissingKeyMembersException } from "../exceptions/missing-key-members-exception";
 
 /**
  * A factory for creating entity managers.
@@ -16,13 +17,17 @@ export class EntityManagerFactory {
      * @param {Serializer<TEntity>} serializer - The serializer used to serialize and deserialize entities.
      * @param {SchemaField[]} fields - The fields of the entity schema.
      * @returns A new entity manager.
+     * @throws {MissingKeyMembersException} Thrown if the entity type does not have any properties or fields marked as keys.
      */
     make<TEntity extends object>(serializer: Serializer<TEntity>, fields: SchemaField[]): EntityManager<TEntity> {
-        const keyExtractor = (entity: TEntity): EntityKey<TEntity> => {
-            const keyValues = fields
-                .filter(field => 'isKey' in field && field.isKey === true)
-                .map(field => (entity as any)[field.name]);
+        const keyFields = fields.filter(field => 'isKey' in field && field.isKey === true);
 
+        if (keyFields.length === 0) {
+            throw new MissingKeyMembersException(this.constructor.name);
+        }
+
+        const keyExtractor = (entity: TEntity): EntityKey<TEntity> => {
+            const keyValues = keyFields.map(field => (entity as any)[field.name]);
             return new EntityKey<TEntity>(keyValues);
         };
 

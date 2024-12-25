@@ -1,4 +1,5 @@
 export * from './buffers/exceptions/insufficient-capacity-exception';
+export * from './buffers/exceptions/invalid-byte-array-length-exception';
 export * from './buffers/factories/data-buffer-reader-factory';
 export * from './buffers/factories/data-buffer-writer-factory';
 export * from './buffers/factories/data-reader-factory.interface';

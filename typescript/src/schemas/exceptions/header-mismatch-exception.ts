@@ -9,8 +9,7 @@
  */
 export class HeaderMismatchException extends Error {
     constructor(entityId: number, expectedEntityId: number) {
-        const message = `The header entity ID (${entityId}) does not match the expected entity ID (${expectedEntityId}).`;
-        super(message);
+        super(`The header entity ID (${entityId}) does not match the expected entity ID (${expectedEntityId}).`);
 
         Object.setPrototypeOf(this, HeaderMismatchException.prototype);
     }

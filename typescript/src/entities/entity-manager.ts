@@ -39,7 +39,7 @@ export class EntityManager<TEntity extends object> {
             this._snapshots.set(key, snapshot);
         }
 
-        return snapshot;
+        return new Uint8Array(snapshot);
     }
 
     /**

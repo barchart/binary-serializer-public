@@ -7,6 +7,7 @@ import { Header } from "../headers/header";
 import { HeaderMismatchException } from "./exceptions/header-mismatch-exception";
 import { KeyUndefinedException } from "./exceptions/key-undefined-exception";
 import { Bookmark } from "../buffers/data-buffer-reader";
+import { ArgumentNullException } from "../exceptions/argument-null-exception";
 
 /**
  * Serializes and deserializes instances of the TEntity class.
@@ -46,7 +47,7 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
 
     serialize(writer: DataWriter, source: TEntity): Uint8Array {
         if (source === null) {
-            throw new Error("source cannot be null");
+            throw new ArgumentNullException("source");
         }
 
         if (writer.bytesWritten === 0) {
@@ -65,10 +66,6 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     }
 
     serializeChanges(writer: DataWriter, current: TEntity, previous: TEntity): Uint8Array {
-        if (previous === null) {
-            return this.serialize(writer, current);
-        }
-
         if (writer.bytesWritten === 0) {
             this.headerSerializer.encode(writer, this.entityId, false);
         }
@@ -90,7 +87,7 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
 
     deserializeChanges(reader: DataReader, target: TEntity, existing: boolean = true): TEntity {
         if (target === null) {
-            throw new Error("target cannot be null");
+            throw new ArgumentNullException("target");
         }
 
         if (reader.bytesRead === 0) {

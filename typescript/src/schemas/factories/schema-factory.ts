@@ -10,6 +10,7 @@ import { SchemaItemList } from "../collections/schema-item-list";
 import { SchemaItemListPrimitive } from "../collections/schema-item-list-primitive";
 import { SchemaDefinition } from "../schema-definition.interface";
 import { SerializerFactory } from "../../types/factories/serializer-factory.interface";
+import {InvalidEntityIdException} from "../exceptions/invalid-entity-id-exception";
 
 /**
  * Defines a factory for creating schemas for entities.
@@ -33,7 +34,7 @@ export class SchemaFactory implements SerializationSchemaFactory {
     private makeInternal<TEntity extends object>(entityId: number, fields: SchemaField[], nested: boolean): SchemaDefinition<TEntity> {
         if (!nested && entityId == 0)
         {
-            throw new Error("Entity ID cannot be [ 0 ].");
+            throw new InvalidEntityIdException();
         }
 
         const memberDataContainer: SchemaItemDefinition<TEntity>[] = fields.map(field => {

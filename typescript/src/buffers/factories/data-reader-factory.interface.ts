@@ -10,6 +10,7 @@ export interface DataReaderFactory {
      /**
      * Creates a new DataReader instance.
      *
+     * @public
      * @param {Uint8Array} bytes - The binary data to read from.
      * @returns A new DataReader instance.
      */

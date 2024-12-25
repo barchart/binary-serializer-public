@@ -2,6 +2,7 @@ import { BinaryTypeSerializer } from './binary-type-serializer.interface';
 import { DataReader } from '../buffers/data-reader.interface';
 import { DataWriter } from '../buffers/data-writer.interface';
 import { BinarySerializerUShort } from './binary-serializer-ushort';
+import {InvalidStringLengthException} from "./exceptions/invalid-string-length-exception";
 
 /**
  * Reads (and writes) string values to (and from) a binary data source.
@@ -20,6 +21,9 @@ export class BinarySerializerString implements BinaryTypeSerializer<string | nul
         this.encoding = encoding;
     }
 
+    /**
+     * @throws {InvalidStringLengthException} The string length exceeds the maximum allowed length.
+     */
     encode(writer: DataWriter, value: string | null): void {
         if (value === null) {
             this.writeNullFlag(writer, true);
@@ -32,7 +36,7 @@ export class BinarySerializerString implements BinaryTypeSerializer<string | nul
         const bytes = encoder.encode(value);
 
         if (bytes.length > BinarySerializerString.MAX_STRING_LENGTH_IN_BYTES) {
-            throw new Error(`Unable to serialize string. Serialized string would require ${bytes.length} bytes; however, the maximum size of a serialized string is ${BinarySerializerString.MAX_STRING_LENGTH_IN_BYTES}`);
+            throw new InvalidStringLengthException(bytes.length, BinarySerializerString.MAX_STRING_LENGTH_IN_BYTES);
         }
 
         this.binarySerializerUShort.encode(writer, bytes.length);

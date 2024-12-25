@@ -32,7 +32,7 @@ export class SchemaItem<TEntity, TMember> implements SchemaItemWithKeyDefinition
 
         this.serializer = serializer as BinaryTypeSerializer<TMember>;
     }
-  
+
     encode(writer: DataWriter, source: TEntity): void {
         if (!this.key) {
             Serialization.writeMissingFlag(writer, false);
@@ -43,6 +43,9 @@ export class SchemaItem<TEntity, TMember> implements SchemaItemWithKeyDefinition
         this.serializer.encode(writer, member);
     }
 
+    /**
+     * @throws {KeyMismatchException} - If the key property is not equal between the current and previous entities.
+     */
     encodeChanges(writer: DataWriter, current: TEntity, previous: TEntity): void {
         const valuesEqual = this.getEquals(current, previous);
 
@@ -57,6 +60,9 @@ export class SchemaItem<TEntity, TMember> implements SchemaItemWithKeyDefinition
         }
     }
 
+    /**
+     * @throws {KeyMismatchException} - If the key property is not equal between the current and previous entities.
+     */
     decode(reader: DataReader, target: TEntity, existing: boolean = false): void {
         let missing = false;
         

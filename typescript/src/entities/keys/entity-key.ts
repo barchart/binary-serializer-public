@@ -1,4 +1,5 @@
 import { EntityKeyDefinition } from "./entity-key.interface";
+import { ArgumentNullException } from "../../exceptions/argument-null-exception";
 
 /**
  * Represents a unique key for an entity used in (de)serialization process.
@@ -13,6 +14,10 @@ export class EntityKey<TEntity extends object> implements EntityKeyDefinition<TE
     private readonly _key: object;
 
     constructor(key: object) {
+        if (key === null || key === undefined) {
+            throw new ArgumentNullException('key');
+        }
+
         this._key = key;
     }
 

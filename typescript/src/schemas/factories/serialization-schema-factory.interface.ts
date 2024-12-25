@@ -16,6 +16,7 @@ export interface SerializationSchemaFactory {
       * @param entityId - The unique identifier for the entity.
       * @param {SchemaField[]} fields - The fields defining the schema members.
       * @returns {Schema<TEntity>} An `SchemaDefinition<TEntity>` instance representing the schema for the entity.
+      * @throws {InvalidEntityIdException} Thrown when the entity ID is invalid.
       */
     make<TEntity extends object>(entityId: number, fields: SchemaField[]): SchemaDefinition<TEntity>;
 }
