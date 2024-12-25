@@ -82,10 +82,18 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     }
 
     deserialize(reader: DataReader): TEntity {
-        return this.deserializeChanges(reader, {} as TEntity, false);
+        return this.deserializeInternal(reader, {} as TEntity, false);
     }
 
-    deserializeChanges(reader: DataReader, target: TEntity, existing: boolean = true): TEntity {
+    deserializeChanges(reader: DataReader, target: TEntity): TEntity {
+        if (target === null) {
+            throw new ArgumentNullException("target");
+        }
+
+        return this.deserializeInternal(reader, target, true);
+    }
+
+    private deserializeInternal(reader: DataReader, target: TEntity, existing: boolean): TEntity {
         if (target === null) {
             throw new ArgumentNullException("target");
         }

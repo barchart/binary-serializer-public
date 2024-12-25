@@ -114,7 +114,7 @@ export class SchemaItemList<TEntity extends object, TItem extends object> implem
             } 
             else {
                 if (currentItems != null && currentItems.length > i && currentItems[i] !== null) {
-                    items.push(this.itemSchema.deserializeChanges(reader, currentItems[i], true));
+                    items.push(this.itemSchema.deserializeChanges(reader, currentItems[i]));
                 } else {
                     items.push(this.itemSchema.deserialize(reader));
                 }

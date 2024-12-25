@@ -58,13 +58,12 @@ export interface SchemaDefinition<TEntity extends object> {
      * @public
      * @param {DataReader} reader - A buffer of binary data which contains the serialized entity.
      * @param {TEntity} target - The target entity to assign the deserialized values to.
-     * @param {boolean} [existing] - Optional flag to indicate if the target entity is an existing instance.
      * @returns {TEntity} The reference to the target instance.
      * @throws {ArgumentNullException} - If the target entity is null.
      * @throws {KeyMismatchException} - If the key schema items of the current and previous entities do not match.
      * @throws {HeaderMismatchException} - If the header from the serialized byte array is invalid.
      */
-    deserializeChanges(reader: DataReader, target: TEntity, existing?: boolean): TEntity;
+    deserializeChanges(reader: DataReader, target: TEntity): TEntity;
 
     /**
      * Deserializes a header from the reader.
