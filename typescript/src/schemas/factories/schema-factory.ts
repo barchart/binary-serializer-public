@@ -10,7 +10,7 @@ import { SchemaItemList } from "../collections/schema-item-list";
 import { SchemaItemListPrimitive } from "../collections/schema-item-list-primitive";
 import { SchemaDefinition } from "../schema-definition.interface";
 import { SerializerFactory } from "../../types/factories/serializer-factory.interface";
-import {InvalidEntityIdException} from "../exceptions/invalid-entity-id-exception";
+import { InvalidEntityIdException } from "../exceptions/invalid-entity-id-exception";
 
 /**
  * Defines a factory for creating schemas for entities.
@@ -114,9 +114,11 @@ export class SchemaFactory implements SerializationSchemaFactory {
     private isNestedClass(field: SchemaField): boolean {
         return field.type === DataType.object;
     }
+
     private isList(field: SchemaField): boolean {
         return field.type === DataType.list && field.elementType == DataType.object;
     }
+
     private isListPrimitive(field: SchemaField): boolean {
         return field.type === DataType.list;
     }
