@@ -96,7 +96,10 @@ describe('EntityManager', () => {
     it('should return a byte array if there are changes', () => {
         const entity = new TestEntity(0b11110000, 0b00001111);
 
+        let snapshot: Uint8Array<ArrayBufferLike> = entityManager.snapshot(entity);
         entity.value = 0b11111000;
+        snapshot = new Uint8Array([0b00001111]);
+
         const difference = entityManager.difference(entity);
 
         expect(difference.length).toBe(4);
