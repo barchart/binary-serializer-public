@@ -1,4 +1,4 @@
-import { EntityManagerFactory, EntityManager, Serializer, SchemaField, DataType, EntityKey } from '../../../src';
+import { EntityManagerFactory, EntityManager, Serializer, SchemaField, DataType } from '../../../src';
 
 class TestEntityOne {
     keyPropertyOne: string;

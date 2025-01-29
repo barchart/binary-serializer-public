@@ -1,4 +1,4 @@
-import { EntityManagerFactory, EntityManager, Serializer, SchemaField, DataType, EntityKey, EntityKeyDefinition, EntityNotFoundException } from '../../src';
+import { EntityManagerFactory, EntityManager, Serializer, SchemaField, DataType, EntityNotFoundException } from '../../src';
 import {expect} from "vitest";
 
 class TestEntity {
@@ -96,9 +96,7 @@ describe('EntityManager', () => {
     it('should return a byte array if there are changes', () => {
         const entity = new TestEntity(0b11110000, 0b00001111);
 
-        let adada: Uint8Array<ArrayBufferLike> = entityManager.snapshot(entity);
         entity.value = 0b11111000;
-        adada = new Uint8Array([0b00001111]);
         const difference = entityManager.difference(entity);
 
         expect(difference.length).toBe(4);
