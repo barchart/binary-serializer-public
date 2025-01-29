@@ -36,19 +36,19 @@
 		"./dist/src/types/data_types": "./dist/src/types/data_types.js"
 	},
 	"dependencies": {
-		"@barchart/common-js": "^4.49.0",
-		"decimal.js": "^10.4.3"
+		"@barchart/common-js": "^4.49.2",
+		"decimal.js": "^10.5.0"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.18.0",
+		"@eslint/js": "^9.19.0",
 		"@types/eslint__js": "^8.42.3",
-		"@types/node": "^22.10.9",
-		"@typescript-eslint/eslint-plugin": "^8.21.0",
-		"@typescript-eslint/parser": "^8.21.0",
-		"eslint": "^9.18.0",
+		"@types/node": "^22.12.0",
+		"@typescript-eslint/eslint-plugin": "^8.22.0",
+		"@typescript-eslint/parser": "^8.22.0",
+		"eslint": "^9.19.0",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.7.3",
-		"typescript-eslint": "^8.21.0",
+		"typescript-eslint": "^8.22.0",
 		"vitest": "^3.0.4"
 	},
 	"license": "MIT",
