@@ -1,6 +1,7 @@
 import { DataReader } from '../buffers/data-reader.interface';
 import { DataWriter } from '../buffers/data-writer.interface';
 import { BinaryTypeSerializer } from './binary-type-serializer.interface';
+import { BinarySerializerByte } from "./binary-serializer-byte";
 import Enum from '@barchart/common-js/lang/Enum';
 
 /**
@@ -13,7 +14,7 @@ import Enum from '@barchart/common-js/lang/Enum';
  */
 export class BinarySerializerEnum<T extends Enum> implements BinaryTypeSerializer<T> {
     get sizeInBytes(): number {
-        return 4;
+        return this.binarySerializerNumber instanceof BinarySerializerByte ? 1 : 4;
     }
 
     private readonly binarySerializerNumber: BinaryTypeSerializer<number>;
