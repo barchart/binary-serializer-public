@@ -1,7 +1,7 @@
 {
 	"name": "@barchart/binary-serializer-ts",
 	"description": "Barchart Binary Serializer (TypeScript)",
-	"version": "1.1.3",
+	"version": "1.1.4",
 	"author": {
 		"name": "Luka Sotra",
 		"email": "luka.sotra@barchart.com",
