@@ -15,9 +15,11 @@ export class BinarySerializerULong implements BinaryTypeSerializer<bigint> {
     }
 
     encode(writer: DataWriter, value: bigint): void {
+        const bigIntValue = BigInt(value);
+
         const buffer = new ArrayBuffer(this.sizeInBytes);
         const view = new DataView(buffer);
-        view.setBigUint64(0, value, true);
+        view.setBigUint64(0, bigIntValue, true);
         
         writer.writeBytes(new Uint8Array(buffer));
     }
