@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <Configurations>Debug;Release;Publish</Configurations>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
