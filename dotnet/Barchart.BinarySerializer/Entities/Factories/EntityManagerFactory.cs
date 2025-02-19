@@ -20,6 +20,9 @@ public class EntityManagerFactory
 {
     #region Constructor(s)
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="EntityManagerFactory"/> class.
+    /// </summary>
     public EntityManagerFactory()
     {
         

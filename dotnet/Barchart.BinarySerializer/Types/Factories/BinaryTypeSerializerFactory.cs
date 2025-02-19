@@ -17,6 +17,9 @@ public class BinaryTypeSerializerFactory : IBinaryTypeSerializerFactory
 
     #region Constructor(s)
     
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="BinaryTypeSerializerFactory" /> class.
+    /// </summary>
     public BinaryTypeSerializerFactory()
     {
         AddStructSerializer(new BinarySerializerBool());

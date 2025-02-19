@@ -8,27 +8,20 @@ namespace Barchart.BinarySerializer.Schemas.Exceptions;
 /// </summary>
 public class KeyMismatchException : InvalidOperationException
 {
-    #region Properties
-
-    /// <summary>
-    ///     The type of the entity.
-    /// </summary>
-    public Type EntityType { get; }
-
-    /// <summary>
-    ///     The name of the key.
-    /// </summary>
-    public string KeyName { get; }
-
-    #endregion
-    
     #region Constructor(s)
-    
-    public KeyMismatchException(Type entityType, string keyName, bool serializing) : base(serializing ? $"An attempt was made to serialize the difference between two entities with different key values [ {keyName} ]." : $"An attempt was made to alter the a key property during deserialization [ {keyName} ].")
+
+    /// <summary>
+    ///     Creates a new <see cref="KeyMismatchException"/> instance.
+    /// </summary>
+    /// <param name="keyName">
+    ///     The name of the key.
+    /// </param>
+    /// <param name="serializing">
+    ///     A <see cref="bool"/> value indicating whether the exception was thrown during serialization.
+    /// </param>
+    public KeyMismatchException(string keyName, bool serializing) : base(serializing ? $"An attempt was made to serialize the difference between two entities with different key values [ {keyName} ]." : $"An attempt was made to alter the a key property during deserialization [ {keyName} ].")
     {
-        EntityType = entityType;
         
-        KeyName = keyName;
     }
     
     #endregion

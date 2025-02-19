@@ -99,7 +99,7 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
         
         if (Key && !unchanged)
         {
-            throw new KeyMismatchException(typeof(TEntity), Name, true);
+            throw new KeyMismatchException(Name, true);
         }
 
         if (Key || !unchanged)
@@ -140,7 +140,7 @@ public class SchemaItem<TEntity, TMember> : ISchemaItem<TEntity, TMember> where 
         {
             if (!_serializer.GetEquals(current, _getter(target)))
             {
-                throw new KeyMismatchException(typeof(TEntity), Name, false);
+                throw new KeyMismatchException(Name, false);
             }
         }
         else

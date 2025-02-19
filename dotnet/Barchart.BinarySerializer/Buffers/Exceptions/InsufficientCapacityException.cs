@@ -10,6 +10,12 @@ public class InsufficientCapacityException : InvalidOperationException
 {
     #region Constructor(s)
     
+    /// <summary>
+    ///     Creates a new <see cref="InsufficientCapacityException"/> instance.
+    /// </summary>
+    /// <param name="writing">
+    ///     Indicates if the exception is being thrown during a write operation.
+    /// </param>
     public InsufficientCapacityException(bool writing) : base(writing ? "Unable to write to [IDataBufferWriter], remaining capacity would be exceeded." : "Unable to read from [IDataBufferReader], remaining capacity would be exceeded.")
     {
 

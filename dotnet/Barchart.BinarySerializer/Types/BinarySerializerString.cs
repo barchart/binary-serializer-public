@@ -32,11 +32,20 @@ public class BinarySerializerString : IBinaryTypeSerializer<string?>
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="BinarySerializerString"/> class using the default encoding.
+    /// </summary>
     public BinarySerializerString() : this(DEFAULT_ENCODING)
     {
 
     }
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="BinarySerializerString"/> class using the specified encoding.
+    /// </summary>
+    /// <param name="encoding">
+    ///     The encoding to use when reading and writing strings.
+    /// </param>
     public BinarySerializerString(Encoding encoding)
     {
         _encoding = encoding;

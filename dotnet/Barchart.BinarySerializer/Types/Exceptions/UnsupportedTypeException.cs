@@ -12,20 +12,17 @@ namespace Barchart.BinarySerializer.Types.Exceptions;
 /// </summary>
 public class UnsupportedTypeException : InvalidOperationException
 {
-    #region Properties
-
-    /// <summary>
-    ///     The type for which an <see cref="IBinaryTypeSerializer{T}" /> cannot be created.
-    /// </summary>
-    public Type Unsupported { get; }
-
-    #endregion
-    
     #region Constructor(s)
     
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="UnsupportedTypeException" /> class.
+    /// </summary>
+    /// <param name="unsupported">
+    ///     The type that is not supported.
+    /// </param>
     public UnsupportedTypeException(Type unsupported) : base($"Unable to create a serializer for the ({unsupported.Name}) type.")
     {
-        Unsupported = unsupported;
+        
     }
     
     #endregion

@@ -7,6 +7,9 @@ public class InvalidEntityIdException : ArgumentException
 {
     #region Constructor(s)
     
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="InvalidEntityIdException"/> class.
+    /// </summary>
     public InvalidEntityIdException() : base("Entity ID cannot be [ 0 ].")
     {
         

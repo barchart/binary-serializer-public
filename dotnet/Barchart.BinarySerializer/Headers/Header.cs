@@ -23,6 +23,15 @@ public struct Header
     
     #region Constructor(s)
     
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="Header"/> struct.
+    /// </summary>
+    /// <param name="entityId">
+    ///     An identifier for the entity that was serialized.
+    /// </param>
+    /// <param name="snapshot">
+    ///     True if the message is a "snapshot" or false if the message is a "delta".
+    /// </param>
     public Header(byte entityId, bool snapshot)
     {
         EntityId = entityId;

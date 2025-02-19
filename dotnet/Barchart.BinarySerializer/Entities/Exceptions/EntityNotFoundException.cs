@@ -14,20 +14,17 @@ namespace Barchart.BinarySerializer.Entities.Exceptions;
 /// </typeparam>
 public class EntityNotFoundException<TEntity> : InvalidOperationException where TEntity : class, new()
 {
-    #region Properties
-
-    /// <summary>
-    ///     The key of the entity.
-    /// </summary>
-    public IEntityKey<TEntity> Key { get; }
-
-    #endregion
-    
     #region Constructor(s)
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="EntityNotFoundException{TEntity}"/> class.
+    /// </summary>
+    /// <param name="key">
+    ///     The key of the entity.
+    /// </param>
     public EntityNotFoundException(IEntityKey<TEntity> key) : base($"The entity manager [ {nameof(TEntity)} ] does not contain the desired entity [ ${key} ].")
     {
-        Key = key;
+        
     }
     
     #endregion

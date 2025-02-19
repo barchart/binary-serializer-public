@@ -23,6 +23,12 @@ public class BinarySerializerEnumByte<T> : IBinaryTypeSerializer<T> where T : En
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Create an instance of <see cref="BinarySerializerEnumByte{T}"/>.
+    /// </summary>
+    /// <param name="binarySerializerByte">
+    ///     The binary serializer for byte.
+    /// </param>
     public BinarySerializerEnumByte(IBinaryTypeSerializer<byte> binarySerializerByte)
     {
         _binarySerializerByte = binarySerializerByte;

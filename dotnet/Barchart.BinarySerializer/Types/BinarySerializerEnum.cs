@@ -25,6 +25,12 @@ public class BinarySerializerEnum<T> : IBinaryTypeSerializer<T> where T : Enum
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Create an instance of <see cref="BinarySerializerEnum{T}"/>.
+    /// </summary>
+    /// <param name="binarySerializerInt">
+    ///     The binary serializer for 32-bit integers.
+    /// </param>
     public BinarySerializerEnum(IBinaryTypeSerializer<int> binarySerializerInt)
     {
         _binarySerializerInt = binarySerializerInt;

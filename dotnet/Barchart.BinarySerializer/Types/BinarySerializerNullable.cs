@@ -23,6 +23,12 @@ public class BinarySerializerNullable<T> : IBinaryTypeSerializer<T?> where T : s
 
     #region Constructor(s)
 
+    /// <summary>
+    ///     Creates a new instance of the <see cref="BinarySerializerNullable{T}" /> class.
+    /// </summary>
+    /// <param name="typeSerializer">
+    ///     The type serializer to use for the value type.
+    /// </param>
     public BinarySerializerNullable(IBinaryTypeSerializer<T> typeSerializer)
     {
         _typeSerializer = typeSerializer;
