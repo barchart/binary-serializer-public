@@ -52,7 +52,7 @@
   </Target>
 
   <Target Name="SignAfterPack" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Publish'">
-    <Exec Command="nuget sign bin\$(Configuration)\$(PackageId).$(PackageVersion).nupkg -CertificateFingerprint $(CertificateThumbprint)" />
+    <Exec Command="nuget sign bin\$(Configuration)\$(PackageId).$(PackageVersion).nupkg -CertificateFingerprint $(CertificateThumbprint) -Timestamper $(TimestampUrl)" />
   </Target>
 
   <Target Name="PublishToNuGet" DependsOnTargets="SignAfterPack" Condition="'$(Configuration)' == 'Publish'">
