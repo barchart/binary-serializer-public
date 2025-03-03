@@ -3,8 +3,8 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputPath>bin\$(Configuration)\net9.0</OutputPath>
     <PackageIcon>BarchartLogo.png</PackageIcon>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
