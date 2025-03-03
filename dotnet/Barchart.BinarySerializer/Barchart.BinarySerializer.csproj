@@ -4,7 +4,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net9.0</TargetFramework>
-    <OutputPath>bin\$(Configuration)\net9.0</OutputPath>
+    <OutputPath>bin\$(Configuration)</OutputPath>
     <PackageIcon>BarchartLogo.png</PackageIcon>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
