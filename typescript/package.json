@@ -38,10 +38,11 @@
 	},
 	"dependencies": {
 		"@barchart/common-js": "^4.51.0",
-		"decimal.js": "^10.5.0"
+		"big.js": "^7.0.1"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.21.0",
+		"@types/big.js": "^7.0.0",
 		"@types/eslint__js": "^9.14.0",
 		"@types/node": "^22.13.9",
 		"@typescript-eslint/eslint-plugin": "^8.26.0",
