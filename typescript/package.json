@@ -18,6 +18,7 @@
 		"url": "git+https://github.com/barchart/binary-serializer-public.git"
 	},
 	"scripts": {
+		"clean": "rm -rf node_modules",
 		"prebuild": "rm -rf dist",
 		"build": "tsc --build tsconfig.build.json",
 		"test": "vitest run",
