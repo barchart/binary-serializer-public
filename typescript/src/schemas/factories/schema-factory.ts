@@ -11,7 +11,7 @@ import { SchemaItemListPrimitive } from "../collections/schema-item-list-primiti
 import { SchemaDefinition } from "../schema-definition.interface";
 import { SerializerFactory } from "../../types/factories/serializer-factory.interface";
 import { InvalidEntityIdException } from "../exceptions/invalid-entity-id-exception";
-import Decimal from "decimal.js";
+import Big from "big.js";
 
 /**
  * Defines a factory for creating schemas for entities.
@@ -92,7 +92,7 @@ export class SchemaFactory implements SerializationSchemaFactory {
             case DataType.datetime:
                 return new SchemaItem<TEntity, Date>(field.name, isKey, serializer);
             case DataType.decimal:
-                return new SchemaItem<TEntity, Decimal>(field.name, isKey, serializer);
+                return new SchemaItem<TEntity, Big>(field.name, isKey, serializer);
 
             case DataType.long:
             case DataType.ulong:

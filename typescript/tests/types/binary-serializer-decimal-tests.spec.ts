@@ -1,12 +1,26 @@
 import { BinarySerializerDecimal } from "../../src";
 import { Helpers } from "../common/helpers";
-import Decimal from "decimal.js";
+import Big from "big.js";
 
 describe('BinarySerializerDecimalTests', () => {
     let serializer: BinarySerializerDecimal;
     
     beforeEach(() => {
         serializer = new BinarySerializerDecimal();
+    });
+
+    describe('GetDecimalComponents', () => {
+        it('should return .NET decimal components', () => {
+            expect(serializer.getDecimalComponents(new Big('79228162514264337593543950335'))).toEqual([-1, -1, -1, 0]);
+        });
+
+        it('should reject precision greater than 28 decimal places', () => {
+            expect(() => serializer.getDecimalComponents(new Big('1e-29'))).toThrow('Decimal precision cannot exceed 28 decimal places.');
+        });
+
+        it('should reject values exceeding the 96-bit range', () => {
+            expect(() => serializer.getDecimalComponents(new Big('79228162514264337593543950336'))).toThrow('Decimal value exceeds the 96-bit range.');
+        });
     });
 
     describe('Encode', () => {
@@ -22,7 +36,7 @@ describe('BinarySerializerDecimalTests', () => {
 
         testCases.forEach((valueString) => {
             it(`should write expected bytes for ${valueString}`, () => {
-                const value = new Decimal(valueString);
+                const value = new Big(valueString);
                 const writer = {
                     writeBit: vi.fn(),
                     writeByte: vi.fn(),
@@ -67,15 +81,15 @@ describe('BinarySerializerDecimalTests', () => {
             "0",
             "1",
             "-1",
-            // "79228162514264337593543950335",
-            // "-79228162514264337593543950335",
+            "79228162514264337593543950335",
+            "-79228162514264337593543950335",
             "0.0000000000000000000000000001",
             "3.14159265359"
         ];
 
         testCases.forEach((expectedString) => {
             it(`should return expected value for ${expectedString}`, () => {
-                const expectedValue = new Decimal(expectedString);
+                const expectedValue = new Big(expectedString);
                 const components = serializer.getDecimalComponents(expectedValue);
                 const reader = {
                     readBytes: vi.fn(),
@@ -92,7 +106,7 @@ describe('BinarySerializerDecimalTests', () => {
 
                 const actualValue = serializer.decode(reader);
 
-                expect(actualValue.equals(expectedValue)).toBe(true);
+                expect(actualValue.eq(expectedValue)).toBe(true);
             });
         });
     });
@@ -112,11 +126,11 @@ describe('BinarySerializerDecimalTests', () => {
 
         testCases.forEach(([first, second]) => {
             it(`should return expected result for ${first} and ${second}`, () => {
-                const a = new Decimal(first);
-                const b = new Decimal(second);
+                const a = new Big(first);
+                const b = new Big(second);
                 
                 const actual = serializer.getEquals(a, b);
-                const expected = a.equals(b);
+                const expected = a.eq(b);
 
                 expect(actual).toBe(expected);
             });
