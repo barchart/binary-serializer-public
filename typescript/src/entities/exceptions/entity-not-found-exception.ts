@@ -12,6 +12,6 @@ export class EntityNotFoundException<TEntity extends object> extends Error {
     constructor(key: EntityKeyDefinition<TEntity>) {
         super(`The entity manager does not contain the desired entity [ ${key} ].`);
 
-        Object.setPrototypeOf(this, EntityNotFoundException.prototype);
+        this.name = new.target.name;
     }
 }

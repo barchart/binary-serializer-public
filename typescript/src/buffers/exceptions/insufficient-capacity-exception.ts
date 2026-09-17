@@ -11,6 +11,6 @@ export class InsufficientCapacityException extends Error {
     constructor(writing: boolean) {
         super(writing ? "Unable to write to [DataBufferWriter], remaining capacity would be exceeded." : "Unable to read from [DataBufferReader], remaining capacity would be exceeded.");
         
-        Object.setPrototypeOf(this, InsufficientCapacityException.prototype);
+        this.name = new.target.name;
     }
 }

@@ -11,6 +11,6 @@ export class KeyUndefinedException extends Error {
     constructor(keyName: string) {
         super(`The schema does not contain a key property with the specified name [${keyName}].`);
 
-        Object.setPrototypeOf(this, KeyUndefinedException.prototype);
+        this.name = new.target.name;
     }
 }

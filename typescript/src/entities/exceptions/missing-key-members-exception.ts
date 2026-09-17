@@ -9,6 +9,6 @@ export class MissingKeyMembersException extends Error {
     constructor(entityType: string) {
         super(`The entity type '${entityType}' does not have any properties or fields marked as keys.`);
 
-        Object.setPrototypeOf(this, MissingKeyMembersException.prototype);
+        this.name = new.target.name;
     }
 }

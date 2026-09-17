@@ -11,6 +11,6 @@ export class HeaderMismatchException extends Error {
     constructor(entityId: number, expectedEntityId: number) {
         super(`The header entity ID (${entityId}) does not match the expected entity ID (${expectedEntityId}).`);
 
-        Object.setPrototypeOf(this, HeaderMismatchException.prototype);
+        this.name = new.target.name;
     }
 }

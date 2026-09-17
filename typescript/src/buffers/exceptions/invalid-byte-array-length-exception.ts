@@ -10,6 +10,6 @@ export class InvalidByteArrayLengthException extends RangeError {
     constructor(length: number) {
         super(`The byte array length must be positive. The length was ${length}.`);
 
-        Object.setPrototypeOf(this, InvalidByteArrayLengthException.prototype);
+        this.name = new.target.name;
     }
 }

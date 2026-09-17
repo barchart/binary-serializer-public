@@ -10,6 +10,6 @@ export class InvalidStringLengthException extends Error {
     constructor(length: number, maximumStringLengthInBytes: number) {
         super(`Unable to serialize string. Serialized string would require ${length} bytes; however, the maximum size of a serialized string is ${maximumStringLengthInBytes}`);
 
-        Object.setPrototypeOf(this, InvalidStringLengthException.prototype);
+        this.name = new.target.name;
     }
 }

@@ -9,6 +9,6 @@ export class ArgumentNullException extends Error {
     constructor(name: string) {
         super(`The '${name}' value cannot be null.`);
 
-        Object.setPrototypeOf(this, ArgumentNullException.prototype);
+        this.name = new.target.name;
     }
 }

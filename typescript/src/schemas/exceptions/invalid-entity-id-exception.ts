@@ -9,6 +9,6 @@ export class InvalidEntityIdException extends Error {
     constructor() {
         super("Entity ID cannot be [ 0 ].");
 
-        Object.setPrototypeOf(this, InvalidEntityIdException.prototype);
+        this.name = new.target.name;
     }
 }

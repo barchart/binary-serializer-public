@@ -13,6 +13,6 @@ export class UnsupportedTypeException extends Error {
     constructor(unsupported: DataType) {
         super(`Unable to create a serializer for the (${unsupported}) type.`);
 
-        Object.setPrototypeOf(this, UnsupportedTypeException.prototype);
+        this.name = new.target.name;
     }
 }

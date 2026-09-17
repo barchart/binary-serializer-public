@@ -10,6 +10,6 @@ export class InvalidHeaderException extends Error {
     constructor(maxEntityId: number) {
         super(`The entityId cannot exceed ${maxEntityId} because the header serializer uses exactly four bits for entityId value.`);
 
-        Object.setPrototypeOf(this, InvalidHeaderException.prototype);
+        this.name = new.target.name;
     }
 }
