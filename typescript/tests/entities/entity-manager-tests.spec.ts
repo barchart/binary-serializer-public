@@ -84,6 +84,27 @@ describe('EntityManager', () => {
         expect(difference.length).toBe(0);
     });
 
+    it('should replace an existing snapshot for the same key', () => {
+        const entity = new TestEntity(0b11110000, 0b00001111);
+
+        entityManager.snapshot(entity);
+        entity.value = 0b11111000;
+        entityManager.snapshot(entity);
+
+        expect(entityManager.difference(entity).length).toBe(0);
+    });
+
+    it('should remove the only snapshot after replacing one with the same key', () => {
+        const entity = new TestEntity(0b11110000, 0b00001111);
+
+        entityManager.snapshot(entity);
+        entity.value = 0b11111000;
+        entityManager.snapshot(entity);
+        entityManager.remove(entity);
+
+        expect(() => entityManager.difference(entity)).toThrow(EntityNotFoundException);
+    });
+
     it('should return an empty byte array if there are no changes for the compound key entity', () => {
         const entity = new TestEntityTwo(0b11110000, 'KeyTwo', 0b00001111);
 
