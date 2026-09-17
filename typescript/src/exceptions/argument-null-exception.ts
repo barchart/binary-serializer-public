@@ -7,7 +7,7 @@
  */
 export class ArgumentNullException extends Error {
     constructor(name: string) {
-        super(`The '${name}' value cannot be null.`);
+        super(`The '${ name }' value cannot be null.`);
 
         this.name = new.target.name;
     }

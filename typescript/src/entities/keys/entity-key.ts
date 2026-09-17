@@ -1,3 +1,8 @@
+import Day from "@barchart/common-js/lang/Day";
+import Enum from "@barchart/common-js/lang/Enum";
+import * as is from "@barchart/common-js/lang/is";
+import Big from "big.js";
+
 import { EntityKeyDefinition } from "./entity-key.interface";
 import { ArgumentNullException } from "../../exceptions/argument-null-exception";
 
@@ -14,31 +19,30 @@ export class EntityKey<TEntity extends object> implements EntityKeyDefinition<TE
     private readonly _key: object;
 
     constructor(key: object) {
-        if (key === null || key === undefined) {
-            throw new ArgumentNullException('key');
+        if (is.nil(key) || is.undef(key)) {
+            throw new ArgumentNullException("key");
         }
 
         this._key = key;
     }
 
-    equals(other: EntityKey<TEntity> | null): boolean {
-        if (other === null) {
+    equals(other: EntityKeyDefinition<TEntity> | null): boolean {
+        if (!(other instanceof EntityKey)) {
             return false;
         }
 
-        if (this._key === other._key) {
-            return true;
-        }
-
-        return !this.isEmptyObject(this._key) && !this.isEmptyObject(other._key) && JSON.stringify(this._key) === JSON.stringify(other._key);
+        return EntityKey.equalsValue(this._key, other._key);
     }
 
     toString(): string {
-        return `${Object.prototype.toString.call(this)}, (key=${this._key})`;
+        return `${this.constructor.name}, (key=${this._key})`;
     }
 
-    private isEmptyObject(obj: object): boolean {
-        return Object.keys(obj).length === 0 && obj.constructor === Object;
-    }
+    private static equalsValue(left: unknown, right: unknown): boolean {
+        if (Array.isArray(left) && Array.isArray(right)) {
+            return left.length === right.length && left.every((value, index) => EntityKey.equalsValue(value, right[index]));
+        }
 
+        return left === right || (is.nan(left) && is.nan(right)) || (left instanceof Date && right instanceof Date && left.getTime() === right.getTime()) || (left instanceof Day && right instanceof Day && left.getIsEqual(right)) || (left instanceof Big && right instanceof Big && left.eq(right)) || (left instanceof Enum && right instanceof Enum && left.equals(right));
+    }
 }

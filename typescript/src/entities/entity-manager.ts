@@ -15,11 +15,13 @@ import { EntityNotFoundException } from "./exceptions/entity-not-found-exception
 export class EntityManager<TEntity extends object> {
     private readonly _serializer: Serializer<TEntity>;
     private readonly _keyExtractor: (entity: TEntity) => EntityKeyDefinition<TEntity>;
+
     private readonly _snapshots: Map<EntityKeyDefinition<TEntity>, Uint8Array>;
 
     constructor(serializer: Serializer<TEntity>, keyExtractor: (entity: TEntity) => EntityKeyDefinition<TEntity>) {
         this._serializer = serializer;
         this._keyExtractor = keyExtractor;
+
         this._snapshots = new Map<EntityKeyDefinition<TEntity>, Uint8Array>();
     }
 
@@ -33,10 +35,11 @@ export class EntityManager<TEntity extends object> {
      */
     snapshot(entity: TEntity, checkpoint: boolean = true): Uint8Array {
         const key = this.extractKey(entity);
+
         const snapshot = this._serializer.serialize(entity);
 
         if (checkpoint) {
-            this._snapshots.set(key, snapshot);
+            this.setSnapshot(key, snapshot);
         }
 
         return new Uint8Array(snapshot);
@@ -68,7 +71,7 @@ export class EntityManager<TEntity extends object> {
         }
 
         if (checkpoint) {
-            this.setSnapshot(key, current);
+            this.setSnapshot(key, this._serializer.serialize(current));
         }
 
         return this._serializer.serializeChanges(current, previous);
@@ -83,6 +86,7 @@ export class EntityManager<TEntity extends object> {
      */
     remove(entity: TEntity): boolean {
         const key = this.extractKey(entity);
+
         return this.removeSnapshot(key);
     }
 
@@ -99,17 +103,16 @@ export class EntityManager<TEntity extends object> {
         return undefined;
     }
 
-    private setSnapshot(key: EntityKeyDefinition<TEntity>, entity: TEntity): void {
-        const serializedEntity = this._serializer.serialize(entity);
-
+    private setSnapshot(key: EntityKeyDefinition<TEntity>, snapshot: Uint8Array): void {
         for (const snapshotKey of this._snapshots.keys()) {
             if (key.equals(snapshotKey)) {
-                this._snapshots.delete(snapshotKey);
-                break;
+                this._snapshots.set(snapshotKey, snapshot);
+
+                return;
             }
         }
 
-        this._snapshots.set(key, serializedEntity);
+        this._snapshots.set(key, snapshot);
     }
 
     private removeSnapshot(key: EntityKeyDefinition<TEntity>): boolean {
