@@ -9,7 +9,7 @@
  */
 export class KeyUndefinedException extends Error {
     constructor(keyName: string) {
-        super(`The schema does not contain a key property with the specified name [${keyName}].`);
+        super(`The schema does not contain a key property with the specified name [ ${ keyName } ].`);
 
         this.name = new.target.name;
     }

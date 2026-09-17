@@ -19,7 +19,7 @@ public class KeyMismatchException : InvalidOperationException
     /// <param name="serializing">
     ///     A <see cref="bool"/> value indicating whether the exception was thrown during serialization.
     /// </param>
-    public KeyMismatchException(string keyName, bool serializing) : base(serializing ? $"An attempt was made to serialize the difference between two entities with different key values [ {keyName} ]." : $"An attempt was made to alter the a key property during deserialization [ {keyName} ].")
+    public KeyMismatchException(string keyName, bool serializing) : base(serializing ? $"An attempt was made to serialize the difference between two entities with different key values [ { keyName } ]." : $"An attempt was made to alter the a key property during deserialization [ { keyName } ].")
     {
         
     }

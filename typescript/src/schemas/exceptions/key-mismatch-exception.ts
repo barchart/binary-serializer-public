@@ -12,7 +12,7 @@
  */
 export class KeyMismatchException extends Error {
     constructor(keyName: string, serializing: boolean) {
-        const message = serializing ? `An attempt was made to serialize the difference between two entities with different key values (${keyName}).` : `An attempt was made to alter the a key property during deserialization (${keyName}).`;
+        const message = serializing ? `An attempt was made to serialize the difference between two entities with different key values (${ keyName }).` : `An attempt was made to alter the a key property during deserialization (${ keyName }).`;
         super(message);
 
         this.name = new.target.name;

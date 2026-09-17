@@ -16,7 +16,7 @@ public class HeaderMismatchException : InvalidOperationException
     /// <param name="expectedEntityId">
     ///     The entity ID expected in the header.
     /// </param>
-    public HeaderMismatchException(byte entityId, byte expectedEntityId) : base($"The header entity ID ({entityId}) does not match the expected entity ID ({expectedEntityId}).")
+    public HeaderMismatchException(byte entityId, byte expectedEntityId) : base($"The header entity ID ({ entityId }) does not match the expected entity ID ({ expectedEntityId }).")
     {
         
     }
