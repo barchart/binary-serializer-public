@@ -94,6 +94,16 @@ public class BinaryHeaderSerializerTests
 
         Assert.Throws<InvalidHeaderException>(() => _serializer.Encode(mock.Object, 16, true));
     }
+
+    [Fact]
+    public void Encode_SixteenTrue_ExceptionContainsMaximumEntityId()
+    {
+        Mock<IDataBufferWriter> mock = new();
+
+        InvalidHeaderException exception = Assert.Throws<InvalidHeaderException>(() => _serializer.Encode(mock.Object, 16, true));
+
+        Assert.Contains("integer between 0 and 15", exception.Message);
+    }
     
     #endregion
     

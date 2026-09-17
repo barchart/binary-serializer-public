@@ -44,7 +44,7 @@ describe('BinaryHeaderSerializerTests', () => {
             expect(writer.writeByte).toHaveBeenCalledWith(0b10001111);
         });
 
-        it('should throw an exception for Encode(16, true)', () => {
+        it.each([-1, 1.5, 16, NaN, Infinity])('should throw an exception for an invalid entity ID', entityId => {
             const writer = {
                 writeByte: vi.fn(),
                 writeBit: vi.fn(),
@@ -54,7 +54,7 @@ describe('BinaryHeaderSerializerTests', () => {
                 bytesWritten: 0
             };
 
-            expect(() => serializer.encode(writer, 16, true)).toThrow(RangeError);
+            expect(() => serializer.encode(writer, entityId, true)).toThrow(InvalidHeaderException);
         });
     });
 
