@@ -15,9 +15,9 @@ import { Header } from "../headers/header";
  * @template TEntity - The type of entity to be (de)serialized.
  * @param {number} entityId - The unique identifier for the entity.
  * @param {SchemaField[]} fields - The fields of the entity to be (de)serialized.
- * @param {SchemaDefinition<TEntity>} [schema] - The schema definition for the entity (optional).
- * @param {DataReaderFactory} dataBufferReaderFactory - The factory for creating data buffer readers (optional).
- * @param {DataWriterFactory} dataBufferWriterFactory - The factory for creating data buffer writers (optional).
+ * @param {SchemaDefinition<TEntity>=} schema - A custom schema definition, supplied together with both factories.
+ * @param {DataReaderFactory=} dataBufferReaderFactory - A custom data reader factory, supplied together with the schema and writer factory.
+ * @param {DataWriterFactory=} dataBufferWriterFactory - A custom data writer factory, supplied together with the schema and reader factory.
  */
 export class Serializer<TEntity extends object> {
     private readonly schema: SchemaDefinition<TEntity>;
@@ -25,15 +25,17 @@ export class Serializer<TEntity extends object> {
     private readonly dataBufferWriterFactory: DataWriterFactory;
 
     constructor(entityId: number, fields: SchemaField[]);
-    constructor(entityId: number, fields: SchemaField[], schema?: SchemaDefinition<TEntity>, dataBufferReaderFactory?: DataReaderFactory, dataBufferWriterFactory?: DataWriterFactory);
+    constructor(entityId: number, fields: SchemaField[], schema: SchemaDefinition<TEntity>, dataBufferReaderFactory: DataReaderFactory, dataBufferWriterFactory: DataWriterFactory);
     constructor(entityId: number = 0, fields: SchemaField[], schema?: SchemaDefinition<TEntity>, dataBufferReaderFactory?: DataReaderFactory, dataBufferWriterFactory?: DataWriterFactory) {
         if (schema && dataBufferReaderFactory && dataBufferWriterFactory) {
             this.schema = schema;
+           
             this.dataBufferReaderFactory = dataBufferReaderFactory;
             this.dataBufferWriterFactory = dataBufferWriterFactory;
         } else {
             const schemaFactory = new SchemaFactory();
             this.schema = schemaFactory.make<TEntity>(entityId, fields);
+          
             this.dataBufferReaderFactory = new DataBufferReaderFactory();
             this.dataBufferWriterFactory = new DataBufferWriterFactory();
         }
@@ -49,6 +51,7 @@ export class Serializer<TEntity extends object> {
      */
     serialize(source: TEntity): Uint8Array {
         const writer = this.dataBufferWriterFactory.make();
+       
         return this.schema.serialize(writer, source);
     }
 
@@ -65,6 +68,7 @@ export class Serializer<TEntity extends object> {
      */
     serializeChanges(current: TEntity, previous: TEntity): Uint8Array {
         const writer = this.dataBufferWriterFactory.make();
+     
         return this.schema.serializeChanges(writer, current, previous);
     }
 
@@ -78,6 +82,7 @@ export class Serializer<TEntity extends object> {
      */
     deserialize(serialized: Uint8Array): TEntity {
         const reader = this.dataBufferReaderFactory.make(serialized);
+       
         return this.schema.deserialize(reader);
     }
 
@@ -92,6 +97,7 @@ export class Serializer<TEntity extends object> {
      */
     deserializeChanges(serialized: Uint8Array, target: TEntity): TEntity {
         const reader = this.dataBufferReaderFactory.make(serialized);
+       
         return this.schema.deserializeChanges(reader, target);
     }
 
@@ -104,6 +110,7 @@ export class Serializer<TEntity extends object> {
      */
     readHeader(serialized: Uint8Array): Header {
         const reader = this.dataBufferReaderFactory.make(serialized);
+        
         return this.schema.readHeader(reader);
     }
 
@@ -118,6 +125,7 @@ export class Serializer<TEntity extends object> {
      */
     readKey<TMember>(serialized: Uint8Array, name: string): TMember {
         const reader = this.dataBufferReaderFactory.make(serialized);
+    
         return this.schema.readKey<TMember>(reader, name);
     }
 

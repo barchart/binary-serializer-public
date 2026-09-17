@@ -43,6 +43,7 @@ export class SerializerBuilder<TEntity extends object> {
      */
     withSchemaFactory(schemaFactory: SerializationSchemaFactory): SerializerBuilder<TEntity> {
         this.schemaFactory = schemaFactory;
+        
         return this;
     }
 
@@ -55,6 +56,7 @@ export class SerializerBuilder<TEntity extends object> {
      */
     withSchemaFactoryUsingBinaryTypeSerializerFactory(typeFactory: SerializerFactory): SerializerBuilder<TEntity> {
         this.schemaFactory = new SchemaFactory(typeFactory);
+      
         return this;
     }
 
@@ -67,6 +69,7 @@ export class SerializerBuilder<TEntity extends object> {
      */
     withDataBufferReaderFactory(dataReaderFactory: DataReaderFactory): SerializerBuilder<TEntity> {
         this.dataReaderFactory = dataReaderFactory;
+      
         return this;
     }
 
@@ -79,6 +82,7 @@ export class SerializerBuilder<TEntity extends object> {
      */
     withDataBufferWriterFactory(dataWriterFactory: DataWriterFactory): SerializerBuilder<TEntity> {
         this.dataWriterFactory = dataWriterFactory;
+    
         return this;
     }
 
@@ -91,6 +95,7 @@ export class SerializerBuilder<TEntity extends object> {
      */
     build(fields: SchemaField[]): Serializer<TEntity> {
         const schema: SchemaDefinition<TEntity> = this.schemaFactory.make(this.entityId, fields);
+      
         return new Serializer<TEntity>(this.entityId, fields, schema, this.dataReaderFactory, this.dataWriterFactory);
     }
 
