@@ -26,6 +26,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+          registry-url: https://registry.npmjs.org
+          scope: '@barchart'
           cache: yarn
           cache-dependency-path: typescript/yarn.lock
 
@@ -42,6 +44,8 @@ jobs:
         run: |
           corepack enable
           yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
 
       - name: Test TypeScript
         working-directory: typescript
@@ -131,18 +135,16 @@ jobs:
           path: artifacts/npm
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: https://registry.npmjs.org
-          scope: '@barchart'
+          package-manager-cache: false
 
       - name: Publish package
         shell: bash
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           if [[ $(npm view "@barchart/binary-serializer-ts@${VERSION}" version 2>/dev/null || true) != "$VERSION" ]]; then
-            npm publish artifacts/npm/*.tgz --access public --provenance
+            npm publish artifacts/npm/*.tgz --access public
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
