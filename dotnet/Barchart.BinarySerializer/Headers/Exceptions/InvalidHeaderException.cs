@@ -13,7 +13,7 @@ public class InvalidHeaderException : InvalidOperationException
     /// <param name="maxEntityId">
     ///     The maximum entityId value that can be used.
     /// </param>
-    public InvalidHeaderException(byte maxEntityId) : base($"The entityId cannot exceed {maxEntityId} because the header serializer uses exactly four bits for entityId value.")
+    public InvalidHeaderException(byte maxEntityId) : base($"The entityId must be an integer between 0 and { maxEntityId } because the header serializer uses exactly four bits for entityId value.")
     {
         
     }

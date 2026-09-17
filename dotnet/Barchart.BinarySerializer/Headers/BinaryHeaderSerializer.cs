@@ -63,7 +63,7 @@ public class BinaryHeaderSerializer
     {
         if (entityId > MAX_ENTITY_ID)
         {
-            throw new InvalidHeaderException(entityId);
+            throw new InvalidHeaderException(MAX_ENTITY_ID);
         }
         
         byte combined = entityId;

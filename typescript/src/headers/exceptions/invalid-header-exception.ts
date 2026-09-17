@@ -8,7 +8,7 @@
  */
 export class InvalidHeaderException extends Error {
     constructor(maxEntityId: number) {
-        super(`The entityId cannot exceed ${maxEntityId} because the header serializer uses exactly four bits for entityId value.`);
+        super(`The entityId must be an integer between 0 and ${ maxEntityId } because the header serializer uses exactly four bits for entityId value.`);
 
         this.name = new.target.name;
     }

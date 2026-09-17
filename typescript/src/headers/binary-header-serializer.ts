@@ -1,3 +1,5 @@
+import * as is from "@barchart/common-js/lang/is";
+
 import { DataWriter } from "../buffers/data-writer.interface";
 import { Header } from "./header";
 import { InvalidHeaderException } from "./exceptions/invalid-header-exception";
@@ -13,6 +15,7 @@ import { DataReader } from "../buffers/data-reader.interface";
  */
 export class BinaryHeaderSerializer {
     private static readonly SNAPSHOT_FLAG: number = 128;
+
     private static readonly MAX_ENTITY_ID: number = 15;
 
     /**
@@ -32,11 +35,11 @@ export class BinaryHeaderSerializer {
      * @param {DataWriter} writer - The data buffer writer to which the header will be written.
      * @param {number} entityId - The entity ID to be included in the header.
      * @param {boolean} snapshot - A boolean value indicating whether the data represents a snapshot.
-     * @throws {RangeError} Thrown when the entityId argument exceeds the maximum value of 15.
+     * @throws {InvalidHeaderException} Thrown when entityId is not an integer between 0 and 15.
      */
     encode(writer: DataWriter, entityId: number, snapshot: boolean): void {
-        if (entityId > BinaryHeaderSerializer.MAX_ENTITY_ID) {
-            throw new RangeError(`The entityId argument cannot exceed ${BinaryHeaderSerializer.MAX_ENTITY_ID} because the header serializer uses exactly four bits for entityId value.`);
+        if (!is.integer(entityId) || entityId < 0 || entityId > BinaryHeaderSerializer.MAX_ENTITY_ID) {
+            throw new InvalidHeaderException(BinaryHeaderSerializer.MAX_ENTITY_ID);
         }
 
         let combined = entityId;
