@@ -1,4 +1,4 @@
-import { DataBufferWriter, DataBufferReader, SchemaItemListPrimitive, BinarySerializerInt } from "../../../src";
+import { BinarySerializerNullable, DataBufferWriter, DataBufferReader, SchemaItemListPrimitive, BinarySerializerInt } from "../../../src";
 
 class TestEntity {
     intListProperty?: number[] | null;
@@ -53,6 +53,44 @@ describe('SchemaItemListPrimitiveTests', () => {
 
             expect(isListMissing).toBe(false);
             expect(isListNull).toBe(true);
+        });
+
+        it('should serialize an item appended to a primitive list', () => {
+            const previous = new TestEntity();
+            previous.intListProperty = [1];
+
+            const current = new TestEntity();
+            current.intListProperty = [1, 2];
+
+            schemaItemListPrimitive.encodeChanges(writer, current, previous);
+            schemaItemListPrimitive.decode(reader, previous);
+
+            expect(previous.intListProperty).toEqual(current.intListProperty);
+        });
+
+        it('should encode null nullable items instead of marking them as missing', () => {
+            const nullableList = new SchemaItemListPrimitive<{ intListProperty: Array<number | null> }, number | null>(
+                'intListProperty',
+                new BinarySerializerNullable(new BinarySerializerInt())
+            );
+            const previous = { intListProperty: [null, 1] };
+            const current = { intListProperty: [null, 2] };
+
+            nullableList.encodeChanges(writer, current, previous);
+
+            const listMissing = reader.readBit();
+            const listNull = reader.readBit();
+            const count = new DataView(reader.readBytes(4).buffer).getInt32(0, true);
+            const firstItemMissing = reader.readBit();
+            const firstItemNull = reader.readBit();
+
+            expect({ listMissing, listNull, count, firstItemMissing, firstItemNull }).toEqual({
+                listMissing: false,
+                listNull: false,
+                count: 2,
+                firstItemMissing: false,
+                firstItemNull: true
+            });
         });
     });
 

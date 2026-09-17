@@ -90,6 +90,19 @@ describe('SchemaTests', () => {
             expect(actualValue).toEqual(expectedValue);
         });
 
+        it('should restore the reader position after reading a valid key', () => {
+            const entity = new TestEntity();
+            entity.keyProperty = 'Key';
+            entity.valueProperty = 'Value';
+
+            const writer = new DataBufferWriter(new Uint8Array(100));
+            const reader = new DataBufferReader(schema.serialize(writer, entity));
+
+            schema.readKey<string>(reader, 'keyProperty');
+
+            expect(reader.bytesRead).toBe(0);
+        });
+
         it('should throw KeyUndefinedException with an invalid key', () => {
             const entity = new TestEntity();
             entity.keyProperty = 'Key';

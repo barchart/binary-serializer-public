@@ -85,6 +85,25 @@ public class SchemaItemListPrimitiveTests
         Assert.True(isListNull);
     }
 
+    [Fact]
+    public void Encode_WithItemAppendedToList_SerializesAppendedItem()
+    {
+        TestEntity previous = new()
+        {
+            IntListProperty = [1]
+        };
+
+        TestEntity current = new()
+        {
+            IntListProperty = [1, 2]
+        };
+
+        _schemaItemListPrimitive.Encode(_writer, current, previous);
+        _schemaItemListPrimitive.Decode(_reader, previous);
+
+        Assert.Equal(current.IntListProperty, previous.IntListProperty);
+    }
+
     #endregion
 
     #region Test Methods (Decode)
