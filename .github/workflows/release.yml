@@ -71,10 +71,10 @@ jobs:
           mkdir -p ../artifacts/npm
           npm pack --pack-destination ../artifacts/npm
 
-      - name: Upload unsigned NuGet package
+      - name: Upload NuGet package
         uses: actions/upload-artifact@v4
         with:
-          name: unsigned-nuget-package
+          name: nuget-package
           path: artifacts/nuget/*.nupkg
 
       - name: Upload npm package
@@ -83,75 +83,18 @@ jobs:
           name: npm-package
           path: artifacts/npm/*.tgz
 
-  sign:
-    name: Sign package
-    needs: build
-    runs-on: windows-latest
-
-    steps:
-      - name: Download unsigned package
-        uses: actions/download-artifact@v4
-        with:
-          name: unsigned-nuget-package
-          path: artifacts/nuget
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x
-
-      - name: Install signing tools
-        shell: pwsh
-        run: dotnet tool install --tool-path tools --version 0.9.1-beta.26431.1 sign
-
-      - name: Login to Azure
-        uses: azure/login@v3
-        with:
-          allow-no-subscriptions: true
-          enable-AzPSSession: true
-          creds: >-
-            {"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}
-
-      - name: Sign package
-        uses: azure/powershell@v3
-        env:
-          SIGNING_ENDPOINT: ${{ secrets.AZURE_ENDPOINT }}
-          SIGNING_ACCOUNT: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
-          SIGNING_CERTIFICATE_PROFILE: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
-        with:
-          azPSVersion: latest
-          inlineScript: |
-            ./tools/sign code artifact-signing *.nupkg `
-              -ase $env:SIGNING_ENDPOINT `
-              -asa $env:SIGNING_ACCOUNT `
-              -ascp $env:SIGNING_CERTIFICATE_PROFILE `
-              -act azure-powershell `
-              --base-directory "${{ github.workspace }}/artifacts/nuget"
-
-      - name: Verify package signature
-        shell: pwsh
-        run: |
-          $package = Get-ChildItem artifacts/nuget/*.nupkg
-          dotnet nuget verify --all $package.FullName
-
-      - name: Upload signed package
-        uses: actions/upload-artifact@v4
-        with:
-          name: signed-nuget-package
-          path: artifacts/nuget/*.nupkg
-
   publish-nuget:
     name: Publish NuGet package
-    needs: sign
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       id-token: write
 
     steps:
-      - name: Download signed package
+      - name: Download NuGet package
         uses: actions/download-artifact@v4
         with:
-          name: signed-nuget-package
+          name: nuget-package
           path: artifacts/nuget
 
       - name: Setup .NET
@@ -174,7 +117,7 @@ jobs:
 
   publish-npm:
     name: Publish npm package
-    needs: sign
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
