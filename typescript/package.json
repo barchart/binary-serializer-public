@@ -41,17 +41,17 @@
 		"big.js": "^7.0.1"
 	},
 	"devDependencies": {
-		"@eslint/js": "^10.0.1",
+		"@eslint/js": "^9.21.0",
 		"@types/big.js": "^7.0.0",
 		"@types/eslint__js": "^9.14.0",
 		"@types/node": "^22.13.9",
 		"@typescript-eslint/eslint-plugin": "^8.26.0",
 		"@typescript-eslint/parser": "^8.26.0",
-		"eslint": "^10.10.0",
+		"eslint": "^9.21.0",
 		"ts-node": "^10.9.2",
-		"typescript": "^7.0.2",
+		"typescript": "^5.8.2",
 		"typescript-eslint": "^8.26.0",
-		"vitest": "^5.0.1"
+		"vitest": "^3.0.7"
 	},
 	"license": "MIT",
 	"keywords": [
