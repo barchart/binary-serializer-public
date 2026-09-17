@@ -8,7 +8,7 @@
  */
 export class InvalidByteArrayLengthException extends RangeError {
     constructor(length: number) {
-        super(`The byte array length must be positive. The length was ${length}.`);
+        super(`The byte array length must be positive. The length was ${ length }.`);
 
         this.name = new.target.name;
     }

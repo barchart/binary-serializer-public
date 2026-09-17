@@ -13,7 +13,7 @@ public class MissingKeyMembersException : InvalidOperationException
     /// <param name="entityType">
     ///     The type of the entity.
     /// </param>
-    public MissingKeyMembersException(Type entityType) : base($"The entity type '{entityType.Name}' does not have any properties or fields marked as keys with the {nameof(SerializeAttribute)}'.")
+    public MissingKeyMembersException(Type entityType) : base($"The entity type '{ entityType.Name }' does not have any properties or fields marked as keys with the { nameof(SerializeAttribute) }'.")
     {
         
     }

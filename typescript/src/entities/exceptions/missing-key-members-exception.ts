@@ -7,7 +7,7 @@
  */
 export class MissingKeyMembersException extends Error {
     constructor(entityType: string) {
-        super(`The entity type '${entityType}' does not have any properties or fields marked as keys.`);
+        super(`The entity type '${ entityType }' does not have any properties or fields marked as keys.`);
 
         this.name = new.target.name;
     }

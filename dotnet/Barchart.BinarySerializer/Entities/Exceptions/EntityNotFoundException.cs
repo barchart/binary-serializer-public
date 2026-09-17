@@ -22,7 +22,7 @@ public class EntityNotFoundException<TEntity> : InvalidOperationException where 
     /// <param name="key">
     ///     The key of the entity.
     /// </param>
-    public EntityNotFoundException(IEntityKey<TEntity> key) : base($"The entity manager [ {nameof(TEntity)} ] does not contain the desired entity [ ${key} ].")
+    public EntityNotFoundException(IEntityKey<TEntity> key) : base($"The entity manager [ { nameof(TEntity) } ] does not contain the desired entity [ ${ key } ].")
     {
         
     }

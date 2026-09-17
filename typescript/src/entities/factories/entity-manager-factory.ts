@@ -28,6 +28,7 @@ export class EntityManagerFactory {
 
         const keyExtractor = (entity: TEntity): EntityKey<TEntity> => {
             const keyValues = keyFields.map(field => (entity as any)[field.name]);
+   
             return new EntityKey<TEntity>(keyValues);
         };
 
