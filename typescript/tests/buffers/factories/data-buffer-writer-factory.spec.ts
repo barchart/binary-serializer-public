@@ -15,6 +15,10 @@ describe('DataBufferWriterFactoryTests', () => {
     it('should throw an exception when instantiated with negative byte array size', () => {
       expect(() => new DataBufferWriterFactory(-1)).toThrow(RangeError);
     });
+
+    it.each([1.5, NaN, Infinity])('should throw an exception when instantiated with invalid byte array size', size => {
+      expect(() => new DataBufferWriterFactory(size)).toThrow(RangeError);
+    });
   });
 
   describe('Make', () => {

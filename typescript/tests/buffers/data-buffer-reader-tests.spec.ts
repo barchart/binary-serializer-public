@@ -92,6 +92,12 @@ describe('DataBufferReaderTests', () => {
 
       expect(() => dataBuffer.readBytes(3)).toThrow(InsufficientCapacityException);
     });
+
+    it.each([-1, 1.5, NaN, Infinity])('should throw error when the byte count is invalid', size => {
+      const dataBuffer = new DataBufferReader(new Uint8Array(3));
+
+      expect(() => dataBuffer.readBytes(size)).toThrow(RangeError);
+    });
   });
 
   describe('Multiple - ReadBit + ReadByte', () => {

@@ -82,6 +82,12 @@ describe('DataBufferWriterTests', () => {
 
       expect(() => dataBuffer.writeByte(0xFF)).toThrow(InsufficientCapacityException);
     });
+
+    it.each([-1, 1.5, 256, NaN, Infinity])('should throw error when the byte value is invalid', value => {
+      const dataBuffer = new DataBufferWriter(new Uint8Array(1));
+
+      expect(() => dataBuffer.writeByte(value)).toThrow(RangeError);
+    });
   });
 
   describe('WriteBytes', () => {
