@@ -1,3 +1,5 @@
+import * as is from "@barchart/common-js/lang/is";
+
 import { DataWriter } from "./data-writer.interface";
 import { InsufficientCapacityException } from "./exceptions/insufficient-capacity-exception";
 
@@ -48,6 +50,10 @@ export class DataBufferWriter implements DataWriter {
     }
 
     writeByte(value: number): void {
+        if (!is.integer(value) || value < 0 || value > 0xFF) {
+            throw new RangeError(`The byte value must be an integer between 0 and 255. The value was ${ value }.`);
+        }
+
         if (this.capacityWouldBeExceeded(this.positionBit === 0 ? 0 : 1)) {
             throw new InsufficientCapacityException(true);
         }

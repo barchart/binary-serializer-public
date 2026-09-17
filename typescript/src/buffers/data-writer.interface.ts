@@ -27,6 +27,7 @@ export interface DataWriter {
      *
      * @public
      * @param {number} value - The byte value to write.
+     * @throws {RangeError} if value is not an integer between 0 and 255.
      * @throws {InsufficientCapacityException} if attempting to write beyond the buffer length.
      */
     writeByte(value: number): void;

@@ -1,3 +1,5 @@
+import * as is from "@barchart/common-js/lang/is";
+
 import { DataWriter } from "../data-writer.interface";
 import { DataWriterFactory } from "./data-writer-factory.interface";
 import { DataBufferWriter } from "../data-buffer-writer";
@@ -10,7 +12,7 @@ import { InvalidByteArrayLengthException } from "../exceptions/invalid-byte-arra
  * @exported
  * @implements {DataWriterFactory}
  * @param {number} byteArrayLength - The length of the byte array to use for each DataWriter.
- * @throws {InvalidByteArrayLengthException} If the byte array length is less than 1.
+ * @throws {InvalidByteArrayLengthException} If the byte array length is not a positive integer.
  */
 export class DataBufferWriterFactory implements DataWriterFactory {
     private static readonly DEFAULT_BYTE_ARRAY_LENGTH: number = 512 * 1024;
@@ -19,7 +21,7 @@ export class DataBufferWriterFactory implements DataWriterFactory {
     private readonly byteArrayLength: number;
 
     constructor(byteArrayLength: number = DataBufferWriterFactory.DEFAULT_BYTE_ARRAY_LENGTH) {
-        if (byteArrayLength < 1) {
+        if (!is.integer(byteArrayLength) || byteArrayLength < 1) {
             throw new InvalidByteArrayLengthException(byteArrayLength);
         }
         

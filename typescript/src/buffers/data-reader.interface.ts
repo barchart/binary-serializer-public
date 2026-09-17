@@ -40,6 +40,7 @@ export interface DataReader {
      * @public
      * @param {number} size - The number of bytes to read.
      * @returns {Uint8Array} The array of bytes read from the buffer.
+     * @throws {RangeError} if size is not a non-negative integer.
      * @throws {InsufficientCapacityException} if attempting to read beyond the buffer length.
      */
     readBytes(size: number): Uint8Array;

@@ -1,3 +1,5 @@
+import * as is from "@barchart/common-js/lang/is";
+
 import { DataReader } from "./data-reader.interface";
 import { InsufficientCapacityException } from "./exceptions/insufficient-capacity-exception";
 
@@ -48,6 +50,10 @@ export class DataBufferReader implements DataReader {
     }
 
     readBytes(size: number): Uint8Array {
+        if (!is.integer(size) || size < 0) {
+            throw new RangeError(`The byte count must be a non-negative integer. The value was ${ size }.`);
+        }
+
         if (size === 0) {
             return new Uint8Array(0);
         }
