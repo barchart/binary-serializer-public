@@ -227,7 +227,7 @@ public class SchemaItemListPrimitive<TEntity, TItem> : ISchemaItem<TEntity> wher
 
         for (int i = 0; i < numberOfElements; i++)
         {
-            WriteItem(writer, currentItems[i], previousItems != null ? previousItems[i] : default!);
+            WriteItem(writer, currentItems[i], previousItems != null && i < previousItems.Count ? previousItems[i] : default!);
         }
     }
 

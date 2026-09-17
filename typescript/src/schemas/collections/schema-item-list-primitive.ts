@@ -148,7 +148,7 @@ export class SchemaItemListPrimitive<TEntity, TItem> implements SchemaItemDefini
     }
 
     private writeItem(writer: DataWriter, currentItem: TItem, previousItem?: TItem): void {
-        if (currentItem !== undefined && previousItem !== undefined && this.elementSerializer.getEquals(currentItem, previousItem)) {
+        if (currentItem != null && previousItem != null && this.elementSerializer.getEquals(currentItem, previousItem)) {
             Serialization.writeMissingFlag(writer, true);
         } else {
             Serialization.writeMissingFlag(writer, false);

@@ -121,21 +121,24 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     readKey<TMember>(reader: DataReader, name: string): TMember {
         const bookmark: Bookmark = reader.bookmark();
 
-        const header = this.readHeader(reader);
-        this.checkHeader(header);
+        try {
+            const header = this.readHeader(reader);
+            this.checkHeader(header);
 
-        const target = {} as TEntity;
+            const target = { } as TEntity;
 
-        for (const candidate of this.keyItems) {
-            candidate.decode(reader, target, false);
+            for (const candidate of this.keyItems) {
+                candidate.decode(reader, target, false);
 
-            if (candidate.name === name && 'read' in candidate) {
-                return (candidate as SchemaItemWithKeyDefinition<TEntity, TMember>).read(target);
+                if (candidate.name === name && 'read' in candidate) {
+                    return (candidate as SchemaItemWithKeyDefinition<TEntity, TMember>).read(target);
+                }
             }
-        }
 
-        bookmark.dispose();
-        throw new KeyUndefinedException(name);
+            throw new KeyUndefinedException(name);
+        } finally {
+            bookmark.dispose();
+        }
     }
 
     getEquals(a: TEntity, b: TEntity): boolean {

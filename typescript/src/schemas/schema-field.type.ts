@@ -57,6 +57,11 @@ export type SchemaListField =
      * This property is optional.
      */
     elementType: Exclude<DataType, DataType.object | DataType.enum>;
+
+    /**
+     * Indicates whether list elements are nullable.
+     */
+    nullable?: boolean;
 }
     | {
     /**
@@ -99,6 +104,11 @@ export type SchemaListField =
      * The enumeration type if the field is a list of enumerations.
      */
     enumType: new (...args: any[]) => Enum;
+
+    /**
+     * Indicates whether list elements are nullable.
+     */
+    nullable?: boolean;
 };
 
 /**

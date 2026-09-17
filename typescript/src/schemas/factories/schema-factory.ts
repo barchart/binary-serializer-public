@@ -62,11 +62,18 @@ export class SchemaFactory implements SerializationSchemaFactory {
         }
 
         if (this.isListPrimitive(field) && "elementType" in field) {
-            field = field as SchemaListField;
+            const listField = field as SchemaListField;
+            const nullable = "nullable" in listField && listField.nullable === true;
 
-            const serializer = field.elementType === DataType.enum ? this.binaryTypeSerializerFactory.make(field.elementType, field.enumType) : this.binaryTypeSerializerFactory.make(field.elementType);
+            let serializer;
 
-            return new SchemaItemListPrimitive<TEntity, any>(field.name, serializer);
+            if (listField.elementType === DataType.enum) {
+                serializer = nullable ? this.binaryTypeSerializerFactory.makeNullable(listField.elementType, listField.enumType) : this.binaryTypeSerializerFactory.make(listField.elementType, listField.enumType);
+            } else {
+                serializer = nullable ? this.binaryTypeSerializerFactory.makeNullable(listField.elementType) : this.binaryTypeSerializerFactory.make(listField.elementType);
+            }
+
+            return new SchemaItemListPrimitive<TEntity, any>(listField.name, serializer);
         }
 
         return this.createPrimitiveMemberData<TEntity>(field as SchemaPrimitiveField);
@@ -130,7 +137,10 @@ export class SchemaFactory implements SerializationSchemaFactory {
         let comparison = Number(a.key) - Number(b.key);
 
         if (comparison === 0) {
-            comparison = a.name.localeCompare(b.name);
+            const nameA = a.name.toUpperCase();
+            const nameB = b.name.toUpperCase();
+
+            comparison = nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
         }
 
         return comparison;
