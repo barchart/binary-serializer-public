@@ -32,6 +32,7 @@ public class Schema<TEntity> : ISchema<TEntity> where TEntity : class, new()
     /// <inheritdoc cref="Schema{TEntity}(byte, ISchemaItem{TEntity}[])"/>
     public Schema(ISchemaItem<TEntity>[] items) : this(0, items)
     {
+        
     }
 
     /// <summary>

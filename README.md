@@ -33,7 +33,7 @@ public class Person
 
 Here is an example of what the byte representation might look like:
 
-```aiignore
+```text
 10000000 00000001 01000000 00010000 10011100 10011110 01011000 01011011 10000110 00100000 00001000
 ```
 ### Byte Representation:
@@ -62,6 +62,12 @@ For each non-key nullable property, two bits are reserved to indicate its state:
 
 > Key properties and non-nullable value types (e.g., int, bool, etc.) have a different binary representation. They are always present so they do not have an `IsMissing flag`, only an `IsNull` flag.
 
-### License
+## Release Process
+
+- Create `.releases/<version>.md` with the release notes.
+- Run `./tools/release.sh <version>` from the repository root. The script updates the versions in the .NET project and `typescript/package.json`, creates the release commit and tag, and pushes them to `main`.
+- Publish a [GitHub Release](https://github.com/barchart/binary-serializer-public/releases) from that tag. The release workflow tests both implementations and publishes the packages to NuGet and npm.
+
+## License
 
 This software is available for use under the MIT license.
