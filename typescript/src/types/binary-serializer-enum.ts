@@ -13,16 +13,18 @@ import Enum from '@barchart/common-js/lang/Enum';
  * @template T - The enumeration type.
  */
 export class BinarySerializerEnum<T extends Enum> implements BinaryTypeSerializer<T> {
-    get sizeInBytes(): number {
-        return this.binarySerializerNumber instanceof BinarySerializerByte ? 1 : 4;
-    }
-
     private readonly binarySerializerNumber: BinaryTypeSerializer<number>;
+    
     private readonly enumType: new (...args: any[]) => T;
 
     constructor(binarySerializerNumber: BinaryTypeSerializer<number>, enumType: new (...args: any[]) => T) {
         this.binarySerializerNumber = binarySerializerNumber;
+     
         this.enumType = enumType;
+    }
+
+    get sizeInBytes(): number {
+        return this.binarySerializerNumber instanceof BinarySerializerByte ? 1 : 4;
     }
 
     encode(writer: DataWriter, value: T): void {

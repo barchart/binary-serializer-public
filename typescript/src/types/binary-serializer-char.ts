@@ -34,6 +34,7 @@ export class BinarySerializerChar implements BinaryTypeSerializer<string> {
         if (a.length !== 1 || b.length !== 1) {
             throw new Error('Values must be single characters.');
         }
+     
         return a === b;
     }
 }

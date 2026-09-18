@@ -33,9 +33,11 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
     constructor(entityIdOrItems: number | SchemaItemDefinition<TEntity>[], items?: SchemaItemDefinition<TEntity>[]) {
         if (typeof entityIdOrItems === 'number') {
             this.entityId = entityIdOrItems;
+          
             items = items!;
         } else {
             this.entityId = 0;
+           
             items = entityIdOrItems;
         }
 
@@ -100,6 +102,7 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
 
         if (reader.bytesRead === 0) {
             const header = this.readHeader(reader);
+         
             this.checkHeader(header);
         }
 
@@ -123,6 +126,7 @@ export class Schema<TEntity extends object> implements SchemaDefinition<TEntity>
 
         try {
             const header = this.readHeader(reader);
+           
             this.checkHeader(header);
 
             const target = { } as TEntity;

@@ -2,7 +2,15 @@ import { DataReader } from "../buffers/data-reader.interface";
 import { DataWriter } from "../buffers/data-writer.interface";
 import { BinarySerializerInt } from "./binary-serializer-int";
 import { BinaryTypeSerializer } from "./binary-type-serializer.interface";
-import Big from 'big.js';
+import Big from "big.js";
+
+const SIZE_IN_BYTES = 16;
+const MAX_SCALE = 28;
+const WORD_SIZE = new Big(2).pow(32);
+const MAX_SIGNED_WORD = 0x7FFFFFFF;
+const SIGN_FLAG = -0x80000000;
+const SCALE_BIT_OFFSET = 16;
+const SCALE_MASK = 0xFF;
 
 /**
  * Reads (and writes) decimal values to (and from) a binary data source.
@@ -12,23 +20,16 @@ import Big from 'big.js';
  * @implements {BinaryTypeSerializer<Big>}
  */
 export class BinarySerializerDecimal implements BinaryTypeSerializer<Big> {
-    private binarySerializerInt: BinarySerializerInt;
-
-    constructor() {
-        this.binarySerializerInt = new BinarySerializerInt();
-    }
+    private readonly binarySerializerInt = new BinarySerializerInt();
     
     get sizeInBytes(): number {
-        return 16;
+        return SIZE_IN_BYTES;
     }
 
     encode(writer: DataWriter, value: Big): void {
-        const components = this.getDecimalComponents(value);
-
-        this.binarySerializerInt.encode(writer, components[0]);
-        this.binarySerializerInt.encode(writer, components[1]);
-        this.binarySerializerInt.encode(writer, components[2]);
-        this.binarySerializerInt.encode(writer, components[3]);
+        for (const component of this.getDecimalComponents(value)) {
+            this.binarySerializerInt.encode(writer, component);
+        }
     }
 
     decode(reader: DataReader): Big {
@@ -48,45 +49,43 @@ export class BinarySerializerDecimal implements BinaryTypeSerializer<Big> {
 
     getDecimalComponents(value: Big): number[] {
         const parts = value.toFixed().split('.');
-        const precision = parts[1]?.length ?? 0;
+        const scale = parts[1]?.length ?? 0;
 
-        if (precision > 28) {
+        if (scale > MAX_SCALE) {
             throw new RangeError('Decimal precision cannot exceed 28 decimal places.');
         }
 
-        const wordSize = new Big(2).pow(32);
-        const combinedScaled = value.abs().times(new Big(10).pow(precision));
-        const lowBits = combinedScaled.mod(wordSize);
-        const remainingBits = combinedScaled.minus(lowBits).div(wordSize);
-        const middleBits = remainingBits.mod(wordSize);
-        const highBits = remainingBits.minus(middleBits).div(wordSize);
+        const combinedScaled = value.abs().times(new Big(10).pow(scale));
+        const lowBits = combinedScaled.mod(WORD_SIZE);
+        const remainingBits = combinedScaled.minus(lowBits).div(WORD_SIZE);
+        const middleBits = remainingBits.mod(WORD_SIZE);
+        const highBits = remainingBits.minus(middleBits).div(WORD_SIZE);
 
-        if (highBits.gte(wordSize)) {
+        if (highBits.gte(WORD_SIZE)) {
             throw new RangeError('Decimal value exceeds the 96-bit range.');
         }
 
         const components = [lowBits, middleBits, highBits].map(component => {
-            return component.gt(0x7fffffff) ? component.minus(wordSize).toNumber() : component.toNumber();
+            return component.gt(MAX_SIGNED_WORD) ? component.minus(WORD_SIZE).toNumber() : component.toNumber();
         });
-        const flags = precision * 0x10000 - (value.lt(0) ? 0x80000000 : 0);
+        
+        const flags = (scale << SCALE_BIT_OFFSET) | (value.lt(0) ? SIGN_FLAG : 0);
 
-        return [...components, flags];
+        return [ ...components, flags ];
     }
 
     private constructDecimalFromComponents(components: number[]): Big {
-        const [lowBits, middleBits, highBits, flags] = components;
-        const wordSize = new Big(2).pow(32);
-        const low = new Big(lowBits < 0 ? lowBits + 0x100000000 : lowBits);
-        const middle = new Big(middleBits < 0 ? middleBits + 0x100000000 : middleBits);
-        const high = new Big(highBits < 0 ? highBits + 0x100000000 : highBits);
-        const combinedScaled = high.times(wordSize).plus(middle).times(wordSize).plus(low);
-        const precision = (flags >>> 16) & 0xff;
-        let result = new Big(`${combinedScaled.toFixed()}e-${precision}`);
+        const [ lowBits, middleBits, highBits, flags ] = components;
+      
+        const low = new Big(lowBits >>> 0);
+        const middle = new Big(middleBits >>> 0);
+        const high = new Big(highBits >>> 0);
+      
+        const combinedScaled = high.times(WORD_SIZE).plus(middle).times(WORD_SIZE).plus(low);
+        const scale = (flags >>> SCALE_BIT_OFFSET) & SCALE_MASK;
+    
+        const result = new Big(`${combinedScaled.toFixed()}e-${scale}`);
 
-        if (flags < 0) {
-            result = result.neg();
-        }
-
-        return result;
+        return flags < 0 ? result.neg() : result;
     }
 }

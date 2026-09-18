@@ -28,6 +28,7 @@ export class BinarySerializerDateOnly implements BinaryTypeSerializer<Day> {
 
     decode(reader: DataReader): Day {
         const daysSinceEpoch = this.binarySerializerInt.decode(reader);
+     
         return this.addDaysToEpoch(daysSinceEpoch);
     }
 
@@ -37,11 +38,13 @@ export class BinarySerializerDateOnly implements BinaryTypeSerializer<Day> {
 
     getDaysSinceEpoch(value: Day): number {
         const epoch = new Day(1, 1, 1);
+      
         return Day.countDaysBetween(epoch, value);
     }
 
     private addDaysToEpoch(days: number): Day {
         const epoch = new Day(1, 1, 1);
+      
         return epoch.addDays(days);
     }
 }
