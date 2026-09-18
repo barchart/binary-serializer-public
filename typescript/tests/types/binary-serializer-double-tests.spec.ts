@@ -34,7 +34,7 @@ describe('BinarySerializerDoubleTests', () => {
 
         serializer.encode(writer, value);
 
-        const expectedBytes = new Uint8Array(new Float64Array([value]).buffer);
+        const expectedBytes = Number.isNaN(value) ? new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0xFF]) : new Uint8Array(new Float64Array([value]).buffer);
 
         expect(writer.writeBytes).toHaveBeenCalledWith(expectedBytes);
       });
@@ -88,6 +88,7 @@ describe('BinarySerializerDoubleTests', () => {
       [Number.MIN_VALUE, Number.MIN_VALUE],
       [Number.EPSILON, Number.EPSILON],
       [Math.PI, Math.PI],
+      [NaN, NaN],
       [1, -1],
       [0.1, 0.2]
     ];
@@ -95,7 +96,7 @@ describe('BinarySerializerDoubleTests', () => {
     testCases.forEach(([a, b]) => {
       it(`should match equals output for values: ${a} and ${b}`, () => {
         const actual = serializer.getEquals(a, b);
-        const expected = Object.is(a, b);
+        const expected = a === b || (Number.isNaN(a) && Number.isNaN(b));
 
         expect(actual).toBe(expected);
       });

@@ -1,4 +1,4 @@
-import { BinarySerializerNullable, DataReader, DataWriter } from "../../src";
+import { BinarySerializerNullable, BinarySerializerDateTime, DataReader, DataWriter } from "../../src";
 
 describe('BinarySerializerNullable Tests', () => {
 
@@ -127,6 +127,16 @@ describe('BinarySerializerNullable Tests', () => {
 
             const result = serializer.getEquals(null, null);
             expect(result).toBe(true);
+        });
+
+        it('should safely handle null when inner serializer throws on null (e.g., DateTime)', () => {
+            const serializer = new BinarySerializerNullable(new BinarySerializerDateTime());
+            const now = new Date();
+
+            expect(serializer.getEquals(null, null)).toBe(true);
+            expect(serializer.getEquals(null, now)).toBe(false);
+            expect(serializer.getEquals(now, null)).toBe(false);
+            expect(serializer.getEquals(now, now)).toBe(true);
         });
     });
 });

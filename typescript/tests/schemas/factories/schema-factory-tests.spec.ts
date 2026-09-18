@@ -1,4 +1,13 @@
 import { SchemaFactory, BinaryTypeSerializerFactory, SchemaField, DataType, Schema, DataBufferReader, DataBufferWriter } from "../../../src";
+import Enum from '@barchart/common-js/lang/Enum';
+
+class TestEnum extends Enum {
+    static Value = new TestEnum('Value', 'Value', 1);
+
+    constructor(code: string, description: string, mapping: number) {
+        super(code, description, mapping);
+    }
+}
 
 describe('SchemaFactoryTests', () => {
     let schemaFactory: SchemaFactory;
@@ -85,5 +94,57 @@ describe('SchemaFactoryTests', () => {
         const reader = new DataBufferReader(schema.serialize(writer, source));
 
         expect(schema.deserialize(reader)).toEqual(source);
+    });
+
+    it('should pass the underlying type for an enum field', () => {
+        const serializerFactory = new BinaryTypeSerializerFactory();
+        const make = vi.spyOn(serializerFactory, 'make');
+        const factory = new SchemaFactory(serializerFactory);
+        const fields: SchemaField[] = [
+            { name: 'value', type: DataType.enum, enumType: TestEnum, enumUnderlyingType: DataType.byte }
+        ];
+
+        factory.make(entityId, fields);
+
+        expect(make).toHaveBeenCalledWith(DataType.enum, TestEnum, DataType.byte);
+    });
+
+    it('should pass the underlying type for a nullable enum field', () => {
+        const serializerFactory = new BinaryTypeSerializerFactory();
+        const makeNullable = vi.spyOn(serializerFactory, 'makeNullable');
+        const factory = new SchemaFactory(serializerFactory);
+        const fields: SchemaField[] = [
+            { name: 'value', type: DataType.enum, enumType: TestEnum, enumUnderlyingType: DataType.byte, nullable: true }
+        ];
+
+        factory.make(entityId, fields);
+
+        expect(makeNullable).toHaveBeenCalledWith(DataType.enum, TestEnum, DataType.byte);
+    });
+
+    it('should pass the underlying type for enum list elements', () => {
+        const serializerFactory = new BinaryTypeSerializerFactory();
+        const make = vi.spyOn(serializerFactory, 'make');
+        const factory = new SchemaFactory(serializerFactory);
+        const fields: SchemaField[] = [
+            { name: 'values', type: DataType.list, elementType: DataType.enum, enumType: TestEnum, enumUnderlyingType: DataType.byte }
+        ];
+
+        factory.make(entityId, fields);
+
+        expect(make).toHaveBeenCalledWith(DataType.enum, TestEnum, DataType.byte);
+    });
+
+    it('should pass the underlying type for nullable enum list elements', () => {
+        const serializerFactory = new BinaryTypeSerializerFactory();
+        const makeNullable = vi.spyOn(serializerFactory, 'makeNullable');
+        const factory = new SchemaFactory(serializerFactory);
+        const fields: SchemaField[] = [
+            { name: 'values', type: DataType.list, elementType: DataType.enum, enumType: TestEnum, enumUnderlyingType: DataType.byte, nullable: true }
+        ];
+
+        factory.make(entityId, fields);
+
+        expect(makeNullable).toHaveBeenCalledWith(DataType.enum, TestEnum, DataType.byte);
     });
 });

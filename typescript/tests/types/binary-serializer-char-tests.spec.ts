@@ -65,6 +65,19 @@ describe('BinarySerializerCharTests', () => {
             expect(deserialized).toEqual(value);
         });
     });
+
+    it('should read from the returned byte array view offset', () => {
+        const bytes = new Uint8Array([0xFF, 0x41, 0x00, 0xFF]);
+        const reader = {
+            readBytes: vi.fn(() => bytes.subarray(1, 3)),
+            readBit: vi.fn(),
+            readByte: vi.fn(),
+            bookmark: vi.fn(),
+            bytesRead: 0
+        };
+
+        expect(serializer.decode(reader)).toBe('A');
+    });
   });
 
   describe('GetEquals', () => {

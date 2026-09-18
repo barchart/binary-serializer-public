@@ -1,4 +1,4 @@
-import { BinarySerializerSByte } from "../../src";
+import { BinarySerializerSByte, DataBufferWriter, DataBufferReader } from "../../src";
 
 describe('BinarySerializerSByteTests', () => {
     let serializer: BinarySerializerSByte;
@@ -40,7 +40,7 @@ describe('BinarySerializerSByteTests', () => {
                 expect(bytesArrayWritten.length).toBe(0);
 
                 expect(byteWritten.length).toBe(1);
-                expect(byteWritten[0]).toBe(value);
+                expect(byteWritten[0]).toBe(value & 0xFF);
             });
         });
     });
@@ -63,11 +63,27 @@ describe('BinarySerializerSByteTests', () => {
                     bookmark: vi.fn(),
                     bytesRead: 0
                 };
-                reader.readByte.mockReturnValue(expectedValue);
+                reader.readByte.mockReturnValue(expectedValue & 0xFF);
 
                 const actualValue = serializer.decode(reader);
 
                 expect(actualValue).toBe(expectedValue);
+            });
+        });
+    });
+
+    describe('Roundtrip with real DataBufferWriter and DataBufferReader', () => {
+        const testCases = [127, -128, 0, -1, 1, -42, 42];
+
+        testCases.forEach((value) => {
+            it(`should roundtrip ${value} correctly`, () => {
+                const writer = new DataBufferWriter(new Uint8Array(1));
+                serializer.encode(writer, value);
+
+                const reader = new DataBufferReader(writer.toBytes());
+                const decoded = serializer.decode(reader);
+
+                expect(decoded).toBe(value);
             });
         });
     });

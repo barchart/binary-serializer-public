@@ -86,6 +86,18 @@ describe('BinarySerializerEnumTests', () => {
                 expect(actualValue).toBe(expectedValue);
             });
         });
+
+        it('should reject an enum mapping that is not declared locally', () => {
+            const reader = {
+                readBytes: vi.fn(() => new Uint8Array(new Int32Array([99]).buffer)),
+                readBit: vi.fn(),
+                readByte: vi.fn(),
+                bookmark: vi.fn(),
+                bytesRead: 0
+            };
+
+            expect(() => serializer.decode(reader)).toThrow(RangeError);
+        });
     });
 
     describe('GetEquals', () => {
