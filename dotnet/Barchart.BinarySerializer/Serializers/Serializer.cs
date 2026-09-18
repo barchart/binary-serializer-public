@@ -39,7 +39,7 @@ public class Serializer<TEntity> where TEntity : class, new()
     /// </param>
     public Serializer(byte entityId = 0)
     {
-        ISchemaFactory schemaFactory = new SchemaFactory();
+        SchemaFactory schemaFactory = new();
         
         _schema = schemaFactory.Make<TEntity>(entityId);
         
