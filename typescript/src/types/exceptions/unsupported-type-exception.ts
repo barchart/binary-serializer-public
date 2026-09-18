@@ -11,7 +11,7 @@ import { DataType } from "../data-types";
  */
 export class UnsupportedTypeException extends Error {
     constructor(unsupported: DataType) {
-        super(`Unable to create a serializer for the (${unsupported}) type.`);
+        super(`Unable to create a serializer for the (${ unsupported }) type.`);
 
         this.name = new.target.name;
     }

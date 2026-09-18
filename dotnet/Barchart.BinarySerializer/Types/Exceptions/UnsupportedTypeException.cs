@@ -20,7 +20,7 @@ public class UnsupportedTypeException : InvalidOperationException
     /// <param name="unsupported">
     ///     The type that is not supported.
     /// </param>
-    public UnsupportedTypeException(Type unsupported) : base($"Unable to create a serializer for the ({unsupported.Name}) type.")
+    public UnsupportedTypeException(Type unsupported) : base($"Unable to create a serializer for the ({ unsupported.Name }) type.")
     {
         
     }

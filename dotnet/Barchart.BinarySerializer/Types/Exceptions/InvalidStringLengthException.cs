@@ -16,7 +16,7 @@ public class InvalidStringLengthException : ArgumentException
     /// <param name="maximumStringLengthInBytes">
     ///     The maximum size of a serialized string.
     /// </param>
-    public InvalidStringLengthException(int length, int maximumStringLengthInBytes) : base($"Unable to serialize string. Serialized string would require {length} bytes; however, the maximum size of a serialized string is {maximumStringLengthInBytes}")
+    public InvalidStringLengthException(int length, int maximumStringLengthInBytes) : base($"Unable to serialize string. Serialized string would require { length } bytes; however, the maximum size of a serialized string is { maximumStringLengthInBytes }")
     {
         
     }
