@@ -73,7 +73,9 @@ describe('SchemaFactoryTests', () => {
             { name: '_value', type: DataType.int },
             { name: 'zValue', type: DataType.int }
         ];
+     
         const schema = schemaFactory.make<{ _value: number; zValue: number }>(entityId, fields);
+        
         const writer = new DataBufferWriter(new Uint8Array(100));
         const reader = new DataBufferReader(schema.serialize(writer, { _value: 1, zValue: 2 }));
 
@@ -88,8 +90,11 @@ describe('SchemaFactoryTests', () => {
             { name: 'id', type: DataType.int, isKey: true },
             { name: 'values', type: DataType.list, elementType: DataType.int, nullable: true }
         ];
+       
         const schema = schemaFactory.make<{ id: number; values: Array<number | null> }>(entityId, fields);
-        const source = { id: 1, values: [1, null, 2] };
+      
+        const source = { id: 1, values: [ 1, null, 2 ] };
+       
         const writer = new DataBufferWriter(new Uint8Array(100));
         const reader = new DataBufferReader(schema.serialize(writer, source));
 
@@ -98,7 +103,9 @@ describe('SchemaFactoryTests', () => {
 
     it('should pass the underlying type for an enum field', () => {
         const serializerFactory = new BinaryTypeSerializerFactory();
+        
         const make = vi.spyOn(serializerFactory, 'make');
+       
         const factory = new SchemaFactory(serializerFactory);
         const fields: SchemaField[] = [
             { name: 'value', type: DataType.enum, enumType: TestEnum, enumUnderlyingType: DataType.byte }
@@ -112,6 +119,7 @@ describe('SchemaFactoryTests', () => {
     it('should pass the underlying type for a nullable enum field', () => {
         const serializerFactory = new BinaryTypeSerializerFactory();
         const makeNullable = vi.spyOn(serializerFactory, 'makeNullable');
+       
         const factory = new SchemaFactory(serializerFactory);
         const fields: SchemaField[] = [
             { name: 'value', type: DataType.enum, enumType: TestEnum, enumUnderlyingType: DataType.byte, nullable: true }
@@ -125,6 +133,7 @@ describe('SchemaFactoryTests', () => {
     it('should pass the underlying type for enum list elements', () => {
         const serializerFactory = new BinaryTypeSerializerFactory();
         const make = vi.spyOn(serializerFactory, 'make');
+      
         const factory = new SchemaFactory(serializerFactory);
         const fields: SchemaField[] = [
             { name: 'values', type: DataType.list, elementType: DataType.enum, enumType: TestEnum, enumUnderlyingType: DataType.byte }
@@ -138,6 +147,7 @@ describe('SchemaFactoryTests', () => {
     it('should pass the underlying type for nullable enum list elements', () => {
         const serializerFactory = new BinaryTypeSerializerFactory();
         const makeNullable = vi.spyOn(serializerFactory, 'makeNullable');
+        
         const factory = new SchemaFactory(serializerFactory);
         const fields: SchemaField[] = [
             { name: 'values', type: DataType.list, elementType: DataType.enum, enumType: TestEnum, enumUnderlyingType: DataType.byte, nullable: true }

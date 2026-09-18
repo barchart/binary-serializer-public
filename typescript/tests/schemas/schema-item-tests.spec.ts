@@ -32,8 +32,10 @@ describe('SchemaItemTests', () => {
 
         it('should throw KeyMismatchException with different key values', () => {
             const schemaItem = new SchemaItem<TestEntity, string>("name", true, serializerMock);
+           
             const current = new TestEntity();
             current.name = "CurrentValue";
+           
             const previous = new TestEntity();
             previous.name = "PreviousValue";
 
@@ -43,8 +45,10 @@ describe('SchemaItemTests', () => {
         it('should write data with identical key values', () => {
             const schemaItem = new SchemaItem<TestEntity, string>("name", true, serializerMock);
             const value = "SameValue";
+           
             const current = new TestEntity();
             current.name = value;
+           
             const previous = new TestEntity();
             previous.name = value;
 
@@ -75,6 +79,7 @@ describe('SchemaItemTests', () => {
             serializerMock.getEquals = vi.fn().mockReturnValue(false);
 
             const schemaItem = new SchemaItem<TestEntity, string>("name", true, serializerMock);
+           
             const target = new TestEntity();
             target.name = "OriginalValue";
 
@@ -88,6 +93,7 @@ describe('SchemaItemTests', () => {
             serializerMock.getEquals = vi.fn().mockReturnValue(true);
 
             const schemaItem = new SchemaItem<TestEntity, string>("name", true, serializerMock);
+            
             const target = new TestEntity();
             target.name = decodedValue;
 
@@ -102,8 +108,10 @@ describe('SchemaItemTests', () => {
             serializerMock.getEquals = vi.fn().mockReturnValue(true);
 
             const schemaItem = new SchemaItem<TestEntity, string>("name", false, serializerMock);
+            
             const a = new TestEntity();
             a.name = "Value";
+           
             const b = new TestEntity();
             b.name = "Value";
 
@@ -116,8 +124,10 @@ describe('SchemaItemTests', () => {
             serializerMock.getEquals = vi.fn().mockReturnValue(false);
 
             const schemaItem = new SchemaItem<TestEntity, string>("name", false, serializerMock);
+           
             const a = new TestEntity();
             a.name = "ValueA";
+           
             const b = new TestEntity();
             b.name = "ValueB";
 
@@ -130,6 +140,7 @@ describe('SchemaItemTests', () => {
     describe('Read', () => {
         it('should return expected entity with valid data', () => {
             const schemaItem = new SchemaItem<TestEntity, string>("name", true, serializerMock);
+            
             const target = new TestEntity();
             target.name = "CurrentValue";
 
@@ -140,6 +151,7 @@ describe('SchemaItemTests', () => {
 
         it('should return wrong entity with wrong data', () => {
             const schemaItem = new SchemaItem<TestEntity, string>("name", true, serializerMock);
+       
             const targetInvalid = new TestEntity();
             targetInvalid.name = "CurrentInvalid";
 

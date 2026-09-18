@@ -154,6 +154,7 @@ describe('EntityManager', () => {
         entity.value = 0b11111000;
         entityManager.difference(entity);
         entity.value = 0b11111100;
+      
         const difference = entityManager.difference(entity);
 
         expect(difference.length).toBe(4);

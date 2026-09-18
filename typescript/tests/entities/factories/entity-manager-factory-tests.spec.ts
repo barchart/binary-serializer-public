@@ -20,8 +20,10 @@ class TestEntityTwo {
 
 describe('EntityManagerFactory', () => {
     let factory: EntityManagerFactory;
+   
     let serializerTestEntityOne: Serializer<TestEntityOne>;
     let serializerTestEntityTwo: Serializer<TestEntityTwo>;
+   
     let fieldsOne: SchemaField[];
     let fieldsTwo: SchemaField[];
 

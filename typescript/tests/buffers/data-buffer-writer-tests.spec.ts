@@ -11,12 +11,12 @@ describe('DataBufferWriterTests', () => {
   }
 
   const bitCases: boolean[][] = [
-    [true, true],
-    [false, false],
-    [true, true, false, true],
-    [false, false, true, false],
-    [true, false, true, false, true, false, true, false],
-    [false, true, false, true, false, true, false, true]
+    [ true, true ],
+    [ false, false ],
+    [ true, true, false, true ],
+    [ false, false, true, false ],
+    [ true, false, true, false, true, false, true, false ],
+    [ false, true, false, true, false, true, false, true ]
   ];
 
   describe('WriteBit', () => {

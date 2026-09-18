@@ -24,7 +24,9 @@ interface TestSchema extends SchemaDefinition<TestProperty> {
 describe('SchemaItemNestedTests', () => {
     let writer: DataBufferWriter;
     let reader: DataBufferReader;
+    
     let buffer: Uint8Array;
+    
     let schema: TestSchema;
     let schemaItemNested: SchemaItemNested<TestEntity, TestProperty>;
 

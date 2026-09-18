@@ -22,11 +22,13 @@ export class Helpers {
         }
 
         let totalLength = 0;
+      
         for (let i = 0; i < 4; i++) {
             totalLength += byteArrays[i].length;
         }
 
         const combinedArray = new Uint8Array(totalLength);
+     
         let offset = 0;
 
         for (let i = 0; i < 4; i++) {

@@ -41,6 +41,7 @@ describe("BinaryTypeSerializerFactoryTests", () => {
   supportedDataTypes.forEach(({ type, serializer }) => {
     it(`should support the ${DataType[type]} data type`, () => {
       const isSupported = factory.supports(type);
+      
       expect(isSupported).toBe(true);
     });
 
@@ -55,6 +56,7 @@ describe("BinaryTypeSerializerFactoryTests", () => {
   unsupportedDataTypes.forEach((type) => {
     it(`should not support the ${DataType[type]} data type`, () => {
         const isSupported = factory.supports(type);
+       
         expect(isSupported).toBe(false);
     });
 
@@ -68,12 +70,14 @@ describe("BinaryTypeSerializerFactoryTests", () => {
       class DefaultEnum extends Enum {
         static A = new DefaultEnum("A", "A", 0);
         static B = new DefaultEnum("B", "B", 255);
+       
         constructor(code: string, desc: string, mapping: number) {
           super(code, desc, mapping);
         }
       }
 
       const s = factory.make(DataType.enum, DefaultEnum) as BinarySerializerEnum<DefaultEnum>;
+     
       expect(s).toBeInstanceOf(BinarySerializerEnum);
       expect(s.sizeInBytes).toBe(4);
     });
@@ -82,6 +86,7 @@ describe("BinaryTypeSerializerFactoryTests", () => {
       class ByteEnum extends Enum {
         static A = new ByteEnum("A", "A", 0);
         static B = new ByteEnum("B", "B", 255);
+      
         constructor(code: string, desc: string, mapping: number) {
           super(code, desc, mapping);
         }
@@ -95,6 +100,7 @@ describe("BinaryTypeSerializerFactoryTests", () => {
     it("should reject byte enum mappings outside the byte range", () => {
       class InvalidByteEnum extends Enum {
         static Value = new InvalidByteEnum("Value", "Value", 256);
+      
         constructor(code: string, desc: string, mapping: number) {
           super(code, desc, mapping);
         }
@@ -106,6 +112,7 @@ describe("BinaryTypeSerializerFactoryTests", () => {
     it("should use byte storage for nullable byte enums", () => {
       class ByteEnum extends Enum {
         static Value = new ByteEnum("Value", "Value", 1);
+     
         constructor(code: string, desc: string, mapping: number) {
           super(code, desc, mapping);
         }
@@ -122,12 +129,14 @@ describe("BinaryTypeSerializerFactoryTests", () => {
       class LargeIntEnum extends Enum {
         static A = new LargeIntEnum("A", "A", 0);
         static B = new LargeIntEnum("B", "B", 2140000000);
+     
         constructor(code: string, desc: string, mapping: number) {
           super(code, desc, mapping);
         }
       }
 
       const s = factory.make(DataType.enum, LargeIntEnum) as BinarySerializerEnum<LargeIntEnum>;
+    
       expect(s).toBeInstanceOf(BinarySerializerEnum);
       expect(s.sizeInBytes).toBe(4);
     });

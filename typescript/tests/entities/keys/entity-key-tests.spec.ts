@@ -19,6 +19,7 @@ describe('EntityKey', () => {
             const same = {};
             const keyOne = new EntityKey<TestEntity>(same);
             const keyTwo = new EntityKey<TestEntity>(same);
+            
             expect(keyOne.equals(keyTwo)).toBe(true);
         });
 
@@ -28,6 +29,7 @@ describe('EntityKey', () => {
 
             const keyOne = new EntityKey<TestEntity>(objectOne);
             const keyTwo = new EntityKey<TestEntity>(objectTwo);
+          
             expect(keyOne.equals(keyTwo)).toBe(false);
         });
     });
@@ -37,24 +39,28 @@ describe('EntityKey', () => {
             const same = ['Luka', 1];
             const keyOne = new EntityKey<TestEntity>(same);
             const keyTwo = new EntityKey<TestEntity>(same);
+           
             expect(keyOne.equals(keyTwo)).toBe(true);
         });
 
         it('should return true for different arrays with the same values', () => {
             const keyOne = new EntityKey<TestEntity>(['Luka', 1]);
             const keyTwo = new EntityKey<TestEntity>(['Luka', 1]);
+          
             expect(keyOne.equals(keyTwo)).toBe(true);
         });
 
         it('should return false for different arrays with different string value', () => {
             const keyOne = new EntityKey<TestEntity>(['Luka', 1]);
             const keyTwo = new EntityKey<TestEntity>(['Bryan', 1]);
+          
             expect(keyOne.equals(keyTwo)).toBe(false);
         });
 
         it('should return false for different arrays with different number value', () => {
             const keyOne = new EntityKey<TestEntity>(['Luka', 1]);
             const keyTwo = new EntityKey<TestEntity>(['Luka', 2]);
+         
             expect(keyOne.equals(keyTwo)).toBe(false);
         });
 
@@ -119,6 +125,7 @@ describe('EntityKey', () => {
         it('should end with key toString', () => {
             const mock = { toString: () => 'The End' };
             const key = new EntityKey<TestEntity>(mock);
+         
             expect(key.toString()).toContain('(key=The End)');
         });
     });
