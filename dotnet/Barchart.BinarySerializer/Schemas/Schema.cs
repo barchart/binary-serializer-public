@@ -60,7 +60,7 @@ public class Schema<TEntity> : ISchema<TEntity> where TEntity : class, new()
     /// <inheritdoc />
     public byte[] Serialize(IDataBufferWriter writer, TEntity source)
     {
-        ArgumentNullException.ThrowIfNull(source, nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         if (writer.BytesWritten == 0)
         {
@@ -110,7 +110,7 @@ public class Schema<TEntity> : ISchema<TEntity> where TEntity : class, new()
     /// <inheritdoc />
     public TEntity Deserialize(IDataBufferReader reader, TEntity target)
     {
-        ArgumentNullException.ThrowIfNull(target, nameof(target));
+        ArgumentNullException.ThrowIfNull(target);
             
         return Deserialize(reader, target, true);
     }

@@ -27,7 +27,7 @@ public class EntityKey<TEntity> : IEntityKey<TEntity>, IEquatable<EntityKey<TEnt
     /// </exception>
     public EntityKey(object key)
     {
-        ArgumentNullException.ThrowIfNull(key, nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
         
         _key = key;
     }
