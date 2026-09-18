@@ -68,7 +68,7 @@ export class SchemaFactory implements SerializationSchemaFactory {
             let serializer;
 
             if (listField.elementType === DataType.enum) {
-                serializer = nullable ? this.binaryTypeSerializerFactory.makeNullable(listField.elementType, listField.enumType) : this.binaryTypeSerializerFactory.make(listField.elementType, listField.enumType);
+                serializer = nullable ? this.binaryTypeSerializerFactory.makeNullable(listField.elementType, listField.enumType, listField.enumUnderlyingType) : this.binaryTypeSerializerFactory.make(listField.elementType, listField.enumType, listField.enumUnderlyingType);
             } else {
                 serializer = nullable ? this.binaryTypeSerializerFactory.makeNullable(listField.elementType) : this.binaryTypeSerializerFactory.make(listField.elementType);
             }
@@ -83,9 +83,9 @@ export class SchemaFactory implements SerializationSchemaFactory {
         let serializer;
 
         if ('nullable' in field && field.nullable === true) {
-            serializer = this.binaryTypeSerializerFactory.makeNullable(field.type, field.enumType);
+            serializer = this.binaryTypeSerializerFactory.makeNullable(field.type, field.enumType, field.enumUnderlyingType);
         } else {
-            serializer = this.binaryTypeSerializerFactory.make(field.type, field.enumType);
+            serializer = this.binaryTypeSerializerFactory.make(field.type, field.enumType, field.enumUnderlyingType);
         }
 
         const isKey = 'isKey' in field && field.isKey === true;

@@ -31,7 +31,13 @@ export class BinarySerializerEnum<T extends Enum> implements BinaryTypeSerialize
 
     decode(reader: DataReader): T {
         const intValue = this.binarySerializerNumber.decode(reader);
-        return Enum.fromMapping(this.enumType, intValue) as T;
+        const value = Enum.fromMapping(this.enumType, intValue) as T | null;
+
+        if (value === null) {
+            throw new RangeError(`Unknown enum mapping: ${ intValue }.`);
+        }
+
+        return value;
     }
 
     getEquals(a: T, b: T): boolean {

@@ -23,20 +23,22 @@ export interface SerializerFactory {
      *
      * @public
      * @param {DataType} dataType - The type to create a serializer for.
-     * @param {new (...args: any[]) => Enum} [enumType] - Optional, the enumeration type (if the specified type is an enumeration).
+     * @param {new (...args: any[]) => Enum=} enumType - The enumeration type (if the specified type is an enumeration).
+     * @param {DataType.byte | DataType.int=} enumUnderlyingType - The enumeration's C# underlying type. Defaults to int.
      * @returns An BinaryTypeSerializer for the specified type.
      * @throws {UnsupportedTypeException} Thrown when the factory is unable to create a serializer for the specified type.
      */
-    make<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum): BinaryTypeSerializer<T>;
+    make<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum, enumUnderlyingType?: DataType.byte | DataType.int): BinaryTypeSerializer<T>;
 
     /**
      * Creates a binary type serializer for the specified nullable type.
      *
      * @public
      * @param {DataType} dataType - The type to create a serializer for.
-     * @param {new (...args: any[]) => Enum} [enumType] - Optional, the enumeration type (if the specified type is an enumeration).
+     * @param {new (...args: any[]) => Enum=} enumType - The enumeration type (if the specified type is an enumeration).
+     * @param {DataType.byte | DataType.int=} enumUnderlyingType - The enumeration's C# underlying type. Defaults to int.
      * @returns An BinaryTypeSerializer for the specified type.
      * @throws {UnsupportedTypeException} Thrown when the factory is unable to create a serializer for the specified type.
      */
-    makeNullable<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum): BinaryTypeSerializer<T | null>;
+    makeNullable<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum, enumUnderlyingType?: DataType.byte | DataType.int): BinaryTypeSerializer<T | null>;
 }

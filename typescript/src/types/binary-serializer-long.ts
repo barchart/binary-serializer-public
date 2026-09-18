@@ -1,6 +1,10 @@
 import { DataReader } from "../buffers/data-reader.interface";
 import { DataWriter } from "../buffers/data-writer.interface";
 import { BinaryTypeSerializer } from "./binary-type-serializer.interface";
+import { assertBigIntInRange } from './validation';
+
+const MINIMUM_VALUE = BigInt('-9223372036854775808');
+const MAXIMUM_VALUE = BigInt('9223372036854775807');
 
 /**
  * Reads (and writes) long values to (and from) a binary data source.
@@ -15,18 +19,19 @@ export class BinarySerializerLong implements BinaryTypeSerializer<bigint> {
     }
 
     encode(writer: DataWriter, value: bigint): void {
-        const bigIntValue = BigInt(value);
+        assertBigIntInRange(value, MINIMUM_VALUE, MAXIMUM_VALUE);
 
         const buffer = new ArrayBuffer(this.sizeInBytes);
         const view = new DataView(buffer);
-        view.setBigInt64(0, bigIntValue, true);
-        
+
+        view.setBigInt64(0, value, true);
+
         writer.writeBytes(new Uint8Array(buffer));
     }
 
     decode(reader: DataReader): bigint {
         const valueBytes = reader.readBytes(this.sizeInBytes);
-        
+
         return new DataView(valueBytes.buffer, valueBytes.byteOffset, valueBytes.byteLength).getBigInt64(0, true);
     }
 

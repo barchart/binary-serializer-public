@@ -17,15 +17,16 @@ export class BinarySerializerChar implements BinaryTypeSerializer<string> {
 
         const charCode = value.charCodeAt(0);
         const bytes = new Uint8Array(this.sizeInBytes);
+
         new DataView(bytes.buffer).setUint16(0, charCode, true);
-        
+
         writer.writeBytes(bytes);
     }
 
     decode(reader: DataReader): string {
         const bytes = reader.readBytes(this.sizeInBytes);
-        const charCode = new DataView(bytes.buffer).getUint16(0, true);
-        
+        const charCode = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint16(0, true);
+
         return String.fromCharCode(charCode);
     }
 

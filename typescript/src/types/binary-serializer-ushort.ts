@@ -1,6 +1,10 @@
 import { DataReader } from "../buffers/data-reader.interface";
 import { DataWriter } from "../buffers/data-writer.interface";
 import { BinaryTypeSerializer } from "./binary-type-serializer.interface";
+import { assertIntegerInRange } from './validation';
+
+const MINIMUM_VALUE = 0;
+const MAXIMUM_VALUE = 0xFFFF;
 
 /**
  * Reads (and writes) ushort values to (and from) a binary data source.
@@ -15,10 +19,13 @@ export class BinarySerializerUShort implements BinaryTypeSerializer<number> {
     }
 
     encode(writer: DataWriter, value: number): void {
+        assertIntegerInRange(value, MINIMUM_VALUE, MAXIMUM_VALUE);
+
         const buffer = new ArrayBuffer(this.sizeInBytes);
         const view = new DataView(buffer);
+
         view.setUint16(0, value, true);
-        
+
         writer.writeBytes(new Uint8Array(buffer));
     }
 

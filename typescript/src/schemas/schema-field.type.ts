@@ -32,6 +32,11 @@ export type SchemaPrimitiveField = {
      * The enumeration type if the field is an enumeration.
      */
     enumType?: new (...args: any[]) => Enum;
+
+    /**
+     * The underlying storage type for an enumeration. Defaults to a 32-bit integer.
+     */
+    enumUnderlyingType?: DataType.byte | DataType.int;
 }
 
 /**
@@ -104,6 +109,11 @@ export type SchemaListField =
      * The enumeration type if the field is a list of enumerations.
      */
     enumType: new (...args: any[]) => Enum;
+
+    /**
+     * The underlying storage type for list enumeration elements. Defaults to a 32-bit integer.
+     */
+    enumUnderlyingType?: DataType.byte | DataType.int;
 
     /**
      * Indicates whether list elements are nullable.

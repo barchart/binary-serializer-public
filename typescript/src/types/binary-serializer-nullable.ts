@@ -38,7 +38,15 @@ export class BinarySerializerNullable<T> implements BinaryTypeSerializer<T | nul
         return this.typeSerializer.decode(reader);
     }
 
-    getEquals(a: T, b: T): boolean {
+    getEquals(a: T | null, b: T | null): boolean {
+        if (a === null && b === null) {
+            return true;
+        }
+
+        if (a === null || b === null) {
+            return false;
+        }
+
         return this.typeSerializer.getEquals(a, b);
     }
 }

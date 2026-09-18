@@ -1,6 +1,10 @@
 import { DataReader } from "../buffers/data-reader.interface";
 import { DataWriter } from "../buffers/data-writer.interface";
 import { BinaryTypeSerializer } from "./binary-type-serializer.interface";
+import { assertBigIntInRange } from './validation';
+
+const MINIMUM_VALUE = BigInt(0);
+const MAXIMUM_VALUE = BigInt('0xFFFFFFFFFFFFFFFF');
 
 /**
  * Reads (and writes) ulong values to (and from) a binary data source.
@@ -15,12 +19,13 @@ export class BinarySerializerULong implements BinaryTypeSerializer<bigint> {
     }
 
     encode(writer: DataWriter, value: bigint): void {
-        const bigIntValue = BigInt(value);
+        assertBigIntInRange(value, MINIMUM_VALUE, MAXIMUM_VALUE);
 
         const buffer = new ArrayBuffer(this.sizeInBytes);
         const view = new DataView(buffer);
-        view.setBigUint64(0, bigIntValue, true);
-        
+
+        view.setBigUint64(0, value, true);
+
         writer.writeBytes(new Uint8Array(buffer));
     }
 

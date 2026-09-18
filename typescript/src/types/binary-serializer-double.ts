@@ -1,6 +1,9 @@
 import { DataReader } from "../buffers/data-reader.interface";
 import { DataWriter } from "../buffers/data-writer.interface";
 import { BinaryTypeSerializer } from "./binary-type-serializer.interface";
+import * as is from '@barchart/common-js/lang/is';
+
+const NAN_BITS = BigInt('0xFFF8000000000000');
 
 /**
  * Reads (and writes) double values to (and from) a binary data source.
@@ -16,8 +19,14 @@ export class BinarySerializerDouble implements BinaryTypeSerializer<number> {
 
     encode(writer: DataWriter, value: number): void {
         const buffer = new ArrayBuffer(this.sizeInBytes);
-        new DataView(buffer).setFloat64(0, value, true);
-        
+        const view = new DataView(buffer);
+
+        if (is.nan(value)) {
+            view.setBigUint64(0, NAN_BITS, true);
+        } else {
+            view.setFloat64(0, value, true);
+        }
+
         writer.writeBytes(new Uint8Array(buffer));
     }
 
@@ -28,6 +37,6 @@ export class BinarySerializerDouble implements BinaryTypeSerializer<number> {
     }
 
     getEquals(a: number, b: number): boolean {
-        return a === b;
+        return a === b || (is.nan(a) && is.nan(b));
     }
 }

@@ -22,6 +22,11 @@ import { SerializerFactory } from "./serializer-factory.interface";
 import { BinarySerializerNullable } from "../binary-serializer-nullable";
 import Enum from "@barchart/common-js/lang/Enum";
 
+const BYTE_MINIMUM_VALUE = 0;
+const BYTE_MAXIMUM_VALUE = 0xFF;
+const INT_MINIMUM_VALUE = -0x80000000;
+const INT_MAXIMUM_VALUE = 0x7FFFFFFF;
+
 /**
  * Defines a factory for creating binary type serializers.
  *
@@ -59,7 +64,7 @@ export class BinaryTypeSerializerFactory implements SerializerFactory {
         return this.serializers.has(dataType) || dataType === DataType.enum;
     }
 
-    make<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum): BinaryTypeSerializer<T> {
+    make<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum, enumUnderlyingType: DataType.byte | DataType.int = DataType.int): BinaryTypeSerializer<T> {
         const serializer = this.serializers.get(dataType);
 
         if (serializer){
@@ -71,31 +76,35 @@ export class BinaryTypeSerializerFactory implements SerializerFactory {
                 throw new Error("Enum type is required for DataType.enum");
             }
 
-            return this.createEnumSerializer(enumType) as BinaryTypeSerializer<T>;
+            return this.createEnumSerializer(enumType, enumUnderlyingType) as BinaryTypeSerializer<T>;
         }
 
         throw new UnsupportedTypeException(dataType);
     }
 
-    makeNullable<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum): BinaryTypeSerializer<T | null> {
-        const serializer = this.make<T>(dataType, enumType);
+    makeNullable<T>(dataType: DataType, enumType?: new (...args: any[]) => Enum, enumUnderlyingType: DataType.byte | DataType.int = DataType.int): BinaryTypeSerializer<T | null> {
+        const serializer = this.make<T>(dataType, enumType, enumUnderlyingType);
+
+        if (dataType === DataType.string) {
+            return serializer as BinaryTypeSerializer<T | null>;
+        }
 
         return new BinarySerializerNullable<T>(serializer);
     }
 
-    private createEnumSerializer(enumType: new (...args: any[]) => Enum): BinarySerializerEnum<any> {
+    private createEnumSerializer(enumType: new (...args: any[]) => Enum, storageType: DataType.byte | DataType.int): BinarySerializerEnum<any> {
         const enumItems: Enum[] = Enum.getItems(enumType);
         const mappings: number[] = enumItems.map(item => item.mapping).filter(mapping => mapping !== null) as number[];
 
         const smallest = Math.min(...mappings);
         const largest = Math.max(...mappings);
 
-        if (smallest > -1 && largest < 256) {
+        if (storageType === DataType.byte && smallest >= BYTE_MINIMUM_VALUE && largest <= BYTE_MAXIMUM_VALUE) {
             return new BinarySerializerEnum(this.serializers.get(DataType.byte) as BinarySerializerByte, enumType);
-        } else if (smallest > -2.1e9 && largest < 2.1e9) {
+        } else if (storageType === DataType.int && smallest >= INT_MINIMUM_VALUE && largest <= INT_MAXIMUM_VALUE) {
             return new BinarySerializerEnum(this.serializers.get(DataType.int) as BinarySerializerInt, enumType);
         } else {
-            throw new Error("Unsupported enum mapping range");
+            throw new RangeError("Unsupported enum mapping range");
         }
     }
 }
